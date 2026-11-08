@@ -1,0 +1,5 @@
+<div class="quantity" role="group" aria-label="Quantidade">
+  <button type="button" aria-label="Diminuir quantidade" [disabled]="quantity() <= 1" (click)="change(-1)">−</button>
+  <output aria-live="polite" aria-atomic="true">{{ quantity() }}</output>
+  <button type="button" aria-label="Aumentar quantidade" (click)="change(1)">+</button>
+</div>

@@ -1,0 +1,36 @@
+<app-catalog-layout>
+  <section class="cart-page" aria-labelledby="cart-title">
+    <a routerLink="/home" class="back-link">Continuar comprando</a>
+    <header><h1 id="cart-title">Meu carrinho</h1><span>{{ cart.totalItems() }} itens</span></header>
+    @if (cart.error()) { <p class="error" role="alert">{{ cart.error() }} <button type="button" (click)="cart.load()" [disabled]="cart.busy()">Tentar novamente</button></p> }
+    @if (cart.loading()) { <p role="status">Carregando seu carrinho…</p> }
+    @else if (!cart.cart().items.length && !cart.error()) {
+      <div class="empty" role="status"><h2>Seu carrinho está vazio</h2><p>Você ainda não adicionou nenhum produto.</p><a routerLink="/home" class="primary">Continuar comprando</a></div>
+    } @else if (cart.cart().items.length) {
+      <div class="cart-grid">
+        <div class="items">
+          @for (item of cart.cart().items; track item.id) {
+            <article class="item" [attr.aria-label]="item.name">
+              <a class="image" [routerLink]="['/produto', item.productId]" [attr.aria-label]="'Ver ' + item.name">
+                @if (item.image) { <img [src]="imageUrl(item.image)" [alt]="item.name" (error)="hideBrokenImage($event)" /> }
+              </a>
+              <div class="item-info">
+                <a [routerLink]="['/produto', item.productId]"><h2>{{ item.name }}</h2></a>
+                <p>{{ item.unitPrice | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
+                @if (!item.available) { <p class="error">Produto indisponível nesta quantidade. Ajuste ou remova o item.</p> }
+                <div class="quantity" aria-label="Quantidade">
+                  <button type="button" [attr.aria-label]="'Diminuir quantidade de ' + item.name" [disabled]="cart.busy() || item.quantity <= 1" (click)="cart.update(item.id, item.quantity - 1)">−</button>
+                  <span aria-live="polite">{{ item.quantity }}</span>
+                  <button type="button" [attr.aria-label]="'Aumentar quantidade de ' + item.name" [disabled]="cart.busy() || !item.available || item.quantity >= item.stock" (click)="cart.update(item.id, item.quantity + 1)">+</button>
+                </div>
+              </div>
+              <div class="item-total"><span>Subtotal</span><strong>{{ item.subtotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong><button class="text-button" type="button" [disabled]="cart.busy()" (click)="cart.remove(item.id)" [attr.aria-label]="'Remover ' + item.name">Remover</button></div>
+            </article>
+          }
+          <button class="text-button" type="button" [disabled]="cart.busy()" (click)="cart.clear()">Limpar carrinho</button>
+        </div>
+        <aside class="summary" aria-labelledby="summary-title"><h2 id="summary-title">Resumo do pedido</h2><p><span>Produtos</span><span>{{ cart.total() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span></p><p class="total"><strong>Total</strong><strong>{{ cart.total() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></p><a routerLink="/home" class="primary">Continuar comprando</a></aside>
+      </div>
+    }
+  </section>
+</app-catalog-layout>

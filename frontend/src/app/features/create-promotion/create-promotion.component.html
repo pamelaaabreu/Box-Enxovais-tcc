@@ -1,0 +1,78 @@
+<div class="promotion-form-container">
+  <div class="form-header">
+    <div class="header-icon">
+      <mat-icon>campaign</mat-icon>
+    </div>
+
+    <div class="header-content">
+      <h2>Criar Nova Promoção</h2>
+      <p>Cadastre uma nova campanha promocional para sua loja.</p>
+    </div>
+  </div>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="promo-name">
+        <mat-icon>local_offer</mat-icon>
+        Nome da Promoção
+      </label>
+
+      <input
+        type="text"
+        id="promo-name"
+        name="name"
+        placeholder="Ex: Black Friday 2026"
+        [(ngModel)]="promotionData.name"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="status">
+        <mat-icon>toggle_on</mat-icon>
+        Status
+      </label>
+
+      <select id="status" name="status" [(ngModel)]="promotionData.status">
+        <option value="active">Ativa</option>
+        <option value="inactive">Inativa</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="start-date">
+        <mat-icon>event_available</mat-icon>
+        Data de Início
+      </label>
+
+      <input
+        type="datetime-local"
+        id="start-date"
+        name="start-date"
+        [(ngModel)]="promotionData.start_date"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="end-date">
+        <mat-icon>event_busy</mat-icon>
+        Data de Fim
+      </label>
+
+      <input
+        type="datetime-local"
+        id="end-date"
+        name="end-date"
+        [(ngModel)]="promotionData.end_date"
+        required
+      />
+    </div>
+    <div class="button-container">
+      <button type="submit">
+        <mat-icon>add_circle</mat-icon>
+        Criar Promoção
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,274 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f6f7f9;
+}
+
+/* === SIDEBAR === */
+.sidebar {
+  width: 250px;
+  background-color: #101820;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* === LOGO === */
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 180px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  position: relative;
+}
+
+.logo {
+  height: 100px;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.menu-toggle {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* === MENU === */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 25px 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: 12px;
+}
+
+.sidebar-nav a,
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  color: #e9e9e9;
+  text-decoration: none;
+  padding: 14px 25px;
+  font-size: 15px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border-left: 3px solid transparent;
+  border-radius: 8px;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.sidebar-nav a:hover,
+.dropdown-toggle:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #c5b4a8;
+}
+
+.sidebar-nav a.active {
+  color: #c5b4a8;
+  border-left-color: #c5b4a8;
+}
+
+/* === ÍCONES === */
+.sidebar i {
+  width: 22px;
+  min-width: 22px;
+  text-align: center;
+  font-size: 17px;
+  color: #c5b4a8;
+  flex-shrink: 0;
+}
+
+/* === NAV TEXT === */
+.nav-text {
+  flex: 1;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: #f2f2f2;
+  transition: color 0.2s ease;
+  text-align: left;
+}
+
+.sidebar-nav a:hover .nav-text,
+.dropdown-toggle:hover .nav-text {
+  color: #c5b4a8;
+}
+
+.sidebar-nav a.active .nav-text {
+  color: #c5b4a8;
+  font-weight: 600;
+}
+
+/* === DROPDOWN ARROW === */
+.dropdown-toggle .arrow {
+  margin-left: auto;
+  margin-right: 5px;
+  font-size: 12px;
+  color: #c5b4a8;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-toggle .arrow.open {
+  transform: rotate(180deg);
+}
+
+/* === SUBMENU === */
+.submenu {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.submenu.show {
+  max-height: 200px;
+}
+
+.submenu a {
+  display: flex;
+  align-items: center;
+  padding: 10px 60px;
+  font-size: 14px;
+  color: #ddd;
+  transition: color 0.2s;
+}
+
+.submenu a:hover {
+  color: #fff;
+}
+
+/* === FOOTER === */
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #c5b4a8;
+}
+
+/* === CONTEÚDO === */
+.content {
+  flex: 1;
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+.topbar {
+  background: #fff;
+  padding: 18px 28px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-bottom: 1px solid #ececec;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-profile i {
+  font-size: 28px;
+  color: #5a5550;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #d6c2b6;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.user-title {
+  font-size: 13px;
+  color: #a0a0a0;
+}
+
+.user-email {
+  font-size: 13px;
+  color: #8a8a8a;
+}
+
+.content-body {
+  padding: 25px;
+}
+
+/* === RESPONSIVIDADE === */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 0;
+  }
+
+  .sidebar-collapsed .sidebar {
+    width: 250px;
+  }
+
+  .content,
+  .sidebar-collapsed .content {
+    margin-left: 0;
+  }
+}

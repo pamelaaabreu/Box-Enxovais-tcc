@@ -1,0 +1,176 @@
+<div class="page-wrapper">
+  <!-- HEADER -->
+  <div class="page-header sticky-header">
+    <h2>Adicionar novo produto</h2>
+
+    <button
+      class="btn-save"
+      [disabled]="!productForm.form.valid || !validQuantity() || loading"
+      type="submit"
+      form="productForm"
+    >
+      <ng-container *ngIf="!loading; else loadingTemplate">
+        Salvar produto
+      </ng-container>
+
+      <ng-template #loadingTemplate>
+        <span class="loader"></span>
+        Salvando...
+      </ng-template>
+    </button>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="page-layout">
+    <div class="card form-card">
+      <form
+        id="productForm"
+        (ngSubmit)="onSubmit(productForm)"
+        #productForm="ngForm"
+        class="product-form"
+      >
+        <!-- linha 1 -->
+        <div class="form-row-2-cols">
+          <div class="floating-group with-icon">
+            <span class="input-icon material-icons">shopping_bag</span>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              [(ngModel)]="product.name"
+              placeholder=""
+              required
+            />
+            <label for="name">Nome do Produto</label>
+          </div>
+
+          <div class="floating-group with-icon">
+            <span class="input-icon material-icons">visibility</span>
+            <select id="status" name="status" [(ngModel)]="product.status">
+              <option value="" disabled hidden></option>
+              <option value="active">Ativo</option>
+              <option value="inactive">Inativo</option>
+            </select>
+            <label for="status">Status</label>
+          </div>
+        </div>
+
+        <!-- descrição -->
+        <div class="floating-group with-icon">
+          <span class="input-icon material-icons">description</span>
+          <textarea
+            id="description"
+            name="description"
+            [(ngModel)]="product.description"
+            placeholder=""
+          ></textarea>
+          <label for="description">Descrição</label>
+        </div>
+
+        <!-- linha 2 -->
+        <div class="form-row-3-cols">
+          <div class="floating-group with-icon">
+            <span class="input-icon material-icons">attach_money</span>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              placeholder=""
+              [(ngModel)]="product.price"
+              required
+            />
+            <label for="price">Preço (R$)</label>
+          </div>
+
+          <div>
+          <div class="floating-group with-icon">
+            <span class="input-icon material-icons">inventory_2</span>
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              placeholder=""
+              [(ngModel)]="product.quantity"
+              (ngModelChange)="quantityError = ''"
+              #quantityField="ngModel"
+              min="0"
+              max="2147483647"
+              step="1"
+              pattern="[0-9]+"
+              aria-describedby="quantity-error"
+              required
+            />
+            <label for="quantity">Quantidade em Estoque</label>
+          </div>
+            <small id="quantity-error" role="alert" *ngIf="quantityError || (quantityField.invalid && (quantityField.dirty || quantityField.touched))">
+              Informe uma quantidade inteira entre 0 e 2147483647.
+            </small>
+          </div>
+
+          <div class="floating-group with-icon">
+            <span class="input-icon material-icons">storefront</span>
+            <select
+              id="brand_id"
+              name="brand_id"
+              [(ngModel)]="product.brand_id"
+            >
+              <option [ngValue]="null"></option>
+              <option [ngValue]="1">Marca A</option>
+              <option [ngValue]="2">Marca B</option>
+            </select>
+            <label for="brand_id">Marca</label>
+          </div>
+        </div>
+
+        <hr />
+        <h4>Medidas</h4>
+
+        <div class="form-row-4-cols">
+          <div class="floating-group">
+            <input
+              type="text"
+              name="casal"
+              [(ngModel)]="product.measurements['casal']"
+            />
+            <label>Casal</label>
+          </div>
+
+          <div class="floating-group">
+            <input
+              type="text"
+              name="queen"
+              [(ngModel)]="product.measurements['queen']"
+            />
+            <label>Queen</label>
+          </div>
+
+          <div class="floating-group">
+            <input
+              type="text"
+              name="super_king"
+              [(ngModel)]="product.measurements['super_king']"
+            />
+            <label>Super King</label>
+          </div>
+
+          <div class="floating-group">
+            <input
+              type="text"
+              name="solteiro"
+              [(ngModel)]="product.measurements['solteiro']"
+            />
+            <label>Solteiro</label>
+          </div>
+        </div>
+
+        <div class="floating-group">
+          <textarea
+            name="care_instructions"
+            [(ngModel)]="product.care_instructions"
+          ></textarea>
+          <label>Instruções de Cuidado</label>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

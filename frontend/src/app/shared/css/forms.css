@@ -1,0 +1,144 @@
+.auth-form-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 40px 50px;
+  border-radius: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+  border: 1px solid rgba(233, 236, 239, 0.8);
+  z-index: 1;
+}
+
+.auth-form-container h2 {
+  color: #333;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.auth-form-container .subtitle {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.form-control {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 10px 0;
+  font-size: 1rem;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.4s ease;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  border-color: #7a3325;
+}
+
+.form-control.ng-invalid.ng-touched {
+  border-color: #d9534f;
+}
+
+.floating-label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  font-size: 1rem;
+  color: #999;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus ~ .floating-label,
+.form-control:not(:placeholder-shown) ~ .floating-label {
+  top: -16px;
+  font-size: 0.8rem;
+  color: #7a3325;
+}
+
+.form-control.ng-invalid.ng-touched ~ .floating-label {
+  color: #d9534f;
+}
+
+.input-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #7a3325;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.form-control:focus ~ .input-underline {
+  transform: scaleX(1);
+}
+
+.auth-form-container button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 30px;
+  background-color: #7a3325;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  margin-top: 10px;
+}
+
+.auth-form-container button[type="submit"]:hover:not(:disabled) {
+  background-color: #5c271c;
+  transform: translateY(-2px);
+}
+
+.auth-form-container button[type="submit"]:disabled {
+  background-color: #c27b5c;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 10px;
+  display: block;
+}
+
+.back-to-login {
+  margin-top: 20px;
+}
+
+.back-to-login a {
+  color: #7a3325;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+  text-transform: uppercase;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-to-login a:hover {
+  text-decoration: underline;
+}

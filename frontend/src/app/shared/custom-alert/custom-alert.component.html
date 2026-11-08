@@ -1,0 +1,71 @@
+<div
+  class="alert-toast"
+  [attr.role]="type === 'error' ? 'alert' : 'status'"
+  aria-atomic="true"
+  [attr.aria-live]="type === 'error' ? 'assertive' : 'polite'"
+  [class.alert-recovery-success]="recoverySuccess"
+  [class]="'alert-' + type"
+  [class.toast-exit]="!visible"
+>
+  <!-- Ícone Lucide -->
+  <div class="alert-icon" aria-hidden="true">
+    <ng-container [ngSwitch]="type">
+      <i-lucide
+        *ngSwitchCase="'success'"
+        name="check"
+        [size]="16"
+        [strokeWidth]="2.5"
+      ></i-lucide>
+      <i-lucide
+        *ngSwitchCase="'error'"
+        name="x"
+        [size]="16"
+        [strokeWidth]="2.5"
+      ></i-lucide>
+      <i-lucide
+        *ngSwitchCase="'warning'"
+        name="alert-triangle"
+        [size]="16"
+        [strokeWidth]="2.5"
+      ></i-lucide>
+      <i-lucide
+        *ngSwitchCase="'info'"
+        name="info"
+        [size]="16"
+        [strokeWidth]="2.5"
+      ></i-lucide>
+      <i-lucide
+        *ngSwitchCase="'loading'"
+        name="loader-2"
+        [size]="16"
+        [strokeWidth]="2.5"
+        class="spinning"
+      ></i-lucide>
+    </ng-container>
+  </div>
+
+  <!-- Conteúdo -->
+  <div class="alert-content">
+    <h4 class="alert-title">{{ title }}</h4>
+    <p class="alert-message" *ngIf="message">{{ message }}</p>
+  </div>
+
+  <!-- Botão Fechar -->
+  <button
+    class="alert-close"
+    type="button"
+    *ngIf="showClose && type !== 'loading'"
+    (click)="onClose()"
+    aria-label="Fechar notificação"
+  >
+    <i-lucide name="x" [size]="14" [strokeWidth]="2.5"></i-lucide>
+  </button>
+
+  <!-- Barra de Progresso -->
+  <div aria-hidden="true" class="alert-progress" *ngIf="showProgress && duration > 0">
+    <div
+      class="progress-bar"
+      [style.animation-duration]="duration + 'ms'"
+    ></div>
+  </div>
+</div>

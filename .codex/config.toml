@@ -1,0 +1,6 @@
+# Projeto Box Enxovais: subagentes disponíveis, mas chamados apenas por solicitação.
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 1
+# Sem modelo fixo: usa a configuração disponível do seu Codex.
+# Para reduzir custo, escolha manualmente um modelo econômico compatível na sua instalação.

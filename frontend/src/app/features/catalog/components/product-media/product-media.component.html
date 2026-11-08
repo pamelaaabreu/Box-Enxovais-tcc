@@ -1,0 +1,8 @@
+@if (showImage()) {
+  <img [src]="image()!.url" [alt]="image()!.alt" loading="lazy" (error)="onImageError()" />
+} @else {
+  <div class="media-placeholder" [class.compact]="compact()" [class.icon-only]="!showCaption()" role="img" [attr.aria-label]="image()?.alt ? 'Imagem indisponível: ' + image()!.alt : 'Imagem indisponível'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 4 4 3-3 5 5"/></svg>
+    @if (!compact() && showCaption()) { <span>Imagem em preparação</span><small>{{ image()?.alt }}</small> }
+  </div>
+}

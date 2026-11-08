@@ -1,0 +1,226 @@
+/* ============================
+   WRAPPER → controla largura
+============================ */
+.page-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ============================
+   HEADER (segue largura do form)
+============================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 18px 24px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.page-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1f36;
+  margin: 0;
+}
+
+/* ============================
+   BOTÃO
+============================ */
+.btn-save {
+  background: linear-gradient(135deg, #b09586, #c8b3a6);
+  border: none;
+  color: #fff;
+  padding: 10px 26px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 210px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.btn-save:hover:not(:disabled) {
+  background: linear-gradient(135deg, #9e8679, #b59d8e);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.loader {
+  width: 18px;
+  height: 18px;
+  border: 3px solid #ffffff70;
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================
+   FORM CARD
+============================ */
+.page-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================
+   GRID (colunas responsivas)
+============================ */
+.form-row-2-cols {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.form-row-3-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.form-row-4-cols {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* ==================================================
+   BASE DO INPUT / SELECT / TEXTAREA
+================================================== */
+.floating-group {
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+  margin-bottom: 22px;
+}
+
+.floating-group input,
+.floating-group textarea,
+.floating-group select {
+  width: 100%;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 14px 14px 6px;
+  background: #f7f7f7;
+  font-size: 0.95rem;
+  transition: 0.18s ease;
+  box-sizing: border-box;
+}
+
+/* Focus visual */
+.floating-group input:focus,
+.floating-group textarea:focus,
+.floating-group select:focus {
+  outline: none;
+  border-color: #c8b3a6;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(200, 179, 166, 0.25);
+}
+
+/* ==================================================
+   LABEL FLOATING
+================================================== */
+.floating-group label {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  font-size: 0.95rem;
+  color: #7a7a7a;
+  pointer-events: none;
+  transition: 0.2s ease;
+  z-index: 3;
+}
+
+/* FLOAT quando tem valor ou foco */
+.floating-group input:focus + label,
+.floating-group textarea:focus + label,
+.floating-group select:focus + label,
+.floating-group input:not(:placeholder-shown) + label,
+.floating-group textarea:not(:placeholder-shown) + label,
+.floating-group select.ng-dirty + label,
+.floating-group select.ng-not-empty + label {
+  top: -8px;
+  left: 10px;
+  padding: 0 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #c8b3a6;
+  background: #fff;
+}
+
+/* ==================================================
+   ÍCONE DENTRO DO INPUT
+================================================== */
+.with-icon {
+  position: relative;
+}
+
+/* Ícone */
+.with-icon .input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #bfbfbf;
+  pointer-events: none;
+}
+
+/* empurra o texto para não sobrepor o ícone */
+.with-icon input,
+.with-icon textarea,
+.with-icon select {
+  padding-left: 42px !important;
+}
+
+/* Label não fica em cima do ícone */
+.with-icon.floating-group label {
+  left: 42px;
+}
+
+/* Quando flutua → volta ao normal */
+.with-icon.floating-group input:focus + label,
+.with-icon.floating-group textarea:focus + label,
+.with-icon.floating-group select:focus + label,
+.with-icon.floating-group input:not(:placeholder-shown) + label,
+.with-icon.floating-group textarea:not(:placeholder-shown) + label,
+.with-icon.floating-group select.ng-dirty + label,
+.with-icon.floating-group select.ng-not-empty + label {
+  left: 10px;
+}

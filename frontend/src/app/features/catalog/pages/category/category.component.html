@@ -1,0 +1,26 @@
+@if (state().status === 'loaded' && !category()) {
+  <app-not-found />
+} @else {
+<app-catalog-layout>
+  <app-breadcrumbs [items]="breadcrumbs()" />
+  @if (state().status === 'loading') {
+    <app-product-grid [loading]="true" />
+  } @else if (state().status === 'error') {
+    <section class="state" role="alert"><h1>Não foi possível carregar o catálogo.</h1><p>Tente novamente mais tarde.</p><a routerLink="/home">Voltar para Home</a></section>
+  } @else {
+    @if (category(); as category) {
+    <header class="category-heading">
+      <span class="eyebrow">PARA UMA CASA BEM VIVIDA</span>
+      <h1>{{ category.name }}</h1>
+      <p>{{ category.description }}</p>
+    </header>
+    <div class="toolbar">
+      <app-product-filters />
+      <div class="results"><span role="status">{{ products().length }} {{ products().length === 1 ? 'produto' : 'produtos' }}</span><app-product-sort /></div>
+    </div>
+    <app-product-grid [products]="products()" />
+  }
+  }
+</app-catalog-layout>
+
+}

@@ -1,0 +1,23 @@
+.manage-container {
+  padding: 24px;
+}
+
+.manage-header {
+  margin-bottom: 24px;
+}
+
+.manage-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.manage-header p {
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.tab-content {
+  padding-top: 24px;
+}

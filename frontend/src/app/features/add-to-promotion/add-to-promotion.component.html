@@ -1,0 +1,40 @@
+<div class="promotion-form">
+  <h2>Adicionar Produto à Promoção</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div>
+      <label for="product_id">ID do Produto:</label>
+      <input
+        type="number"
+        id="product_id"
+        [(ngModel)]="promotionData.product_id"
+        name="product_id"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="promo_name">Nome da Promoção:</label>
+      <input
+        type="text"
+        id="promo_name"
+        [(ngModel)]="promotionData.promotion_name"
+        name="promotion_name"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="promo_price">Preço Promocional:</label>
+      <input
+        type="number"
+        id="promo_price"
+        [(ngModel)]="promotionData.promotional_price"
+        name="promotional_price"
+        step="0.01"
+        required
+      />
+    </div>
+
+    <button type="submit">Adicionar Produto</button>
+  </form>
+</div>

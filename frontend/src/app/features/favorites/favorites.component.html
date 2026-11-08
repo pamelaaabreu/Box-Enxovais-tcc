@@ -1,0 +1,40 @@
+<app-catalog-layout>
+ <section class="favorites" aria-labelledby="favorites-title">
+  <header><span class="eyebrow">Sua seleção</span><h1 id="favorites-title">Meus favoritos</h1><p>Guarde aqui os produtos que combinam com a sua casa.</p></header>
+  @if (favorites.syncError()) {
+   <p role="alert">{{ favorites.syncError() }} <button type="button" (click)="favorites.synchronize()" [disabled]="favorites.loading()">Tentar novamente</button></p>
+  }
+  @if (favorites.pageLoading()) {
+   <p role="status">Carregando favoritos…</p>
+  } @else if (favorites.pageError()) {
+   <div class="state" role="alert"><p>{{ favorites.pageError() }}</p><button type="button" (click)="favorites.loadPage()">Tentar novamente</button></div>
+  } @else {
+   @if (favorites.page(); as page) {
+   @if (page.items.length) {
+    <p role="status">{{ page.pagination.total }} produtos nos seus favoritos</p>
+    <div class="grid">
+     @for (product of products(); track product.id) {
+      <div class="item">
+       <app-product-card [product]="product" />
+       <div class="actions">
+        <button type="button" (click)="cart.add(product.id)" [disabled]="product.status !== 'active' || product.quantity < 1 || cart.pending().has(product.id)">
+         {{ product.status !== 'active' || product.quantity < 1 ? 'Produto indisponível' : cart.pending().has(product.id) ? 'Adicionando…' : 'Adicionar ao carrinho' }}
+        </button>
+        <button class="remove" type="button" (click)="favorites.remove(product.id)" [disabled]="!favorites.synchronized() || favorites.pending().has(product.id)" [attr.aria-label]="'Remover ' + product.name + ' dos favoritos'">Remover</button>
+       </div>
+       @if (cart.feedback()[product.id]) { <p role="status">{{ cart.feedback()[product.id] }}</p> }
+      </div>
+     }
+    </div>
+    <nav class="pagination" aria-label="Páginas de favoritos">
+     <button type="button" [disabled]="page.pagination.offset === 0" (click)="favorites.loadPage(page.pagination.offset - page.pagination.limit)">Anterior</button>
+     <span>Página {{ page.pagination.offset / page.pagination.limit + 1 }}</span>
+     <button type="button" [disabled]="!page.pagination.hasMore" (click)="favorites.loadPage(page.pagination.offset + page.pagination.limit)">Próxima</button>
+    </nav>
+   } @else {
+    <div class="state"><h2>Sua lista ainda está vazia</h2><p>Toque no coração dos produtos para encontrá-los aqui.</p><a routerLink="/home">Explorar produtos</a></div>
+   }
+  }
+   }
+ </section>
+</app-catalog-layout>

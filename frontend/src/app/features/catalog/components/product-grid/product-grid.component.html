@@ -1,0 +1,8 @@
+<div [attr.aria-busy]="loading()">
+  @if (loading()) {
+    <p role="status">Carregando produtos…</p>
+    <div class="product-grid" aria-hidden="true">@for (item of skeletons; track item) { <div class="skeleton"><div></div><span></span><span></span></div> }</div>
+  } @else if (products().length) {
+    <div class="product-grid">@for (product of products(); track product.id) { <app-product-card [product]="product" /> }</div>
+  } @else { <p class="empty" role="status">Nenhum produto encontrado nesta categoria.</p> }
+</div>

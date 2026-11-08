@@ -1,0 +1,27 @@
+<div class="manage-container">
+  <div class="manage-header">
+    <h1>Gerenciamento de Produto</h1>
+
+    <p>Cadastre as informações do produto e depois envie as imagens.</p>
+  </div>
+
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+    <!-- CADASTRO -->
+    <mat-tab label="Cadastro">
+      <div class="tab-content">
+        <app-product-create
+          (productCreated)="onProductCreated($event)"
+        ></app-product-create>
+      </div>
+    </mat-tab>
+
+    <!-- IMAGENS -->
+    <mat-tab label="Imagens" [disabled]="!productId">
+      <div class="tab-content">
+        <app-product-image-upload
+          [productId]="productId!"
+        ></app-product-image-upload>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

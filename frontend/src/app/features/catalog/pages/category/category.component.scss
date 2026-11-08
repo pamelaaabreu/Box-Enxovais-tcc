@@ -1,0 +1,12 @@
+.category-heading { padding: 8px 0 32px; border-bottom: 1px solid #dedbd0; }
+.eyebrow { font-size: 11px; letter-spacing: .18em; color: #667255; }
+h1 { margin: 12px 0; font-size: clamp(28px, 3vw, 42px); font-weight: 500; color: #3f4937; line-height: 1.3; }
+p { font-size: 15px; line-height: 1.7; color: #706e67; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin: 24px 0; }
+.results { display: flex; align-items: center; gap: 24px; }
+.results > span { white-space: nowrap; font-size: 13px; color: #706e67; }
+.state { padding: 48px 0; }
+.state a { display: inline-block; margin-top: 12px; color: #3f4937; text-decoration: underline; }
+.state a:focus-visible { outline: 2px solid #667255; outline-offset: 4px; }
+@media (max-width: 768px) { .toolbar { flex-direction: column; align-items: stretch; } .results { justify-content: space-between; } }
+@media (max-width: 400px) { .results { gap: 12px; } }

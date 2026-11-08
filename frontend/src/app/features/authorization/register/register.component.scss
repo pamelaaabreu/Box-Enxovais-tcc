@@ -1,0 +1,968 @@
+:host {
+  display: block;
+}
+
+.auth-page {
+  --accent: #667255;
+  --accent-dark: #3f4937;
+  --secondary: #3f4937;
+  --text: #292b25;
+  --muted: #706e67;
+  --border: #d8d1c4;
+  --error: #a1342d;
+  --page-background: #f8f5ec;
+  --outer-background: #dce4d5;
+  --panel-background: #ededdd;
+  --surface: #fffdf8;
+
+  --auth-radius-lg: 16px;
+  --auth-radius-md: 12px;
+  --auth-space-2: 12px;
+  --auth-frame: 12px;
+  --auth-card-height: clamp(620px, 75dvh, 650px);
+
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 3vw, 48px);
+  color: var(--text);
+  background: var(--outer-background);
+  line-height: 1.5;
+}
+
+.auth-card {
+  box-sizing: border-box;
+  padding: var(--auth-frame);
+  width: min(1180px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  column-gap: 12px;
+  border: 1px solid rgba(63, 73, 55, 0.16);
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: 0 24px 64px rgba(63, 73, 55, 0.12);
+}
+
+.welcome-panel {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--panel-background);
+  font-family: "Montserrat", sans-serif;
+}
+
+.welcome-copy {
+  position: relative;
+  z-index: 1;
+  padding: 40px clamp(24px, 4vw, 54px) 64px;
+  background: linear-gradient(#f8f5ecf2, #f8f5eceb 82%, transparent);
+}
+
+.welcome-eyebrow {
+  display: block;
+  margin-bottom: 48px;
+  color: var(--secondary);
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.welcome-copy h2 {
+  max-width: 10ch;
+  margin: 0;
+  color: var(--secondary);
+  font-size: clamp(38px, 4vw, 56px);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.07;
+}
+
+.welcome-copy p {
+  max-width: 30ch;
+  margin: 20px 0 0;
+  color: var(--secondary);
+  font-size: 0.88rem;
+  line-height: 1.8;
+}
+
+.welcome-illustration {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.welcome-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.welcome-video {
+  position: absolute;
+  inset: 0;
+}
+
+.auth-form-panel {
+  background: var(--surface);
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+.auth-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px clamp(24px, 3.5vw, 48px);
+}
+
+.auth-brand-mobile {
+  display: none;
+}
+
+.auth-form-shell,
+.auth-tabs {
+  width: 100%;
+  max-width: 600px;
+  align-self: center;
+}
+
+.auth-tabs {
+  --mdc-tab-indicator-active-indicator-color: transparent;
+  --mdc-tab-indicator-active-indicator-height: 3px;
+  --mat-tab-header-active-label-text-color: var(--surface);
+  --mat-tab-header-active-focus-label-text-color: var(--surface);
+  --mat-tab-header-active-hover-label-text-color: var(--surface);
+  --mat-tab-header-inactive-label-text-color: var(--muted);
+  --mat-tab-header-inactive-focus-label-text-color: var(--secondary);
+  --mat-tab-header-inactive-hover-label-text-color: var(--secondary);
+}
+
+:host ::ng-deep .auth-tabs .mat-mdc-tab-header {
+  overflow: visible;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-radius: var(--auth-radius-lg);
+  background: var(--page-background);
+}
+:host
+  ::ng-deep
+  .auth-tabs
+  :is(.mat-mdc-tab-label-container, .mat-mdc-tab-list) {
+  overflow: visible;
+}
+
+:host ::ng-deep .auth-tabs .mat-mdc-tab-label-container {
+  border-bottom: 0;
+}
+
+:host ::ng-deep .auth-tabs .mat-mdc-tab-labels {
+  justify-content: center;
+  gap: 4px;
+}
+
+:host ::ng-deep .auth-tabs .mat-mdc-tab {
+  min-width: 0;
+  height: 46px;
+  flex: 1 1 0;
+  padding: 0 1rem;
+  border-radius: var(--auth-radius-md);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+:host ::ng-deep .auth-tabs .mat-mdc-tab:hover:not(.mdc-tab--active) {
+  background: rgba(102, 114, 85, 0.08);
+}
+
+:host ::ng-deep .auth-tabs .mat-mdc-tab.mdc-tab--active {
+  background: var(--accent-dark);
+  box-shadow: 0 4px 12px rgba(63, 73, 55, 0.18);
+}
+
+:host ::ng-deep .auth-tabs .mdc-tab__text-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+:host ::ng-deep .auth-tabs .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: var(--surface);
+  font-weight: 600;
+  transform: translateY(-1px);
+}
+
+:host ::ng-deep .auth-tabs .mdc-tab-indicator__content--underline {
+  width: 24px;
+  margin: 0 auto;
+  border-radius: 999px;
+  box-shadow: none;
+}
+
+.form-heading {
+  margin: 32px 0 24px;
+  text-align: left;
+}
+
+.form-heading h1 {
+  margin: 0;
+  color: var(--secondary);
+  font-size: clamp(28px, 2.7vw, 36px);
+  font-weight: 520;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.form-heading p {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.is-login .form-heading h1 {
+  position: relative;
+  font-size: clamp(28px, 2.65vw, 36px);
+}
+
+.is-login:not(.is-skeleton) h1::before {
+  content: "";
+  position: absolute;
+  top: -21px;
+  left: 0;
+  width: 140px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #667255 0%, rgba(102, 114, 85, 0) 100%);
+}
+
+.is-login .form-heading p {
+  margin-top: 6px;
+}
+
+/* Formulários */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 1rem;
+  row-gap: 16px;
+  align-items: start;
+}
+
+.field-group {
+  width: 100%;
+  min-width: 0;
+  align-self: start;
+
+  --mdc-filled-text-field-container-color: transparent;
+  --mdc-filled-text-field-container-shape: 0;
+  --mdc-filled-text-field-active-indicator-color: var(--border);
+  --mdc-filled-text-field-hover-active-indicator-color: var(--accent);
+  --mdc-filled-text-field-focus-active-indicator-color: var(--accent);
+  --mdc-filled-text-field-active-indicator-height: 1px;
+  --mdc-filled-text-field-focus-active-indicator-height: 2px;
+  --mdc-filled-text-field-label-text-color: var(--muted);
+  --mdc-filled-text-field-label-text-weight: 400;
+  --mdc-filled-text-field-label-text-font: "Montserrat", sans-serif;
+  --mdc-filled-text-field-hover-label-text-color: var(--secondary);
+  --mdc-filled-text-field-focus-label-text-color: var(--accent);
+  --mdc-filled-text-field-input-text-color: var(--text);
+  --mdc-filled-text-field-error-active-indicator-color: var(--error);
+  --mdc-filled-text-field-error-focus-active-indicator-color: var(--error);
+  --mdc-filled-text-field-error-label-text-color: var(--error);
+  --mat-form-field-error-text-color: var(--error);
+}
+
+.field-group--full {
+  grid-column: 1 / -1;
+}
+
+:is(.auth-form--login, .recovery-form) .field-group {
+  --border: #899477;
+}
+
+:host ::ng-deep .field-group .mat-mdc-form-field-icon-prefix > .field-icon {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  margin-right: 7px;
+  font-size: 18px;
+  color: var(--muted);
+  transition: color 160ms ease;
+}
+
+:host
+  ::ng-deep
+  .field-group.mat-focused
+  .mat-mdc-form-field-icon-prefix
+  > .field-icon {
+  color: var(--accent);
+}
+
+:host ::ng-deep .field-group .mat-mdc-text-field-wrapper {
+  height: 50px;
+  padding-inline: 10px;
+  border: 0;
+  border-radius: 8px 8px 0 0;
+  outline: none;
+  background: transparent;
+}
+
+:host ::ng-deep .field-group .mat-mdc-form-field-flex {
+  height: 50px;
+  align-items: center;
+}
+
+:host ::ng-deep .field-group .mat-mdc-form-field-infix {
+  min-height: 50px;
+  padding-top: 22px;
+  padding-bottom: 0;
+}
+
+:host ::ng-deep .field-group .mat-mdc-input-element {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+:host ::ng-deep .field-group .mat-mdc-form-field-error {
+  overflow-wrap: anywhere;
+  padding: 0;
+  color: var(--error);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+:host
+  ::ng-deep
+  .field-group
+  :is(.mat-mdc-form-field-error-wrapper, .mat-mdc-form-field-hint-wrapper) {
+  position: static;
+  padding: 3px 10px 0;
+}
+
+:host ::ng-deep .field-group .mat-mdc-form-field-bottom-align::before {
+  display: none;
+}
+
+:host ::ng-deep .field-group .mat-mdc-form-field-focus-overlay {
+  opacity: 0;
+}
+
+:host ::ng-deep .field-group .mdc-line-ripple::before {
+  border-bottom-color: var(--border);
+}
+
+:host ::ng-deep .field-group:hover .mdc-line-ripple::before {
+  border-bottom-color: var(--accent);
+}
+
+:host ::ng-deep .field-group.mat-focused .mdc-line-ripple::after {
+  border-color: var(--accent);
+  border-bottom-width: 2px;
+}
+
+:host ::ng-deep .field-group.mat-form-field-invalid .mdc-line-ripple::before,
+:host ::ng-deep .field-group.mat-form-field-invalid .mdc-line-ripple::after {
+  border-color: var(--error);
+}
+
+:host
+  ::ng-deep
+  .field-group.mat-form-field-disabled
+  .mat-mdc-text-field-wrapper {
+  background: #e9e6de;
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+:host
+  ::ng-deep
+  .field-group
+  :is(
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus
+  ) {
+  -webkit-text-fill-color: var(--text);
+  box-shadow: 0 0 0 1000px var(--surface) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
+/* Mostrar/ocultar senha */
+.password-toggle {
+  width: 2.5rem;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: -0.5rem;
+}
+
+:host ::ng-deep .password-toggle app-show-password {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .password-toggle .password-toggle-btn {
+  position: static;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
+  color: var(--secondary);
+  transform: none;
+}
+
+:host ::ng-deep .password-toggle .password-toggle-btn:hover {
+  background: var(--page-background);
+  color: var(--accent-dark);
+}
+
+:host ::ng-deep .password-toggle .password-toggle-btn svg {
+  width: 19px;
+  height: 19px;
+  display: block;
+}
+
+/* Login: remove espaços vazios do Angular Material.
+   O subscript só aparece quando o campo realmente está inválido. */
+.auth-form--login .form-grid {
+  row-gap: clamp(18px, 2.5dvh, 22px);
+}
+
+:host
+  ::ng-deep
+  :is(.auth-form--login, .auth-form--register)
+  .field-group:not(.mat-form-field-invalid)
+  .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+:host
+  ::ng-deep
+  :is(.auth-form--login, .auth-form--register)
+  .field-group.mat-form-field-invalid
+  .mat-mdc-form-field-subscript-wrapper {
+  display: block;
+  min-height: 0;
+  margin: 0;
+}
+
+:host
+  ::ng-deep
+  .auth-form--login
+  .field-group.mat-form-field-invalid
+  .mat-mdc-form-field-error-wrapper {
+  padding-top: 3px;
+  padding-bottom: 2px;
+}
+
+.auth-form--login .forgot-password {
+  margin: 10px 0 14px;
+}
+
+/* Requisitos da senha */
+.password-box {
+  container-type: inline-size;
+  margin-top: var(--auth-space-2);
+  padding: 14px 12px;
+  border: 1px solid #a6ad94;
+  border-radius: var(--auth-radius-md);
+  background: #eee5d4;
+}
+
+.password-box > p {
+  margin: 0 0 0.375rem;
+  color: var(--secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.password-requirements {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.password-requirements li {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+  font-weight: 460;
+  line-height: 1.5;
+  transition: color 150ms ease;
+}
+
+.password-requirements li > span {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  border: 1.5px solid var(--accent);
+  background: var(--surface);
+  border-radius: 50%;
+  color: transparent;
+  font-size: 0.58rem;
+  font-weight: 700;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.password-requirements li.met {
+  color: var(--secondary);
+}
+
+.password-requirements li.met > span {
+  border-color: var(--secondary);
+  background: var(--secondary);
+  color: var(--surface);
+}
+
+/* Termos */
+.terms-field {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--auth-space-2);
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  cursor: pointer;
+}
+
+.terms-field input {
+  width: 17px;
+  height: 17px;
+  margin: 1px 0 0;
+  flex: 0 0 auto;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.terms-field strong {
+  color: var(--secondary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 3px;
+}
+
+.field-error {
+  margin: 0.125rem 0 0 1.7rem;
+  color: var(--error);
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+/* Login */
+.forgot-password {
+  text-align: right;
+}
+
+.forgot-password .auth-secondary-action {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 540;
+  text-decoration: underline;
+  box-shadow: none;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+
+.forgot-password .auth-secondary-action:hover {
+  color: var(--accent-dark);
+}
+
+.auth-secondary-action mat-icon {
+  width: 17px;
+  height: 17px;
+  font-size: 17px;
+}
+
+/* Botão principal */
+.submit-button {
+  width: 100%;
+  min-height: 50px;
+  padding: 0.7rem 1.5rem;
+  border: 0;
+  border-radius: var(--auth-radius-lg);
+  background: var(--accent);
+  color: var(--surface);
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  cursor: pointer;
+  box-shadow: 0 5px 12px rgba(102, 114, 85, 0.16);
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.auth-form--register .submit-button {
+  display: block;
+  margin: 14px 0 0;
+}
+
+.submit-button:hover:not(:disabled) {
+  background: var(--accent-dark);
+  box-shadow: 0 7px 16px rgba(102, 114, 85, 0.22);
+  transform: translateY(-1px);
+}
+
+.submit-button:active:not(:disabled) {
+  box-shadow: 0 3px 8px rgba(102, 114, 85, 0.18);
+  transform: translateY(0);
+}
+
+.submit-button:disabled {
+  background: #d8d0ca;
+  color: var(--secondary);
+  cursor: wait;
+  box-shadow: none;
+}
+
+/* Screen-reader announcement must not occupy a row in the form layout. */
+.auth-loading-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Submission and initial loading are independent visual states. */
+.auth-form--login .submit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.auth-form--login .submit-button mat-icon,
+.auth-spin {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  font-size: 18px;
+}
+
+.auth-spin {
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: button-spin 800ms linear infinite;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mask the real layout so placeholders cannot shift fields or duplicate forms. */
+.is-skeleton {
+  :is(
+    .login-context-icon,
+    .form-heading h1,
+    .form-heading p,
+    .field-group,
+    .auth-secondary-action,
+    .submit-button
+  ) {
+    color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    background: linear-gradient(100deg, #e9e9df 25%, #f3f2e9 45%, #e9e9df 65%);
+    background-size: 250% 100%;
+    animation: auth-shimmer 1800ms ease-in-out infinite;
+  }
+
+  :is(.form-heading h1, .form-heading p, .field-group, .auth-secondary-action) {
+    border-radius: 8px;
+  }
+
+  :is(.login-context-icon, .auth-secondary-action, .submit-button) > * {
+    visibility: hidden;
+  }
+}
+
+:host ::ng-deep .is-skeleton .field-group > * {
+  visibility: hidden;
+}
+
+@keyframes auth-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+/* Acessibilidade */
+.submit-button:focus-visible,
+.forgot-password a:focus-visible,
+:host ::ng-deep .auth-tabs .mat-mdc-tab:focus-visible,
+:host ::ng-deep .password-toggle .password-toggle-btn:focus-visible {
+  outline: 2px solid var(--accent-dark);
+  outline-offset: 3px;
+}
+
+.terms-field input:focus-visible {
+  outline: 2px solid var(--accent-dark) !important;
+  outline-offset: 3px;
+}
+
+/* Desktop:
+   - Login e Cadastro partem da mesma altura mínima.
+   - Se mensagens de validação aumentarem o conteúdo, o card cresce junto.
+   - Não existe rolagem interna no painel do formulário. */
+@media (min-width: 701px) {
+  .auth-page {
+    padding-block: 24px;
+    align-items: safe center;
+  }
+
+  .auth-card {
+    min-height: var(--auth-card-height);
+    overflow: hidden;
+  }
+
+  .welcome-panel,
+  .auth-form-panel {
+    min-height: calc(var(--auth-card-height) - 2 * var(--auth-frame));
+    align-self: stretch;
+  }
+
+  .auth-content {
+    justify-content: flex-start;
+    padding-block: calc(16px - var(--auth-frame));
+  }
+
+  .auth-form-shell {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .is-login .form-heading {
+    margin: 0 0 clamp(18px, 2.5dvh, 24px);
+  }
+
+  .welcome-copy {
+    padding-top: 30px;
+    padding-bottom: 46px;
+  }
+
+  .welcome-eyebrow {
+    margin-bottom: 24px;
+  }
+
+  .welcome-copy h2 {
+    font-size: clamp(34px, 4dvh, 42px);
+  }
+
+  .welcome-copy p {
+    margin-top: 14px;
+  }
+
+  .form-heading {
+    margin: 12px 0 16px;
+  }
+
+  .form-heading h1 {
+    font-size: clamp(26px, 3.5dvh, 30px);
+  }
+
+  .form-heading p {
+    margin-top: 8px;
+  }
+
+  .form-grid {
+    row-gap: 14px;
+  }
+
+  .forgot-password {
+    margin: 8px 0 14px;
+  }
+
+  .password-box {
+    margin-top: 16px;
+    padding-block: 8px;
+  }
+
+  .password-requirements {
+    row-gap: 5px;
+  }
+
+  .auth-form--register .submit-button {
+    margin-top: 16px;
+  }
+}
+
+@container (min-width: 420px) {
+  .password-requirements {
+    grid-template-columns: minmax(max-content, 0.85fr) repeat(
+        2,
+        minmax(max-content, 1fr)
+      );
+  }
+}
+
+@container (max-width: 299px) {
+  .password-requirements {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Tablet */
+@media (max-width: 1000px) and (min-width: 701px) {
+  .auth-page {
+    padding-inline: 20px;
+  }
+
+  .auth-card {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  }
+
+  .welcome-copy {
+    padding-inline: 24px;
+  }
+
+  .auth-content {
+    padding-inline: 24px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile: a contained form with natural page scrolling. */
+@media (max-width: 700px) {
+  .auth-page {
+    display: block;
+    padding: 16px;
+  }
+
+  .auth-card {
+    max-width: 480px;
+    margin: 0 auto;
+    grid-template-columns: minmax(0, 1fr);
+    border-radius: 24px;
+    box-shadow: 0 12px 32px rgba(63, 73, 55, 0.1);
+  }
+
+  .welcome-panel {
+    display: none;
+  }
+  .auth-content {
+    padding: calc(20px - var(--auth-frame));
+  }
+
+  .auth-brand-mobile {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 64px;
+    column-gap: 12px;
+    align-items: center;
+    margin: 0 0 24px;
+    padding: 12px;
+    border-radius: 16px;
+    background: var(--panel-background);
+    color: var(--secondary);
+  }
+
+  .auth-brand-mobile span:first-child {
+    font-size: 0.7rem;
+    font-weight: 650;
+    letter-spacing: 0.15em;
+  }
+
+  .auth-brand-mobile span:nth-child(2) {
+    grid-column: 1;
+    margin-top: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .auth-brand-mobile img {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    width: 64px;
+    height: 72px;
+    border-radius: 10px;
+    object-fit: cover;
+    object-position: center 75%;
+  }
+
+  .form-heading {
+    margin: 24px 0 20px;
+  }
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .password-box {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .password-requirements li:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

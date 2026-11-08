@@ -1,0 +1,11 @@
+<div 
+  class="tooltip-wrapper"
+  (mouseenter)="isTooltipVisible = true"
+  (mouseleave)="isTooltipVisible = false"
+>
+  <span class="tooltip-trigger">?</span>
+  
+  <div *ngIf="isTooltipVisible" class="tooltip-box">
+    {{ text }}
+  </div>
+</div>

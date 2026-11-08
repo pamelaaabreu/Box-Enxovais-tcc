@@ -1,0 +1,29 @@
+<section class="newsletter-section">
+  <div class="newsletter-container">
+    <div class="newsletter-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/>
+      </svg>
+    </div>
+    <div class="newsletter-content">
+      <h2>Ganhe 10% OFF!</h2>
+      <p>Cadastre-se e receba seu cupom de desconto para a primeira compra, além de novidades e ofertas exclusivas.</p>
+    </div>
+    <div class="newsletter-form">
+      <form (ngSubmit)="onSubmit(newsletterForm)" #newsletterForm="ngForm">
+        <input
+          type="email"
+          name="email"
+          placeholder="Digite seu e-mail"
+          ngModel
+          required
+          email
+          class="wide-email-input"
+        >
+        <button type="submit" [disabled]="!newsletterForm.valid || isLoading">
+          {{ isLoading ? 'Enviando...' : 'Cadastrar' }}
+        </button>
+      </form>
+      </div>
+  </div>
+</section>

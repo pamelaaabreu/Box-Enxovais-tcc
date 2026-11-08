@@ -1,0 +1,53 @@
+<section class="products" aria-labelledby="products-title" [attr.aria-busy]="loading()">
+  <header class="page-header">
+    <div><span class="eyebrow">Catálogo</span><h1 id="products-title">Produtos</h1><p>Consulte os produtos cadastrados, seus status e estoque.</p></div>
+    <a class="primary-button" routerLink="/admin/products/manage"><span aria-hidden="true">+</span> Novo produto</a>
+  </header>
+
+  <form class="filters" [formGroup]="filters" (ngSubmit)="applyFilters()">
+    <div class="search-field"><label for="product-search">Buscar produto</label><input id="product-search" type="search" formControlName="name" placeholder="Digite o nome do produto" maxlength="200" /></div>
+    <div><label for="product-status">Status</label><select id="product-status" formControlName="status"><option value="">Todos os status</option><option value="active">Ativos</option><option value="inactive">Inativos</option><option value="archived">Arquivados</option></select></div>
+    <div><label for="product-stock">Estoque</label><select id="product-stock" formControlName="stock"><option value="">Todos</option><option value="available">Em estoque</option><option value="empty">Sem estoque</option></select></div>
+    <div class="filter-actions"><button class="primary-button" type="submit">Filtrar</button><button class="secondary-button" type="button" (click)="clearFilters()">Limpar</button></div>
+  </form>
+
+  <div class="list-toolbar">
+    <p role="status">{{ total() | number:'1.0-0':'pt-BR' }} {{ total() === 1 ? 'produto encontrado' : 'produtos encontrados' }}</p>
+    <div class="page-size"><label for="product-limit">Por página</label><select id="product-limit" [formControl]="filters.controls.limit" (change)="applyFilters()"><option [ngValue]="10">10</option><option [ngValue]="20">20</option><option [ngValue]="50">50</option><option [ngValue]="100">100</option></select></div>
+  </div>
+
+  @if (loading()) {
+    <div class="state" role="status"><span class="loading-dot" aria-hidden="true"></span><h2>Carregando produtos…</h2><p>Aguarde enquanto buscamos o catálogo.</p></div>
+  } @else if (error()) {
+    <div class="state error" role="alert"><h2>Não foi possível carregar a listagem</h2><p>{{ error() }}</p><button type="button" class="secondary-button" (click)="retry()">Tentar novamente</button></div>
+  } @else {
+    @if (page(); as result) {
+      @if (result.items.length) {
+        <div class="table-wrap" role="region" aria-label="Lista de produtos" tabindex="0">
+          <table>
+            <caption class="visually-hidden">Produtos cadastrados, preços, estoque e status</caption>
+            <thead><tr><th scope="col">Produto</th><th scope="col">Categoria</th><th scope="col" class="numeric">Preço</th><th scope="col" class="numeric">Estoque</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
+            <tbody>
+              @for (product of result.items; track product.id) {
+                <tr>
+                  <td><div class="product-identity"><div class="thumbnail"><app-product-media [image]="image(product)" [compact]="true" [showCaption]="false" /></div><div><strong>{{ product.name }}</strong><span class="product-id">#{{ product.id }}</span></div></div></td>
+                  <td class="category">{{ product.category_name || 'Sem categoria' }}</td>
+                  <td class="numeric price">{{ product.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+                  <td class="numeric"><span [class.stock-empty]="product.quantity === 0">{{ product.quantity | number:'1.0-0':'pt-BR' }}</span>@if (product.quantity === 0) { <span class="stock-hint">Sem estoque</span> }</td>
+                  <td><span class="status" [class.status-active]="product.status === 'active'" [class.status-inactive]="product.status === 'inactive'" [class.status-archived]="product.status === 'archived'">{{ statusLabel(product.status) }}</span></td>
+                  <td>@if (product.status === 'active') { <a class="store-link" [routerLink]="['/produto', product.id]" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Ver ' + product.name + ' na loja (abre em nova aba)'">Ver na loja <span aria-hidden="true">↗</span></a> } @else { <span class="unpublished">Não publicado</span> }</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <nav class="pagination" aria-label="Paginar produtos">
+          <span>Página {{ currentPage() }} de {{ totalPages() }}</span>
+          <div><button type="button" class="secondary-button" (click)="changePage(-1)" [disabled]="loading() || result.pagination.offset === 0">Anterior</button><button type="button" class="secondary-button" (click)="changePage(1)" [disabled]="loading() || !result.pagination.hasMore">Próxima</button></div>
+        </nav>
+      } @else {
+        <div class="state"><h2>Nenhum produto encontrado</h2><p>Revise os filtros ou cadastre um novo produto.</p><button type="button" class="secondary-button" (click)="clearFilters()">Limpar filtros</button></div>
+      }
+    }
+  }
+</section>

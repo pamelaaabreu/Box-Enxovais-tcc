@@ -1,0 +1,101 @@
+<section class="promo-grid-section">
+  <div class="section-header">
+    <h1>
+      <span class="snow-icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-snowflake-icon lucide-snowflake"
+        >
+          <path d="m10 20-1.25-2.5L6 18" />
+          <path d="M10 4 8.75 6.5 6 6" />
+          <path d="m14 20 1.25-2.5L18 18" />
+          <path d="m14 4 1.25 2.5L18 6" />
+          <path d="m17 21-3-6h-4" />
+          <path d="m17 3-3 6 1.5 3" />
+          <path d="M2 12h6.5L10 9" />
+          <path d="m20 10-1.5 2 1.5 2" />
+          <path d="M22 12h-6.5L14 15" />
+          <path d="m4 10 1.5 2L4 14" />
+          <path d="m7 21 3-6-1.5-3" />
+          <path d="m7 3 3 6h4" />
+        </svg>
+      </span>
+      Ofertas de Inverno
+    </h1>
+    <p>
+      Transforme seu estilo com nossos descontos imperdíveis em produtos
+      selecionados especialmente para você!
+    </p>
+  </div>
+
+  <div
+    class="promo-grid-container"
+    *ngIf="promotionalProducts && promotionalProducts.length > 0; else noPromos"
+  >
+    <article
+      class="promo-card product-card"
+      *ngFor="let product of promotionalProducts"
+      [attr.aria-label]="'Comprar ' + product.name + ' em promoção'"
+    >
+      <app-favorite-button class="favorite-action" [productId]="product.id!" [productName]="product.name" />
+      <!-- Badge -->
+      @if (hasDiscount(product)) {
+      <div class="badge">
+        -{{
+          (1 - product.promotional_price / product.price) * 100
+            | number : "1.0-0"
+        }}%
+      </div>
+
+      }
+
+      <!-- Imagem -->
+      @let imagePath = product.image_paths?.[0];
+      <app-product-media
+        [image]="imagePath ? { id: 0, url: imagePath.startsWith('http') ? imagePath : 'http://localhost:8080/' + imagePath, alt: product.name, position: 0 } : null"
+        [showCaption]="false"
+      />
+
+      <div class="promo-text">
+        <h3><a [routerLink]="['/produto', product.id]">{{ product.name }}</a></h3>
+        <div class="price-container">
+          @if (hasDiscount(product)) {
+          <span class="original-price">{{
+            product.price | currency : "BRL"
+          }}</span>
+          }
+          <span class="promo-price">{{
+            (hasDiscount(product) ? product.promotional_price : product.price) | currency : "BRL"
+          }}</span>
+        </div>
+        <div class="actions" [attr.aria-busy]="pending(product)">
+          @if (cartItem(product); as item) {
+            <div class="cart-quantity" role="group" [attr.aria-label]="'Quantidade de ' + product.name + ' no carrinho'">
+              <button class="quantity-decrease" type="button" (click)="changeQuantity(product, -1)" [disabled]="pending(product)" [attr.aria-label]="item.quantity === 1 ? 'Remover ' + product.name + ' do carrinho' : 'Diminuir quantidade de ' + product.name">−</button>
+              <span class="quantity-count" aria-live="polite">{{ item.quantity }}</span>
+              <button class="quantity-increase" type="button" (click)="changeQuantity(product, 1)" [disabled]="!canIncrease(product)" [attr.aria-label]="'Aumentar quantidade de ' + product.name">+</button>
+            </div>
+            <span class="cart-quantity-label">{{ pending(product) ? 'Atualizando…' : 'No carrinho' }}</span>
+          } @else {
+            <button class="add-cart-btn" type="button" (click)="addToCart(product)" [disabled]="pending(product) || !available(product)">{{ pending(product) ? 'Adicionando…' : (!available(product) ? 'Produto indisponível' : 'Adicionar ao carrinho') }}</button>
+          }
+        </div>
+        <p class="cart-feedback" [id]="'promo-feedback-' + product.id" role="status" aria-live="polite">{{ cart.feedback()[product.id!] }}</p>
+      </div>
+    </article>
+  </div>
+
+  <ng-template #noPromos>
+    <div class="no-promos-message">
+      <p>Nenhuma oferta de inverno disponível no momento.</p>
+    </div>
+  </ng-template>
+</section>

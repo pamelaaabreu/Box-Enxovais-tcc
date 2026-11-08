@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS promotion_products;
+DROP TABLE IF EXISTS promotions;
+DROP TABLE IF EXISTS subscribers;
+DROP TABLE IF EXISTS product_images;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS product_types;
+DROP TABLE IF EXISTS brands;
+DROP TABLE IF EXISTS password_resets;
+DROP TABLE IF EXISTS users;

@@ -1,0 +1,11 @@
+:host { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 14px; min-width: 0; }
+.main-image { grid-column: 2; grid-row: 1; width: 100%; height: auto; aspect-ratio: 4 / 3; max-height: 500px; border-radius: 12px; overflow: hidden; background: #eceee6; }
+:host:not(:has(.thumbnails)) .main-image { grid-column: 1 / -1; }
+.thumbnails { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; gap: 12px; }
+button { position: relative; width: 72px; height: 78px; padding: 3px; flex-shrink: 0; border: 1px solid transparent; border-radius: 12px; overflow: hidden; background: transparent; cursor: pointer; }
+button app-product-media { border-radius: 8px; overflow: hidden; }
+button[aria-pressed="true"] { border-color: #3f4937; }
+button:focus-visible { outline: 2px solid #3f4937; outline-offset: 3px; }
+button span { position: absolute; right: 6px; bottom: 6px; padding: 1px 4px; border-radius: 4px; background: #fffdf8; color: #3f4937; font-size: 10px; }
+@media (min-width: 701px) and (max-width: 1000px) { :host { grid-template-columns: 52px minmax(0, 1fr); gap: 10px; } button { width: 52px; height: 64px; } }
+@media (max-width: 700px) { :host { display: block; } .main-image { height: auto; aspect-ratio: 1.08; max-height: 440px; } .thumbnails { flex-direction: row; flex-wrap: wrap; margin-top: 12px; } button { width: 64px; height: 68px; } }

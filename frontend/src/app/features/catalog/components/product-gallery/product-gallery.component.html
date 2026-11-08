@@ -1,0 +1,11 @@
+<div class="main-image"><app-product-media [image]="selectedImage()" /></div>
+@if (orderedImages().length > 1) {
+  <div class="thumbnails" role="group" aria-label="Imagens do produto">
+    @for (image of orderedImages(); track image.id; let index = $index) {
+      <button type="button" [attr.aria-label]="'Ver imagem ' + (index + 1) + ': ' + image.alt" [attr.aria-pressed]="selectedImage()?.id === image.id" (click)="selectedId.set(image.id)">
+        <app-product-media [image]="image" [compact]="true" />
+        <span aria-hidden="true">{{ index + 1 }}</span>
+      </button>
+    }
+  </div>
+}

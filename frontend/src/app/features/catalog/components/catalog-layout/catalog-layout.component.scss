@@ -1,0 +1,45 @@
+:host {
+  --catalog-surface: #faf9f5;
+  --catalog-header-height: 0px;
+  --home-dark: #3f493c;
+  --home-surface: #faf9f5;
+  display: block;
+  min-height: 100dvh;
+  background: var(--catalog-surface);
+  color: #292b25;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+.catalog-content { max-width: 1440px; min-height: 50vh; margin: auto; padding: 24px 32px 64px; }
+@media (max-width: 700px) { .catalog-content { padding: 12px 16px 40px; } }
+
+:host ::ng-deep .catalog-content [id] { scroll-margin-top: calc(var(--catalog-header-height) + 76px); }
+
+/* Product-page proportions follow the reference without changing category pages. */
+:host(.product-page) .catalog-content { max-width: 1116px; padding: 4px 32px 0; }
+:host(.product-page) ::ng-deep .top-navbar { max-width: 1116px; margin-inline: auto; min-height: 86px; padding: 8px 32px 4px; grid-template-columns: 190px minmax(0, 1fr) 220px; gap: 36px; }
+:host(.product-page) ::ng-deep app-top-navbar { background: var(--catalog-surface); }
+:host(.product-page) ::ng-deep .logo { width: 150px; }
+:host(.product-page) ::ng-deep .brand-symbol { width: 58px; height: 54px; mask-size: 58px auto; }
+:host(.product-page) ::ng-deep .brand-name { font-size: 13px; font-weight: 500; }
+:host(.product-page) ::ng-deep .brand-tagline { font-size: 7px; }
+:host(.product-page) ::ng-deep .search-input { padding: 12px 52px 12px 24px; font-size: 14px; }
+:host(.product-page) ::ng-deep .profile-btn { font-size: 14px; }
+:host(.product-page) ::ng-deep .navbar-container { width: min(668px, calc(100% - 64px)); margin-bottom: 8px; }
+:host(.product-page) ::ng-deep .nav-link { min-height: 38px; padding: 8px 12px; font-size: 11px; letter-spacing: .04em; }
+:host(.product-page) ::ng-deep .welcome-navbar { min-height: 30px; padding-block: 4px; font-size: 12px; }
+@media (max-width: 1000px) {
+  :host(.product-page) ::ng-deep .top-navbar { grid-template-columns: 1fr auto; gap: 16px; }
+  :host(.product-page) ::ng-deep .search-input { font-size: 16px; }
+}
+@media (max-width: 700px) {
+  :host(.product-page) .catalog-content { padding: 4px 20px 0; }
+  :host(.product-page) ::ng-deep .top-navbar { padding: 12px 16px 16px; }
+  :host(.product-page) ::ng-deep .logo { width: 112px; }
+  :host(.product-page) ::ng-deep .brand-name { font-size: 10px; }
+  :host(.product-page) ::ng-deep .brand-tagline { font-size: 6px; }
+  :host(.product-page) ::ng-deep .navbar-container { width: calc(100% - 32px); }
+}
+
+:host(.product-page) ::ng-deep app-breadcrumbs { padding-block: 8px; margin-bottom: 12px; }

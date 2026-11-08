@@ -1,0 +1,125 @@
+.proof-section {
+  width: 90%;
+  max-width: 1200px;
+  margin: 80px auto;
+  text-align: center;
+}
+
+.proof-header {
+  margin-bottom: 50px;
+}
+
+.header-icon {
+  width: 40px;
+  height: 40px;
+  color: #667255;
+  margin-bottom: 15px;
+}
+
+.proof-title {
+  font-size: 36px;
+  font-weight: 350;
+  color: #222;
+  margin: 0;
+}
+
+.proof-subtitle {
+  font-size: 16px;
+  color: #666;
+  font-weight: 500;
+  max-width: 600px;
+  margin: 10px auto 0;
+  line-height: 1.6;
+}
+
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.proof-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 30px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.proof-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-header img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.author-info {
+  margin-right: auto;
+}
+
+.author-name {
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.author-role {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+.card-rating {
+  color: #667255;
+  font-size: 16px;
+}
+
+.card-text {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.7;
+  margin: 0;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.quote-icon {
+  font-size: 38px;
+  font-weight: bold;
+  stroke-width: 1px;
+  color: #667255;
+  line-height: 1;
+}
+
+@media (max-width: 992px) {
+  .proof-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .proof-title {
+    font-size: 28px;
+  }
+
+  .proof-subtitle {
+    font-size: 15px;
+  }
+}

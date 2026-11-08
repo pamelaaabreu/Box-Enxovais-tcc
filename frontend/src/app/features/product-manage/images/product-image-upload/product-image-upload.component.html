@@ -1,0 +1,31 @@
+<div class="product-form-container">
+  <h2 class="form-title">Upload de Imagens</h2>
+
+  <p class="product-linked">
+    Produto #{{ productId }} pronto para receber imagens.
+  </p>
+
+  <div class="form-field">
+    <label for="file" class="form-label"> Selecione a imagem </label>
+
+    <input
+      type="file"
+      id="file"
+      (change)="onFileSelected($event)"
+      class="form-file"
+    />
+  </div>
+
+  <div *ngIf="selectedFile" class="file-info">
+    <p>
+      Arquivo selecionado:
+      <strong>{{ selectedFile.name }}</strong>
+    </p>
+  </div>
+
+  <button (click)="onUpload()" class="form-button">Enviar imagem</button>
+
+  <div *ngIf="uploadResponse" class="response-message">
+    <p>{{ uploadResponse }}</p>
+  </div>
+</div>

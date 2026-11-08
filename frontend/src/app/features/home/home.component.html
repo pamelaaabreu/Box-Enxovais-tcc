@@ -1,0 +1,26 @@
+<app-top-welcome-header></app-top-welcome-header>
+<app-top-navbar [isScrolled]="isScrolled"></app-top-navbar>
+<app-main-navbar [isHidden]="isScrolled"></app-main-navbar>
+
+<main class="home-content">
+  <app-carousel></app-carousel>
+  <app-trust-bar></app-trust-bar>
+  <app-featured-products id="colecao"
+    ngSkipHydration
+    [titulo]="'Mais Vendidos'"
+  ></app-featured-products>
+  <app-shop-by-category
+    [titulo]="'Navegue por Categorias'"
+  ></app-shop-by-category>
+  <app-testimonials></app-testimonials>
+  <app-promo-grid [promoName]="'Ofertas de Inverno'"></app-promo-grid>
+  <app-newsletter></app-newsletter>
+</main>
+
+<app-footer
+  companyName="Box Enxovais LTDA"
+  cnpj="00.000.000/0001-00"
+  address="Rua Exemplo, 123 — São Paulo / SP"
+  phone="+55 (19) 98966-3480"
+  whatsappNumber="+5519989663480"
+></app-footer>
