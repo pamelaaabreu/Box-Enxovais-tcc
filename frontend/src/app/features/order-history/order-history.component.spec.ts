@@ -198,18 +198,24 @@ describe('OrderHistoryComponent', () => {
       fixture.detectChanges();
     };
     await open();
+    document.querySelector<HTMLElement>('.order-cancellation-backdrop')!.click();
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true }));
+    await fixture.whenStable();
+    expect(document.querySelector('[role="dialog"]')).not.toBeNull();
     await close('.cancel-dialog-keep');
     http.expectNone(endpoint);
     await open();
     await close('.cancel-dialog-confirm');
     const first = http.expectOne({ method: 'POST', url: endpoint });
-    expect(page.querySelector<HTMLButtonElement>('.cancel-order')?.disabled).toBeTrue();
+    expect(document.querySelector<HTMLButtonElement>('.cancel-dialog-keep')?.disabled).toBeTrue();
+    expect(document.querySelector<HTMLButtonElement>('.cancel-dialog-confirm')?.disabled).toBeTrue();
+    document.querySelector<HTMLButtonElement>('.cancel-dialog-confirm')!.click();
+    http.expectNone(endpoint);
     expect(page.textContent).toContain('Toalha');
     first.flush({ message: 'Estoque indisponível para reposição' }, { status: 409, statusText: 'Conflict' });
     fixture.detectChanges();
-    expect(page.querySelector('[role="alert"]')?.textContent).toContain('Estoque indisponível');
+    expect(document.querySelector('[role="dialog"] [role="alert"]')?.textContent).toContain('Estoque indisponível');
     expect(page.textContent).toContain('Cliente teste');
-    await open();
     await close('.cancel-dialog-confirm');
     http.expectOne({ method: 'POST', url: endpoint }).flush({ data: { ...order, canCancel: false, status: 'cancelled' } });
     fixture.detectChanges();
@@ -218,6 +224,24 @@ describe('OrderHistoryComponent', () => {
     expect(page.textContent).toContain('25,00');
     http.verify();
   });
+
+  it('switches to support when the remaining server window elapses', fakeAsync(() => {
+    const { fixture, page, http } = setup('9');
+    http.expectOne('http://localhost:8080/orders/9').flush({ data: {
+      id: 9, createdAt: '2026-11-09T12:00:00Z', total: 25, status: 'simulated_approved',
+      canCancel: true, cancellationRemainingMs: 1000, paymentMethod: 'pix',
+      address: { recipient: 'Cliente teste' }, items: [],
+    } });
+    fixture.detectChanges();
+    tick(999);
+    expect(page.querySelector('.cancel-order')).not.toBeNull();
+    tick(1);
+    fixture.detectChanges();
+    expect(page.querySelector('.cancel-order')).toBeNull();
+    expect(page.querySelector('.support-order')?.textContent).toContain('Falar com o suporte');
+    http.expectNone(request => request.method === 'POST');
+    http.verify();
+  }));
 
   it('debounces typing, cancels stale results and clears the search', fakeAsync(() => {
     const { fixture, page, http } = setup();

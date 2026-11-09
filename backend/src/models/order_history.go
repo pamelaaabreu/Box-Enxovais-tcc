@@ -17,9 +17,10 @@ type OrderHistoryEntry struct {
 
 type OrderDetails struct {
 	OrderHistoryEntry
-	Address       ShippingAddress `json:"address"`
-	PaymentMethod string          `json:"paymentMethod"`
-	CanCancel     bool            `json:"canCancel"`
+	Address                 ShippingAddress `json:"address"`
+	PaymentMethod           string          `json:"paymentMethod"`
+	CanCancel               bool            `json:"canCancel"`
+	CancellationRemainingMs int64           `json:"cancellationRemainingMs"`
 }
 
 type OrderHistoryItem struct {

@@ -86,6 +86,8 @@ func (h OrderHistoryHandler) cancel(w http.ResponseWriter, r *http.Request, user
 	switch {
 	case errors.Is(err, sql.ErrNoRows):
 		response.Error(w, http.StatusNotFound, "Pedido não encontrado")
+	case errors.Is(err, repositories.ErrOrderCancellationExpired):
+		response.Error(w, http.StatusGone, err.Error())
 	case errors.Is(err, repositories.ErrOrderNotCancellable), errors.Is(err, repositories.ErrOrderRestock):
 		response.Error(w, http.StatusConflict, err.Error())
 	case err != nil:

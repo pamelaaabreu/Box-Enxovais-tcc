@@ -142,9 +142,8 @@
           <header class="detail-heading">
             <a routerLink="/meus-pedidos">← Voltar aos meus pedidos</a>
             <div class="detail-heading-row">
-              <h1 id="history-title">Pedido #{{ order.id }}</h1>
-              <button type="button" class="action" [disabled]="reorderCart()?.reordering()" (click)="reorder(order.id)">Comprar novamente</button>
-            </div>
+              <div>
+                <h1 id="history-title">Pedido #{{ order.id }}</h1>
             @if (order.status === "cancelled") {
               <span class="cancelled-badge">Cancelado</span>
             }
@@ -153,12 +152,15 @@
               <time [attr.datetime]="order.createdAt">{{
                 order.createdAt
                   | date: "dd/MM/yyyy 'às' HH:mm" : "-0300" : "pt-BR"
-              }}</time>
+              }}</time> · {{ units(order) }} {{ units(order) === 1 ? "item" : "itens" }}
             </p>
+              </div>
+              <a class="action" routerLink="/home">Continuar comprando</a>
+            </div>
           </header>
           <div class="detail-grid">
             <div class="detail-main">
-              <section class="order detail-panel">
+              <section class="order detail-panel detail-products">
                 <h2>
                   <svg
                     viewBox="0 0 24 24"
@@ -169,7 +171,7 @@
                   >
                     <path d="m3 7 9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4m-9 4v10" />
                   </svg>
-                  Produtos do pedido <small class="detail-count">{{ units(order) }} un.</small>
+                  Produtos do pedido <small class="detail-count">{{ units(order) }} {{ units(order) === 1 ? "item" : "itens" }}</small>
                 </h2>
                 @for (item of order.items; track item.id) {
                   <div class="detail-item">
@@ -188,7 +190,7 @@
                       }
                     </div>
                     <div class="detail-item-total">
-                      <small>Subtotal</small
+                      <small>Subtotal do item</small
                       ><strong>{{
                         item.subtotal
                           | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
@@ -224,25 +226,14 @@
             </div>
             <div class="detail-side">
             <section class="order detail-panel detail-summary">
-              <h2>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  aria-hidden="true"
-                >
-                  <path d="M5 3h14v18l-3-2-4 2-4-2-3 2zM8 8h8M8 12h8" />
-                </svg>
-                Resumo do pedido
-              </h2>
+              <h2>Resumo do pedido</h2>
               <dl>
                 <div>
                   <dt>Forma de pagamento</dt>
                   <dd>{{ payments[order.paymentMethod] }}</dd>
                 </div>
                 <div>
-                  <dt>Subtotal</dt>
+                  <dt>Subtotal ({{ units(order) }} {{ units(order) === 1 ? "item" : "itens" }})</dt>
                   <dd>
                     {{
                       subtotal(order)
@@ -265,57 +256,43 @@
               <h2>Precisa de ajuda?</h2>
               <p>Tem alguma dúvida sobre este pedido? Estamos por aqui.</p>
               <div class="detail-help-actions">
-                <a class="action" href="tel:08006567846">Falar com atendimento</a>
-            @if (order.canCancel && order.status !== "cancelled") {
-              <button
-                type="button"
-                class="cancel-order"
-                [disabled]="cancelling()"
-                (click)="confirmCancellation(cancelDialog, order)"
-              >
-                @if (cancelling()) {
-                  <mat-spinner diameter="18" aria-hidden="true" />
-                  <span role="status">Cancelando pedido…</span>
+                @if (order.status === "cancelled") {
+                  <span class="cancelled-badge">Pedido cancelado</span>
+                } @else if (order.canCancel) {
+                  <button type="button" class="cancel-order" (click)="confirmCancellation(cancelDialog, order)">
+                    Cancelar compra
+                  </button>
                 } @else {
-                  Cancelar pedido
+                  <a class="action support-order" href="tel:08006567846">Falar com o suporte</a>
                 }
-              </button>
+              </div>
               <ng-template #cancelDialog>
                 <h2 mat-dialog-title>Cancelar pedido #{{ order.id }}?</h2>
-                <mat-dialog-content
-                  >Tem certeza de que deseja cancelar este pedido? Esta ação não
-                  poderá ser desfeita.</mat-dialog-content
-                >
-                <mat-dialog-actions align="end">
-                  <button
-                    type="button"
-                    class="cancel-dialog-keep"
-                    [mat-dialog-close]="false"
-                  >
+                <mat-dialog-content>
+                  <p>Tem certeza de que deseja cancelar este pedido? Esta ação não poderá ser desfeita.</p>
+                  @if (cancelError()) {
+                    <p class="cancel-error" role="alert">{{ cancelError() }}</p>
+                  } @else if (!details()?.canCancel && !cancelling()) {
+                    <p class="cancel-error" role="alert">O prazo de uma hora terminou. Fale com o suporte.</p>
+                  }
+                </mat-dialog-content>
+                <mat-dialog-actions>
+                  <button type="button" class="cancel-dialog-keep" [disabled]="cancelling()" mat-dialog-close>
                     Manter pedido
                   </button>
-                  <button
-                    type="button"
-                    class="cancel-dialog-confirm"
-                    [mat-dialog-close]="true"
-                  >
-                    Confirmar cancelamento
+                  <button type="button" class="cancel-dialog-confirm"
+                    [disabled]="cancelling() || !details()?.canCancel" (click)="cancelPurchase()">
+                    @if (cancelling()) {
+                      <mat-spinner diameter="18" aria-hidden="true" />
+                      <span role="status">Cancelando…</span>
+                    } @else {
+                      Confirmar cancelamento
+                    }
                   </button>
                 </mat-dialog-actions>
               </ng-template>
-            }
-              </div>
             </section>
             </div>
-          </div>
-          @if (cancelError()) {
-            <p class="cancel-error" role="alert">{{ cancelError() }}</p>
-          }
-          <div class="detail-actions">
-
-            <a class="action" routerLink="/home"
-              >Continuar comprando <span aria-hidden="true">→</span></a
-            >
           </div>
         } @else {
           @if (orders().length) {

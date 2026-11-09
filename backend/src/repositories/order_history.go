@@ -25,7 +25,7 @@ func (repo CheckoutRepository) GetOrderDetails(ctx context.Context, userID int, 
 func readOrderDetails(ctx context.Context, db orderReader, userID int, id int64) (models.OrderDetails, error) {
 	var result models.OrderDetails
 	var address []byte
-	err := db.QueryRowContext(ctx, `SELECT address,payment_method,stock_debited AND status='simulated_approved' FROM checkout_orders WHERE user_id=$1 AND id=$2`, userID, id).Scan(&address, &result.PaymentMethod, &result.CanCancel)
+	err := db.QueryRowContext(ctx, `SELECT address,payment_method, CASE WHEN stock_debited AND status='simulated_approved' THEN GREATEST(0, CEIL(EXTRACT(EPOCH FROM (`+cancellationDeadlineSQL+` - clock_timestamp())) * 1000))::bigint ELSE 0 END FROM checkout_orders WHERE user_id=$1 AND id=$2`, userID, id).Scan(&address, &result.PaymentMethod, &result.CancellationRemainingMs)
 	if err != nil {
 		return result, err
 	}
@@ -40,6 +40,7 @@ func readOrderDetails(ctx context.Context, db orderReader, userID int, id int64)
 		return result, sql.ErrNoRows
 	}
 	result.OrderHistoryEntry = orders[0]
+	result.CanCancel = result.CancellationRemainingMs > 0
 	return result, nil
 }
 

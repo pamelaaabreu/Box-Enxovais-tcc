@@ -5,8 +5,12 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"time"
 )
 
+const cancellationDeadlineSQL = "created_at + interval '1 hour'"
+
+var ErrOrderCancellationExpired = errors.New("O prazo de uma hora para cancelar este pedido terminou. Fale com o suporte.")
 var ErrOrderNotCancellable = errors.New("Este pedido não está disponível para cancelamento")
 var ErrOrderRestock = errors.New("Não foi possível repor o estoque deste pedido. Entre em contato com o suporte.")
 
@@ -19,7 +23,8 @@ func (repo CheckoutRepository) CancelOrder(ctx context.Context, userID int, id i
 	defer tx.Rollback()
 	var status string
 	var debited bool
-	err = tx.QueryRowContext(ctx, `SELECT status,stock_debited FROM checkout_orders WHERE id=$1 AND user_id=$2 FOR UPDATE`, id, userID).Scan(&status, &debited)
+	var deadline time.Time
+	err = tx.QueryRowContext(ctx, `SELECT status,stock_debited, `+cancellationDeadlineSQL+` FROM checkout_orders WHERE id=$1 AND user_id=$2 FOR UPDATE`, id, userID).Scan(&status, &debited, &deadline)
 	if err != nil {
 		return order, false, err
 	}
@@ -27,6 +32,13 @@ func (repo CheckoutRepository) CancelOrder(ctx context.Context, userID int, id i
 	if changed {
 		if status != "simulated_approved" || !debited {
 			return order, false, ErrOrderNotCancellable
+		}
+		var withinWindow bool
+		if err := tx.QueryRowContext(ctx, "SELECT clock_timestamp() < $1::timestamptz", deadline).Scan(&withinWindow); err != nil {
+			return order, false, err
+		}
+		if !withinWindow {
+			return order, false, ErrOrderCancellationExpired
 		}
 		if err := restoreOrderStock(ctx, tx, id); err != nil {
 			return order, false, err

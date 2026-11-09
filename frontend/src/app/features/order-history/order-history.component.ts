@@ -6,7 +6,7 @@ import {
 } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, DestroyRef, Injector, TemplateRef, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, Injector, TemplateRef, computed, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -20,7 +20,6 @@ import {
   distinctUntilChanged,
   timer,
   of,
-  filter,
   finalize,
   EMPTY,
   combineLatest,
@@ -54,6 +53,7 @@ interface Order {
 
 interface Details extends Order {
   canCancel: boolean;
+  cancellationRemainingMs?: number;
   address: {
     recipient: string;
     street: string;
@@ -135,6 +135,14 @@ export class OrderHistoryComponent {
 
   constructor() {
     const auth = this.auth;
+    effect(onCleanup => {
+      const order = this.details();
+      if (!order?.canCancel || order.cancellationRemainingMs === undefined) return;
+      const timeout = setTimeout(() => {
+        this.details.update(current => current === order ? { ...current, canCancel: false } : current);
+      }, order.cancellationRemainingMs);
+      onCleanup(() => clearTimeout(timeout));
+    });
     this.searchInput.pipe(
       switchMap(({value, immediate}) => immediate ? of(value) : timer(300).pipe(map(() => value))),
       distinctUntilChanged(),
@@ -314,38 +322,50 @@ export class OrderHistoryComponent {
   }
 
   confirmCancellation(template: TemplateRef<unknown>, order: Details): void {
-    if (!order.canCancel || order.status === 'cancelled' || this.cancelling() || this.cancellationDialog) return;
+    if (!order.canCancel || order.status === 'cancelled' || this.cancellationDialog) return;
     this.cancelError.set('');
-    const dialog = this.dialog.open<unknown, unknown, boolean>(template, {
+    const dialog = this.dialog.open(template, {
       ariaLabel: 'Cancelar pedido #' + order.id + '?',
-      width: '420px',
+      width: '490px',
       maxWidth: 'calc(100% - 32px)',
       autoFocus: 'first-tabbable',
+      disableClose: true,
+      panelClass: 'order-cancellation-dialog',
+      backdropClass: 'order-cancellation-backdrop',
     });
     this.cancellationDialog = dialog;
-    dialog.afterClosed().pipe(
-      tap(() => { this.cancellationDialog = undefined; }),
-      filter(confirmed => confirmed === true && this.details()?.id === order.id),
-      switchMap(() => {
-        this.cancelling.set(true);
-        return this.http.post<{ data: Details }>('http://localhost:8080/orders/' + order.id + '/cancel', {}).pipe(
-          finalize(() => this.cancelling.set(false)),
-        );
-      }),
+    dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      if (this.cancellationDialog === dialog) this.cancellationDialog = undefined;
+    });
+  }
+
+  cancelPurchase(): void {
+    const order = this.details();
+    const dialog = this.cancellationDialog;
+    if (!order?.canCancel || !dialog || this.cancelling()) return;
+
+    this.cancelError.set('');
+    this.cancelling.set(true);
+    this.http.post<{ data: Details }>('http://localhost:8080/orders/' + order.id + '/cancel', {}).pipe(
       takeUntil(this.auth.userChanged),
       takeUntilDestroyed(this.destroyRef),
+      finalize(() => this.cancelling.set(false)),
     ).subscribe({
       next: ({ data }) => {
         if (this.details()?.id !== order.id) return;
+        dialog.close();
         this.details.set(data);
         this.snackBar.open('Pedido cancelado com sucesso.', 'Fechar', { duration: 5000 });
       },
       error: (error: HttpErrorResponse) => {
-        if (error.status === 401) this.expire();
-        else if (this.details()?.id === order.id) {
-          this.cancelError.set(error.status === 409 && typeof error.error?.message === 'string'
-            ? error.error.message : 'Não foi possível cancelar o pedido. Tente novamente.');
+        if (error.status === 401) {
+          this.expire();
+          return;
         }
+        if (this.details()?.id !== order.id) return;
+        if (error.status === 410) this.details.update(current => current && ({ ...current, canCancel: false }));
+        this.cancelError.set((error.status === 409 || error.status === 410) && typeof error.error?.message === 'string'
+          ? error.error.message : 'Não foi possível cancelar o pedido. Tente novamente.');
       },
     });
   }

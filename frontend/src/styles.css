@@ -222,3 +222,19 @@ app-top-navbar {
   min-height: 42px;
   padding-inline: 12px;
 }
+
+.order-cancellation-dialog {
+  --mdc-dialog-container-color: #fffdf8;
+  --mdc-dialog-container-shape: 18px;
+  --mdc-dialog-subhead-color: #3d4836;
+  --mdc-dialog-supporting-text-color: #4f594a;
+}
+.order-cancellation-dialog .mat-mdc-dialog-surface {
+  background: #fffdf8;
+  border: 1px solid #879578;
+  padding: 24px;
+}
+.order-cancellation-dialog :is(.mat-mdc-dialog-title, .mat-mdc-dialog-content) { padding: 0 0 16px; }
+.order-cancellation-dialog .mat-mdc-dialog-content p { margin: 0; }
+.order-cancellation-dialog .mat-mdc-dialog-content p + p { margin-top: 12px; }
+.order-cancellation-backdrop { background: rgb(41 43 37 / 32%); }

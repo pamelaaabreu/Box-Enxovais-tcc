@@ -294,3 +294,40 @@ func TestReorderPostgres(t *testing.T) {
 		t.Fatalf("reorder total/items: %v/%v (%v)", current.Total, current.TotalItems, err)
 	}
 }
+func TestOrderCancellationDeadlinePostgres(t *testing.T) {
+	for _, scenario := range []struct {
+		age     string
+		allowed bool
+	}{
+		{"59 minutes 59 seconds", true},
+		{"60 minutes", false},
+		{"61 minutes", false},
+	} {
+		t.Run(scenario.age, func(t *testing.T) {
+			db, exec := checkoutTestDB(t)
+			ctx := context.Background()
+			repo := repositories.CheckoutRepository{DB: db}
+			order, err := repo.Create(ctx, 1, models.CheckoutRequest{RequestKey: "deadline", PaymentMethod: "pix", ExpectedTotalCents: 1000})
+			if err != nil {
+				t.Fatal(err)
+			}
+			exec("UPDATE checkout_orders SET created_at=clock_timestamp()-interval '" + scenario.age + "'")
+			details, err := repo.GetOrderDetails(ctx, 1, order.ID)
+			if err != nil || details.CanCancel != scenario.allowed || (details.CancellationRemainingMs > 0) != scenario.allowed {
+				t.Fatalf("eligibility: %v, remaining: %d, err: %v", details.CanCancel, details.CancellationRemainingMs, err)
+			}
+			_, changed, err := repo.CancelOrder(ctx, 1, order.ID)
+			if scenario.allowed {
+				if err != nil || !changed {
+					t.Fatalf("cancel: %v", err)
+				}
+				assertCheckoutState(t, db, 1, 1, 1)
+			} else {
+				if changed || !errors.Is(err, repositories.ErrOrderCancellationExpired) {
+					t.Fatalf("expected expired cancellation, got %v", err)
+				}
+				assertCheckoutState(t, db, 0, 1, 1)
+			}
+		})
+	}
+}
