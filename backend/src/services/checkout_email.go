@@ -62,8 +62,8 @@ func sendCheckoutReceipt(email, name string, order models.CheckoutOrder) error {
 	msg.SetHeader("Subject", fmt.Sprintf("Box Enxovais — Pedido #%d confirmado", order.ID))
 	msg.SetBody("text/plain", plain.String())
 	msg.AddAlternative("text/html", html.String())
-	msg.Embed("src/templates/assets/checkout-footer-logo.png", gomail.SetHeader(map[string][]string{
-		"Content-ID":          {"<checkout-footer-logo.png>"},
+	msg.Embed("src/templates/assets/checkout-logo-white.png", gomail.SetHeader(map[string][]string{
+		"Content-ID":          {"<checkout-logo-white.png>"},
 		"Content-Disposition": {"inline"},
 	}))
 	if err := gomail.NewDialer(host, 587, from, key).DialAndSend(msg); err != nil {
