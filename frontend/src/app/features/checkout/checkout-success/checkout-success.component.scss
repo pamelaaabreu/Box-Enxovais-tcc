@@ -1,0 +1,107 @@
+.purchase-success {
+  box-sizing: border-box;
+  width: min(calc(100% - 32px), 640px);
+  margin-inline: auto;
+  padding-block: clamp(36px, 7vw, 88px);
+  color: #3d4836;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  overflow-wrap: anywhere;
+
+  h1 {
+    margin: 16px 0 12px;
+    font-size: clamp(1.6rem, 5vw, 2.35rem);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0 auto 16px;
+    line-height: 1.55;
+  }
+
+  .success-mark {
+    display: block;
+    width: clamp(68px, 14vw, 88px);
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .success-mark path {
+    fill: none;
+    stroke: #526044;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .success-details > p:first-child { max-width: 46ch; }
+
+  .order-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 24px;
+    width: fit-content;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: #eef0e7;
+    font-size: 0.9rem;
+  }
+
+  .demo-note { color: #64695e; font-size: 0.82rem; }
+  .retry { color: inherit; text-decoration: underline; cursor: pointer; }
+
+  .continue {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+    max-width: 100%;
+    margin-top: 8px;
+    padding: 13px 24px;
+    border-radius: 12px;
+    background: #667255;
+    color: #fffdf8;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover { background: #3d4836; }
+  }
+
+  :is(a, button):focus-visible { outline: 2px solid #667255; outline-offset: 3px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .purchase-success {
+    .success-mark circle {
+      transform-origin: center;
+      animation: success-circle 260ms ease-out both;
+    }
+
+    .success-mark path {
+      stroke-dasharray: 1;
+      animation: success-draw 380ms ease-out 120ms both;
+    }
+
+    .success-title { animation: success-reveal 300ms ease-out 160ms both; }
+    .success-details { animation: success-reveal 320ms ease-out 240ms both; }
+    .continue { transition: background-color 160ms ease; }
+  }
+}
+
+@keyframes success-circle {
+  from { opacity: 0; transform: scale(0.82); }
+}
+
+@keyframes success-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes success-reveal {
+  from { opacity: 0; transform: translateY(6px); }
+}

@@ -6,6 +6,8 @@ import (
 	"backend/src/config"
 	"backend/src/db"
 	"backend/src/handlers"
+	middlewares "backend/src/middleware"
+	"backend/src/models"
 	"backend/src/repositories"
 	"backend/src/routes"
 	"backend/src/services"
@@ -99,6 +101,14 @@ func run() error {
 
 	routes.InitRoutesAuth(mux, auth, users)
 	routes.InitRoutesCart(mux, cart)
+	checkout := handlers.CheckoutHandler{
+		Store: repositories.CheckoutRepository{DB: database},
+		Notify: func(userID int, order models.CheckoutOrder) {
+			go services.SendCheckoutReceipt(database, userID, order)
+		},
+	}
+	mux.HandleFunc("POST /checkout", middlewares.AuthMiddleware(checkout.ServeHTTP))
+	mux.HandleFunc("GET /checkout/success/{id}", middlewares.AuthMiddleware(checkout.ServeHTTP))
 	routes.InitRoutesFavorites(mux, favorites)
 	routes.InitRoutesProducts(mux, products, images)
 	routes.InitRoutesNewsletter(mux, newsletter)

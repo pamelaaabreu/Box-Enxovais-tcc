@@ -1,0 +1,29 @@
+<app-catalog-layout>
+  <section class="purchase-success" aria-labelledby="success-title" [attr.aria-busy]="loading()">
+    @if (order(); as approved) {
+      <svg class="success-mark" viewBox="0 0 88 88" aria-hidden="true" focusable="false">
+        <circle cx="44" cy="44" r="44" fill="#eef0e7" />
+        <path d="M27 44l11 11 23-23" pathLength="1" />
+      </svg>
+      <h1 id="success-title" class="success-title">Seu pedido foi realizado!</h1>
+      <div class="success-details">
+        <p>Sua compra foi confirmada! Enviaremos os detalhes para o seu e-mail cadastrado.</p>
+        <p class="order-strip">
+          <span>Pedido <strong>#{{ approved.id }}</strong></span>
+          <span>Total <strong>{{ approved.total | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</strong></span>
+        </p>
+        <p class="demo-note">Compra demonstrativa. Nenhuma cobrança foi realizada.</p>
+      </div>
+    } @else {
+      <h1 id="success-title">Confirmação do pedido</h1>
+      @if (loading()) {
+        <p role="status">Consultando pedido…</p>
+      }
+      @if (error()) {
+        <p role="alert">{{ error() }}</p>
+        <button type="button" class="retry" (click)="retry()">Tentar novamente</button>
+      }
+    }
+    <a routerLink="/home" class="continue">Continuar comprando <span aria-hidden="true">→</span></a>
+  </section>
+</app-catalog-layout>

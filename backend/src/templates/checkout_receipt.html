@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;padding:24px 12px;background:#eef0e7;font-family:Arial,sans-serif;color:#3d4836">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;margin:auto;background:#fffdf8;border-radius:16px">
+<tr><td style="padding:24px">
+  <p style="letter-spacing:2px;font-weight:bold">BOX ENXOVAIS</p>
+  <h1 style="font-size:24px">Pedido #{{.Order.ID}} confirmado</h1>
+  <p>Olá, {{.Name}}! Seu pedido foi registrado.</p>
+  <table width="100%" cellpadding="8" cellspacing="0" style="text-align:left">
+    <thead><tr><th>Produto</th><th>Qtd.</th><th>Valor unitário</th></tr></thead>
+    <tbody>{{range .Order.ReceiptItems}}<tr><td>{{.Name}}</td><td>{{.Quantity}}</td><td>{{money .UnitPrice}}</td></tr>{{end}}</tbody>
+  </table>
+  <p><strong>Total: {{money .Order.Total}}</strong></p>
+  <p style="padding:12px;background:#f5f4ed;border-radius:8px">Pagamento simulado. Nenhuma cobrança foi realizada.</p>
+</td></tr></table>
+</body>
+</html>
