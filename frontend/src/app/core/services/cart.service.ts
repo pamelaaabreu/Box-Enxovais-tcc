@@ -37,6 +37,7 @@ export class CartService {
   readonly total = computed(() => this.cart().total);
   readonly pending = signal<ReadonlySet<number>>(new Set());
   readonly busy = computed(() => this.pending().size > 0);
+  readonly reordering = computed(() => this.pending().has(Number.MIN_SAFE_INTEGER));
   readonly loading = signal(false);
   readonly error = signal('');
   readonly feedback = signal<Record<number, string>>({});
@@ -67,6 +68,7 @@ export class CartService {
                     return next;
                   });
                   this.state.set(response.data);
+                  if (request.key === Number.MIN_SAFE_INTEGER) void this.router.navigate(['/cart']);
                   if (request.productId && request.method !== 'DELETE')
                     this.feedback.update((value) => ({
                       ...value,
@@ -123,6 +125,9 @@ export class CartService {
   }
   load(): void {
     if (this.auth.getToken()) this.request('GET', '', -1);
+  }
+  reorder(orderId: number): void {
+    this.request('POST', '/orders/' + orderId, Number.MIN_SAFE_INTEGER);
   }
   add(productId: number, quantity = 1): void {
     this.request(

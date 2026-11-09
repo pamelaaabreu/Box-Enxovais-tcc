@@ -107,9 +107,16 @@ func run() error {
 			go services.SendCheckoutReceipt(database, userID, order)
 		},
 	}
-	orderHistory := handlers.OrderHistoryHandler{Store: repositories.CheckoutRepository{DB: database}}
+	orderHistory := handlers.OrderHistoryHandler{
+		Store: repositories.CheckoutRepository{DB: database},
+		NotifyCancelled: func(userID int, order models.OrderDetails) {
+			go services.SendOrderCancellation(database, userID, order)
+		},
+	}
+	mux.HandleFunc("POST /cart/orders/{orderID}", middlewares.AuthMiddleware(handlers.CartHandler{Store: repositories.CartRepository{DB: database}}.ServeHTTP))
 	mux.HandleFunc("GET /orders", middlewares.AuthMiddleware(orderHistory.ServeHTTP))
 	mux.HandleFunc("GET /orders/{id}", middlewares.AuthMiddleware(orderHistory.ServeHTTP))
+	mux.HandleFunc("POST /orders/{id}/cancel", middlewares.AuthMiddleware(orderHistory.ServeHTTP))
 	mux.HandleFunc("POST /checkout", middlewares.AuthMiddleware(checkout.ServeHTTP))
 	mux.HandleFunc("GET /checkout/success/{id}", middlewares.AuthMiddleware(checkout.ServeHTTP))
 	routes.InitRoutesFavorites(mux, favorites)

@@ -133,6 +133,23 @@
     &:hover { background: #3d4836; }
   }
 
+  .success-actions {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+  }
+
+  .continue-shopping {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: 12px;
+    color: #3d4836;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   :is(a, button):focus-visible { outline: 2px solid #667255; outline-offset: 3px; }
 }
 

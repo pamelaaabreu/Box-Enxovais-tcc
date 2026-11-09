@@ -49,48 +49,9 @@ func (repo CartRepository) Apply(ctx context.Context, userID int, operation stri
 	}
 	switch operation {
 	case "add", "update":
-		if quantity < 1 || quantity > 1000000 {
-			return empty, ErrCartQuantity
-		}
-		productID := id
-		if operation == "update" {
-			err = tx.QueryRowContext(ctx, `SELECT product_id FROM cart_items WHERE id=$1 AND cart_id=$2`, id, cartID).Scan(&productID)
-			if errors.Is(err, sql.ErrNoRows) {
-				return empty, ErrCartItemNotFound
-			}
-			if err != nil {
-				return empty, err
-			}
-		}
-		var stock int64
-		var status string
-		var price int64
-		err = tx.QueryRowContext(ctx, `SELECT quantity,status,(price*100)::bigint FROM products WHERE id=$1 FOR SHARE`, productID).Scan(&stock, &status, &price)
-		if errors.Is(err, sql.ErrNoRows) {
-			return empty, ErrCartProduct
-		}
-		if err != nil {
-			return empty, err
-		}
-		if status != "active" || price < 0 {
-			return empty, ErrCartProduct
-		}
-		if operation == "add" {
-			var existing int64
-			err = tx.QueryRowContext(ctx, `SELECT quantity FROM cart_items WHERE cart_id=$1 AND product_id=$2`, cartID, productID).Scan(&existing)
-			if err != nil && !errors.Is(err, sql.ErrNoRows) {
-				return empty, err
-			}
-			quantity += existing
-		}
-		if quantity > stock {
-			return empty, CartStockError{Stock: stock}
-		}
-		if quantity > 1000000 {
-			return empty, ErrCartQuantity
-		}
-		_, err = tx.ExecContext(ctx, `INSERT INTO cart_items(cart_id,product_id,quantity) VALUES($1,$2,$3)
-   ON CONFLICT(cart_id,product_id) DO UPDATE SET quantity=EXCLUDED.quantity,updated_at=NOW()`, cartID, productID, quantity)
+		err = writeCartItem(ctx, tx, cartID, operation, id, quantity)
+	case "reorder":
+		err = reorderItems(ctx, tx, userID, cartID, id)
 	case "remove":
 		var result sql.Result
 		result, err = tx.ExecContext(ctx, `DELETE FROM cart_items WHERE id=$1 AND cart_id=$2`, id, cartID)
@@ -153,4 +114,51 @@ func (repo CartRepository) Apply(ctx context.Context, userID int, operation stri
 		return empty, err
 	}
 	return cart, nil
+}
+
+func writeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, operation string, id, quantity int64) error {
+	var err error
+	if quantity < 1 || quantity > 1000000 {
+		return ErrCartQuantity
+	}
+	productID := id
+	if operation == "update" {
+		err = tx.QueryRowContext(ctx, `SELECT product_id FROM cart_items WHERE id=$1 AND cart_id=$2`, id, cartID).Scan(&productID)
+		if errors.Is(err, sql.ErrNoRows) {
+			return ErrCartItemNotFound
+		}
+		if err != nil {
+			return err
+		}
+	}
+	var stock int64
+	var status string
+	var price int64
+	err = tx.QueryRowContext(ctx, `SELECT quantity,status,(price*100)::bigint FROM products WHERE id=$1 FOR SHARE`, productID).Scan(&stock, &status, &price)
+	if errors.Is(err, sql.ErrNoRows) {
+		return ErrCartProduct
+	}
+	if err != nil {
+		return err
+	}
+	if status != "active" || price < 0 {
+		return ErrCartProduct
+	}
+	if operation == "add" {
+		var existing int64
+		err = tx.QueryRowContext(ctx, `SELECT quantity FROM cart_items WHERE cart_id=$1 AND product_id=$2`, cartID, productID).Scan(&existing)
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+			return err
+		}
+		quantity += existing
+	}
+	if quantity > stock {
+		return CartStockError{Stock: stock}
+	}
+	if quantity > 1000000 {
+		return ErrCartQuantity
+	}
+	_, err = tx.ExecContext(ctx, `INSERT INTO cart_items(cart_id,product_id,quantity) VALUES($1,$2,$3)
+   ON CONFLICT(cart_id,product_id) DO UPDATE SET quantity=EXCLUDED.quantity,updated_at=NOW()`, cartID, productID, quantity)
+	return err
 }

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+  <body
+    style="
+      margin: 0;
+      background: #f3efe6;
+      color: #3d4836;
+      font:
+        16px Arial,
+        sans-serif;
+    "
+  >
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="16">
+      <tr>
+        <td align="center">
+          <table
+            role="presentation"
+            width="100%"
+            cellspacing="0"
+            cellpadding="0"
+            style="max-width: 640px; background: #fffdf8; border-radius: 24px"
+          >
+            <tr>
+              <td
+                align="center"
+                style="
+                  padding: 16px;
+                  background: #777361;
+                  border-radius: 24px 24px 0 0;
+                "
+              >
+                <img
+                  src="cid:checkout-logo-white.png"
+                  width="120"
+                  alt="Box Enxovais — Casa bem vivida"
+                  style="display: block; width: 120px; height: auto"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 24px">
+                <h1
+                  style="
+                    margin: 0 0 12px;
+                    font:
+                      28px Georgia,
+                      serif;
+                  "
+                >
+                  Pedido #{{.Order.ID}} cancelado
+                </h1>
+                <p>Olá, {{.Name}}! Confirmamos o cancelamento do seu pedido.</p>
+                <table width="100%" cellspacing="0" cellpadding="8">
+                  <thead>
+                    <tr style="background: #f2ede4">
+                      <th align="left" scope="col">Produto</th>
+                      <th scope="col">Quantidade</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{range .Order.ReceiptItems}}
+                    <tr>
+                      <td style="border-bottom: 1px solid #e3ded3">
+                        {{.Name}}
+                      </td>
+                      <td
+                        align="center"
+                        style="border-bottom: 1px solid #e3ded3"
+                      >
+                        {{.Quantity}}
+                      </td>
+                    </tr>
+                    {{end}}
+                  </tbody>
+                </table>
+                <p
+                  style="
+                    padding: 12px;
+                    background: #eaede2;
+                    border-radius: 12px;
+                  "
+                >
+                  <strong>Total do pedido: {{money .Order.Total}}</strong>
+                </p>
+                <p>Compra simulada. Nenhuma cobrança foi realizada.</p>
+              </td>
+            </tr>
+            <tr>
+              <td
+                align="center"
+                style="
+                  padding: 12px;
+                  background: #777361;
+                  color: #fffdf8;
+                  border-radius: 0 0 24px 24px;
+                  font-size: 13px;
+                "
+              >
+                Este é um e-mail automático. Por favor, não responda.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

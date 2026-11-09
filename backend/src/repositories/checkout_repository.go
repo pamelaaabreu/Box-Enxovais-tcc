@@ -91,7 +91,7 @@ func (repo CheckoutRepository) Create(ctx context.Context, userID int, input mod
 		return order, err
 	}
 	order.Status = "simulated_approved"
-	err = tx.QueryRowContext(ctx, `INSERT INTO checkout_orders(user_id,request_key,address,payment_method,total_cents) VALUES($1,$2,$3,$4,$5) RETURNING id`, userID, input.RequestKey, string(address), input.PaymentMethod, order.Total).Scan(&order.ID)
+	err = tx.QueryRowContext(ctx, `INSERT INTO checkout_orders(user_id,request_key,address,payment_method,total_cents,stock_debited) VALUES($1,$2,$3,$4,$5,true) RETURNING id`, userID, input.RequestKey, string(address), input.PaymentMethod, order.Total).Scan(&order.ID)
 	if err != nil {
 		return order, err
 	}

@@ -29,6 +29,7 @@ func TestOrderHistoryPostgres(t *testing.T) {
 	}
 	if _, err := db.Exec(`
         SET search_path TO pg_temp;
+        CREATE TEMP TABLE products (id integer PRIMARY KEY, status text);
         CREATE TEMP TABLE users (id integer PRIMARY KEY);
         CREATE TEMP TABLE product_images (id integer PRIMARY KEY, product_id integer, image_path text, is_primary boolean);
         INSERT INTO users VALUES (1), (2), (3);
@@ -40,6 +41,13 @@ func TestOrderHistoryPostgres(t *testing.T) {
         INSERT INTO checkout_order_items (order_id, product_id, name, quantity, unit_price_cents)
         VALUES (2, 7, 'Toalha', 2, 1250), (2, 8, 'Manta', 1, 0), (3, 7, 'Privado', 1, 3000);
     `); err != nil {
+		t.Fatal(err)
+	}
+	cancellation, err := os.ReadFile("../../migrations/000007_order_cancellation.up.sql")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec(string(cancellation)); err != nil {
 		t.Fatal(err)
 	}
 	const secret = "orders-tests-only"
@@ -125,6 +133,35 @@ func TestOrderHistoryPostgres(t *testing.T) {
 	}
 	if orders := filtered("page=2&dateFrom=2025-01-01"); len(orders) != 0 {
 		t.Fatal("pagination must run after filtering")
+	}
+	if orders := filtered("search=toAlha"); len(orders) != 1 || orders[0].ID != 2 || len(orders[0].Items) != 2 {
+		t.Fatal("search should match historical names and preserve all order items")
+	}
+	if orders := filtered("search=%232"); len(orders) != 1 || orders[0].ID != 2 {
+		t.Fatal("expected exact order number")
+	}
+	if orders := filtered("search=Privado"); len(orders) != 0 {
+		t.Fatal("search must not expose another customer's order")
+	}
+	if _, err := db.Exec("UPDATE checkout_orders SET status='cancelled' WHERE id=2"); err != nil {
+		t.Fatal(err)
+	}
+	if orders := filtered("status=cancelled&search=Toalha"); len(orders) != 1 || orders[0].ID != 2 {
+		t.Fatal("expected only the matching cancelled order")
+	}
+
+	if _, err := db.Exec(`UPDATE checkout_order_items SET name='Toalha 100%_natural' WHERE id=2;`); err != nil {
+		t.Fatal(err)
+	}
+	for _, term := range []string{"2", "%232", "Toalha", "TOA", "%25_", "Toalha+100%25_natural"} {
+		if orders := filtered("search=" + term + "&dateFrom=2025-01-01&dateTo=2025-01-01&sort=oldest"); len(orders) != 1 || orders[0].ID != 2 || len(orders[0].Items) != 2 {
+			t.Fatalf("expected one complete order for %s", term)
+		}
+	}
+	for _, query := range []string{"search=%5C", "search=999", "search=3", "search=Toalha&dateFrom=2025-01-02", "search=Toalha&page=2"} {
+		if orders := filtered(query); len(orders) != 0 {
+			t.Fatalf("unexpected match for %s", query)
+		}
 	}
 	other := call(2, 200)
 	if len(other) != 1 || other[0].ID != 3 {

@@ -3,7 +3,7 @@ import { MatSelectHarness } from '@angular/material/select/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { of, Subject } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
@@ -49,7 +49,7 @@ describe('OrderHistoryComponent', () => {
     http.expectOne({ url, method: 'GET' }).error(new ProgressEvent('error'));
     fixture.detectChanges();
     expect(page.querySelector('[role="alert"]')).not.toBeNull();
-    page.querySelector('button')!.click();
+    page.querySelector<HTMLButtonElement>('.state button')!.click();
     http.expectOne({ url, method: 'GET' }).flush({ data: { orders: [{
       id: 9, createdAt: '2025-01-02T15:00:00Z', status: 'simulated_approved', total: 25,
       items: [{ id: 3, name: 'Toalha', quantity: 2, unitPrice: 12.5, image: '' }],
@@ -64,12 +64,15 @@ describe('OrderHistoryComponent', () => {
     expect(cards[0].textContent).toContain('Toalha');
     expect(cards[0].textContent).toContain('12,50');
     expect(cards[0].querySelector('footer')?.textContent).toContain('25,00');
-    expect(cards[1].querySelectorAll('li').length).toBe(4);
-    expect(cards[1].querySelector('footer')?.textContent).toContain('(4 itens)');
-    expect(cards[1].textContent).toContain('Fronha');
+    expect(cards[1].querySelectorAll('li').length).toBe(2);
+    expect(cards[1].querySelector('.order-count')?.textContent).toContain('4 itens');
+    expect(cards[1].textContent).toContain('+ 2 produtos neste pedido');
     expect(page.textContent).not.toContain('Aprovado em simulação');
     expect(page.querySelector('.order a')?.getAttribute('href')).toBe('/meus-pedidos/9');
-    page.querySelectorAll('nav button')[1].dispatchEvent(new MouseEvent('click'));
+    page.querySelector<HTMLButtonElement>('.orders-more button')!.click();
+    fixture.detectChanges();
+    expect(page.querySelectorAll('.order-preview').length).toBe(2);
+    expect(page.querySelector('.orders-more button[disabled]')).not.toBeNull();
     http.expectOne('http://localhost:8080/orders?page=2').flush({ data: { orders: [], hasMore: false } });
     http.verify();
   });
@@ -94,26 +97,26 @@ describe('OrderHistoryComponent', () => {
     http.expectNone(request => request.url.includes('/orders'));
     fixture.componentInstance.updateFilters('dateTo', '2026-11-09');
     fixture.detectChanges();
-    expect(page.querySelectorAll('mat-select[role="combobox"]').length).toBe(2);
+    expect(page.querySelectorAll('mat-select[role="combobox"]').length).toBe(1);
     expect(page.querySelectorAll('.skeleton').length).toBe(2);
     expect(page.textContent).not.toContain('Nenhum pedido encontrado');
     http.expectOne(url + '&sort=oldest&dateFrom=2026-11-01&dateTo=2026-11-09')
       .flush({ data: { orders: [], hasMore: false } });
     fixture.detectChanges();
     expect(page.textContent).toContain('Nenhum pedido encontrado');
-    page.querySelector<HTMLButtonElement>('.clear-filters')!.click();
+    page.querySelector<HTMLButtonElement>('.state .clear-filters')!.click();
     http.expectOne(url).flush({ data: { orders: [], hasMore: false } });
     fixture.detectChanges();
     expect(page.querySelector('.empty')).not.toBeNull();
     http.verify();
   });
-  it('opens both Material overlays and reloads when an option is selected', async () => {
+  it('opens the Material sorting overlay and combines status and search', async () => {
     const { fixture, page, http } = setup();
     http.expectOne(url).flush({ data: { orders: [], hasMore: false } });
     fixture.detectChanges();
 
     const loader = TestbedHarnessEnvironment.loader(fixture);
-    const [sort, period] = await loader.getAllHarnesses(MatSelectHarness);
+    const [sort] = await loader.getAllHarnesses(MatSelectHarness);
     expect(page.querySelector('select')).toBeNull();
     await sort.open();
     const panel = document.querySelector('.cdk-overlay-pane .order-history-filter-panel');
@@ -125,12 +128,16 @@ describe('OrderHistoryComponent', () => {
     expect(page.querySelectorAll('.skeleton').length).toBe(2);
 
     const previous = http.expectOne(url + '&sort=oldest');
-    await period.open();
-    expect((await period.getOptions()).length).toBe(4);
-    await period.clickOptions({ text: 'Personalizado' });
+    Array.from(page.querySelectorAll<HTMLButtonElement>('.orders-periods button'))
+      .find(button => button.textContent?.trim() === 'Cancelados')!.click();
     expect(previous.cancelled).toBeTrue();
-    expect(page.querySelectorAll('input[type="date"]').length).toBe(2);
-    http.expectNone(request => request.url.includes('/orders'));
+    const pending = http.expectOne(url + '&sort=oldest&status=cancelled');
+    const search = page.querySelector<HTMLInputElement>('.orders-search input')!;
+    search.value = '#18';
+    page.querySelector('.orders-search')!.dispatchEvent(new Event('submit', { cancelable: true }));
+    expect(pending.cancelled).toBeTrue();
+    http.expectOne(url + '&sort=oldest&search=%2318&status=cancelled')
+      .flush({ data: { orders: [], hasMore: false } });
     http.verify();
   });
 
@@ -167,4 +174,78 @@ describe('OrderHistoryComponent', () => {
     expect(navigate).toHaveBeenCalledOnceWith(['/login']);
     http.verify();
   });
+  it('cancels eligible orders only after confirmation and keeps order details during errors', async () => {
+    const { fixture, page, http } = setup('9');
+    const order = {
+      id: 9, createdAt: '2025-01-02T15:00:00Z', total: 25, status: 'simulated_approved',
+      canCancel: true, paymentMethod: 'pix',
+      address: { recipient: 'Cliente teste', street: 'Rua Teste', number: '3', city: 'São Paulo', state: 'SP' },
+      items: [{ id: 3, name: 'Toalha', quantity: 2, unitPrice: 12.5, subtotal: 25, image: '' }],
+    };
+    const endpoint = 'http://localhost:8080/orders/9/cancel';
+    http.expectOne('http://localhost:8080/orders/9').flush({ data: order });
+    fixture.detectChanges();
+    const open = async () => {
+      page.querySelector<HTMLButtonElement>('.cancel-order')!.click();
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(document.querySelector('[role="dialog"]')?.getAttribute('aria-label')).toContain('#9');
+    };
+    const close = async (selector: string) => {
+      document.querySelector<HTMLButtonElement>(selector)!.click();
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+    };
+    await open();
+    await close('.cancel-dialog-keep');
+    http.expectNone(endpoint);
+    await open();
+    await close('.cancel-dialog-confirm');
+    const first = http.expectOne({ method: 'POST', url: endpoint });
+    expect(page.querySelector<HTMLButtonElement>('.cancel-order')?.disabled).toBeTrue();
+    expect(page.textContent).toContain('Toalha');
+    first.flush({ message: 'Estoque indisponível para reposição' }, { status: 409, statusText: 'Conflict' });
+    fixture.detectChanges();
+    expect(page.querySelector('[role="alert"]')?.textContent).toContain('Estoque indisponível');
+    expect(page.textContent).toContain('Cliente teste');
+    await open();
+    await close('.cancel-dialog-confirm');
+    http.expectOne({ method: 'POST', url: endpoint }).flush({ data: { ...order, canCancel: false, status: 'cancelled' } });
+    fixture.detectChanges();
+    expect(page.querySelector('.cancelled-badge')?.textContent).toContain('Cancelado');
+    expect(page.querySelector('.cancel-order')).toBeNull();
+    expect(page.textContent).toContain('25,00');
+    http.verify();
+  });
+
+  it('debounces typing, cancels stale results and clears the search', fakeAsync(() => {
+    const { fixture, page, http } = setup();
+    http.expectOne(url).flush({ data: { orders: [], hasMore: false } });
+    const input = page.querySelector<HTMLInputElement>('.orders-search input')!;
+    const type = (value: string) => {
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+    };
+    type('toa');
+    tick(200);
+    type('toalha');
+    tick(299);
+    http.expectNone(url + '&search=toa');
+    http.expectNone(url + '&search=toalha');
+    tick(1);
+    fixture.detectChanges();
+    expect(page.querySelector('.skeleton')).not.toBeNull();
+    const old = http.expectOne(url + '&search=toalha');
+    type('TOALHA');
+    tick(300);
+    expect(old.cancelled).toBeTrue();
+    http.expectOne(url + '&search=TOALHA').flush({ data: { orders: [], hasMore: false } });
+    fixture.detectChanges();
+    expect(page.textContent).toContain('Não encontramos pedidos para sua pesquisa.');
+    page.querySelector<HTMLButtonElement>('button[aria-label="Limpar pesquisa"]')!.click();
+    http.expectOne(url).flush({ data: { orders: [], hasMore: false } });
+    http.verify();
+  }));
+
 });

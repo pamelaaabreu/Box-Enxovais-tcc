@@ -53,7 +53,9 @@ describe('CheckoutSuccessComponent', () => {
     http.expectOne(lookup).flush({ success: true, data: { id: 7, total: 25, status: 'simulated_approved' } });
     fixture.detectChanges();
     expect(page.textContent).toContain('Seu pedido foi realizado!');
-    expect(page.querySelectorAll('a, button').length).toBe(1);
+    expect(Array.from(page.querySelectorAll('.success-actions a'), link => link.getAttribute('href')))
+      .toEqual(['/meus-pedidos/7', '/home']);
+    http.expectNone(request => request.method === 'POST');
     http.verify();
   });
 });

@@ -3,18 +3,22 @@ package handlers
 import (
 	middlewares "backend/src/middleware"
 	"backend/src/models"
+	"backend/src/repositories"
 	"backend/src/response"
 	"context"
 	"database/sql"
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 	_ "time/tzdata"
 )
 
 type OrderHistoryHandler struct {
-	Store interface {
+	NotifyCancelled func(int, models.OrderDetails)
+	Store           interface {
+		CancelOrder(context.Context, int, int64) (models.OrderDetails, bool, error)
 		GetOrderDetails(context.Context, int, int64) (models.OrderDetails, error)
 		ListOrders(context.Context, int, int, int, models.OrderFilters) ([]models.OrderHistoryEntry, error)
 	}
@@ -32,6 +36,10 @@ func (h OrderHistoryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(raw, 10, 64)
 		if err != nil || id <= 0 {
 			response.Error(w, 404, "Pedido não encontrado")
+			return
+		}
+		if r.Method == http.MethodPost {
+			h.cancel(w, r, userID, id)
 			return
 		}
 		order, err := h.Store.GetOrderDetails(r.Context(), userID, id)
@@ -73,9 +81,40 @@ func (h OrderHistoryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	response.Success(w, 200, "", map[string]any{"orders": orders, "hasMore": hasMore})
 }
 
+func (h OrderHistoryHandler) cancel(w http.ResponseWriter, r *http.Request, userID int, id int64) {
+	order, changed, err := h.Store.CancelOrder(r.Context(), userID, id)
+	switch {
+	case errors.Is(err, sql.ErrNoRows):
+		response.Error(w, http.StatusNotFound, "Pedido não encontrado")
+	case errors.Is(err, repositories.ErrOrderNotCancellable), errors.Is(err, repositories.ErrOrderRestock):
+		response.Error(w, http.StatusConflict, err.Error())
+	case err != nil:
+		response.Error(w, http.StatusInternalServerError, "Não foi possível cancelar o pedido. Tente novamente.")
+	default:
+		message := "Pedido já cancelado"
+		if changed {
+			message = "Pedido cancelado com sucesso"
+			if h.NotifyCancelled != nil {
+				h.NotifyCancelled(userID, order)
+			}
+		}
+		response.Success(w, http.StatusOK, message, order)
+	}
+}
+
 func parseOrderFilters(r *http.Request) (models.OrderFilters, error) {
 	var filters models.OrderFilters
 	query := r.URL.Query()
+	filters.Search = strings.TrimSpace(query.Get("search"))
+	if len(filters.Search) > 200 || strings.ContainsRune(filters.Search, 0) {
+		return filters, errors.New("Busca inválida")
+	}
+	if status := query.Get("status"); status != "" {
+		if status != "cancelled" {
+			return filters, errors.New("Status inválido")
+		}
+		filters.CancelledOnly = true
+	}
 	switch query.Get("sort") {
 	case "", "recent":
 	case "oldest":

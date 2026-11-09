@@ -33,6 +33,16 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	switch r.Method {
 	case http.MethodPost:
+		if r.PathValue("orderID") != "" {
+			var err error
+			id, err = strconv.ParseInt(r.PathValue("orderID"), 10, 64)
+			if err != nil || id <= 0 {
+				response.Error(w, 404, "Pedido não encontrado")
+				return
+			}
+			operation = "reorder"
+			break
+		}
 		var body struct {
 			ProductID int64 `json:"productId"`
 			Quantity  int64 `json:"quantity"`
@@ -65,7 +75,7 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		status := 500
 		message := "Não foi possível atualizar o carrinho. Tente novamente."
 		switch {
-		case errors.Is(err, repositories.ErrCartItemNotFound):
+		case errors.Is(err, repositories.ErrCartItemNotFound), errors.Is(err, repositories.ErrCartOrderNotFound):
 			status = 404
 			message = err.Error()
 		case errors.Is(err, repositories.ErrCartProduct), errors.Is(err, repositories.ErrCartQuantity):

@@ -3,8 +3,10 @@ package models
 import "time"
 
 type OrderFilters struct {
-	Oldest      bool
-	From, Until *time.Time
+	Search        string
+	CancelledOnly bool
+	Oldest        bool
+	From, Until   *time.Time
 }
 
 type OrderHistoryEntry struct {
@@ -17,9 +19,11 @@ type OrderDetails struct {
 	OrderHistoryEntry
 	Address       ShippingAddress `json:"address"`
 	PaymentMethod string          `json:"paymentMethod"`
+	CanCancel     bool            `json:"canCancel"`
 }
 
 type OrderHistoryItem struct {
+	ProductID int64  `json:"productId,omitempty"`
 	UnitPrice Money  `json:"unitPrice"`
 	Subtotal  Money  `json:"subtotal"`
 	ID        int64  `json:"id"`
