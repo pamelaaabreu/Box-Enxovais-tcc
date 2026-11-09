@@ -5,405 +5,498 @@
       @if (error()) {
         <p class="error" role="alert">{{ error() }}</p>
       }
-      <button type="button" class="text-button" (click)="openConfirmedOrder()" [disabled]="openingOrder()">
-        {{ openingOrder() ? "Abrindo confirmação…" : "Abrir confirmação do pedido" }}
+      <button
+        type="button"
+        class="text-button"
+        (click)="openConfirmedOrder()"
+        [disabled]="openingOrder()"
+      >
+        {{
+          openingOrder()
+            ? "Abrindo confirmação…"
+            : "Abrir confirmação do pedido"
+        }}
       </button>
     </section>
   } @else {
-  <section class="checkout checkout-flow" aria-labelledby="checkout-title">
-    <ol class="steps" aria-label="Etapas do checkout">
-      @for (
-        label of ["Carrinho", "Entrega", "Pagamento", "Revisão"];
-        track $index;
-        let index = $index
-      ) {
-        <li
-          [class.completed]="index < step()"
-          [class.current]="index === step()"
-          [attr.aria-current]="index === step() ? 'step' : null"
-        >
-          <span class="step-marker" aria-hidden="true">{{
-            index < step() ? "✓" : index + 1
-          }}</span
-          ><span>{{ label }}</span>
-        </li>
+    <section class="checkout checkout-flow" aria-labelledby="checkout-title">
+      <ol class="steps" aria-label="Etapas do checkout">
+        @for (
+          label of ["Carrinho", "Entrega", "Pagamento", "Revisão"];
+          track $index;
+          let index = $index
+        ) {
+          <li
+            [class.completed]="index < step()"
+            [class.current]="index === step()"
+            [attr.aria-current]="index === step() ? 'step' : null"
+          >
+            <span class="step-marker" aria-hidden="true">{{
+              index < step() ? "✓" : index + 1
+            }}</span
+            ><span>{{ label }}</span>
+          </li>
+        }
+      </ol>
+      @if (error()) {
+        <p role="alert" class="error">{{ error() }}</p>
       }
-    </ol>
-    @if (error()) {
-      <p role="alert" class="error">{{ error() }}</p>
-    }
-    @if (cart.error()) {
-      <p role="alert" class="error">
-        {{ cart.error() }}
-        <button
-          type="button"
-          class="text-button"
-          (click)="cart.load()"
-          [disabled]="cart.busy() || busy()"
-        >
-          Tentar novamente
-        </button>
-      </p>
-    }
-    @if (cart.loading()) {
-      <p role="status" class="muted">Atualizando carrinho…</p>
-    }
-    @if (!cart.loading() && !cart.cart().items.length && !order()) {
-      <p role="status">Seu carrinho está vazio.</p>
-    }
-    <div class="grid" [attr.aria-busy]="busy()">
-      <div class="panel stage-card">
-        @if (step() === 1) {
-          <h2>Informações de entrega</h2>
-          <form id="delivery-form" [formGroup]="address" (ngSubmit)="next()">
-            <div class="fields">
-              @for (field of fields; track field.key) {
-                <div class="field" [class]="'field field-' + field.key">
-                  <label [for]="field.key">{{ field.label }}</label>
-                  <input
-                    [id]="field.key"
-                    [formControlName]="field.key"
-                    [readOnly]="postalFilled().includes(field.key)"
-                    [autocomplete]="field.autocomplete"
-                    [attr.inputmode]="
-                      field.key === 'zipCode' ? 'numeric' : null
-                    "
-                    [attr.maxlength]="field.key === 'zipCode' ? 9 : 200"
-                    [attr.aria-invalid]="
+      @if (cart.error()) {
+        <p role="alert" class="error">
+          {{ cart.error() }}
+          <button
+            type="button"
+            class="text-button"
+            (click)="cart.load()"
+            [disabled]="cart.busy() || busy()"
+          >
+            Tentar novamente
+          </button>
+        </p>
+      }
+      @if (cart.loading()) {
+        <p role="status" class="muted">Atualizando carrinho…</p>
+      }
+      @if (!cart.loading() && !cart.cart().items.length && !order()) {
+        <p role="status">Seu carrinho está vazio.</p>
+      }
+      <div class="grid" [attr.aria-busy]="busy()">
+        <div class="panel stage-card">
+          @if (step() === 1) {
+            <h2>Informações de entrega</h2>
+            <form id="delivery-form" [formGroup]="address" (ngSubmit)="next()">
+              <div class="fields">
+                @for (field of fields; track field.key) {
+                  <div class="field" [class]="'field field-' + field.key">
+                    <label [for]="field.key">{{ field.label }}</label>
+                    <input
+                      [id]="field.key"
+                      [formControlName]="field.key"
+                      [readOnly]="postalFilled().includes(field.key)"
+                      [autocomplete]="field.autocomplete"
+                      [attr.inputmode]="
+                        field.key === 'zipCode' ? 'numeric' : null
+                      "
+                      [attr.maxlength]="field.key === 'zipCode' ? 9 : 200"
+                      [attr.aria-invalid]="
+                        address.get(field.key)?.touched &&
+                        address.get(field.key)?.invalid
+                      "
+                      [attr.aria-describedby]="
+                        field.key +
+                        '-error' +
+                        (field.key === 'zipCode' ? ' postal-status' : '')
+                      "
+                    />
+                    @if (
                       address.get(field.key)?.touched &&
                       address.get(field.key)?.invalid
-                    "
-                    [attr.aria-describedby]="
-                      field.key +
-                      '-error' +
-                      (field.key === 'zipCode' ? ' postal-status' : '')
-                    "
-                  />
-                  @if (
-                    address.get(field.key)?.touched &&
-                    address.get(field.key)?.invalid
-                  ) {
-                    <small class="error" [id]="field.key + '-error'">{{
-                      field.key === "zipCode"
-                        ? "Informe um CEP com 8 dígitos."
-                        : "Preencha " +
-                          field.label.toLowerCase() +
-                          " corretamente."
-                    }}</small>
-                  }
-                  @if (field.key === "zipCode") {
-                    <small
-                      id="postal-status"
-                      class="postal-status"
-                      role="status"
+                    ) {
+                      <small class="error" [id]="field.key + '-error'">{{
+                        field.key === "zipCode"
+                          ? "Informe um CEP com 8 dígitos."
+                          : "Preencha " +
+                            field.label.toLowerCase() +
+                            " corretamente."
+                      }}</small>
+                    }
+                    @if (field.key === "zipCode") {
+                      <small
+                        id="postal-status"
+                        class="postal-status"
+                        role="status"
+                      >
+                        @if (postalLoading()) {
+                          <span class="loading-dot" aria-hidden="true"></span>
+                          Consultando CEP…
+                        } @else {
+                          {{ postalMessage() }}
+                        }
+                      </small>
+                    }
+                  </div>
+                }
+                <div class="field field-state">
+                  <label for="state">Estado</label>
+                  @if (postalFilled().includes("state")) {
+                    <input
+                      id="state"
+                      formControlName="state"
+                      autocomplete="address-level1"
+                      readonly
+                    />
+                  } @else {
+                    <select
+                      id="state"
+                      formControlName="state"
+                      autocomplete="address-level1"
+                      [attr.aria-invalid]="
+                        address.controls.state.touched &&
+                        address.controls.state.invalid
+                      "
+                      aria-describedby="state-error"
                     >
-                      @if (postalLoading()) {
-                        <span class="loading-dot" aria-hidden="true"></span>
-                        Consultando CEP…
-                      } @else {
-                        {{ postalMessage() }}
+                      <option value="">Selecione</option>
+                      @for (state of states; track state) {
+                        <option [value]="state">{{ state }}</option>
                       }
-                    </small>
+                    </select>
+                  }
+                  @if (
+                    address.controls.state.touched &&
+                    address.controls.state.invalid
+                  ) {
+                    <small id="state-error" class="error"
+                      >Selecione o estado.</small
+                    >
+                  }
+                </div>
+              </div>
+              @if (
+                !postalLoading() &&
+                (postalFilled().length > 0 || editingPostalAddress())
+              ) {
+                <button
+                  class="text-button postal-edit"
+                  type="button"
+                  (click)="togglePostalAddressEditing()"
+                >
+                  {{
+                    editingPostalAddress()
+                      ? "Usar endereço do CEP"
+                      : "Editar endereço manualmente"
+                  }}
+                </button>
+              }
+            </form>
+            <footer class="stage-footer">
+              <a routerLink="/cart" class="back-link"
+                ><span aria-hidden="true">←</span> Voltar ao carrinho</a
+              >
+            </footer>
+          }
+          @if (step() === 2) {
+            <h2 id="payment-title">Pagamento</h2>
+            <p class="payment-intro">
+              Selecione a forma de pagamento que prefere utilizar.
+            </p>
+            <fieldset class="payment-methods" aria-labelledby="payment-title">
+              @for (method of ["pix", "card", "boleto"]; track method) {
+                <div class="payment-card">
+                  <label class="payment-option">
+                    <input
+                      type="radio"
+                      [formControl]="payment"
+                      [value]="method"
+                      name="payment"
+                    />
+                    <span class="payment-option-copy">
+                      <strong>{{ paymentLabels[method] }}</strong>
+                      <span>{{
+                        method === "pix"
+                          ? "Pagamento à vista"
+                          : method === "card"
+                            ? "Visa, Mastercard e Elo"
+                            : "Pagamento em parcela única"
+                      }}</span>
+                    </span>
+                    <span class="payment-brands" aria-hidden="true">
+                      @if (method === "pix") {
+                        <img
+                          class="payment-pix"
+                          src="/payment/pix.svg"
+                          alt=""
+                        />
+                      } @else if (method === "card") {
+                        <img
+                          class="payment-card-brand"
+                          src="/payment/visa.webp"
+                          alt="Visa"
+                        />
+                        <img
+                          class="payment-card-brand"
+                          src="/payment/mastercard.svg"
+                          alt="Mastercard"
+                        />
+                        <img
+                          class="payment-card-brand"
+                          src="/payment/elo.webp"
+                          alt="Elo"
+                        />
+                      } @else {
+                        <svg
+                          class="payment-barcode"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          focusable="false"
+                        >
+                          <path
+                            d="M3 5v14m3-14v14m4-14v14m4-14v14m3-14v14m4-14v14"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                          />
+                        </svg>
+                      }
+                    </span>
+                  </label>
+                  @if (method === "card" && payment.value === "card") {
+                    <div class="card-demo">
+                      <div class="card-demo-content">
+                        <p>Dados fictícios para demonstração</p>
+                        <dl>
+                          <div class="card-demo-wide">
+                            <dt>Nome no cartão</dt>
+                            <dd>CLIENTE TESTE</dd>
+                          </div>
+                          <div class="card-demo-wide">
+                            <dt>Número do cartão</dt>
+                            <dd>•••• •••• •••• 1234</dd>
+                          </div>
+                          <div>
+                            <dt>Validade</dt>
+                            <dd>12/30</dd>
+                          </div>
+                          <div>
+                            <dt>CVV</dt>
+                            <dd>•••</dd>
+                          </div>
+                        </dl>
+                      </div>
+                    </div>
                   }
                 </div>
               }
-              <div class="field field-state">
-                <label for="state">Estado</label>
-                @if (postalFilled().includes("state")) {
-                  <input
-                    id="state"
-                    formControlName="state"
-                    autocomplete="address-level1"
-                    readonly
-                  />
-                } @else {
-                  <select
-                    id="state"
-                    formControlName="state"
-                    autocomplete="address-level1"
-                    [attr.aria-invalid]="
-                      address.controls.state.touched &&
-                      address.controls.state.invalid
-                    "
-                    aria-describedby="state-error"
-                  >
-                    <option value="">Selecione</option>
-                    @for (state of states; track state) {
-                      <option [value]="state">{{ state }}</option>
-                    }
-                  </select>
-                }
-                @if (
-                  address.controls.state.touched &&
-                  address.controls.state.invalid
-                ) {
-                  <small id="state-error" class="error"
-                    >Selecione o estado.</small
-                  >
-                }
-              </div>
-            </div>
-            @if (
-              !postalLoading() &&
-              (postalFilled().length > 0 || editingPostalAddress())
-            ) {
+            </fieldset>
+            <footer class="stage-footer">
               <button
-                class="text-button postal-edit"
+                class="text-button"
                 type="button"
-                (click)="togglePostalAddressEditing()"
+                (click)="step.set(1)"
+                [disabled]="busy()"
               >
-                {{
-                  editingPostalAddress()
-                    ? "Usar endereço do CEP"
-                    : "Editar endereço manualmente"
-                }}
+                ← Voltar à entrega
               </button>
-            }
-          </form>
-          <footer class="stage-footer">
-            <a routerLink="/cart" class="back-link"
-              ><span aria-hidden="true">←</span> Voltar ao carrinho</a
-            >
-          </footer>
-        }
-        @if (step() === 2) {
-          <h2 id="payment-title">Pagamento</h2>
-          <p class="payment-intro">Selecione a forma de pagamento que prefere utilizar.</p>
-          <fieldset class="payment-methods" aria-labelledby="payment-title">
-            @for (method of ["pix", "card", "boleto"]; track method) {
-              <div class="payment-card">
-                <label class="payment-option">
-                  <input
-                    type="radio"
-                    [formControl]="payment"
-                    [value]="method"
-                    name="payment"
-                  />
-                  <span class="payment-option-copy">
-                    <strong>{{ paymentLabels[method] }}</strong>
-                    <span>{{
-                      method === "pix"
-                        ? "Pagamento à vista"
-                        : method === "card"
-                          ? "Visa, Mastercard e Elo"
-                          : "Pagamento em parcela única"
-                    }}</span>
-                  </span>
-                  <span class="payment-brands" aria-hidden="true">
-                    @if (method === "pix") {
-                      <img class="payment-pix" src="/payment/pix.svg" alt="" />
-                    } @else if (method === "card") {
-                      <img class="payment-card-brand" src="/payment/visa.webp" alt="Visa" />
-                      <img class="payment-card-brand" src="/payment/mastercard.svg" alt="Mastercard" />
-                      <img class="payment-card-brand" src="/payment/elo.webp" alt="Elo" />
-                    } @else {
-                      <svg class="payment-barcode" viewBox="0 0 24 24" fill="none" focusable="false">
-                        <path d="M3 5v14m3-14v14m4-14v14m4-14v14m3-14v14m4-14v14" stroke="currentColor" stroke-width="1.5" />
-                      </svg>
-                    }
-                  </span>
-                </label>
-                @if (method === "card" && payment.value === "card") {
-                  <div class="card-demo">
-                    <div class="card-demo-content">
-                      <p>Dados fictícios para demonstração</p>
-                      <dl>
-                        <div class="card-demo-wide">
-                          <dt>Nome no cartão</dt>
-                          <dd>CLIENTE TESTE</dd>
-                        </div>
-                        <div class="card-demo-wide">
-                          <dt>Número do cartão</dt>
-                          <dd>•••• •••• •••• 1234</dd>
-                        </div>
-                        <div>
-                          <dt>Validade</dt>
-                          <dd>12/30</dd>
-                        </div>
-                        <div>
-                          <dt>CVV</dt>
-                          <dd>•••</dd>
-                        </div>
-                      </dl>
-                    </div>
-                  </div>
-                }
+            </footer>
+          }
+          @if (step() === 3) {
+            <h2 class="review-title">Confira seu pedido</h2>
+            @let delivery = address.getRawValue();
+            <section class="review-section">
+              <div class="review-heading">
+                <h3>
+                  <mat-icon aria-hidden="true">location_on</mat-icon> Endereço
+                  de entrega
+                </h3>
+                <button
+                  class="text-button review-edit"
+                  type="button"
+                  (click)="step.set(1)"
+                  [disabled]="busy()"
+                  aria-label="Editar endereço de entrega"
+                >
+                  Editar
+                </button>
               </div>
-            }
-          </fieldset>
-          <footer class="stage-footer">
-            <button
-              class="text-button"
-              type="button"
-              (click)="step.set(1)"
-              [disabled]="busy()"
-            >
-              ← Voltar à entrega
-            </button>
-          </footer>
-        }
-        @if (step() === 3) {
-          <h2 class="review-title">Confira seu pedido</h2>
-          @let delivery = address.getRawValue();
-          <section class="review-section">
-            <div class="review-heading">
-              <h3><mat-icon aria-hidden="true">location_on</mat-icon> Endereço de entrega</h3>
-              <button class="text-button review-edit" type="button" (click)="step.set(1)"
-                [disabled]="busy()" aria-label="Editar endereço de entrega">Editar</button>
-            </div>
-            <div class="review-details">
-              <strong>{{ delivery.recipient }}</strong>
-              <p>{{ delivery.street }}, {{ delivery.number }}@if (delivery.complement.trim()) { — {{ delivery.complement }} }</p>
-              <p>{{ delivery.neighborhood }}, {{ delivery.city }} — {{ delivery.state }}</p>
-              <p>CEP {{ delivery.zipCode.slice(0, 5) }}-{{ delivery.zipCode.slice(-3) }}</p>
-            </div>
-          </section>
-          <section class="review-section">
-            <div class="review-heading">
-              <h3><mat-icon aria-hidden="true">credit_card</mat-icon> Forma de pagamento</h3>
-              <button class="text-button review-edit" type="button" (click)="step.set(2)"
-                [disabled]="busy()" aria-label="Editar forma de pagamento">Editar</button>
-            </div>
-            <p class="review-method">
-              @switch (payment.value) {
-                @case ("pix") {
-                  <img class="payment-pix" src="/payment/pix.svg" alt="" />
-                }
-                @case ("card") {
-                  <img class="payment-card-brand" src="/payment/mastercard.svg" alt="" />
-                }
-                @case ("boleto") {
-                  <svg class="payment-barcode" viewBox="0 0 24 24" fill="none" focusable="false" aria-hidden="true">
-                        <path d="M3 5v14m3-14v14m4-14v14m4-14v14m3-14v14m4-14v14" stroke="currentColor" stroke-width="1.5" />
-                      </svg>
-                }
-              }
-              <span class="review-payment-copy">
-                <strong>{{ paymentLabels[payment.value] }}</strong>
-                <span class="muted">
-                  {{ payment.value === "card" ? "Mastercard terminando em 1234" :
-                    payment.value === "pix" ? "Pagamento à vista" : "Pagamento em parcela única" }}
-                </span>
-              </span>
-            </p>
-          </section>
-          <p class="simulation-note review-demo">
-            <strong>Compra demonstrativa</strong>
-            Nenhuma cobrança será realizada.
-          </p>
-          <footer class="stage-footer">
-            <button
-              class="text-button"
-              type="button"
-              (click)="step.set(2)"
-              [disabled]="busy()"
-            >
-              ← Voltar ao pagamento
-            </button>
-          </footer>
-        }
-      </div>
-      <aside class="panel order-summary" aria-labelledby="summary-title">
-        <h2 id="summary-title">Resumo do pedido</h2>
-        <div class="summary-products" [attr.aria-busy]="cart.busy()">
-          @for (item of cart.cart().items; track item.id) {
-            <article class="summary-product">
-              <div class="product-image">
-                @if (item.image) {
-                  <img
-                    [src]="imageUrl(item.image)"
-                    [alt]="item.name"
-                    (error)="hideBrokenImage($event)"
-                  />
-                }
-              </div>
-              <div class="product-info">
-                <h3>{{ item.name }}</h3>
-                <p class="unit-price">
-                  {{
-                    item.unitPrice
-                      | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-                  }}
-                  <span class="muted">/ unidade</span>
+              <div class="review-details">
+                <strong>{{ delivery.recipient }}</strong>
+                <p>
+                  {{ delivery.street }}, {{ delivery.number }}
+                  @if (delivery.complement.trim()) {
+                    — {{ delivery.complement }}
+                  }
                 </p>
-                @if (step() === 3) {
-                  <small class="review-quantity">Qtd.: {{ item.quantity }}</small>
-                } @else {
-                  <div
-                    class="quantity"
-                    [attr.aria-label]="'Quantidade de ' + item.name"
-                  >
-                    <button
-                      type="button"
-                      (click)="updateQuantity(item.id, -1)"
-                      [disabled]="busy() || cart.busy() || item.quantity <= 1"
-                      [attr.aria-label]="'Diminuir quantidade de ' + item.name"
-                    >
-                      −</button
-                    ><span aria-live="polite">{{ item.quantity }}</span
-                    ><button
-                      type="button"
-                      (click)="updateQuantity(item.id, 1)"
-                      [disabled]="
-                        busy() ||
-                        cart.busy() ||
-                        !item.available ||
-                        item.quantity >= item.stock
-                      "
-                      [attr.aria-label]="'Aumentar quantidade de ' + item.name"
-                    >
-                      +
-                    </button>
-                  </div>
-                }
-                @if (!item.available) {
-                  <small class="error"
-                    >Quantidade indisponível. Ajuste seu carrinho.</small
-                  >
-                }
+                <p>
+                  {{ delivery.neighborhood }}, {{ delivery.city }} —
+                  {{ delivery.state }}
+                </p>
+                <p>
+                  CEP {{ delivery.zipCode.slice(0, 5) }}-{{
+                    delivery.zipCode.slice(-3)
+                  }}
+                </p>
               </div>
-            </article>
+            </section>
+            <section class="review-section">
+              <div class="review-heading">
+                <h3>
+                  <mat-icon aria-hidden="true">credit_card</mat-icon> Forma de
+                  pagamento
+                </h3>
+                <button
+                  class="text-button review-edit"
+                  type="button"
+                  (click)="step.set(2)"
+                  [disabled]="busy()"
+                  aria-label="Editar forma de pagamento"
+                >
+                  Editar
+                </button>
+              </div>
+              <p class="review-method">
+                @switch (payment.value) {
+                  @case ("pix") {
+                    <img class="payment-pix" src="/payment/pix.svg" alt="" />
+                  }
+                  @case ("card") {
+                    <img
+                      class="payment-card-brand"
+                      src="/payment/mastercard.svg"
+                      alt=""
+                    />
+                  }
+                  @case ("boleto") {
+                    <svg
+                      class="payment-barcode"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      focusable="false"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M3 5v14m3-14v14m4-14v14m4-14v14m3-14v14m4-14v14"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                      />
+                    </svg>
+                  }
+                }
+                <span class="review-payment-copy">
+                  <strong>{{ paymentLabels[payment.value] }}</strong>
+                  <span class="muted">
+                    {{
+                      payment.value === "card"
+                        ? "Mastercard terminando em 1234"
+                        : payment.value === "pix"
+                          ? "Pagamento à vista"
+                          : "Pagamento em parcela única"
+                    }}
+                  </span>
+                </span>
+              </p>
+            </section>
+            <p class="simulation-note review-demo">
+              <strong>Compra demonstrativa</strong>
+              Nenhuma cobrança será realizada.
+            </p>
+            <footer class="stage-footer">
+              <button
+                class="text-button"
+                type="button"
+                (click)="step.set(2)"
+                [disabled]="busy()"
+              >
+                ← Voltar ao pagamento
+              </button>
+            </footer>
           }
         </div>
-        <div class="price-details">
-          <p class="price-line products-total">
-            <span>Produtos ({{ cart.totalItems() }})</span
-            ><span>{{
-              cart.total() | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-            }}</span>
-          </p>
-          <p class="price-line grand-total" aria-live="polite">
-            <strong>Total</strong
-            ><strong>{{
-              cart.total() | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-            }}</strong>
-          </p>
-        </div>
-        <footer class="summary-footer">
-          <button
-            class="primary"
-            [type]="step() === 1 ? 'submit' : 'button'"
-            [attr.form]="step() === 1 ? 'delivery-form' : null"
-            (click)="step() === 3 ? confirm() : step() === 2 ? next() : null"
-            [disabled]="busy() || !ready() || !!order()"
-          >
-            @if (busy() || cart.busy()) {
-              <span class="loading-dot" aria-hidden="true"></span>
-              {{ busy() ? "Confirmando…" : "Atualizando…" }}
-            } @else {
-              {{
-                step() === 1
-                  ? "Continuar para pagamento"
-                  : step() === 2
-                    ? "Revisar pedido"
-                    : "Confirmar pedido"
-              }}
-              <span aria-hidden="true">→</span>
+        <aside class="panel order-summary" aria-labelledby="summary-title">
+          <h2 id="summary-title">Resumo do pedido</h2>
+          <div class="summary-products" [attr.aria-busy]="cart.busy()">
+            @for (item of cart.cart().items; track item.id) {
+              <article class="summary-product">
+                <div class="product-image">
+                  @if (item.image) {
+                    <img
+                      [src]="imageUrl(item.image)"
+                      [alt]="item.name"
+                      (error)="hideBrokenImage($event)"
+                    />
+                  }
+                </div>
+                <div class="product-info">
+                  <h3>{{ item.name }}</h3>
+                  <p class="unit-price">
+                    {{
+                      item.unitPrice
+                        | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                    }}
+                    <span class="muted">/ unidade</span>
+                  </p>
+                  @if (step() === 3) {
+                    <small class="review-quantity"
+                      >Qtd.: {{ item.quantity }}</small
+                    >
+                  } @else {
+                    <div
+                      class="quantity"
+                      [attr.aria-label]="'Quantidade de ' + item.name"
+                    >
+                      <button
+                        type="button"
+                        (click)="updateQuantity(item.id, -1)"
+                        [disabled]="busy() || cart.busy() || item.quantity <= 1"
+                        [attr.aria-label]="
+                          'Diminuir quantidade de ' + item.name
+                        "
+                      >
+                        −</button
+                      ><span aria-live="polite">{{ item.quantity }}</span
+                      ><button
+                        type="button"
+                        (click)="updateQuantity(item.id, 1)"
+                        [disabled]="
+                          busy() ||
+                          cart.busy() ||
+                          !item.available ||
+                          item.quantity >= item.stock
+                        "
+                        [attr.aria-label]="
+                          'Aumentar quantidade de ' + item.name
+                        "
+                      >
+                        +
+                      </button>
+                    </div>
+                  }
+                  @if (!item.available) {
+                    <small class="error"
+                      >Quantidade indisponível. Ajuste seu carrinho.</small
+                    >
+                  }
+                </div>
+              </article>
             }
-          </button>
-        </footer>
-      </aside>
-    </div>
-  </section>
+          </div>
+          <div class="price-details">
+            <p class="price-line products-total">
+              <span>Produtos ({{ cart.totalItems() }})</span
+              ><span>{{
+                cart.total() | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+              }}</span>
+            </p>
+            <p class="price-line grand-total" aria-live="polite">
+              <strong>Total</strong
+              ><strong>{{
+                cart.total() | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+              }}</strong>
+            </p>
+          </div>
+          <footer class="summary-footer">
+            <button
+              class="primary"
+              [type]="step() === 1 ? 'submit' : 'button'"
+              [attr.form]="step() === 1 ? 'delivery-form' : null"
+              (click)="step() === 3 ? confirm() : step() === 2 ? next() : null"
+              [disabled]="busy() || !ready() || !!order()"
+            >
+              @if (busy() || cart.busy()) {
+                <span class="loading-dot" aria-hidden="true"></span>
+                {{ busy() ? "Confirmando…" : "Atualizando…" }}
+              } @else {
+                {{
+                  step() === 1
+                    ? "Continuar para pagamento"
+                    : step() === 2
+                      ? "Revisar pedido"
+                      : "Confirmar pedido"
+                }}
+                <span aria-hidden="true">→</span>
+              }
+            </button>
+          </footer>
+        </aside>
+      </div>
+    </section>
   }
 </app-catalog-layout>

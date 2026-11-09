@@ -2,7 +2,11 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpBackend, HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpBackend,
+  HttpClient,
+  HttpErrorResponse,
+} from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import {
@@ -296,15 +300,15 @@ export class CheckoutComponent {
     this.busy.set(true);
     this.error.set('');
     this.http
-      .post<{ success?: boolean; data?: { id: number; total: number; status: string } } | null>(
-        'http://localhost:8080/checkout',
-        {
-          requestKey: this.requestKey,
-          address: this.address.getRawValue(),
-          paymentMethod: this.payment.value,
-          expectedTotalCents: Math.round(this.cart.total() * 100),
-        },
-      )
+      .post<{
+        success?: boolean;
+        data?: { id: number; total: number; status: string };
+      } | null>('http://localhost:8080/checkout', {
+        requestKey: this.requestKey,
+        address: this.address.getRawValue(),
+        paymentMethod: this.payment.value,
+        expectedTotalCents: Math.round(this.cart.total() * 100),
+      })
       .pipe(
         takeUntil(this.auth.userChanged),
         finalize(() => this.busy.set(false)),
@@ -312,11 +316,18 @@ export class CheckoutComponent {
       .subscribe({
         next: (response) => {
           const order = response?.data;
-          if (response?.success !== true || !order ||
-              !Number.isSafeInteger(order.id) || order.id <= 0 ||
-              !Number.isFinite(order.total) || order.total < 0 ||
-              order.status !== 'simulated_approved') {
-            this.error.set('Resposta inválida do servidor. Tente novamente para consultar ou concluir esta mesma compra.');
+          if (
+            response?.success !== true ||
+            !order ||
+            !Number.isSafeInteger(order.id) ||
+            order.id <= 0 ||
+            !Number.isFinite(order.total) ||
+            order.total < 0 ||
+            order.status !== 'simulated_approved'
+          ) {
+            this.error.set(
+              'Resposta inválida do servidor. Tente novamente para consultar ou concluir esta mesma compra.',
+            );
             return;
           }
           this.order.set(order);
@@ -324,18 +335,21 @@ export class CheckoutComponent {
         },
         error: (error: HttpErrorResponse) => {
           const body = error.error;
-          const message = body?.success === false && typeof body.message === 'string'
-            ? body.message
-            : null;
+          const message =
+            body?.success === false && typeof body.message === 'string'
+              ? body.message
+              : null;
           this.error.set(
             error.status === 0
               ? 'Sem conexão. Tente novamente para consultar ou concluir esta mesma compra.'
               : error.status === 401
                 ? 'Sua sessão expirou. Faça login novamente.'
                 : (error.status >= 200 && error.status < 300) ||
-                    typeof body === 'string' || body?.error instanceof SyntaxError
+                    typeof body === 'string' ||
+                    body?.error instanceof SyntaxError
                   ? 'Resposta inválida do servidor. Tente novamente para consultar ou concluir esta mesma compra.'
-                  : message || 'Não foi possível concluir a compra. Tente novamente.',
+                  : message ||
+                    'Não foi possível concluir a compra. Tente novamente.',
           );
           if (error.status === 409) {
             this.cart.load();
@@ -364,7 +378,8 @@ export class CheckoutComponent {
   }
 
   updateQuantity(id: number, change: number): void {
-    if (this.step() === 3 || this.busy() || this.cart.busy() || this.order()) return;
+    if (this.step() === 3 || this.busy() || this.cart.busy() || this.order())
+      return;
     const item = this.cart.cart().items.find((item) => item.id === id);
     if (!item || ![-1, 1].includes(change)) return;
     const quantity = item.quantity + change;

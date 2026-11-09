@@ -1,18 +1,235 @@
 <!doctype html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
-<body style="margin:0;padding:24px 12px;background:#eef0e7;font-family:Arial,sans-serif;color:#3d4836">
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;margin:auto;background:#fffdf8;border-radius:16px">
-<tr><td style="padding:24px">
-  <p style="letter-spacing:2px;font-weight:bold">BOX ENXOVAIS</p>
-  <h1 style="font-size:24px">Pedido #{{.Order.ID}} confirmado</h1>
-  <p>Olá, {{.Name}}! Seu pedido foi registrado.</p>
-  <table width="100%" cellpadding="8" cellspacing="0" style="text-align:left">
-    <thead><tr><th>Produto</th><th>Qtd.</th><th>Valor unitário</th></tr></thead>
-    <tbody>{{range .Order.ReceiptItems}}<tr><td>{{.Name}}</td><td>{{.Quantity}}</td><td>{{money .UnitPrice}}</td></tr>{{end}}</tbody>
-  </table>
-  <p><strong>Total: {{money .Order.Total}}</strong></p>
-  <p style="padding:12px;background:#f5f4ed;border-radius:8px">Pagamento simulado. Nenhuma cobrança foi realizada.</p>
-</td></tr></table>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pedido #{{.Order.ID}} confirmado | Box Enxovais</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      background-color: #dfe6d8;
+      color: #3d4836;
+      font-family: Arial, Helvetica, sans-serif;
+    "
+  >
+    <table
+      role="presentation"
+      width="100%"
+      cellspacing="0"
+      cellpadding="0"
+      border="0"
+      bgcolor="#dfe6d8"
+    >
+      <tr>
+        <td align="center" style="padding: 24px 12px">
+          <!--[if mso]><table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0"><tr><td><![endif]-->
+          <table
+            role="presentation"
+            width="100%"
+            cellspacing="0"
+            cellpadding="0"
+            border="0"
+            style="
+              max-width: 600px;
+              background-color: #fffdf8;
+              border-radius: 24px;
+            "
+          >
+            <tr>
+              <td align="center" bgcolor="#edf0e5" style="padding: 12px 12px; background-color: #edf0e5; border-radius: 24px 24px 0 0">
+                <img src="cid:checkout-footer-logo.png" alt="Box Enxovais — Casa bem vivida" width="144" height="113" style="display:block;width:144px;max-width:100%;height:auto;margin:0 auto;border:0;color:#3d4836">
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 22px 20px 20px; color: #3d4836">
+                <h1
+                  style="
+                    margin: 0 0 8px;
+                    color: #3d4836;
+                    font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                    font-size: 27px;
+                    font-weight: 400;
+                    line-height: 1.25;
+                  "
+                >
+                  Pedido #{{.Order.ID}} confirmado!
+                </h1>
+                <p
+                  style="
+                    margin: 0 0 16px;
+                    color: #5f6858;
+                    font-size: 15px;
+                    line-height: 1.6;
+                  "
+                >
+                  Olá, {{.Name}}! Recebemos seu pedido com sucesso.
+                </p>
+                <h2
+                  style="
+                    margin: 0 0 10px;
+                    font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                    font-size: 21px;
+                    font-weight: 400;
+                  "
+                >
+                  Resumo do seu pedido
+                </h2>
+                <table
+                  width="100%"
+                  cellspacing="0"
+                  cellpadding="0"
+                  border="0"
+                  style="
+                    table-layout: fixed;
+                    border-collapse: collapse;
+                    font-size: 13px;
+                    line-height: 1.45;
+                  "
+                >
+                  <thead style="background-color: #f5f4ed">
+                    <tr>
+                      <th
+                        scope="col"
+                        width="48%"
+                        align="left"
+                        style="
+                          padding: 8px 6px;
+                          border-bottom: 1px solid #deddd2;
+                        "
+                      >
+                        Produto
+                      </th>
+                      <th
+                        scope="col"
+                        width="20%"
+                        align="center"
+                        style="
+                          padding: 8px 6px;
+                          border-bottom: 1px solid #deddd2;
+                        "
+                      >
+                        Qtd.
+                      </th>
+                      <th
+                        scope="col"
+                        width="32%"
+                        align="right"
+                        style="
+                          padding: 8px 6px;
+                          border-bottom: 1px solid #deddd2;
+                        "
+                      >
+                        Valor unitário
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{range .Order.ReceiptItems}}
+                    <tr>
+                      <td
+                        valign="top"
+                        style="
+                          padding: 8px 6px;
+                          border-bottom: 1px solid #e8e6dc;
+                          overflow-wrap: anywhere;
+                          word-wrap: break-word;
+                        "
+                      >
+                        {{.Name}}
+                      </td>
+                      <td
+                        valign="top"
+                        align="center"
+                        style="
+                          padding: 8px 6px;
+                          border-bottom: 1px solid #e8e6dc;
+                        "
+                      >
+                        {{.Quantity}}
+                      </td>
+                      <td
+                        valign="top"
+                        align="right"
+                        style="
+                          padding: 8px 6px;
+                          border-bottom: 1px solid #e8e6dc;
+                        "
+                      >
+                        {{money .UnitPrice}}
+                      </td>
+                    </tr>
+                    {{end}}
+                  </tbody>
+                </table>
+                <table
+                  role="presentation"
+                  width="100%"
+                  cellspacing="0"
+                  cellpadding="0"
+                  border="0"
+                  style="margin-top: 14px"
+                >
+                  <tr>
+                    <td
+                      align="center"
+                      style="
+                        padding: 14px 12px;
+                        background-color: #f5f4ed;
+                        border-radius: 14px;
+                      "
+                    >
+                      <p
+                        style="
+                          margin: 0 0 4px;
+                          font-size: 11px;
+                          font-weight: bold;
+                          letter-spacing: 1px;
+                        "
+                      >
+                        TOTAL DO PEDIDO
+                      </p>
+                      <p
+                        style="
+                          margin: 0;
+                          color: #3d4836;
+                          font-family: Verdana, Arial, sans-serif;
+                          font-size: 24px;
+                          font-weight: bold;
+                        "
+                      >
+                        {{money .Order.Total}}
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td
+                align="center"
+                style="
+                  padding: 10px 16px;
+                  background-color: #edf0e5;
+                  border-radius: 0 0 24px 24px;
+                "
+              >
+                <p
+                  style="
+                    margin: 0;
+                    color: #667255;
+                    font-size: 11px;
+                    line-height: 1.5;
+                  "
+                >
+                  Este é um e-mail automático. Por favor, não responda.
+                </p>
+              </td>
+            </tr>
+          </table>
+          <!--[if mso]></td></tr></table><![endif]-->
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>

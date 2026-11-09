@@ -1,69 +1,121 @@
 .purchase-success {
   box-sizing: border-box;
-  width: min(calc(100% - 32px), 640px);
+  width: min(calc(100% - 32px), 1130px);
   margin-inline: auto;
-  padding-block: clamp(36px, 7vw, 88px);
+  padding-block: clamp(32px, 6vw, 80px);
   color: #3d4836;
   font-family: 'Montserrat', sans-serif;
   text-align: center;
   overflow-wrap: anywhere;
 
   h1 {
-    margin: 16px 0 12px;
-    font-size: clamp(1.6rem, 5vw, 2.35rem);
+    margin: 12px 0 16px;
+    font-size: clamp(1.9rem, 4.1vw, 3.25rem);
     font-weight: 600;
-    line-height: 1.2;
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
   }
 
-  p {
-    margin: 0 auto 16px;
-    line-height: 1.55;
+  p { line-height: 1.55; }
+
+  .success-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(20px, 4vw, 64px);
   }
 
-  .success-mark {
-    display: block;
-    width: clamp(68px, 14vw, 88px);
-    height: auto;
-    margin-inline: auto;
+  .success-art { display: block; width: 100%; height: auto; }
+  .success-details { min-width: 0; }
+
+  .success-eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0;
+    color: #667255;
+    font-size: 0.75rem;
+    font-weight: 650;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+
+    &::before, &::after {
+      content: '';
+      width: clamp(12px, 4vw, 32px);
+      height: 1px;
+      background: #aab59a;
+    }
   }
 
-  .success-mark path {
+  .success-description {
+    max-width: 42ch;
+    margin: 0 auto 24px;
+    color: #61675b;
+  }
+
+  .order-strip {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0 auto 12px;
+    padding: 14px 4px;
+    border-radius: 16px;
+    background: #f5f2e9;
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 0;
+      padding-inline: 8px;
+    }
+
+    > div + div { border-left: 1px solid #d8d1c4; }
+    span { font-size: 0.75rem; text-align: left; }
+    strong { display: block; font-size: clamp(0.82rem, 2.5vw, 1rem); }
+  }
+
+  .order-strip svg, .demo-note svg {
+    flex: none;
+    width: 22px;
+    height: 22px;
     fill: none;
-    stroke: #526044;
-    stroke-width: 4;
+    stroke: #667255;
+    stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
-  .success-details > p:first-child { max-width: 46ch; }
-
-  .order-strip {
+  .demo-note {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
-    gap: 6px 24px;
-    width: fit-content;
-    max-width: 100%;
-    box-sizing: border-box;
-    padding: 12px 18px;
+    gap: 8px;
+    margin: 0 0 20px;
+    padding: 10px 12px;
     border-radius: 12px;
-    background: #eef0e7;
-    font-size: 0.9rem;
+    background: #f8f5ec;
+    color: #61675b;
+    font-size: 0.79rem;
+    text-align: left;
+
+    svg { width: 18px; height: 18px; }
   }
 
-  .demo-note { color: #64695e; font-size: 0.82rem; }
   .retry { color: inherit; text-decoration: underline; cursor: pointer; }
 
   .continue {
     display: inline-flex;
-    justify-content: center;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 12px;
     box-sizing: border-box;
-    max-width: 100%;
-    margin-top: 8px;
-    padding: 13px 24px;
-    border-radius: 12px;
+    width: min(100%, 320px);
+    min-height: 48px;
+    padding: 12px 18px;
+    border-radius: 999px;
     background: #667255;
     color: #fffdf8;
     font-weight: 600;
@@ -75,33 +127,22 @@
   :is(a, button):focus-visible { outline: 2px solid #667255; outline-offset: 3px; }
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media (max-width: 740px) {
   .purchase-success {
-    .success-mark circle {
-      transform-origin: center;
-      animation: success-circle 260ms ease-out both;
-    }
-
-    .success-mark path {
-      stroke-dasharray: 1;
-      animation: success-draw 380ms ease-out 120ms both;
-    }
-
-    .success-title { animation: success-reveal 300ms ease-out 160ms both; }
-    .success-details { animation: success-reveal 320ms ease-out 240ms both; }
-    .continue { transition: background-color 160ms ease; }
+    .success-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .success-art { width: min(100%, 340px); margin-inline: auto; }
   }
 }
 
-@keyframes success-circle {
-  from { opacity: 0; transform: scale(0.82); }
+@media (prefers-reduced-motion: no-preference) {
+  .purchase-success {
+    .success-details { animation: success-content-enter 480ms ease-out 1050ms both; }
+    .continue { transition: background-color 180ms ease; }
+    .continue span { transition: transform 180ms ease; }
+    .continue:hover span { transform: translateX(4px); }
+  }
 }
 
-@keyframes success-draw {
-  from { stroke-dashoffset: 1; }
-  to { stroke-dashoffset: 0; }
-}
-
-@keyframes success-reveal {
-  from { opacity: 0; transform: translateY(6px); }
+@keyframes success-content-enter {
+  from { opacity: 0; transform: translateY(8px); }
 }

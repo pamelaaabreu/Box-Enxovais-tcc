@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 470">
+  <defs>
+    <linearGradient id="cardboard" x2=".85" y2="1">
+      <stop stop-color="#e4c7a2"/><stop offset="1" stop-color="#bf9672"/>
+    </linearGradient>
+    <linearGradient id="linen" x2="0" y2="1">
+      <stop stop-color="#fff8e9"/><stop offset="1" stop-color="#e4d3b5"/>
+    </linearGradient>
+    <linearGradient id="sage" x2="1" y2="1">
+      <stop stop-color="#c1c9ab"/><stop offset="1" stop-color="#8d9a78"/>
+    </linearGradient>
+  </defs>
+  <style>
+    @media (prefers-reduced-motion: no-preference) {
+      .box { animation: rise 500ms ease-out both; }
+      .flap { transform-box: fill-box; transform-origin: center bottom; animation: open 520ms ease-out 220ms both; }
+      .textile { animation: rise 500ms ease-out 430ms both; }
+      .seal { transform-box: fill-box; transform-origin: center; animation: seal-in 380ms ease-out 770ms both; }
+      .check { stroke-dasharray: 1; animation: draw 450ms ease-out 1000ms both; }
+    }
+    @keyframes rise { from { opacity: 0; transform: translateY(13px); } }
+    @keyframes open { from { opacity: .55; transform: scaleY(.68); } }
+    @keyframes seal-in { from { opacity: 0; transform: scale(.85); } }
+    @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  </style>
+  <path fill="#e8eddf" d="M56 235C66 146 148 69 247 83c51 7 62 26 112 26 79-1 132 67 125 151-9 105-74 161-174 162-66 0-94-24-147-28C85 388 44 340 56 235Z"/>
+  <ellipse cx="270" cy="403" rx="177" ry="17" fill="#56694e" opacity=".09"/>
+  <g fill="none" stroke="#8a987d" stroke-width="1.5" stroke-linecap="round" opacity=".65">
+    <path d="M407 399q53-36 77-97m-25 46q-19-28-8-44 15 14 8 44Zm13-20q29-7 36-24-27-1-36 24Zm-28 42q-27-14-27-36 22 7 27 36Zm-9 6q32 3 46-15-24-9-46 15Z"/>
+  </g>
+  <g class="box" stroke="#98785d" stroke-width="1.4" stroke-linejoin="round">
+    <path d="m122 265 149-57 147 49-146 65Z" fill="#9b795c"/>
+    <path class="flap" d="m122 265 149-57-46-48-150 52Z" fill="#d9b48d"/>
+    <path class="flap" d="m271 208 147 49 50-57-150-44Z" fill="#e8c9a2"/>
+    <g class="textile">
+      <path d="M154 237q-8-19 5-47l14-43q4-13 19-13l100 14q13 1 12 15l-11 80q-2 14-20 14Z" fill="url(#linen)" stroke="#af9d82"/>
+      <path d="M162 233q-2-19 7-42l12-40q4-8 15-8l89 12q10 1 9 12l-11 73q-1 8-12 8Z" fill="none" stroke="#cdbb9d"/>
+      <path d="M268 215q10-18 28-17l67 11q18 4 19 18l-5 52-99-9Z" fill="url(#sage)" stroke="#7b896d"/>
+      <path d="M351 214q-11 6-12 19l-5 42m25-58q-12 6-13 19l-4 40m23-56q-11 8-12 20l-4 36" fill="none" stroke="#a7b194"/>
+      <path d="m164 257 7-17q4-9 15-9l117 12q13 1 14 12l-1 16-145-7q-8-1-7-7Z" fill="url(#linen)" stroke="#ad9d81"/>
+      <path d="m167 270 5-12q4-6 15-5l125 10q9 1 9 10l-1 15-146-4q-11-1-7-14Z" fill="#a4ae8c" stroke="#7d896b"/>
+      <path d="m181 246 122 11m-123 9 124 10" fill="none" opacity=".55"/>
+    </g>
+    <path d="m122 265 150 57v88l-150-52Z" fill="url(#cardboard)"/>
+    <path d="m272 322 146-65v101l-146 52Z" fill="#d7b18a"/>
+    <path class="flap" d="m122 265 150 57-29 34-155-54Z" fill="#ebcda8"/>
+    <path class="flap" d="m272 322 146-65 34 37-146 62Z" fill="#e4c39b"/>
+    <path d="m173 344 18-6 18 6v16l-18 7-18-7Zm0 0 18 7 18-7m-18 7v16m-9-26 18 7" fill="none" stroke="#526044" stroke-width="1.5"/>
+  </g>
+  <g class="seal">
+    <circle cx="290" cy="92" r="37" fill="#f6f8ef"/>
+    <circle cx="290" cy="92" r="30" fill="#667255"/>
+    <path class="check" pathLength="1" d="m276 92 9 9 19-20" fill="none" stroke="#fffdf8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
