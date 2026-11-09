@@ -9,9 +9,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, Injector, TemplateRef, computed, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CustomAlertService } from '../../core/services/custom-alert.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
@@ -53,6 +56,7 @@ interface Order {
 
 interface Details extends Order {
   canCancel: boolean;
+  cancellation?: { reasonCode: string; reasonDetails?: string };
   cancellationRemainingMs?: number;
   address: {
     recipient: string;
@@ -82,9 +86,11 @@ interface OrderPage {
     DatePipe,
     NgTemplateOutlet,
     MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    ReactiveFormsModule,
     MatSelectModule,
     MatDialogModule,
-    MatSnackBarModule,
     MatProgressSpinnerModule,
   ],
   templateUrl: './order-history.component.html',
@@ -94,8 +100,21 @@ export class OrderHistoryComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly auth = inject(AuthService);
   private readonly dialog = inject(MatDialog);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly alerts = inject(CustomAlertService);
   private cancellationDialog?: MatDialogRef<unknown, boolean>;
+  readonly cancellationReasons = new Map([
+    ['changed_mind', 'Desisti da compra'],
+    ['wrong_product', 'Escolhi o produto errado'],
+    ['wrong_address', 'Informei o endereço errado'],
+    ['duplicate_order', 'Realizei o pedido em duplicidade'],
+    ['other', 'Outro motivo'],
+  ]);
+  readonly cancellationReason = new FormControl('', { nonNullable: true, validators: Validators.required });
+  readonly cancellationDetails = new FormControl('', { nonNullable: true, validators: Validators.maxLength(500) });
+  get canConfirmCancellation(): boolean {
+    return this.cancellationReasons.has(this.cancellationReason.value)
+      && (this.cancellationReason.value !== 'other' || (this.cancellationDetails.valid && !!this.cancellationDetails.value.trim()));
+  }
   readonly cancelling = signal(false);
   readonly cancelError = signal('');
   private readonly http = inject(HttpClient);
@@ -323,10 +342,12 @@ export class OrderHistoryComponent {
 
   confirmCancellation(template: TemplateRef<unknown>, order: Details): void {
     if (!order.canCancel || order.status === 'cancelled' || this.cancellationDialog) return;
+    this.cancellationReason.reset();
+    this.cancellationDetails.reset();
     this.cancelError.set('');
     const dialog = this.dialog.open(template, {
       ariaLabel: 'Cancelar pedido #' + order.id + '?',
-      width: '490px',
+      width: '530px',
       maxWidth: 'calc(100% - 32px)',
       autoFocus: 'first-tabbable',
       disableClose: true,
@@ -342,20 +363,25 @@ export class OrderHistoryComponent {
   cancelPurchase(): void {
     const order = this.details();
     const dialog = this.cancellationDialog;
-    if (!order?.canCancel || !dialog || this.cancelling()) return;
+    if (!order?.canCancel || !dialog || this.cancelling() || !this.canConfirmCancellation) return;
 
     this.cancelError.set('');
     this.cancelling.set(true);
-    this.http.post<{ data: Details }>('http://localhost:8080/orders/' + order.id + '/cancel', {}).pipe(
+    this.http.post<{ data: Details }>('http://localhost:8080/orders/' + order.id + '/cancel', {
+      reasonCode: this.cancellationReason.value,
+      reasonDetails: this.cancellationReason.value === 'other' ? this.cancellationDetails.value.trim() : '',
+    }).pipe(
       takeUntil(this.auth.userChanged),
       takeUntilDestroyed(this.destroyRef),
       finalize(() => this.cancelling.set(false)),
     ).subscribe({
       next: ({ data }) => {
         if (this.details()?.id !== order.id) return;
-        dialog.close();
         this.details.set(data);
-        this.snackBar.open('Pedido cancelado com sucesso.', 'Fechar', { duration: 5000 });
+        dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+          this.alerts.success('Pedido cancelado com sucesso!');
+        });
+        dialog.close();
       },
       error: (error: HttpErrorResponse) => {
         if (error.status === 401) {
@@ -364,7 +390,7 @@ export class OrderHistoryComponent {
         }
         if (this.details()?.id !== order.id) return;
         if (error.status === 410) this.details.update(current => current && ({ ...current, canCancel: false }));
-        this.cancelError.set((error.status === 409 || error.status === 410) && typeof error.error?.message === 'string'
+        this.cancelError.set((error.status === 400 || error.status === 409 || error.status === 410) && typeof error.error?.message === 'string'
           ? error.error.message : 'Não foi possível cancelar o pedido. Tente novamente.');
       },
     });

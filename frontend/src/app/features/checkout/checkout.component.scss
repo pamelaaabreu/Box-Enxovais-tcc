@@ -791,3 +791,7 @@
     transition: none;
   }
 }
+
+.delivery-choice { margin-block: 12px; }
+.saved-address-select { width: 100%; min-width: 0; }
+.save-delivery-address { display: flex; align-items: center; gap: 8px; margin-block: 12px; }

@@ -3,10 +3,12 @@ import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  HttpBackend,
   HttpClient,
   HttpErrorResponse,
 } from '@angular/common/http';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import {
@@ -18,11 +20,11 @@ import {
   switchMap,
   takeUntil,
   tap,
-  timeout,
   timer,
 } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CartService } from '../../core/services/cart.service';
+import { AccountService, SavedAddress, contactPhonePattern } from '../../core/services/account.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/catalog-layout.component';
 
@@ -38,20 +40,28 @@ type PostalField = (typeof postalFields)[number];
     CurrencyPipe,
     ReactiveFormsModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    NgxMaskDirective,
     RouterLink,
     CatalogLayoutComponent,
   ],
+  providers: [provideNgxMask({ validation: false })],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss',
 })
 export class CheckoutComponent {
   readonly cart = inject(CartService);
   private readonly http = inject(HttpClient);
-  // Public lookup must never carry the API's authentication headers.
-  private readonly postalHttp = new HttpClient(inject(HttpBackend));
+  private readonly account = inject(AccountService);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  readonly savedAddresses = signal<SavedAddress[]>([]);
+  readonly selectedAddressId = signal(0);
+  readonly selectedAddress = computed(() => this.savedAddresses().find(address => address.id === this.selectedAddressId()));
+  readonly saveAddress = this.fb.nonNullable.control(false);
+  readonly contactPhone = this.fb.nonNullable.control('', Validators.pattern(contactPhonePattern));
   readonly step = signal(1);
   readonly busy = signal(false);
   readonly error = signal('');
@@ -174,6 +184,23 @@ export class CheckoutComponent {
   };
   constructor() {
     this.cart.load();
+    this.account.addresses().pipe(takeUntilDestroyed()).subscribe({
+      next: addresses => {
+        this.savedAddresses.set(addresses);
+        if (this.step() === 1 && this.address.pristine) {
+          this.selectedAddressId.set(addresses.find(address => address.isDefault)?.id ?? 0);
+        }
+      },
+      error: () => { /* Manual delivery remains available. */ },
+    });
+    this.account.profile().pipe(takeUntilDestroyed()).subscribe({
+      next: profile => {
+        if (this.contactPhone.pristine && contactPhonePattern.test(profile.phone)) {
+          this.contactPhone.setValue(profile.phone);
+        }
+      },
+      error: () => { /* A contact number may still be entered manually. */ },
+    });
     this.auth.userChanged.pipe(takeUntilDestroyed()).subscribe(() => {
       void this.router.navigate(['/cart']);
     });
@@ -203,17 +230,7 @@ export class CheckoutComponent {
           const revisions = { ...this.postalRevisions };
           return timer(300).pipe(
             tap(() => this.postalLoading.set(true)),
-            switchMap(() =>
-              this.postalHttp
-                .get<{
-                  erro?: boolean | string;
-                  logradouro?: string;
-                  bairro?: string;
-                  localidade?: string;
-                  uf?: string;
-                }>(`https://viacep.com.br/ws/${cep}/json/`)
-                .pipe(timeout(8000)),
-            ),
+            switchMap(() => this.account.lookupZip(cep)),
             tap((result) => {
               if (result.erro) {
                 this.postalMessage.set(
@@ -282,7 +299,8 @@ export class CheckoutComponent {
   next(): void {
     if (this.busy() || ![1, 2].includes(this.step())) return;
     this.address.markAllAsTouched();
-    if (this.address.invalid || !this.ready()) return;
+    this.contactPhone.markAsTouched();
+    if ((!this.selectedAddress() && this.address.invalid) || this.contactPhone.invalid || !this.ready()) return;
     if (!Object.hasOwn(this.paymentLabels, this.payment.value)) return;
     this.error.set('');
     this.step.update((value) => Math.min(value + 1, 3));
@@ -292,7 +310,7 @@ export class CheckoutComponent {
       this.busy() ||
       !!this.order() ||
       !this.ready() ||
-      this.address.invalid ||
+      (!this.selectedAddress() && this.address.invalid) || this.contactPhone.invalid ||
       this.step() !== 3 ||
       !Object.hasOwn(this.paymentLabels, this.payment.value)
     )
@@ -305,7 +323,11 @@ export class CheckoutComponent {
         data?: { id: number; total: number; status: string };
       } | null>('http://localhost:8080/checkout', {
         requestKey: this.requestKey,
-        address: this.address.getRawValue(),
+        ...(this.selectedAddress()
+          ? { addressId: this.selectedAddressId() }
+          : { address: this.address.getRawValue() }),
+        ...(this.saveAddress.value && !this.selectedAddress() ? { saveAddress: true } : {}),
+        ...(this.contactPhone.value ? { contactPhone: this.contactPhone.value } : {}),
         paymentMethod: this.payment.value,
         expectedTotalCents: Math.round(this.cart.total() * 100),
       })
@@ -353,6 +375,23 @@ export class CheckoutComponent {
           );
           if (error.status === 409) {
             this.cart.load();
+    this.account.addresses().pipe(takeUntilDestroyed()).subscribe({
+      next: addresses => {
+        this.savedAddresses.set(addresses);
+        if (this.step() === 1 && this.address.pristine) {
+          this.selectedAddressId.set(addresses.find(address => address.isDefault)?.id ?? 0);
+        }
+      },
+      error: () => { /* Manual delivery remains available. */ },
+    });
+    this.account.profile().pipe(takeUntilDestroyed()).subscribe({
+      next: profile => {
+        if (this.contactPhone.pristine && contactPhonePattern.test(profile.phone)) {
+          this.contactPhone.setValue(profile.phone);
+        }
+      },
+      error: () => { /* A contact number may still be entered manually. */ },
+    });
             this.step.set(2);
           }
           if (error.status === 401) void this.router.navigate(['/login']);
@@ -367,6 +406,23 @@ export class CheckoutComponent {
     try {
       if (await this.router.navigate(['/checkout/success', order.id])) {
         this.cart.load();
+    this.account.addresses().pipe(takeUntilDestroyed()).subscribe({
+      next: addresses => {
+        this.savedAddresses.set(addresses);
+        if (this.step() === 1 && this.address.pristine) {
+          this.selectedAddressId.set(addresses.find(address => address.isDefault)?.id ?? 0);
+        }
+      },
+      error: () => { /* Manual delivery remains available. */ },
+    });
+    this.account.profile().pipe(takeUntilDestroyed()).subscribe({
+      next: profile => {
+        if (this.contactPhone.pristine && contactPhonePattern.test(profile.phone)) {
+          this.contactPhone.setValue(profile.phone);
+        }
+      },
+      error: () => { /* A contact number may still be entered manually. */ },
+    });
         return;
       }
     } catch {

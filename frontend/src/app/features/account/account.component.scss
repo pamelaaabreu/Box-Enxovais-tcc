@@ -1,0 +1,63 @@
+.account {
+  box-sizing: border-box;
+  width: min(100%, 1120px);
+  margin: auto;
+  padding: 32px clamp(16px, 4vw, 40px) 56px;
+  color: #3d4836;
+}
+
+nav, .actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+
+a { color: inherit; }
+
+section, article {
+  background: #fffdf8;
+  border: 1px solid #e4ded1;
+  border-radius: 18px;
+  padding: clamp(16px, 3vw, 26px);
+  margin-block: 20px;
+  overflow-wrap: anywhere;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+}
+
+.fields > mat-form-field { min-width: 0; }
+
+.badge {
+  display: inline-block;
+  margin-inline-start: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eef0e9;
+}
+
+@media (max-width: 620px) {
+  .fields { grid-template-columns: minmax(0, 1fr); }
+}
+
+.account {
+  --mdc-filled-button-container-color: #3d4836;
+  --mdc-filled-button-label-text-color: #fffdf8;
+  --mdc-filled-button-container-shape: 999px;
+  --mdc-outlined-button-container-shape: 999px;
+  --mdc-outlined-button-label-text-color: #3d4836;
+  --mdc-outlined-button-outline-color: #a2aa96;
+  --mdc-outlined-text-field-focus-outline-color: #667255;
+  --mdc-outlined-text-field-focus-label-text-color: #3d4836;
+  --mdc-outlined-text-field-container-shape: 12px;
+}
+
+section h2 { margin: 0 0 18px; font-size: 1.25rem; }
+.saved-address { background: #f8f6f0; }
+.saved-address h3 { display: inline-block; margin: 0; font-size: 1rem; }
+.saved-address p { line-height: 1.6; }
+.badge { color: #3d4836; font-size: .8125rem; font-weight: 600; }

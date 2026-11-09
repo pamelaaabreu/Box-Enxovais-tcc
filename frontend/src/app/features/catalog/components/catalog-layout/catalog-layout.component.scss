@@ -116,14 +116,13 @@
 
 :host(.order-history-surface) .catalog-content {
   max-width: none;
-  background: #fffdf8;
-}
+  }
 
-:host(.order-history-list) app-main-navbar {
+:host(.order-history-surface) app-main-navbar {
   display: flow-root;
   background-color: #eef0e9;
 }
 
-:host(.order-history-list) .catalog-content {
+:host(.order-history-surface) .catalog-content {
   background: linear-gradient(#eef0e9, #fffdf8 96px);
 }

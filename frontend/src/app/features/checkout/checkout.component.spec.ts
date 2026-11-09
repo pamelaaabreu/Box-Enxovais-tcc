@@ -36,6 +36,20 @@ describe('CheckoutComponent', () => {
     const fixture = TestBed.createComponent(CheckoutComponent);
     const component = fixture.componentInstance;
     const http = TestBed.inject(HttpTestingController);
+    const saved = {
+      id: 41, label: 'Casa', isDefault: true, recipient: 'Pessoa Teste',
+      street: 'Rua Salva', number: '8', zipCode: '01001-000', complement: '',
+      neighborhood: 'Centro', city: 'São Paulo', state: 'SP',
+    };
+    http.expectOne('http://localhost:8080/me/addresses').flush({ data: [saved] });
+    http.expectOne('http://localhost:8080/me').flush({
+      data: { name: 'Pessoa Teste', email: 'test@example.com', phone: '11912345678' },
+    });
+    expect(component.selectedAddress()?.id).toBe(41);
+    expect(component.contactPhone.value).toBe('11912345678');
+    component.selectedAddressId.set(0);
+    component.saveAddress.setValue(true);
+    component.contactPhone.setValue('11987654321');
     const navigate = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
     component.address.setValue({
       recipient: 'Nome Inicial', zipCode: '01001-000', street: 'Rua Teste',
@@ -71,6 +85,9 @@ describe('CheckoutComponent', () => {
     component.confirm();
     const request = http.expectOne({ method: 'POST', url: 'http://localhost:8080/checkout' });
     expect(request.request.body.address).toEqual(component.address.getRawValue());
+    expect(request.request.body.saveAddress).toBeTrue();
+    expect(request.request.body.contactPhone).toBe('11987654321');
+    expect(request.request.body.addressId).toBeUndefined();
     expect(request.request.body.address.number).toBe('42');
     expect(request.request.body.address.complement).toBe('Apto 3');
     expect(request.request.body.address.recipient).toBe('Nome Atualizado');

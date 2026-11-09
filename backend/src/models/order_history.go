@@ -15,7 +15,13 @@ type OrderHistoryEntry struct {
 	Items     []OrderHistoryItem `json:"items"`
 }
 
+type CancellationReason struct {
+	ReasonCode    string `json:"reasonCode"`
+	ReasonDetails string `json:"reasonDetails,omitempty"`
+}
+
 type OrderDetails struct {
+	Cancellation *CancellationReason `json:"cancellation,omitempty"`
 	OrderHistoryEntry
 	Address                 ShippingAddress `json:"address"`
 	PaymentMethod           string          `json:"paymentMethod"`

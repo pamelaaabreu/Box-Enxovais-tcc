@@ -86,12 +86,30 @@ func (repo CheckoutRepository) Create(ctx context.Context, userID int, input mod
 	if int64(order.Total) != input.ExpectedTotalCents {
 		return order, ErrCheckoutConflict
 	}
+	if input.AddressID > 0 {
+		saved, err := scanAddress(tx.QueryRowContext(ctx, "SELECT "+addressColumns+" FROM user_addresses WHERE user_id=$1 AND id=$2", userID, input.AddressID))
+		if errors.Is(err, sql.ErrNoRows) {
+			return order, ErrCheckoutAddress
+		}
+		if err != nil {
+			return order, err
+		}
+		input.Address = saved.ShippingAddress
+	}
+	if input.SaveAddress {
+		if err := lockAccount(ctx, tx, userID); err != nil {
+			return order, err
+		}
+		if _, err := insertAddress(ctx, tx, userID, models.UserAddress{ShippingAddress: input.Address, Label: "Outro"}); err != nil {
+			return order, err
+		}
+	}
 	address, err := json.Marshal(input.Address)
 	if err != nil {
 		return order, err
 	}
 	order.Status = "simulated_approved"
-	err = tx.QueryRowContext(ctx, `INSERT INTO checkout_orders(user_id,request_key,address,payment_method,total_cents,stock_debited) VALUES($1,$2,$3,$4,$5,true) RETURNING id`, userID, input.RequestKey, string(address), input.PaymentMethod, order.Total).Scan(&order.ID)
+	err = tx.QueryRowContext(ctx, `INSERT INTO checkout_orders(user_id,request_key,address,payment_method,total_cents,stock_debited,contact_phone) VALUES($1,$2,$3,$4,$5,true,NULLIF($6,'')) RETURNING id`, userID, input.RequestKey, string(address), input.PaymentMethod, order.Total, input.ContactPhone).Scan(&order.ID)
 	if err != nil {
 		return order, err
 	}
@@ -117,3 +135,5 @@ func (repo CheckoutRepository) Create(ctx context.Context, userID int, input mod
 	order.ReceiptItems = items
 	return order, nil
 }
+
+var ErrCheckoutAddress = errors.New("saved address not found")

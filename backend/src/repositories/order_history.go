@@ -40,7 +40,16 @@ func readOrderDetails(ctx context.Context, db orderReader, userID int, id int64)
 		return result, sql.ErrNoRows
 	}
 	result.OrderHistoryEntry = orders[0]
-	result.CanCancel = result.CancellationRemainingMs > 0
+	if result.Status == "cancelled" {
+		var reason models.CancellationReason
+		err := db.QueryRowContext(ctx, "SELECT reason_code, COALESCE(reason_details, '') FROM order_cancellations WHERE order_id=$1", id).Scan(&reason.ReasonCode, &reason.ReasonDetails)
+		if err == nil {
+			result.Cancellation = &reason
+		} else if err != sql.ErrNoRows {
+			return result, err
+		}
+	}
+	result.CanCancel = result.Status == "simulated_approved" && result.CancellationRemainingMs > 0
 	return result, nil
 }
 

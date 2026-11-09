@@ -1,3 +1,6 @@
+import { MatDialog } from '@angular/material/dialog';
+import { firstValueFrom } from 'rxjs';
+import { CustomAlertService } from '../../core/services/custom-alert.service';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatSelectHarness } from '@angular/material/select/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -183,6 +186,7 @@ describe('OrderHistoryComponent', () => {
       items: [{ id: 3, name: 'Toalha', quantity: 2, unitPrice: 12.5, subtotal: 25, image: '' }],
     };
     const endpoint = 'http://localhost:8080/orders/9/cancel';
+    const success = spyOn(TestBed.inject(CustomAlertService), 'success');
     http.expectOne('http://localhost:8080/orders/9').flush({ data: order });
     fixture.detectChanges();
     const open = async () => {
@@ -205,8 +209,24 @@ describe('OrderHistoryComponent', () => {
     await close('.cancel-dialog-keep');
     http.expectNone(endpoint);
     await open();
+    expect(document.querySelector<HTMLButtonElement>('.cancel-dialog-confirm')?.disabled).toBeTrue();
+    fixture.componentInstance.cancellationReason.setValue('other');
+    fixture.detectChanges();
+    expect(document.querySelector('mat-hint')?.textContent?.trim()).toBe('0/500');
+    fixture.componentInstance.cancellationDetails.setValue('x'.repeat(500));
+    fixture.detectChanges();
+    expect(document.querySelector('mat-hint')?.textContent?.trim()).toBe('500/500');
+    expect(fixture.componentInstance.canConfirmCancellation).toBeTrue();
+    fixture.componentInstance.cancellationDetails.setValue('   ');
+    expect(fixture.componentInstance.canConfirmCancellation).toBeFalse();
+    fixture.componentInstance.cancellationDetails.setValue('x'.repeat(501));
+    fixture.detectChanges();
+    expect(document.querySelector<HTMLButtonElement>('.cancel-dialog-confirm')?.disabled).toBeTrue();
+    fixture.componentInstance.cancellationDetails.setValue('Detalhe de teste');
+    fixture.detectChanges();
     await close('.cancel-dialog-confirm');
     const first = http.expectOne({ method: 'POST', url: endpoint });
+    expect(first.request.body).toEqual({ reasonCode: 'other', reasonDetails: 'Detalhe de teste' });
     expect(document.querySelector<HTMLButtonElement>('.cancel-dialog-keep')?.disabled).toBeTrue();
     expect(document.querySelector<HTMLButtonElement>('.cancel-dialog-confirm')?.disabled).toBeTrue();
     document.querySelector<HTMLButtonElement>('.cancel-dialog-confirm')!.click();
@@ -217,9 +237,14 @@ describe('OrderHistoryComponent', () => {
     expect(document.querySelector('[role="dialog"] [role="alert"]')?.textContent).toContain('Estoque indisponível');
     expect(page.textContent).toContain('Cliente teste');
     await close('.cancel-dialog-confirm');
-    http.expectOne({ method: 'POST', url: endpoint }).flush({ data: { ...order, canCancel: false, status: 'cancelled' } });
+    const dialogClosed = firstValueFrom(TestBed.inject(MatDialog).afterAllClosed);
+    http.expectOne({ method: 'POST', url: endpoint }).flush({ data: { ...order, canCancel: false, status: 'cancelled', cancellation: { reasonCode: 'other', reasonDetails: 'Detalhe de teste' } } });
     fixture.detectChanges();
-    expect(page.querySelector('.cancelled-badge')?.textContent).toContain('Cancelado');
+    await fixture.whenStable();
+    await dialogClosed;
+    expect(success).toHaveBeenCalledOnceWith('Pedido cancelado com sucesso!');
+    expect(page.querySelector('.detail-title .cancelled-badge')?.textContent).toContain('Cancelado');
+    expect(page.querySelector('.cancellation-note span')?.textContent).toContain('Detalhe de teste');
     expect(page.querySelector('.cancel-order')).toBeNull();
     expect(page.textContent).toContain('25,00');
     http.verify();

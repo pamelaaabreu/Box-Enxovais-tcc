@@ -1,99 +1,310 @@
 <!doctype html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pedido cancelado | Box Enxovais</title>
+  </head>
+
   <body
     style="
       margin: 0;
-      background: #f3efe6;
+      padding: 0;
+      background-color: #ffffff;
       color: #3d4836;
-      font:
-        16px Arial,
-        sans-serif;
+      font-family: Georgia, &quot;Times New Roman&quot;, serif;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
     "
   >
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="16">
+    <table
+      role="presentation"
+      width="100%"
+      border="0"
+      cellspacing="0"
+      cellpadding="0"
+      style="width: 100%; border-collapse: collapse; background-color: #ffffff"
+    >
       <tr>
-        <td align="center">
+        <td align="center" style="padding: 28px 12px">
+          <!-- Card principal -->
           <table
             role="presentation"
             width="100%"
+            border="0"
             cellspacing="0"
             cellpadding="0"
-            style="max-width: 640px; background: #fffdf8; border-radius: 24px"
+            style="
+              width: 100%;
+              max-width: 600px;
+              border-collapse: collapse;
+              background-color: #fffdf8;
+              border: 1px solid #d7ddcf;
+            "
           >
+            <!-- Cabeçalho -->
             <tr>
               <td
                 align="center"
                 style="
-                  padding: 16px;
-                  background: #777361;
-                  border-radius: 24px 24px 0 0;
+                  padding: 28px 24px;
+                  background-color: #3f4e3c;
+                  text-align: center;
                 "
               >
                 <img
                   src="cid:checkout-logo-white.png"
-                  width="120"
-                  alt="Box Enxovais — Casa bem vivida"
-                  style="display: block; width: 120px; height: auto"
+                  width="140"
+                  alt="Box Enxovais - Casa bem vivida"
+                  style="
+                    display: block;
+                    width: 140px;
+                    max-width: 100%;
+                    height: auto;
+                    margin: 0 auto;
+                    border: 0;
+                    outline: none;
+                    text-decoration: none;
+                  "
                 />
               </td>
             </tr>
+
+            <!-- Conteúdo -->
             <tr>
-              <td style="padding: 24px">
+              <td style="padding: 40px 34px 36px; background-color: #fffdf8">
+                <!-- Título -->
                 <h1
                   style="
-                    margin: 0 0 12px;
-                    font:
-                      28px Georgia,
-                      serif;
+                    margin: 0 0 18px;
+                    color: #33412f;
+                    font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                    font-size: 27px;
+                    font-weight: 700;
+                    line-height: 1.35;
                   "
                 >
                   Pedido #{{.Order.ID}} cancelado
                 </h1>
-                <p>Olá, {{.Name}}! Confirmamos o cancelamento do seu pedido.</p>
-                <table width="100%" cellspacing="0" cellpadding="8">
-                  <thead>
-                    <tr style="background: #f2ede4">
-                      <th align="left" scope="col">Produto</th>
-                      <th scope="col">Quantidade</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{range .Order.ReceiptItems}}
-                    <tr>
-                      <td style="border-bottom: 1px solid #e3ded3">
-                        {{.Name}}
-                      </td>
-                      <td
-                        align="center"
-                        style="border-bottom: 1px solid #e3ded3"
-                      >
-                        {{.Quantity}}
-                      </td>
-                    </tr>
-                    {{end}}
-                  </tbody>
-                </table>
+
+                <!-- Mensagem -->
                 <p
                   style="
-                    padding: 12px;
-                    background: #eaede2;
-                    border-radius: 12px;
+                    margin: 0 0 28px;
+                    color: #485143;
+                    font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                    font-size: 15px;
+                    font-weight: 400;
+                    line-height: 1.9;
                   "
                 >
-                  <strong>Total do pedido: {{money .Order.Total}}</strong>
+                  Olá, {{.Name}}! Confirmamos o cancelamento do seu pedido.
                 </p>
-                <p>Compra simulada. Nenhuma cobrança foi realizada.</p>
+
+                <!-- Linha decorativa discreta -->
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="
+                    width: 100%;
+                    margin-bottom: 26px;
+                    border-collapse: collapse;
+                  "
+                >
+                  <tr>
+                    <td
+                      height="3"
+                      style="
+                        height: 3px;
+                        border-top: 1px solid #d8dccf;
+                        border-bottom: 1px solid #e7eadf;
+                        font-size: 0;
+                        line-height: 0;
+                      "
+                    >
+                      &nbsp;
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Tabela de produtos -->
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="
+                    width: 100%;
+                    border-collapse: collapse;
+                    table-layout: fixed;
+                    border: 1px solid #cfd7c3;
+                  "
+                >
+                  <tr style="background-color: #f7f5ef">
+                    <th
+                      width="72%"
+                      align="left"
+                      style="
+                        padding: 14px 16px;
+                        color: #667255;
+                        font-family:
+                          Georgia, &quot;Times New Roman&quot;, serif;
+                        font-size: 11px;
+                        font-weight: 700;
+                        line-height: 1.5;
+                        text-align: left;
+                        text-transform: uppercase;
+                        letter-spacing: 1.3px;
+                        border-right: 1px solid #cfd7c3;
+                        border-bottom: 1px solid #cfd7c3;
+                      "
+                    >
+                      Produto
+                    </th>
+
+                    <th
+                      width="28%"
+                      align="center"
+                      style="
+                        padding: 14px 8px;
+                        color: #667255;
+                        font-family:
+                          Georgia, &quot;Times New Roman&quot;, serif;
+                        font-size: 11px;
+                        font-weight: 700;
+                        line-height: 1.5;
+                        text-align: center;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                        border-bottom: 1px solid #cfd7c3;
+                      "
+                    >
+                      Quantidade
+                    </th>
+                  </tr>
+
+                  {{range .Order.ReceiptItems}}
+                  <tr>
+                    <td
+                      align="left"
+                      style="
+                        padding: 18px 16px;
+                        background-color: #f4f1eb;
+                        color: #3d4836;
+                        font-family:
+                          Georgia, &quot;Times New Roman&quot;, serif;
+                        font-size: 14px;
+                        font-weight: 400;
+                        line-height: 1.7;
+                        text-align: left;
+                        border-right: 1px solid #cfd7c3;
+                        border-bottom: 1px solid #cfd7c3;
+                        overflow-wrap: break-word;
+                        word-wrap: break-word;
+                      "
+                    >
+                      {{.Name}}
+                    </td>
+
+                    <td
+                      align="center"
+                      style="
+                        padding: 18px 8px;
+                        background-color: #f4f1eb;
+                        color: #3d4836;
+                        font-family:
+                          Georgia, &quot;Times New Roman&quot;, serif;
+                        font-size: 14px;
+                        font-weight: 700;
+                        line-height: 1.7;
+                        text-align: center;
+                        vertical-align: middle;
+                        border-bottom: 1px solid #cfd7c3;
+                      "
+                    >
+                      {{.Quantity}}
+                    </td>
+                  </tr>
+                  {{end}}
+                </table>
+
+                <!-- Total -->
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="
+                    width: 100%;
+                    margin-top: 18px;
+                    border-collapse: collapse;
+                  "
+                >
+                  <tr>
+                    <td
+                      width="50%"
+                      align="left"
+                      style="
+                        padding: 22px 18px;
+                        background-color: #3f4e3c;
+                        color: #ffffff;
+                        font-family:
+                          Georgia, &quot;Times New Roman&quot;, serif;
+                        font-size: 15px;
+                        font-weight: 700;
+                        line-height: 1.5;
+                        text-align: left;
+                        vertical-align: middle;
+                        border-right: 1px solid #73806a;
+                      "
+                    >
+                      Total do pedido
+                    </td>
+
+                    <td
+                      width="50%"
+                      align="right"
+                      style="
+                        padding: 22px 18px;
+                        background-color: #3f4e3c;
+                        color: #ffffff;
+                        font-family:
+                          Georgia, &quot;Times New Roman&quot;, serif;
+                        font-size: 22px;
+                        font-weight: 700;
+                        line-height: 1.4;
+                        text-align: right;
+                        vertical-align: middle;
+                        white-space: nowrap;
+                      "
+                    >
+                      {{money .Order.Total}}
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
+
+            <!-- Rodapé -->
             <tr>
               <td
                 align="center"
                 style="
-                  padding: 12px;
-                  background: #777361;
-                  color: #fffdf8;
-                  border-radius: 0 0 24px 24px;
-                  font-size: 13px;
+                  padding: 24px 20px;
+                  background-color: #3f4e3c;
+                  color: #ffffff;
+                  font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                  font-size: 12px;
+                  font-weight: 400;
+                  line-height: 1.7;
+                  text-align: center;
                 "
               >
                 Este é um e-mail automático. Por favor, não responda.

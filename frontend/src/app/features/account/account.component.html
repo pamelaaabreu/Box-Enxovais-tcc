@@ -1,0 +1,81 @@
+<app-catalog-layout>
+  <main class="account">
+    <h1>Minha Conta</h1>
+    <nav aria-label="Seções da conta">
+      <a href="#dados">Meus dados</a>
+      <a href="#enderecos">Meus endereços</a>
+      <a routerLink="/meus-pedidos">Meus pedidos</a>
+      <a href="#seguranca">Segurança da conta</a>
+    </nav>
+    @if (error()) { <p role="alert">{{ error() }}</p> }
+    @if (notice()) { <p role="status">{{ notice() }}</p> }
+    <section id="dados">
+      <h2>Meus dados</h2>
+      @if (loaded()) {
+        <form [formGroup]="profile" (ngSubmit)="saveProfile()">
+          <div class="fields">
+            <mat-form-field appearance="outline"><mat-label>Nome completo</mat-label><input matInput formControlName="name" autocomplete="name" maxlength="200" required><mat-error>Informe seu nome completo.</mat-error></mat-form-field>
+            <mat-form-field appearance="outline"><mat-label>Telefone</mat-label><input matInput type="tel" mask="(00) 0000-0000||(00) 00000-0000" [dropSpecialCharacters]="false" formControlName="phone" autocomplete="tel" maxlength="25"><mat-error>Informe um telefone válido com DDD.</mat-error></mat-form-field>
+          </div>
+          <p>E-mail cadastrado <strong>{{ email() }}</strong></p>
+          <button mat-flat-button [disabled]="busy()">Salvar dados</button>
+        </form>
+      }
+    </section>
+    <section id="enderecos">
+      <h2>Meus endereços</h2>
+      @if (addressesLoaded() && !editing()) {
+        @if (!addresses().length) { <p>Você ainda não cadastrou nenhum endereço</p> }
+        @for (item of addresses(); track item.id) {
+          <article class="saved-address">
+            <h3>{{ item.label }}</h3>
+            @if (item.isDefault) { <span class="badge">Endereço padrão</span> }
+            <p>{{ item.recipient }} · {{ item.street }}, {{ item.number }} {{ item.complement }}<br>
+              {{ item.neighborhood }} · {{ item.city }} / {{ item.state }} · {{ item.zipCode }}</p>
+            <div class="actions">
+              <button mat-stroked-button type="button" [disabled]="busy()" (click)="editAddress(item)">Editar</button>
+              @if (!item.isDefault) {
+                <button mat-stroked-button type="button" [disabled]="busy()" (click)="makeDefault(item.id)">Definir como padrão</button>
+              }
+              <button mat-stroked-button type="button" [disabled]="busy()" (click)="removeAddress(deleteDialog, item.id)">Excluir</button>
+            </div>
+          </article>
+        }
+        <button mat-flat-button type="button" [disabled]="busy()" (click)="editAddress()">Adicionar endereço</button>
+      }
+      @if (editing()) {
+        <form [formGroup]="address" (ngSubmit)="saveAddress()">
+          <div class="fields">
+            @for (field of addressFields; track field.key) {
+              <mat-form-field appearance="outline">
+                <mat-label>{{ field.label }}</mat-label>
+                <input matInput [formControlName]="field.key" [mask]="field.key === 'zipCode' ? '00000-000' : ''" [dropSpecialCharacters]="false" [maxlength]="field.key === 'zipCode' ? 9 : field.key === 'state' ? 2 : field.key === 'label' ? 40 : 200">
+                @if (field.key === 'label') { <mat-hint>Ex.: Casa, Trabalho ou Outro</mat-hint> }
+                <mat-error>Confira este campo.</mat-error>
+              </mat-form-field>
+              @if (field.key === 'zipCode') {
+                <div><button mat-stroked-button type="button" (click)="lookupZip()" [disabled]="lookingUp() || address.controls.zipCode.invalid">{{ lookingUp() ? 'Consultando CEP…' : 'Buscar CEP' }}</button></div>
+              }
+            }
+          </div>
+          <div class="actions">
+            <button mat-flat-button [disabled]="busy() || lookingUp()">Salvar endereço</button>
+            <button mat-stroked-button type="button" [disabled]="busy() || lookingUp()" (click)="editing.set(false)">Voltar</button>
+          </div>
+        </form>
+      }
+    </section>
+    <section id="seguranca">
+      <h2>Segurança da conta</h2>
+      <a routerLink="/forgot-password">Redefinir senha</a>
+    </section>
+  </main>
+</app-catalog-layout>
+<ng-template #deleteDialog>
+  <h2 mat-dialog-title>Excluir endereço?</h2>
+  <mat-dialog-content>O endereço será removido da sua conta.</mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-stroked-button [mat-dialog-close]="false">Manter endereço</button>
+    <button mat-flat-button [mat-dialog-close]="true">Excluir endereço</button>
+  </mat-dialog-actions>
+</ng-template>

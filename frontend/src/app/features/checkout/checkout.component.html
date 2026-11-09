@@ -65,6 +65,21 @@
           @if (step() === 1) {
             <h2>Informações de entrega</h2>
             <form id="delivery-form" [formGroup]="address" (ngSubmit)="next()">
+              @if (savedAddresses().length) {
+                <mat-form-field class="saved-address-select box-form-field" appearance="outline">
+                  <mat-label>Endereço de entrega</mat-label>
+                  <mat-select id="saved-delivery-address" panelClass="box-form-options" [value]="selectedAddressId()" (selectionChange)="selectedAddressId.set($event.value)">
+                    <mat-option [value]="0">Preencher novo endereço</mat-option>
+                    @for (item of savedAddresses(); track item.id) {
+                      <mat-option [value]="item.id">{{ item.label }} · {{ item.street }}, {{ item.number }}{{ item.isDefault ? ' (padrão)' : '' }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              }
+              @if (selectedAddress(); as saved) {
+                <p>{{ saved.recipient }} · {{ saved.street }}, {{ saved.number }} {{ saved.complement }}<br>
+                   {{ saved.neighborhood }} · {{ saved.city }} / {{ saved.state }} · {{ saved.zipCode }}</p>
+              } @else {
               <div class="fields">
                 @for (field of fields; track field.key) {
                   <div class="field" [class]="'field field-' + field.key">
@@ -72,6 +87,8 @@
                     <input
                       [id]="field.key"
                       [formControlName]="field.key"
+                      [mask]="field.key === 'zipCode' ? '00000-000' : ''"
+                      [dropSpecialCharacters]="false"
                       [readOnly]="postalFilled().includes(field.key)"
                       [autocomplete]="field.autocomplete"
                       [attr.inputmode]="
@@ -168,6 +185,20 @@
                   }}
                 </button>
               }
+                <label class="save-delivery-address">
+                  <input type="checkbox" [formControl]="saveAddress">
+                  Salvar este endereço na minha conta
+                </label>
+              }
+              <div class="field delivery-choice">
+                <label for="checkout-contact-phone">Telefone para contato</label>
+                <input id="checkout-contact-phone" type="tel" mask="(00) 0000-0000||(00) 00000-0000" [dropSpecialCharacters]="false" autocomplete="tel" maxlength="25"
+                  [formControl]="contactPhone" [attr.aria-invalid]="contactPhone.touched && contactPhone.invalid"
+                  [attr.aria-describedby]="contactPhone.touched && contactPhone.invalid ? 'checkout-phone-error' : null">
+                @if (contactPhone.touched && contactPhone.invalid) {
+                  <small id="checkout-phone-error" class="error">Informe um telefone válido com DDD.</small>
+                }
+              </div>
             </form>
             <footer class="stage-footer">
               <a routerLink="/cart" class="back-link"
@@ -280,7 +311,7 @@
           }
           @if (step() === 3) {
             <h2 class="review-title">Confira seu pedido</h2>
-            @let delivery = address.getRawValue();
+            @let delivery = selectedAddress() ?? address.getRawValue();
             <section class="review-section">
               <div class="review-heading">
                 <h3>

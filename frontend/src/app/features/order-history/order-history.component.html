@@ -143,10 +143,12 @@
             <a routerLink="/meus-pedidos">← Voltar aos meus pedidos</a>
             <div class="detail-heading-row">
               <div>
-                <h1 id="history-title">Pedido #{{ order.id }}</h1>
-            @if (order.status === "cancelled") {
-              <span class="cancelled-badge">Cancelado</span>
-            }
+                <div class="detail-title">
+                  <h1 id="history-title">Pedido #{{ order.id }}</h1>
+                  @if (order.status === "cancelled") {
+                    <span class="cancelled-badge">Cancelado</span>
+                  }
+                </div>
             <p>
               Realizado em
               <time [attr.datetime]="order.createdAt">{{
@@ -159,7 +161,6 @@
             </div>
           </header>
           <div class="detail-grid">
-            <div class="detail-main">
               <section class="order detail-panel detail-products">
                 <h2>
                   <svg
@@ -200,7 +201,7 @@
                 }
                 <p class="detail-product-count">{{ order.items.length }} {{ order.items.length === 1 ? 'produto' : 'produtos' }} · {{ units(order) }} {{ units(order) === 1 ? 'unidade' : 'unidades' }}</p>
               </section>
-              <section class="order detail-panel">
+              <section class="order detail-panel detail-delivery">
                 <h2>
                   <svg
                     viewBox="0 0 24 24"
@@ -223,7 +224,6 @@
                   <div><dt>Cidade / UF</dt><dd>{{ order.address.city }} — {{ order.address.state }}</dd></div>
                 </dl>
               </section>
-            </div>
             <div class="detail-side">
             <section class="order detail-panel detail-summary">
               <h2>Resumo do pedido</h2>
@@ -257,7 +257,17 @@
               <p>Tem alguma dúvida sobre este pedido? Estamos por aqui.</p>
               <div class="detail-help-actions">
                 @if (order.status === "cancelled") {
-                  <span class="cancelled-badge">Pedido cancelado</span>
+                  <span class="cancelled-badge cancelled-indicator">Pedido cancelado</span>
+                  <dl class="cancellation-info">
+                    <dt>Motivo do cancelamento</dt>
+                    <dd>{{ cancellationReasons.get(order.cancellation?.reasonCode ?? '') ?? 'Motivo não informado' }}</dd>
+                    @if (order.cancellation?.reasonDetails?.trim(); as note) {
+                      <dd class="cancellation-note">
+                        <mat-icon aria-hidden="true">chat_bubble_outline</mat-icon>
+                        <span>{{ note }}</span>
+                      </dd>
+                    }
+                  </dl>
                 } @else if (order.canCancel) {
                   <button type="button" class="cancel-order" (click)="confirmCancellation(cancelDialog, order)">
                     Cancelar compra
@@ -269,7 +279,26 @@
               <ng-template #cancelDialog>
                 <h2 mat-dialog-title>Cancelar pedido #{{ order.id }}?</h2>
                 <mat-dialog-content>
-                  <p>Tem certeza de que deseja cancelar este pedido? Esta ação não poderá ser desfeita.</p>
+                  <p>Tem certeza de que deseja cancelar esta compra? Esta ação não poderá ser desfeita.</p>
+                  <div class="cancellation-fields" [attr.inert]="cancelling() ? '' : null">
+                    <mat-form-field appearance="outline" floatLabel="always">
+                      <mat-label>Motivo do cancelamento</mat-label>
+                      <mat-select [formControl]="cancellationReason" panelClass="box-form-options" required>
+                        @for (reason of cancellationReasons; track reason[0]) {
+                          <mat-option [value]="reason[0]">{{ reason[1] }}</mat-option>
+                        }
+                      </mat-select>
+                      <mat-error>Selecione o motivo do cancelamento.</mat-error>
+                    </mat-form-field>
+                    @if (cancellationReason.value === 'other') {
+                      <mat-form-field appearance="outline">
+                        <mat-label>Observação</mat-label>
+                        <textarea matInput [formControl]="cancellationDetails" maxlength="500" rows="3" required pattern="[\s\S]*\S[\s\S]*"></textarea>
+                        <mat-hint align="end">{{ cancellationDetails.value.length }}/500</mat-hint>
+                        <mat-error>Preencha a observação com até 500 caracteres.</mat-error>
+                      </mat-form-field>
+                    }
+                  </div>
                   @if (cancelError()) {
                     <p class="cancel-error" role="alert">{{ cancelError() }}</p>
                   } @else if (!details()?.canCancel && !cancelling()) {
@@ -281,7 +310,7 @@
                     Manter pedido
                   </button>
                   <button type="button" class="cancel-dialog-confirm"
-                    [disabled]="cancelling() || !details()?.canCancel" (click)="cancelPurchase()">
+                    [disabled]="cancelling() || !details()?.canCancel || !canConfirmCancellation" (click)="cancelPurchase()">
                     @if (cancelling()) {
                       <mat-spinner diameter="18" aria-hidden="true" />
                       <span role="status">Cancelando…</span>

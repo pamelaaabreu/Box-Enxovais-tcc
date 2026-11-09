@@ -52,20 +52,9 @@ func (h CheckoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		response.Error(w, 400, "Dados de checkout inválidos")
 		return
 	}
-	a := &input.Address
-	fields := []*string{&a.Recipient, &a.ZipCode, &a.Street, &a.Number, &a.Complement, &a.Neighborhood, &a.City, &a.State}
-	for _, field := range fields {
-		*field = strings.TrimSpace(*field)
-	}
-	valid := true
-	for _, field := range []*string{&a.Recipient, &a.Street, &a.Number, &a.Neighborhood, &a.City} {
-		if *field == "" || len(*field) > 200 {
-			valid = false
-		}
-	}
-	states := "|AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO|"
-	if !valid || len(a.Complement) > 200 || len(a.State) != 2 || !strings.Contains(states, "|"+a.State+"|") || !regexp.MustCompile(`^[0-9]{5}-?[0-9]{3}$`).MatchString(a.ZipCode) || !regexp.MustCompile(`^[a-zA-Z0-9-]{16,80}$`).MatchString(input.RequestKey) || input.ExpectedTotalCents < 0 {
-		response.Error(w, 400, "Confira o endereço e os dados da compra")
+	input.ContactPhone, ok = normalizeContactPhone(input.ContactPhone)
+	if !ok || input.AddressID < 0 || (input.AddressID > 0 && input.SaveAddress) || (input.AddressID == 0 && !validShippingAddress(&input.Address)) || !regexp.MustCompile(`^[a-zA-Z0-9-]{16,80}$`).MatchString(input.RequestKey) || input.ExpectedTotalCents < 0 {
+		response.Error(w, 400, "Confira o endereço, o telefone e os dados da compra")
 		return
 	}
 	if input.PaymentMethod != "pix" && input.PaymentMethod != "card" && input.PaymentMethod != "boleto" {
@@ -74,7 +63,9 @@ func (h CheckoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	order, err := h.Store.Create(r.Context(), userID, input)
 	if err != nil {
-		if errors.Is(err, repositories.ErrCheckoutConflict) {
+		if errors.Is(err, repositories.ErrCheckoutAddress) {
+			response.Error(w, 404, "Endereço não encontrado")
+		} else if errors.Is(err, repositories.ErrCheckoutConflict) {
 			response.Error(w, 409, err.Error())
 		} else {
 			response.Error(w, 500, "Não foi possível concluir a compra. Tente novamente.")
@@ -85,4 +76,21 @@ func (h CheckoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.Notify(userID, order)
 	}
 	response.Success(w, 200, "Compra simulada aprovada. Nenhuma cobrança foi realizada.", order)
+}
+
+func validShippingAddress(a *models.ShippingAddress) bool {
+	fields := []*string{&a.Recipient, &a.ZipCode, &a.Street, &a.Number, &a.Complement, &a.Neighborhood, &a.City, &a.State}
+	for _, field := range fields {
+		*field = strings.TrimSpace(*field)
+	}
+
+	for _, field := range []string{a.Recipient, a.Street, a.Number, a.Neighborhood, a.City} {
+		if field == "" || len(field) > 200 || strings.ContainsRune(field, 0) {
+			return false
+		}
+	}
+	const states = "|AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO|"
+	return len(a.Complement) <= 200 && !strings.ContainsRune(a.Complement, 0) &&
+		len(a.State) == 2 && strings.Contains(states, "|"+a.State+"|") &&
+		regexp.MustCompile(`^[0-9]{5}-?[0-9]{3}$`).MatchString(a.ZipCode)
 }

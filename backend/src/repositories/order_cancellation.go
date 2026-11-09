@@ -14,7 +14,7 @@ var ErrOrderCancellationExpired = errors.New("O prazo de uma hora para cancelar 
 var ErrOrderNotCancellable = errors.New("Este pedido não está disponível para cancelamento")
 var ErrOrderRestock = errors.New("Não foi possível repor o estoque deste pedido. Entre em contato com o suporte.")
 
-func (repo CheckoutRepository) CancelOrder(ctx context.Context, userID int, id int64) (models.OrderDetails, bool, error) {
+func (repo CheckoutRepository) CancelOrder(ctx context.Context, userID int, id int64, reason models.CancellationReason) (models.OrderDetails, bool, error) {
 	var order models.OrderDetails
 	tx, err := repo.DB.BeginTx(ctx, nil)
 	if err != nil {
@@ -39,6 +39,9 @@ func (repo CheckoutRepository) CancelOrder(ctx context.Context, userID int, id i
 		}
 		if !withinWindow {
 			return order, false, ErrOrderCancellationExpired
+		}
+		if _, err := tx.ExecContext(ctx, "INSERT INTO order_cancellations (order_id, reason_code, reason_details, cancelled_by) VALUES ($1, $2, NULLIF($3, ''), $4)", id, reason.ReasonCode, reason.ReasonDetails, userID); err != nil {
+			return order, false, err
 		}
 		if err := restoreOrderStock(ctx, tx, id); err != nil {
 			return order, false, err

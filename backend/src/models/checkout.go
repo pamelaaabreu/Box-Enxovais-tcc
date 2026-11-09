@@ -12,6 +12,9 @@ type ShippingAddress struct {
 }
 
 type CheckoutRequest struct {
+	AddressID          int64           `json:"addressId"`
+	SaveAddress        bool            `json:"saveAddress"`
+	ContactPhone       string          `json:"contactPhone"`
 	RequestKey         string          `json:"requestKey"`
 	Address            ShippingAddress `json:"address"`
 	PaymentMethod      string          `json:"paymentMethod"`

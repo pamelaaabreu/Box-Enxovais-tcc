@@ -234,7 +234,69 @@ app-top-navbar {
   border: 1px solid #879578;
   padding: 24px;
 }
-.order-cancellation-dialog :is(.mat-mdc-dialog-title, .mat-mdc-dialog-content) { padding: 0 0 16px; }
-.order-cancellation-dialog .mat-mdc-dialog-content p { margin: 0; }
-.order-cancellation-dialog .mat-mdc-dialog-content p + p { margin-top: 12px; }
+.order-cancellation-dialog .mat-mdc-dialog-surface [mat-dialog-title] {
+  padding: 0;
+  margin: 0 0 10px;
+  color: #3d4836;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: normal;
+  line-height: 1.25;
+  text-align: left;
+}
+.order-cancellation-dialog .mat-mdc-dialog-surface [mat-dialog-title]::before { display: none; }
+.order-cancellation-dialog .mat-mdc-dialog-surface mat-dialog-content {
+  padding: 0 0 16px;
+  color: #5f6858;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.5;
+  text-align: left;
+}
+.order-cancellation-dialog .mat-mdc-dialog-surface mat-dialog-actions { padding: 0; }
+.order-cancellation-dialog .mat-mdc-dialog-surface mat-dialog-content p { margin: 0; }
+.order-cancellation-dialog .mat-mdc-dialog-surface mat-dialog-content p + p { margin-top: 12px; }
 .order-cancellation-backdrop { background: rgb(41 43 37 / 32%); }
+
+.order-cancellation-dialog .cancellation-fields .mat-mdc-text-field-wrapper {
+  padding-inline: 16px;
+}
+
+.order-cancellation-dialog .cancellation-fields .mat-mdc-form-field-infix {
+  min-width: 0;
+}
+
+.order-cancellation-dialog .cancel-dialog-confirm:disabled {
+  opacity: .55;
+}
+
+.box-form-field, .order-cancellation-dialog .cancellation-fields {
+  --mdc-outlined-text-field-container-shape: 12px;
+  --mdc-outlined-text-field-outline-color: #a2aa96;
+  --mdc-outlined-text-field-focus-outline-color: #667255;
+  --mdc-outlined-text-field-focus-label-text-color: #3d4836;
+  --mat-select-focused-arrow-color: #667255;
+}
+
+.box-form-field .mat-mdc-text-field-wrapper,
+.order-cancellation-dialog .cancellation-fields .mat-mdc-text-field-wrapper {
+  background: #fffdf8;
+  border-radius: 12px;
+}
+
+.mat-mdc-select-panel.box-form-options {
+  background: #fffdf8;
+  border: 1px solid #d9ded2;
+  border-radius: 12px;
+}
+
+.box-form-options .mat-mdc-option {
+  color: #3d4836;
+  --mat-option-selected-state-label-text-color: #3d4836;
+  --mat-option-selected-state-layer-color: #eef0e9;
+  --mat-option-hover-state-layer-color: #f3f4ee;
+  --mat-option-focus-state-layer-color: #eef0e9;
+  --mat-full-pseudo-checkbox-selected-icon-color: #667255;
+  --mat-minimal-pseudo-checkbox-selected-checkmark-color: #667255;
+}

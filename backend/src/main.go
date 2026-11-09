@@ -114,6 +114,10 @@ func run() error {
 		},
 	}
 	mux.HandleFunc("POST /cart/orders/{orderID}", middlewares.AuthMiddleware(handlers.CartHandler{Store: repositories.CartRepository{DB: database}}.ServeHTTP))
+	account := middlewares.AuthMiddleware(handlers.AccountHandler{Store: repositories.AccountRepository{DB: database}}.ServeHTTP)
+	for _, pattern := range []string{"GET /me", "PATCH /me", "GET /me/addresses", "POST /me/addresses", "PATCH /me/addresses/{id}", "DELETE /me/addresses/{id}", "PUT /me/addresses/{id}/default"} {
+		mux.HandleFunc(pattern, account)
+	}
 	mux.HandleFunc("GET /orders", middlewares.AuthMiddleware(orderHistory.ServeHTTP))
 	mux.HandleFunc("GET /orders/{id}", middlewares.AuthMiddleware(orderHistory.ServeHTTP))
 	mux.HandleFunc("POST /orders/{id}/cancel", middlewares.AuthMiddleware(orderHistory.ServeHTTP))

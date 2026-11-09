@@ -7,18 +7,21 @@ import (
 	"backend/src/response"
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
 	_ "time/tzdata"
+	"unicode/utf8"
 )
 
 type OrderHistoryHandler struct {
 	NotifyCancelled func(int, models.OrderDetails)
 	Store           interface {
-		CancelOrder(context.Context, int, int64) (models.OrderDetails, bool, error)
+		CancelOrder(context.Context, int, int64, models.CancellationReason) (models.OrderDetails, bool, error)
 		GetOrderDetails(context.Context, int, int64) (models.OrderDetails, error)
 		ListOrders(context.Context, int, int, int, models.OrderFilters) ([]models.OrderHistoryEntry, error)
 	}
@@ -82,7 +85,31 @@ func (h OrderHistoryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h OrderHistoryHandler) cancel(w http.ResponseWriter, r *http.Request, userID int, id int64) {
-	order, changed, err := h.Store.CancelOrder(r.Context(), userID, id)
+	var reason models.CancellationReason
+	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 8192))
+	if err := decoder.Decode(&reason); err != nil || decoder.Decode(new(any)) != io.EOF {
+		response.Error(w, http.StatusBadRequest, "Informe um motivo válido para o cancelamento.")
+		return
+	}
+	switch reason.ReasonCode {
+	case "changed_mind", "wrong_product", "wrong_address", "duplicate_order", "other":
+	default:
+		response.Error(w, http.StatusBadRequest, "Informe um motivo válido para o cancelamento.")
+		return
+	}
+	reason.ReasonDetails = strings.TrimSpace(reason.ReasonDetails)
+	if reason.ReasonCode == "other" && reason.ReasonDetails == "" {
+		response.Error(w, http.StatusBadRequest, "Preencha a observação para informar outro motivo.")
+		return
+	}
+	if utf8.RuneCountInString(reason.ReasonDetails) > 500 || strings.ContainsRune(reason.ReasonDetails, 0) {
+		response.Error(w, http.StatusBadRequest, "A observação deve conter até 500 caracteres válidos.")
+		return
+	}
+	if reason.ReasonCode != "other" {
+		reason.ReasonDetails = ""
+	}
+	order, changed, err := h.Store.CancelOrder(r.Context(), userID, id, reason)
 	switch {
 	case errors.Is(err, sql.ErrNoRows):
 		response.Error(w, http.StatusNotFound, "Pedido não encontrado")

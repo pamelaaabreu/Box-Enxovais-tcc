@@ -4,6 +4,11 @@ import { AdminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
+    path: 'account',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/account/account.component').then(m => m.AccountComponent),
+  },
+  {
     path: 'meus-pedidos',
     canActivate: [authGuard],
     loadComponent: () => import('./features/order-history/order-history.component').then(m => m.OrderHistoryComponent),

@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -49,13 +50,13 @@ func checkoutTestDB(t *testing.T) (*sql.DB, func(string)) {
 	for _, conn := range connections {
 		conn.Close()
 	}
-	exec(`CREATE TABLE users(id INTEGER PRIMARY KEY);
+	exec(`CREATE TABLE users(id INTEGER PRIMARY KEY,full_name TEXT NOT NULL DEFAULT 'Cliente',email TEXT NOT NULL DEFAULT 'test@example.com',phone VARCHAR(20));
  CREATE TABLE products(id INTEGER PRIMARY KEY,name TEXT,price NUMERIC,quantity INTEGER NOT NULL CHECK(quantity>=0),status TEXT,updated_at TIMESTAMPTZ);
  CREATE TABLE promotions(id INTEGER PRIMARY KEY,status TEXT,start_date TIMESTAMPTZ,end_date TIMESTAMPTZ);
  CREATE TABLE promotion_products(product_id INTEGER,promotion_id INTEGER,promotional_price NUMERIC);
  CREATE TABLE product_images(id INTEGER PRIMARY KEY,product_id INTEGER,image_path TEXT,is_primary BOOLEAN);
  INSERT INTO users VALUES(1),(2);`)
-	for _, name := range []string{"000003_cart.up.sql", "000006_checkout.up.sql", "000007_order_cancellation.up.sql"} {
+	for _, name := range []string{"000003_cart.up.sql", "000006_checkout.up.sql", "000007_order_cancellation.up.sql", "000008_order_cancellation_reason.up.sql", "000009_account_addresses.up.sql"} {
 		migration, err := os.ReadFile("../../migrations/" + name)
 		if err != nil {
 			t.Fatal(err)
@@ -130,7 +131,7 @@ func TestCheckoutStockPostgres(t *testing.T) {
 	}
 }
 func TestOrderCancellationPostgres(t *testing.T) {
-	for _, scenario := range []string{"concurrent and repeated", "historical", "missing product", "failure after restock"} {
+	for _, scenario := range []string{"concurrent and repeated", "historical", "missing product", "failure inserting reason", "failure after restock"} {
 		t.Run(scenario, func(t *testing.T) {
 			db, exec := checkoutTestDB(t)
 			ctx := context.Background()
@@ -141,7 +142,7 @@ func TestOrderCancellationPostgres(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if _, _, err := repo.CancelOrder(ctx, 2, order.ID); !errors.Is(err, sql.ErrNoRows) {
+			if _, _, err := repo.CancelOrder(ctx, 2, order.ID, models.CancellationReason{ReasonCode: "wrong_product"}); !errors.Is(err, sql.ErrNoRows) {
 				t.Fatalf("ownership: %v", err)
 			}
 			before, err := repo.GetOrderDetails(ctx, 1, order.ID)
@@ -152,11 +153,11 @@ func TestOrderCancellationPostgres(t *testing.T) {
 			case "concurrent and repeated":
 				changed := make(chan bool, 3)
 				cancel := func() error {
-					result, applied, err := repo.CancelOrder(ctx, 1, order.ID)
+					result, applied, err := repo.CancelOrder(ctx, 1, order.ID, models.CancellationReason{ReasonCode: "wrong_product"})
 					if err != nil {
 						return err
 					}
-					if result.Status != "cancelled" || result.CanCancel || result.Total != 3000 || len(result.Items) != 2 || result.Items[0].UnitPrice != 1000 {
+					if result.Cancellation == nil || result.Cancellation.ReasonCode != "wrong_product" || result.Status != "cancelled" || result.CanCancel || result.Total != 3000 || len(result.Items) != 2 || result.Items[0].UnitPrice != 1000 {
 						return errors.New("unexpected cancelled order")
 					}
 					changed <- applied
@@ -167,8 +168,9 @@ func TestOrderCancellationPostgres(t *testing.T) {
 						t.Fatal(err)
 					}
 				}
-				if err := cancel(); err != nil {
-					t.Fatal(err)
+				repeated, applied, err := repo.CancelOrder(ctx, 1, order.ID, models.CancellationReason{ReasonCode: "other", ReasonDetails: "Retry"})
+				if err != nil || applied || repeated.Cancellation == nil || repeated.Cancellation.ReasonCode != "wrong_product" {
+					t.Fatalf("retry overwrote the cancellation reason: %v", err)
 				}
 				close(changed)
 				count := 0
@@ -198,13 +200,19 @@ func TestOrderCancellationPostgres(t *testing.T) {
 				case "missing product":
 					exec("DELETE FROM products WHERE id=2")
 					want = repositories.ErrOrderRestock
+				case "failure inserting reason":
+					exec("ALTER TABLE order_cancellations ADD CONSTRAINT fail_reason CHECK (reason_code <> 'wrong_product')")
 				case "failure after restock":
 					exec("ALTER TABLE checkout_orders ADD CONSTRAINT fail_cancel CHECK (status <> 'cancelled')")
 				}
-				if _, changed, err := repo.CancelOrder(ctx, 1, order.ID); changed || err == nil || (want != nil && !errors.Is(err, want)) {
+				if _, changed, err := repo.CancelOrder(ctx, 1, order.ID, models.CancellationReason{ReasonCode: "wrong_product"}); changed || err == nil || (want != nil && !errors.Is(err, want)) {
 					t.Fatalf("unexpected error %v", err)
 				}
 				assertCheckoutState(t, db, 0, 1, 1)
+				var reasons int
+				if err := db.QueryRow("SELECT count(*) FROM order_cancellations").Scan(&reasons); err != nil || reasons != 0 {
+					t.Fatalf("cancellation reason survived rollback: %v", err)
+				}
 				result, err := repo.GetOrderDetails(ctx, 1, order.ID)
 				if err != nil || result.Status != "simulated_approved" || result.Total != 3000 {
 					t.Fatalf("order must survive rollback: %v", err)
@@ -233,9 +241,9 @@ func TestOrderCancellationNotificationPostgres(t *testing.T) {
 	}}
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /orders/{id}/cancel", middlewares.AuthMiddleware(handler.ServeHTTP))
-	call := func(user int, id int64, want int) {
+	call := func(user int, id int64, want int, body string) {
 		t.Helper()
-		r := httptest.NewRequest(http.MethodPost, fmt.Sprintf("/orders/%d/cancel", id), nil)
+		r := httptest.NewRequest(http.MethodPost, fmt.Sprintf("/orders/%d/cancel", id), strings.NewReader(body))
 		if user != 0 {
 			r.Header.Set("Authorization", "Bearer "+favoriteTestToken(t, user))
 		}
@@ -245,11 +253,21 @@ func TestOrderCancellationNotificationPostgres(t *testing.T) {
 			t.Fatalf("status %d, want %d", w.Code, want)
 		}
 	}
-	call(0, order.ID, 401)
-	call(2, order.ID, 404)
-	call(1, order.ID+1, 404)
-	call(1, order.ID, 200)
-	call(1, order.ID, 200)
+	valid := "{\"reasonCode\":\"wrong_product\"}"
+	call(0, order.ID, 401, valid)
+	call(2, order.ID, 404, valid)
+	call(1, order.ID+1, 404, valid)
+	for _, invalid := range []string{
+		"{}", "{\"reasonCode\":\"arbitrary\"}", "{\"reasonCode\":\"other\",\"reasonDetails\":\"  \"}",
+		fmt.Sprintf("{\"reasonCode\":\"other\",\"reasonDetails\":%q}", strings.Repeat("a", 501)),
+	} {
+		call(1, order.ID, 400, invalid)
+	}
+	call(1, order.ID, 200, valid)
+	for _, reason := range []string{"changed_mind", "wrong_address", "duplicate_order"} {
+		call(1, order.ID, 200, fmt.Sprintf("{\"reasonCode\":%q}", reason))
+	}
+	call(1, order.ID, 200, "{\"reasonCode\":\"other\",\"reasonDetails\":\"Detalhe de teste\"}")
 	if notifications != 1 {
 		t.Fatalf("notified %d times", notifications)
 	}
@@ -316,7 +334,7 @@ func TestOrderCancellationDeadlinePostgres(t *testing.T) {
 			if err != nil || details.CanCancel != scenario.allowed || (details.CancellationRemainingMs > 0) != scenario.allowed {
 				t.Fatalf("eligibility: %v, remaining: %d, err: %v", details.CanCancel, details.CancellationRemainingMs, err)
 			}
-			_, changed, err := repo.CancelOrder(ctx, 1, order.ID)
+			_, changed, err := repo.CancelOrder(ctx, 1, order.ID, models.CancellationReason{ReasonCode: "wrong_product"})
 			if scenario.allowed {
 				if err != nil || !changed {
 					t.Fatalf("cancel: %v", err)
@@ -329,5 +347,81 @@ func TestOrderCancellationDeadlinePostgres(t *testing.T) {
 				assertCheckoutState(t, db, 0, 1, 1)
 			}
 		})
+	}
+}
+
+func TestAccountAddressesAndCheckoutPostgres(t *testing.T) {
+	db, _ := checkoutTestDB(t)
+	ctx := context.Background()
+	account := repositories.AccountRepository{DB: db}
+	checkout := repositories.CheckoutRepository{DB: db}
+	profile, err := account.UpdateProfile(ctx, 1, models.AccountProfile{Name: "Pessoa Teste", Phone: "11912345678"})
+	if err != nil || profile.Email != "test@example.com" {
+		t.Fatalf("profile update failed: %v", err)
+	}
+	profile, err = account.Profile(ctx, 1)
+	if err != nil || profile.Name != "Pessoa Teste" || profile.Phone != "11912345678" {
+		t.Fatalf("profile read failed: %v", err)
+	}
+	address := models.UserAddress{Label: "Casa", ShippingAddress: models.ShippingAddress{
+		Recipient: "Pessoa Teste", ZipCode: "01001-000", Street: "Rua Teste",
+		Number: "8", Neighborhood: "Centro", City: "São Paulo", State: "SP",
+	}}
+	first, err := account.SaveAddress(ctx, 1, 0, address)
+	if err != nil || !first.IsDefault {
+		t.Fatalf("first address: %v", err)
+	}
+	second, err := account.SaveAddress(ctx, 1, 0, address)
+	if err != nil || second.IsDefault {
+		t.Fatalf("second address: %v", err)
+	}
+	for _, err := range checkoutParallel(
+		func() error { return account.SetDefaultAddress(ctx, 1, first.ID) },
+		func() error { return account.SetDefaultAddress(ctx, 1, second.ID) },
+	) {
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := account.SetDefaultAddress(ctx, 2, first.ID); !errors.Is(err, sql.ErrNoRows) {
+		t.Fatalf("default ownership: %v", err)
+	}
+	addresses, err := account.Addresses(ctx, 1)
+	if err != nil || len(addresses) != 2 || !addresses[0].IsDefault || addresses[1].IsDefault {
+		t.Fatalf("default address consistency: %v", err)
+	}
+	input := models.CheckoutRequest{
+		RequestKey: "checkout-address", AddressID: first.ID, PaymentMethod: "pix",
+		ExpectedTotalCents: 1000, ContactPhone: "11987654321",
+	}
+	if _, err := checkout.Create(ctx, 2, input); !errors.Is(err, repositories.ErrCheckoutAddress) {
+		t.Fatalf("address ownership at checkout: %v", err)
+	}
+	order, err := checkout.Create(ctx, 1, input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	address.Number = "99"
+	if _, err = account.SaveAddress(ctx, 1, first.ID, address); err != nil {
+		t.Fatal(err)
+	}
+	var phone string
+	if err = db.QueryRow("SELECT contact_phone FROM checkout_orders WHERE id=$1", order.ID).Scan(&phone); err != nil || phone != input.ContactPhone {
+		t.Fatalf("contact snapshot: %v", err)
+	}
+	details, err := checkout.GetOrderDetails(ctx, 1, order.ID)
+	if err != nil || details.Address.Number != "8" {
+		t.Fatalf("address snapshot: %v", err)
+	}
+	retry, err := checkout.Create(ctx, 1, input)
+	if err != nil || retry.ID != order.ID || len(retry.ReceiptItems) != 0 {
+		t.Fatalf("checkout retry: %v", err)
+	}
+	if err := account.DeleteAddress(ctx, 1, addresses[0].ID); err != nil {
+		t.Fatal(err)
+	}
+	addresses, err = account.Addresses(ctx, 1)
+	if err != nil || len(addresses) != 1 || !addresses[0].IsDefault {
+		t.Fatalf("default promotion: %v", err)
 	}
 }
