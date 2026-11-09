@@ -49,7 +49,6 @@ func Open(ctx context.Context, cfg Config) (*sql.DB, error) {
 		if connectContext.Err() != nil {
 			return nil, fmt.Errorf("PostgreSQL connection failed: %w", connectContext.Err())
 		}
-		// Driver errors may contain connection details. Never expose them in startup logs.
 		return nil, errors.New("could not connect to PostgreSQL; check configuration and availability")
 	}
 	return database, nil

@@ -4,6 +4,16 @@ import { AdminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
+    path: 'meus-pedidos',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/order-history/order-history.component').then(m => m.OrderHistoryComponent),
+  },
+  {
+    path: 'meus-pedidos/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/order-history/order-history.component').then(m => m.OrderHistoryComponent),
+  },
+  {
     path: 'checkout/success/:id',
     canActivate: [authGuard],
     loadComponent: () => import('./features/checkout/checkout-success/checkout-success.component').then(m => m.CheckoutSuccessComponent),

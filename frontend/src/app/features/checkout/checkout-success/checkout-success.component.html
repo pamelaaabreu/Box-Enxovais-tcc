@@ -26,16 +26,24 @@
           <a routerLink="/home" class="continue">Continuar comprando <span aria-hidden="true">→</span></a>
         </div>
       </div>
+    } @else if (notFound()) {
+      <div class="lookup-state">
+        <h1 id="success-title">Pedido não encontrado</h1>
+        <p>Não encontramos o pedido solicitado. Verifique o endereço ou volte para a loja.</p>
+        <a routerLink="/home" class="continue">Voltar para a loja <span aria-hidden="true">→</span></a>
+      </div>
     } @else {
-      <h1 id="success-title">Confirmação do pedido</h1>
-      @if (loading()) {
-        <p role="status">Consultando pedido…</p>
-      }
-      @if (error()) {
-        <p role="alert">{{ error() }}</p>
-        <button type="button" class="retry" (click)="retry()">Tentar novamente</button>
-      }
-      <a routerLink="/home" class="continue">Continuar comprando <span aria-hidden="true">→</span></a>
+      <div class="lookup-state">
+        <h1 id="success-title">Confirmação do pedido</h1>
+        @if (loading()) {
+          <p role="status">Consultando pedido…</p>
+        } @else if (error()) {
+          <p role="alert">{{ error() }}</p>
+          @if (canRetry()) {
+            <button type="button" class="continue" (click)="retry()">Tentar novamente</button>
+          }
+        }
+      </div>
     }
   </section>
 </app-catalog-layout>

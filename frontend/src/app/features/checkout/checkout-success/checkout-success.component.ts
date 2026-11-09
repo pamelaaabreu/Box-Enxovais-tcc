@@ -32,6 +32,8 @@ export class CheckoutSuccessComponent {
   private readonly reload = new BehaviorSubject(0);
   readonly loading = signal(true);
   readonly error = signal('');
+  readonly notFound = signal(false);
+  readonly canRetry = signal(false);
   readonly order = signal<{ id: number; total: number; status: string } | null>(
     null,
   );
@@ -46,11 +48,13 @@ export class CheckoutSuccessComponent {
         switchMap(([params]) => {
           this.loading.set(true);
           this.error.set('');
+          this.notFound.set(false);
+          this.canRetry.set(false);
           this.order.set(null);
           const id = params.get('id') || '';
           if (!/^[1-9]\d*$/.test(id)) {
             this.loading.set(false);
-            this.error.set('Pedido inválido.');
+            this.notFound.set(true);
             return EMPTY;
           }
           return this.http
@@ -62,12 +66,15 @@ export class CheckoutSuccessComponent {
               takeUntil(this.auth.userChanged),
               catchError((error) => {
                 this.loading.set(false);
-                this.error.set(
-                  error.status === 404
-                    ? 'Pedido não encontrado.'
-                    : 'Não foi possível consultar o pedido. Tente novamente.',
-                );
-                if (error.status === 401) void this.router.navigate(['/login']);
+                if (error.status === 404 || error.status === 400) {
+                  this.notFound.set(true);
+                } else if (error.status === 401) {
+                  this.error.set('Sua sessão expirou. Faça login novamente.');
+                  void this.router.navigate(['/login']);
+                } else {
+                  this.canRetry.set(error.status === 0 || error.status === 429 || error.status >= 500);
+                  this.error.set('Não foi possível consultar o pedido agora.');
+                }
                 return EMPTY;
               }),
             );
@@ -88,6 +95,7 @@ export class CheckoutSuccessComponent {
   }
 
   retry(): void {
+    if (!this.canRetry() || this.loading()) return;
     this.reload.next(this.reload.value + 1);
   }
 }

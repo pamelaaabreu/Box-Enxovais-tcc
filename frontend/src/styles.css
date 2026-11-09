@@ -199,3 +199,26 @@ app-top-navbar {
   margin-top: 60px;
   margin-bottom: 30px;
 }
+
+/* Order history options live outside the component in the CDK overlay. */
+.mat-mdc-select-panel.order-history-filter-panel {
+  --mat-select-panel-background-color: #fffdf8;
+  --mat-option-label-text-color: #3d4836;
+  --mat-option-selected-state-label-text-color: #3d4836;
+  --mat-option-selected-state-layer-color: #eef0e9;
+  --mat-option-hover-state-layer-color: #f5f4ed;
+  --mat-option-focus-state-layer-color: #eef0e9;
+  --mat-minimal-pseudo-checkbox-selected-checkmark-color: #667255;
+  border-radius: 8px;
+}
+
+.mat-mdc-select-panel.order-history-filter-panel {
+  border-radius: 10px;
+  box-shadow: 0 4px 14px #3d48361a;
+  --mat-option-label-text-size: 14px;
+}
+
+.order-history-filter-panel .mat-mdc-option {
+  min-height: 42px;
+  padding-inline: 12px;
+}

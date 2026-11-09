@@ -107,6 +107,9 @@ func run() error {
 			go services.SendCheckoutReceipt(database, userID, order)
 		},
 	}
+	orderHistory := handlers.OrderHistoryHandler{Store: repositories.CheckoutRepository{DB: database}}
+	mux.HandleFunc("GET /orders", middlewares.AuthMiddleware(orderHistory.ServeHTTP))
+	mux.HandleFunc("GET /orders/{id}", middlewares.AuthMiddleware(orderHistory.ServeHTTP))
 	mux.HandleFunc("POST /checkout", middlewares.AuthMiddleware(checkout.ServeHTTP))
 	mux.HandleFunc("GET /checkout/success/{id}", middlewares.AuthMiddleware(checkout.ServeHTTP))
 	routes.InitRoutesFavorites(mux, favorites)
