@@ -1,12 +1,14 @@
 import { Component, DestroyRef, TemplateRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { MatIconModule } from '@angular/material/icon';
+import { CustomAlertService } from '../../core/services/custom-alert.service';
 import { MatInputModule } from '@angular/material/input';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Observable, finalize } from 'rxjs';
 import { AccountService, SavedAddress, contactPhonePattern } from '../../core/services/account.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -14,7 +16,7 @@ import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/cat
 
 @Component({
   standalone: true,
-  imports: [CatalogLayoutComponent, RouterLink, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, NgxMaskDirective],
+  imports: [CatalogLayoutComponent, RouterLink, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, NgxMaskDirective],
   providers: [provideNgxMask({ validation: false })],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss',
@@ -27,6 +29,19 @@ export class AccountComponent {
   private readonly dialog = inject(MatDialog);
   private readonly fb = inject(FormBuilder).nonNullable;
   readonly addresses = signal<SavedAddress[]>([]);
+  private readonly route = inject(ActivatedRoute);
+  private readonly alerts = inject(CustomAlertService);
+  readonly tabs = [
+    { id: 'profile', label: 'Meus dados' },
+    { id: 'addresses', label: 'Meus endereços' },
+    { id: 'security', label: 'Segurança da conta' },
+  ] as const;
+  readonly activeTab = signal('profile');
+  private savedProfile = '';
+  get hasProfileChanges(): boolean {
+    return JSON.stringify(this.profile.getRawValue()) !== this.savedProfile;
+  }
+
   readonly email = signal('');
   readonly error = signal('');
   readonly notice = signal('');
@@ -39,6 +54,8 @@ export class AccountComponent {
   readonly profile = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(200)]],
     phone: ['', Validators.pattern(contactPhonePattern)],
+    nationalId: ['', (control: AbstractControl<string>) => cpfValid(control.value) ? null : { cpf: true }],
+    birthDate: ['', (control: AbstractControl<string>) => !control.value || birthDateISO(control.value) ? null : { birthDate: true }],
   });
   readonly address = this.fb.group({
     label: ['', [Validators.required, Validators.maxLength(40)]],
@@ -64,10 +81,19 @@ export class AccountComponent {
   ] as const;
 
   constructor() {
+    this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
+      const tab = params.get('tab');
+      this.activeTab.set(this.tabs.some(item => item.id === tab) ? tab! : 'profile');
+    });
     this.auth.userChanged.pipe(takeUntilDestroyed()).subscribe(() => void this.router.navigate(['/login']));
     this.account.profile().pipe(takeUntilDestroyed()).subscribe({
       next: profile => {
-        this.profile.patchValue(profile);
+        this.profile.patchValue({
+          ...profile,
+          nationalId: profile.nationalId ?? '',
+          birthDate: profile.birthDate?.split('-').reverse().join('/') ?? '',
+        });
+        this.savedProfile = JSON.stringify(this.profile.getRawValue());
         this.email.set(profile.email);
         this.loaded.set(true);
       },
@@ -81,7 +107,13 @@ export class AccountComponent {
       this.profile.markAllAsTouched();
       return;
     }
-    this.run(this.account.updateProfile(this.profile.getRawValue()), () => this.notice.set('Dados atualizados.'));
+    if (!this.hasProfileChanges || this.busy()) return;
+    const submitted = this.profile.getRawValue();
+    const { birthDate, ...profile } = submitted;
+    this.run(this.account.updateProfile({ ...profile, birthDate: birthDateISO(birthDate) }), () => {
+      this.savedProfile = JSON.stringify(submitted);
+      this.alerts.success('Dados atualizados.');
+    }, true);
   }
 
   editAddress(address?: SavedAddress): void {
@@ -150,14 +182,42 @@ export class AccountComponent {
     });
   }
 
-  private run(request: Observable<unknown>, success: () => void): void {
+  private run(request: Observable<unknown>, success: () => void, toastError = false): void {
     if (this.busy()) return;
     this.busy.set(true);
     this.error.set('');
     this.notice.set('');
     request.pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.busy.set(false))).subscribe({
       next: success,
-      error: error => this.error.set(error.error?.message || 'Não foi possível salvar a alteração. Tente novamente.'),
+      error: error => {
+        const message = error.error?.message || 'Não foi possível salvar a alteração. Tente novamente.';
+        this.error.set(message);
+        if (toastError) this.alerts.error(message);
+      },
     });
   }
+}
+
+function cpfValid(value: string): boolean {
+  if (!value) return true;
+  const digits = value.replace(/[.-]/g, '');
+  if (!/^\d{11}$/.test(digits) || /^(\d)\1{10}$/.test(digits)) return false;
+  return [9, 10].every(length => {
+    const sum = [...digits.slice(0, length)].reduce((total, digit, index) => total + Number(digit) * (length + 1 - index), 0);
+    return sum * 10 % 11 % 10 === Number(digits[length]);
+  });
+}
+
+function birthDateISO(value: string): string {
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
+  if (!match) return '';
+  const [, day, month, year] = match;
+  const iso = year + '-' + month + '-' + day;
+  const date = new Date(iso + 'T00:00:00Z');
+  if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== iso) return '';
+  const today = new Date();
+  const localISO = (date: Date) => [date.getFullYear(), date.getMonth() + 1, date.getDate()].map(part => String(part).padStart(2, '0')).join('-');
+  const upper = localISO(today);
+  today.setFullYear(today.getFullYear() - 130);
+  return iso >= localISO(today) && iso <= upper ? iso : '';
 }

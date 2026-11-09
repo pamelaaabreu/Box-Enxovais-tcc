@@ -4,19 +4,42 @@ import (
 	"backend/src/models"
 	"context"
 	"database/sql"
+	"errors"
 )
 
 type AccountRepository struct{ DB *sql.DB }
 
-func (repo AccountRepository) Profile(ctx context.Context, userID int) (models.AccountProfile, error) {
+var ErrDuplicateCPF = errors.New("CPF já cadastrado em outra conta")
+
+const profileColumns = "full_name,email,COALESCE(phone,''),COALESCE(national_id,''),COALESCE(to_char(birth_date,'YYYY-MM-DD'),'')"
+
+func scanProfile(row *sql.Row) (models.AccountProfile, error) {
 	var p models.AccountProfile
-	err := repo.DB.QueryRowContext(ctx, "SELECT full_name,email,COALESCE(phone,'') FROM users WHERE id=$1", userID).Scan(&p.Name, &p.Email, &p.Phone)
+	err := row.Scan(&p.Name, &p.Email, &p.Phone, &p.NationalID, &p.BirthDate)
 	return p, err
 }
 
-func (repo AccountRepository) UpdateProfile(ctx context.Context, userID int, p models.AccountProfile) (models.AccountProfile, error) {
-	err := repo.DB.QueryRowContext(ctx, "UPDATE users SET full_name=$2,phone=NULLIF($3,'') WHERE id=$1 RETURNING email", userID, p.Name, p.Phone).Scan(&p.Email)
-	return p, err
+func (repo AccountRepository) Profile(ctx context.Context, userID int) (models.AccountProfile, error) {
+	return scanProfile(repo.DB.QueryRowContext(ctx, "SELECT "+profileColumns+" FROM users WHERE id=$1", userID))
+}
+
+func (repo AccountRepository) UpdateProfile(ctx context.Context, userID int, p models.AccountProfilePatch) (models.AccountProfile, error) {
+	if p.NationalID != nil && *p.NationalID != "" {
+		var exists bool
+		err := repo.DB.QueryRowContext(ctx, "SELECT EXISTS(SELECT 1 FROM users WHERE id<>$1 AND translate(national_id,'.-','')=$2)", userID, *p.NationalID).Scan(&exists)
+		if err != nil {
+			return models.AccountProfile{}, err
+		}
+		if exists {
+			return models.AccountProfile{}, ErrDuplicateCPF
+		}
+	}
+	result, err := scanProfile(repo.DB.QueryRowContext(ctx, "UPDATE users SET full_name=COALESCE($2,full_name),phone=CASE WHEN $3::text IS NULL THEN phone ELSE NULLIF($3,'') END,national_id=CASE WHEN $4::text IS NULL THEN national_id ELSE NULLIF($4,'') END,birth_date=CASE WHEN $5::text IS NULL THEN birth_date ELSE NULLIF($5,'')::date END WHERE id=$1 RETURNING "+profileColumns, userID, p.Name, p.Phone, p.NationalID, p.BirthDate))
+	var state interface{ SQLState() string }
+	if errors.As(err, &state) && state.SQLState() == "23505" {
+		return result, ErrDuplicateCPF
+	}
+	return result, err
 }
 
 const addressColumns = "id,label,is_default,recipient,zip_code,street,number,complement,neighborhood,city,state"

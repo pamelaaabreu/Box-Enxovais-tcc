@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 	"unicode/utf8"
 )
 
@@ -46,18 +47,20 @@ func (h AccountHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			accountResult(w, 200, p, err)
 			return
 		}
-		var p models.AccountProfile
-		if !decodeCartBody(w, r, &p) {
+		var patch models.AccountProfilePatch
+		if !decodeCartBody(w, r, &patch) {
 			response.Error(w, 400, "Dados de perfil inválidos")
 			return
 		}
-		p.Name = strings.TrimSpace(p.Name)
-		p.Phone, ok = normalizeContactPhone(p.Phone)
-		if !ok || utf8.RuneCountInString(p.Name) < 2 || utf8.RuneCountInString(p.Name) > 200 || strings.ContainsRune(p.Name, 0) {
-			response.Error(w, 400, "Confira o nome completo e o telefone com DDD")
+		if message := validateProfilePatch(&patch); message != "" {
+			response.Error(w, 400, message)
 			return
 		}
-		p, err := h.Store.UpdateProfile(r.Context(), userID, p)
+		p, err := h.Store.UpdateProfile(r.Context(), userID, patch)
+		if errors.Is(err, repositories.ErrDuplicateCPF) {
+			response.Error(w, 409, err.Error())
+			return
+		}
 		accountResult(w, 200, p, err)
 		return
 	}
@@ -103,4 +106,59 @@ func accountResult(w http.ResponseWriter, status int, data any, err error) {
 	default:
 		response.Success(w, status, "", data)
 	}
+}
+
+var cpfFormat = regexp.MustCompile("^([0-9]{11}|[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{2})$")
+
+func validateProfilePatch(p *models.AccountProfilePatch) string {
+	if p.Name != nil {
+		*p.Name = strings.TrimSpace(*p.Name)
+		if n := utf8.RuneCountInString(*p.Name); n < 2 || n > 200 || strings.ContainsRune(*p.Name, 0) {
+			return "Confira o nome completo"
+		}
+	}
+	if p.Phone != nil {
+		phone, ok := normalizeContactPhone(*p.Phone)
+		if !ok {
+			return "Confira o telefone com DDD"
+		}
+		*p.Phone = phone
+	}
+	if p.NationalID != nil {
+		cpf := strings.TrimSpace(*p.NationalID)
+		if cpf != "" {
+			if !cpfFormat.MatchString(cpf) {
+				return "Informe um CPF válido"
+			}
+			cpf = strings.NewReplacer(".", "", "-", "").Replace(cpf)
+			if !validCPF(cpf) {
+				return "Informe um CPF válido"
+			}
+		}
+		*p.NationalID = cpf
+	}
+	if p.BirthDate != nil && *p.BirthDate != "" {
+		date, err := time.Parse(time.DateOnly, *p.BirthDate)
+		now := time.Now()
+		if err != nil || date.Format(time.DateOnly) != *p.BirthDate || *p.BirthDate > now.Format(time.DateOnly) || *p.BirthDate < now.AddDate(-130, 0, 0).Format(time.DateOnly) {
+			return "Informe uma data de nascimento válida"
+		}
+	}
+	return ""
+}
+
+func validCPF(cpf string) bool {
+	if cpf == strings.Repeat(cpf[:1], 11) {
+		return false
+	}
+	for length := 9; length <= 10; length++ {
+		sum := 0
+		for i := 0; i < length; i++ {
+			sum += int(cpf[i]-'0') * (length + 1 - i)
+		}
+		if sum*10%11%10 != int(cpf[length]-'0') {
+			return false
+		}
+	}
+	return true
 }

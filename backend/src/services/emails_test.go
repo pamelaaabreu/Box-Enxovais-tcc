@@ -106,7 +106,7 @@ func TestRecoveryEmailMIME(t *testing.T) {
 	if _, unused := images["email-leaf.png"]; unused {
 		t.Fatal("unused leaf must not be embedded")
 	}
-	if len(refs) != 2 || len(images) != len(refs) {
+	if len(refs) != 3 || len(images) != len(refs) {
 		t.Fatal("CID/image count mismatch")
 	}
 	for _, ref := range refs {

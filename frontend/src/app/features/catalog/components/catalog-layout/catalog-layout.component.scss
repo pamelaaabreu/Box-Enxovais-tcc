@@ -114,15 +114,15 @@
   margin-bottom: 12px;
 }
 
-:host(.order-history-surface) .catalog-content {
+:host(:is(.order-history-surface, .account-surface)) .catalog-content {
   max-width: none;
   }
 
-:host(.order-history-surface) app-main-navbar {
+:host(:is(.order-history-surface, .account-surface)) app-main-navbar {
   display: flow-root;
   background-color: #eef0e9;
 }
 
-:host(.order-history-surface) .catalog-content {
+:host(:is(.order-history-surface, .account-surface)) .catalog-content {
   background: linear-gradient(#eef0e9, #fffdf8 96px);
 }

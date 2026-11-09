@@ -50,7 +50,7 @@ func checkoutTestDB(t *testing.T) (*sql.DB, func(string)) {
 	for _, conn := range connections {
 		conn.Close()
 	}
-	exec(`CREATE TABLE users(id INTEGER PRIMARY KEY,full_name TEXT NOT NULL DEFAULT 'Cliente',email TEXT NOT NULL DEFAULT 'test@example.com',phone VARCHAR(20));
+	exec(`CREATE TABLE users(id INTEGER PRIMARY KEY,full_name TEXT NOT NULL DEFAULT 'Cliente',email TEXT NOT NULL DEFAULT 'test@example.com',phone VARCHAR(20), national_id VARCHAR(14) UNIQUE, birth_date DATE);
  CREATE TABLE products(id INTEGER PRIMARY KEY,name TEXT,price NUMERIC,quantity INTEGER NOT NULL CHECK(quantity>=0),status TEXT,updated_at TIMESTAMPTZ);
  CREATE TABLE promotions(id INTEGER PRIMARY KEY,status TEXT,start_date TIMESTAMPTZ,end_date TIMESTAMPTZ);
  CREATE TABLE promotion_products(product_id INTEGER,promotion_id INTEGER,promotional_price NUMERIC);
@@ -355,7 +355,8 @@ func TestAccountAddressesAndCheckoutPostgres(t *testing.T) {
 	ctx := context.Background()
 	account := repositories.AccountRepository{DB: db}
 	checkout := repositories.CheckoutRepository{DB: db}
-	profile, err := account.UpdateProfile(ctx, 1, models.AccountProfile{Name: "Pessoa Teste", Phone: "11912345678"})
+	name, profilePhone := "Pessoa Teste", "11912345678"
+	profile, err := account.UpdateProfile(ctx, 1, models.AccountProfilePatch{Name: &name, Phone: &profilePhone})
 	if err != nil || profile.Email != "test@example.com" {
 		t.Fatalf("profile update failed: %v", err)
 	}
@@ -423,5 +424,47 @@ func TestAccountAddressesAndCheckoutPostgres(t *testing.T) {
 	addresses, err = account.Addresses(ctx, 1)
 	if err != nil || len(addresses) != 1 || !addresses[0].IsDefault {
 		t.Fatalf("default promotion: %v", err)
+	}
+}
+
+func TestAccountProfilePatchPostgres(t *testing.T) {
+	db, _ := checkoutTestDB(t)
+	t.Setenv("JWT_SECRET", "favorites-tests-only")
+	mux := http.NewServeMux()
+	handler := handlers.AccountHandler{Store: repositories.AccountRepository{DB: db}}
+	mux.HandleFunc("GET /me", middlewares.AuthMiddleware(handler.ServeHTTP))
+	mux.HandleFunc("PATCH /me", middlewares.AuthMiddleware(handler.ServeHTTP))
+	call := func(method string, user int, body string, want int) string {
+		t.Helper()
+		r := httptest.NewRequest(method, "/me", strings.NewReader(body))
+		r.Header.Set("Authorization", "Bearer "+favoriteTestToken(t, user))
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, r)
+		if w.Code != want {
+			t.Fatalf("status = %d, want %d", w.Code, want)
+		}
+		return w.Body.String()
+	}
+	call("GET", 1, "", 200)
+	for _, body := range []string{
+		`{"nationalId":"111.111.111-11"}`,
+		`{"birthDate":"2001-02-29"}`,
+		`{"birthDate":"2999-01-01"}`,
+		`{"role":"admin"}`,
+	} {
+		call("PATCH", 1, body, 400)
+	}
+	call("PATCH", 1, `{"nationalId":"529.982.247-25","birthDate":"2000-02-29"}`, 200)
+	call("PATCH", 2, `{"nationalId":"52998224725"}`, 409)
+	result := call("PATCH", 1, `{"name":"Pessoa Teste"}`, 200)
+	for _, expected := range []string{"52998224725", "2000-02-29", "Pessoa Teste"} {
+		if !strings.Contains(result, expected) {
+			t.Fatal("patch discarded profile data")
+		}
+	}
+	call("PATCH", 1, `{"nationalId":"","birthDate":""}`, 200)
+	var cleared bool
+	if err := db.QueryRow("SELECT national_id IS NULL AND birth_date IS NULL FROM users WHERE id=1").Scan(&cleared); err != nil || !cleared {
+		t.Fatal("optional fields were not cleared")
 	}
 }

@@ -258,6 +258,7 @@
               <div class="detail-help-actions">
                 @if (order.status === "cancelled") {
                   <span class="cancelled-badge cancelled-indicator">Pedido cancelado</span>
+                  <a class="cancelled-support" [href]="supportPhone">Falar com atendente</a>
                   <dl class="cancellation-info">
                     <dt>Motivo do cancelamento</dt>
                     <dd>{{ cancellationReasons.get(order.cancellation?.reasonCode ?? '') ?? 'Motivo não informado' }}</dd>
@@ -273,7 +274,7 @@
                     Cancelar compra
                   </button>
                 } @else {
-                  <a class="action support-order" href="tel:08006567846">Falar com o suporte</a>
+                  <a class="action support-order" [href]="supportPhone">Falar com o suporte</a>
                 }
               </div>
               <ng-template #cancelDialog>

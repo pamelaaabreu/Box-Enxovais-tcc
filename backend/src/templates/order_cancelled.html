@@ -19,6 +19,7 @@
       -ms-text-size-adjust: 100%;
     "
   >
+    <!-- Fundo principal -->
     <table
       role="presentation"
       width="100%"
@@ -39,9 +40,12 @@
             style="
               width: 100%;
               max-width: 600px;
-              border-collapse: collapse;
+              border-collapse: separate;
+              border-spacing: 0;
               background-color: #fffdf8;
               border: 1px solid #d7ddcf;
+              border-radius: 14px;
+              overflow: hidden;
             "
           >
             <!-- Cabeçalho -->
@@ -51,6 +55,7 @@
                 style="
                   padding: 28px 24px;
                   background-color: #3f4e3c;
+                  border-radius: 14px 14px 0 0;
                   text-align: center;
                 "
               >
@@ -74,7 +79,7 @@
 
             <!-- Conteúdo -->
             <tr>
-              <td style="padding: 40px 34px 36px; background-color: #fffdf8">
+              <td style="padding: 40px 34px 38px; background-color: #fffdf8">
                 <!-- Título -->
                 <h1
                   style="
@@ -103,7 +108,7 @@
                   Olá, {{.Name}}! Confirmamos o cancelamento do seu pedido.
                 </p>
 
-                <!-- Linha decorativa discreta -->
+                <!-- Duas linhas decorativas delicadas -->
                 <table
                   role="presentation"
                   width="100%"
@@ -112,19 +117,19 @@
                   cellpadding="0"
                   style="
                     width: 100%;
-                    margin-bottom: 26px;
+                    margin: 8px 0 26px;
                     border-collapse: collapse;
                   "
                 >
                   <tr>
                     <td
-                      height="3"
+                      height="6"
                       style="
-                        height: 3px;
-                        border-top: 1px solid #d8dccf;
-                        border-bottom: 1px solid #e7eadf;
+                        height: 6px;
                         font-size: 0;
                         line-height: 0;
+                        border-top: 1px solid #cfd3c3;
+                        border-bottom: 1px solid #e3e6dc;
                       "
                     >
                       &nbsp;
@@ -134,7 +139,7 @@
 
                 <!-- Tabela de produtos -->
                 <table
-                  role="presentation"
+                  role="table"
                   width="100%"
                   border="0"
                   cellspacing="0"
@@ -143,98 +148,109 @@
                     width: 100%;
                     border-collapse: collapse;
                     table-layout: fixed;
-                    border: 1px solid #cfd7c3;
+                    border: 1px solid #a7b19a;
                   "
                 >
-                  <tr style="background-color: #f7f5ef">
-                    <th
-                      width="72%"
-                      align="left"
-                      style="
-                        padding: 14px 16px;
-                        color: #667255;
-                        font-family:
-                          Georgia, &quot;Times New Roman&quot;, serif;
-                        font-size: 11px;
-                        font-weight: 700;
-                        line-height: 1.5;
-                        text-align: left;
-                        text-transform: uppercase;
-                        letter-spacing: 1.3px;
-                        border-right: 1px solid #cfd7c3;
-                        border-bottom: 1px solid #cfd7c3;
-                      "
-                    >
-                      Produto
-                    </th>
+                  <!-- Cabeçalho da tabela -->
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        width="72%"
+                        align="left"
+                        style="
+                          padding: 15px 18px;
+                          background-color: #eee9dd;
+                          color: #3d4836;
+                          font-family:
+                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-size: 12px;
+                          font-weight: 700;
+                          line-height: 1.5;
+                          text-align: left;
+                          text-transform: uppercase;
+                          letter-spacing: 1px;
+                          border-right: 1px solid #a7b19a;
+                          border-bottom: 1px solid #a7b19a;
+                        "
+                      >
+                        Produto
+                      </th>
 
-                    <th
-                      width="28%"
-                      align="center"
-                      style="
-                        padding: 14px 8px;
-                        color: #667255;
-                        font-family:
-                          Georgia, &quot;Times New Roman&quot;, serif;
-                        font-size: 11px;
-                        font-weight: 700;
-                        line-height: 1.5;
-                        text-align: center;
-                        text-transform: uppercase;
-                        letter-spacing: 1px;
-                        border-bottom: 1px solid #cfd7c3;
-                      "
-                    >
-                      Quantidade
-                    </th>
-                  </tr>
+                      <th
+                        scope="col"
+                        width="28%"
+                        align="center"
+                        style="
+                          padding: 15px 8px;
+                          background-color: #eee9dd;
+                          color: #3d4836;
+                          font-family:
+                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-size: 12px;
+                          font-weight: 700;
+                          line-height: 1.5;
+                          text-align: center;
+                          text-transform: uppercase;
+                          letter-spacing: 0.5px;
+                          border-bottom: 1px solid #a7b19a;
+                        "
+                      >
+                        Quantidade
+                      </th>
+                    </tr>
+                  </thead>
 
-                  {{range .Order.ReceiptItems}}
-                  <tr>
-                    <td
-                      align="left"
-                      style="
-                        padding: 18px 16px;
-                        background-color: #f4f1eb;
-                        color: #3d4836;
-                        font-family:
-                          Georgia, &quot;Times New Roman&quot;, serif;
-                        font-size: 14px;
-                        font-weight: 400;
-                        line-height: 1.7;
-                        text-align: left;
-                        border-right: 1px solid #cfd7c3;
-                        border-bottom: 1px solid #cfd7c3;
-                        overflow-wrap: break-word;
-                        word-wrap: break-word;
-                      "
-                    >
-                      {{.Name}}
-                    </td>
+                  <!-- Produtos dinâmicos -->
+                  <tbody>
+                    {{range .Order.ReceiptItems}}
+                    <tr>
+                      <td
+                        align="left"
+                        style="
+                          padding: 22px 18px;
+                          background-color: #fffaf1;
+                          color: #3d4836;
+                          font-family:
+                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-size: 14px;
+                          font-weight: 400;
+                          line-height: 1.8;
+                          text-align: left;
+                          vertical-align: middle;
+                          border-right: 1px solid #a7b19a;
+                          border-bottom: 1px solid #a7b19a;
+                          overflow-wrap: break-word;
+                          word-wrap: break-word;
+                        "
+                      >
+                        {{.Name}}
+                      </td>
 
-                    <td
-                      align="center"
-                      style="
-                        padding: 18px 8px;
-                        background-color: #f4f1eb;
-                        color: #3d4836;
-                        font-family:
-                          Georgia, &quot;Times New Roman&quot;, serif;
-                        font-size: 14px;
-                        font-weight: 700;
-                        line-height: 1.7;
-                        text-align: center;
-                        vertical-align: middle;
-                        border-bottom: 1px solid #cfd7c3;
-                      "
-                    >
-                      {{.Quantity}}
-                    </td>
-                  </tr>
-                  {{end}}
+                      <td
+                        align="center"
+                        style="
+                          padding: 22px 8px;
+                          background-color: #fffaf1;
+                          color: #3d4836;
+                          font-family:
+                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-size: 14px;
+                          font-weight: 400;
+                          line-height: 1.8;
+                          text-align: center;
+                          vertical-align: middle;
+                          border-bottom: 1px solid #a7b19a;
+                        "
+                      >
+                        {{.Quantity}}
+                      </td>
+                    </tr>
+                    {{end}}
+                  </tbody>
                 </table>
 
-                <!-- Total -->
+                <!-- Total do pedido -->
                 <table
                   role="presentation"
                   width="100%"
@@ -243,7 +259,7 @@
                   cellpadding="0"
                   style="
                     width: 100%;
-                    margin-top: 18px;
+                    margin-top: 28px;
                     border-collapse: collapse;
                   "
                 >
@@ -252,12 +268,12 @@
                       width="50%"
                       align="left"
                       style="
-                        padding: 22px 18px;
+                        padding: 24px 20px;
                         background-color: #3f4e3c;
                         color: #ffffff;
                         font-family:
                           Georgia, &quot;Times New Roman&quot;, serif;
-                        font-size: 15px;
+                        font-size: 16px;
                         font-weight: 700;
                         line-height: 1.5;
                         text-align: left;
@@ -272,7 +288,7 @@
                       width="50%"
                       align="right"
                       style="
-                        padding: 22px 18px;
+                        padding: 24px 20px;
                         background-color: #3f4e3c;
                         color: #ffffff;
                         font-family:
@@ -297,8 +313,9 @@
               <td
                 align="center"
                 style="
-                  padding: 24px 20px;
+                  padding: 26px 20px;
                   background-color: #3f4e3c;
+                  border-radius: 0 0 14px 14px;
                   color: #ffffff;
                   font-family: Georgia, &quot;Times New Roman&quot;, serif;
                   font-size: 12px;
@@ -311,6 +328,7 @@
               </td>
             </tr>
           </table>
+          <!-- Fim do card principal -->
         </td>
       </tr>
     </table>

@@ -126,74 +126,35 @@
         <div id="account-menu" class="dropdown-menu" [class.show]="isMenuOpen">
           <ul>
             <li>
-              <a routerLink="/account">
-                Minha Conta
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
+              <a routerLink="/account" routerLinkActive="current" ariaCurrentWhenActive="page" #active0="routerLinkActive" (click)="isMenuOpen = false">
+                <mat-icon aria-hidden="true">person_outline</mat-icon>
+                <span class="menu-label">Minha Conta</span>
+                @if (active0.isActive) { <mat-icon class="current-check" aria-hidden="true">check</mat-icon> }
               </a>
             </li>
-
             <li>
-              <a routerLink="/meus-pedidos">
-                Meus Pedidos
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path
-                    d="m12 2 9 5v10l-9 5-9-5V7l9-5Z M3 7l9 5 9-5 M12 12v10 M7.5 4.5l9 5"
-                  />
-                </svg>
+              <a routerLink="/meus-pedidos" routerLinkActive="current" ariaCurrentWhenActive="page" #active1="routerLinkActive" (click)="isMenuOpen = false">
+                <mat-icon aria-hidden="true">inventory_2</mat-icon>
+                <span class="menu-label">Meus Pedidos</span>
+                @if (active1.isActive) { <mat-icon class="current-check" aria-hidden="true">check</mat-icon> }
               </a>
             </li>
-
-            <li><a routerLink="/favorites" (click)="isMenuOpen = false">Favoritos</a></li>
-
+            <li>
+              <a routerLink="/favorites" routerLinkActive="current" ariaCurrentWhenActive="page" #active2="routerLinkActive" (click)="isMenuOpen = false">
+                <mat-icon aria-hidden="true">favorite_border</mat-icon>
+                <span class="menu-label">Favoritos</span>
+                @if (active2.isActive) { <mat-icon class="current-check" aria-hidden="true">check</mat-icon> }
+              </a>
+            </li>
             <li *ngIf="isAdmin">
-              <a routerLink="/admin">Admin</a>
+              <a routerLink="/admin" routerLinkActive="current" ariaCurrentWhenActive="page" #active3="routerLinkActive" (click)="isMenuOpen = false">
+                <mat-icon aria-hidden="true">verified_user</mat-icon>
+                <span class="menu-label">Admin</span><span class="restricted">Restrito</span>
+                @if (active3.isActive) { <mat-icon class="current-check" aria-hidden="true">check</mat-icon> }
+              </a>
             </li>
-
             <li class="divider"></li>
-
-            <li>
-              <button (click)="logout()">
-                Sair
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="m16 17 5-5-5-5" />
-                  <path d="M21 12H9" />
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                </svg>
-              </button>
-            </li>
+            <li><button type="button" (click)="logout()"><mat-icon aria-hidden="true">logout</mat-icon><span class="menu-label">Sair</span></button></li>
           </ul>
         </div>
       </div>

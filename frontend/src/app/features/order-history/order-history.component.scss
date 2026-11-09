@@ -1216,6 +1216,27 @@ mat-dialog-actions {
   font-weight: 600;
 }
 
+.cancelled-support {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 11px;
+  padding: 8px 16px;
+  border: 1px solid #3d4836;
+  border-radius: 999px;
+  background: #fffdf8;
+  color: #3d4836;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.cancelled-support:hover { background: #eef0e9; }
+.cancelled-support:focus-visible { outline: 2px solid #667255; outline-offset: 3px; }
+
 .cancellation-info {
   margin: 12px 0 0;
   padding-top: 12px;

@@ -6,6 +6,8 @@ export interface AccountProfile {
   name: string;
   email: string;
   phone: string;
+  nationalId: string;
+  birthDate: string;
 }
 
 export interface ShippingAddress {
@@ -37,7 +39,7 @@ export class AccountService {
     return this.http.get<{ data: AccountProfile }>(this.url).pipe(map(response => response.data));
   }
 
-  updateProfile(profile: Pick<AccountProfile, 'name' | 'phone'>) {
+  updateProfile(profile: Partial<Omit<AccountProfile, 'email'>>) {
     return this.http.patch<{ data: AccountProfile }>(this.url, profile).pipe(map(response => response.data));
   }
 

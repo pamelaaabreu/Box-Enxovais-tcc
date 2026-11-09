@@ -68,6 +68,7 @@ func buildRecoveryEmail(email, subject, code, templatePath, assetsDir string) (*
 	messageEmail.AddAlternative("text/html", body.String())
 
 	images := []string{
+		"checkout-logo-white.png",
 		"email-hero.png",
 		"email-shield.png",
 	}

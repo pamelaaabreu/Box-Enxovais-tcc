@@ -102,6 +102,7 @@ export class OrderHistoryComponent {
   private readonly dialog = inject(MatDialog);
   private readonly alerts = inject(CustomAlertService);
   private cancellationDialog?: MatDialogRef<unknown, boolean>;
+  readonly supportPhone = 'tel:08006567846';
   readonly cancellationReasons = new Map([
     ['changed_mind', 'Desisti da compra'],
     ['wrong_product', 'Escolhi o produto errado'],
