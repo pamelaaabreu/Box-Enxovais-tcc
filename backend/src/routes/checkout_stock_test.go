@@ -7,6 +7,7 @@ import (
 	"backend/src/repositories"
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -56,7 +57,10 @@ func checkoutTestDB(t *testing.T) (*sql.DB, func(string)) {
  CREATE TABLE promotion_products(product_id INTEGER,promotion_id INTEGER,promotional_price NUMERIC);
  CREATE TABLE product_images(id INTEGER PRIMARY KEY,product_id INTEGER,image_path TEXT,is_primary BOOLEAN);
  INSERT INTO users VALUES(1),(2);`)
-	for _, name := range []string{"000003_cart.up.sql", "000006_checkout.up.sql", "000007_order_cancellation.up.sql", "000008_order_cancellation_reason.up.sql", "000009_account_addresses.up.sql"} {
+	for _, name := range []string{"000003_cart.up.sql", "000006_checkout.up.sql", "000007_order_cancellation.up.sql", "000008_order_cancellation_reason.up.sql", "000009_account_addresses.up.sql", "000010_business_phone.up.sql", "000011_user_cnpj.up.sql"} {
+		if name == "000010_business_phone.up.sql" {
+			exec("UPDATE users SET phone = '+55 (11) 2345-6789' WHERE id = 2")
+		}
 		migration, err := os.ReadFile("../../migrations/" + name)
 		if err != nil {
 			t.Fatal(err)
@@ -312,16 +316,9 @@ func TestReorderPostgres(t *testing.T) {
 		t.Fatalf("reorder total/items: %v/%v (%v)", current.Total, current.TotalItems, err)
 	}
 }
-func TestOrderCancellationDeadlinePostgres(t *testing.T) {
-	for _, scenario := range []struct {
-		age     string
-		allowed bool
-	}{
-		{"59 minutes 59 seconds", true},
-		{"60 minutes", false},
-		{"61 minutes", false},
-	} {
-		t.Run(scenario.age, func(t *testing.T) {
+func TestOrderCancellationAtAnyAgePostgres(t *testing.T) {
+	for _, scenario := range []string{"15 minutes", "60 minutes", "24 hours", "1 year"} {
+		t.Run(scenario, func(t *testing.T) {
 			db, exec := checkoutTestDB(t)
 			ctx := context.Background()
 			repo := repositories.CheckoutRepository{DB: db}
@@ -329,23 +326,16 @@ func TestOrderCancellationDeadlinePostgres(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			exec("UPDATE checkout_orders SET created_at=clock_timestamp()-interval '" + scenario.age + "'")
+			exec("UPDATE checkout_orders SET created_at=clock_timestamp()-interval '" + scenario + "'")
 			details, err := repo.GetOrderDetails(ctx, 1, order.ID)
-			if err != nil || details.CanCancel != scenario.allowed || (details.CancellationRemainingMs > 0) != scenario.allowed {
-				t.Fatalf("eligibility: %v, remaining: %d, err: %v", details.CanCancel, details.CancellationRemainingMs, err)
+			if err != nil || !details.CanCancel || details.Status != "simulated_approved" {
+				t.Fatalf("expected approved order eligible for cancellation: %+v (%v)", details, err)
 			}
 			_, changed, err := repo.CancelOrder(ctx, 1, order.ID, models.CancellationReason{ReasonCode: "wrong_product"})
-			if scenario.allowed {
-				if err != nil || !changed {
-					t.Fatalf("cancel: %v", err)
-				}
-				assertCheckoutState(t, db, 1, 1, 1)
-			} else {
-				if changed || !errors.Is(err, repositories.ErrOrderCancellationExpired) {
-					t.Fatalf("expected expired cancellation, got %v", err)
-				}
-				assertCheckoutState(t, db, 0, 1, 1)
+			if err != nil || !changed {
+				t.Fatalf("cancel: %v", err)
 			}
+			assertCheckoutState(t, db, 1, 1, 1)
 		})
 	}
 }
@@ -390,6 +380,34 @@ func TestAccountAddressesAndCheckoutPostgres(t *testing.T) {
 	addresses, err := account.Addresses(ctx, 1)
 	if err != nil || len(addresses) != 2 || !addresses[0].IsDefault || addresses[1].IsDefault {
 		t.Fatalf("default address consistency: %v", err)
+	}
+	t.Setenv("JWT_SECRET", "favorites-tests-only")
+	mux := http.NewServeMux()
+	handler := middlewares.AuthMiddleware(handlers.AccountHandler{Store: account}.ServeHTTP)
+	mux.HandleFunc("PUT /me/addresses/{id}/default", handler)
+	mux.HandleFunc("GET /me/addresses", handler)
+	call := func(method, path string, user int, want int) *httptest.ResponseRecorder {
+		t.Helper()
+		request := httptest.NewRequest(method, path, nil)
+		request.Header.Set("Authorization", "Bearer "+favoriteTestToken(t, user))
+		result := httptest.NewRecorder()
+		mux.ServeHTTP(result, request)
+		if result.Code != want {
+			t.Fatalf("%s %s: status %d, want %d", method, path, result.Code, want)
+		}
+		return result
+	}
+	path := fmt.Sprintf("/me/addresses/%d/default", second.ID)
+	call(http.MethodPut, path, 2, http.StatusNotFound)
+	call(http.MethodPut, path, 1, http.StatusOK)
+	reloaded := call(http.MethodGet, "/me/addresses", 1, http.StatusOK)
+	var response struct{ Data []models.UserAddress }
+	if err := json.Unmarshal(reloaded.Body.Bytes(), &response); err != nil {
+		t.Fatal(err)
+	}
+	addresses = response.Data
+	if len(addresses) != 2 || addresses[0].ID != second.ID || !addresses[0].IsDefault || addresses[1].IsDefault {
+		t.Fatal("default address did not persist after reloading")
 	}
 	input := models.CheckoutRequest{
 		RequestKey: "checkout-address", AddressID: first.ID, PaymentMethod: "pix",
@@ -445,7 +463,16 @@ func TestAccountProfilePatchPostgres(t *testing.T) {
 		}
 		return w.Body.String()
 	}
+	profileJSON := call("GET", 1, "", 200)
+	if strings.Contains(profileJSON, "\"cnpj\"") || strings.Contains(profileJSON, "\"businessPhone\"") {
+		t.Fatal("profile exposed removed fields")
+	}
 	call("GET", 1, "", 200)
+	var legacyMobile sql.NullString
+	var legacyBusiness string
+	if err := db.QueryRow("SELECT phone, business_phone FROM users WHERE id=2").Scan(&legacyMobile, &legacyBusiness); err != nil || legacyMobile.Valid || legacyBusiness != "+55 (11) 2345-6789" {
+		t.Fatal("migration did not preserve the legacy landline")
+	}
 	for _, body := range []string{
 		`{"nationalId":"111.111.111-11"}`,
 		`{"birthDate":"2001-02-29"}`,
@@ -455,12 +482,21 @@ func TestAccountProfilePatchPostgres(t *testing.T) {
 		call("PATCH", 1, body, 400)
 	}
 	call("PATCH", 1, `{"nationalId":"529.982.247-25","birthDate":"2000-02-29"}`, 200)
+	call("PATCH", 1, `{"phone":"(11) 91234-5678"}`, 200)
 	call("PATCH", 2, `{"nationalId":"52998224725"}`, 409)
 	result := call("PATCH", 1, `{"name":"Pessoa Teste"}`, 200)
-	for _, expected := range []string{"52998224725", "2000-02-29", "Pessoa Teste"} {
+	for _, expected := range []string{"52998224725", "2000-02-29", "Pessoa Teste", "11912345678"} {
 		if !strings.Contains(result, expected) {
 			t.Fatal("patch discarded profile data")
 		}
+	}
+	call("PATCH", 1, `{"birthDate":"2004-06-15"}`, 200)
+	var persisted string
+	if err := db.QueryRow("SELECT birth_date::text FROM users WHERE id=1").Scan(&persisted); err != nil || persisted != "2004-06-15" {
+		t.Fatal("birth date was not persisted")
+	}
+	if !strings.Contains(call("GET", 1, "", 200), "2004-06-15") {
+		t.Fatal("profile reload did not preserve the birth date")
 	}
 	call("PATCH", 1, `{"nationalId":"","birthDate":""}`, 200)
 	var cleared bool

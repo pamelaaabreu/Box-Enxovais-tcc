@@ -23,10 +23,9 @@ type CancellationReason struct {
 type OrderDetails struct {
 	Cancellation *CancellationReason `json:"cancellation,omitempty"`
 	OrderHistoryEntry
-	Address                 ShippingAddress `json:"address"`
-	PaymentMethod           string          `json:"paymentMethod"`
-	CanCancel               bool            `json:"canCancel"`
-	CancellationRemainingMs int64           `json:"cancellationRemainingMs"`
+	Address       ShippingAddress `json:"address"`
+	PaymentMethod string          `json:"paymentMethod"`
+	CanCancel     bool            `json:"canCancel"`
 }
 
 type OrderHistoryItem struct {

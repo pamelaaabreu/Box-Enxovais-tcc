@@ -39,6 +39,15 @@ export class AuthService implements OnDestroy {
   public isLogged = false;
   public userName: string | null = null;
   public userChanged = new Subject<void>();
+  private readonly savedNameChanges = new Subject<void>();
+  readonly savedNameChanged = this.savedNameChanges.asObservable();
+
+  updateSavedName(name: string): void {
+    if (!this.isBrowser() || !this.getToken() || !name.trim() || this.getUserName() === name) return;
+    sessionStorage.setItem('userName', name);
+    this.userName = name;
+    this.savedNameChanges.next();
+  }
 
   loadUser(): void {
     if (!this.isBrowser()) return;

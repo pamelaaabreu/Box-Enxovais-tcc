@@ -1,5 +1,7 @@
+import { merge } from 'rxjs';
 import { CartService } from '../../core/services/cart.service';
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   ElementRef,
@@ -34,6 +36,7 @@ export class TopNavbarComponent implements OnInit {
   isLoading = true;
   isAdmin = false;
 
+  private readonly changeDetector = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
   constructor(
@@ -53,10 +56,11 @@ export class TopNavbarComponent implements OnInit {
     this.updateUserInfo();
     this.isLoading = false;
 
-    this.authService.userChanged
+    merge(this.authService.userChanged, this.authService.savedNameChanged)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.updateUserInfo();
+        this.changeDetector.markForCheck();
       });
   }
 

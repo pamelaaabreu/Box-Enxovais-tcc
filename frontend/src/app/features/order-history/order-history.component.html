@@ -303,7 +303,7 @@
                   @if (cancelError()) {
                     <p class="cancel-error" role="alert">{{ cancelError() }}</p>
                   } @else if (!details()?.canCancel && !cancelling()) {
-                    <p class="cancel-error" role="alert">O prazo de uma hora terminou. Fale com o suporte.</p>
+                    <p class="cancel-error" role="alert">Este pedido não está disponível para cancelamento.</p>
                   }
                 </mat-dialog-content>
                 <mat-dialog-actions>

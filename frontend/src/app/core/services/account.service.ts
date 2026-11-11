@@ -27,6 +27,8 @@ export interface SavedAddress extends ShippingAddress {
   isDefault: boolean;
 }
 
+export const mobilePhonePattern = /^(?:\+55[ .-]*)?(?:\((?:1[1-9]|2[12478]|3[1-578]|4[1-9]|5[1345]|6[1-9]|7[134579]|8[1-9]|9[1-9])\) ?|(?:1[1-9]|2[12478]|3[1-578]|4[1-9]|5[1345]|6[1-9]|7[134579]|8[1-9]|9[1-9]))(?!9{5}-?9{4}$)9\d{4}-?\d{4}$/;
+
 export const contactPhonePattern = /^(?:\+55[ .-]*)?\(?[1-9]\d\)?[ .-]*\d{4,5}[ .-]?\d{4}$/;
 
 @Injectable({ providedIn: 'root' })
@@ -49,7 +51,9 @@ export class AccountService {
 
   saveAddress(id: number | null, address: ShippingAddress & { label: string }) {
     const url = this.url + '/addresses';
-    return id === null ? this.http.post(url, address) : this.http.patch(url + '/' + id, address);
+    return id === null
+      ? this.http.post<{ data: SavedAddress }>(url, address)
+      : this.http.patch<{ data: SavedAddress }>(url + '/' + id, address);
   }
 
   deleteAddress(id: number) {

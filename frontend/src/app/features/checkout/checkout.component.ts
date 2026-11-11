@@ -24,7 +24,7 @@ import {
 } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CartService } from '../../core/services/cart.service';
-import { AccountService, SavedAddress, contactPhonePattern } from '../../core/services/account.service';
+import { AccountService, SavedAddress, contactPhonePattern, mobilePhonePattern } from '../../core/services/account.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/catalog-layout.component';
 
@@ -195,8 +195,8 @@ export class CheckoutComponent {
     });
     this.account.profile().pipe(takeUntilDestroyed()).subscribe({
       next: profile => {
-        if (this.contactPhone.pristine && contactPhonePattern.test(profile.phone)) {
-          this.contactPhone.setValue(profile.phone);
+        if (this.contactPhone.pristine && mobilePhonePattern.test(profile.phone)) {
+          this.contactPhone.setValue(profile.phone.replace(/[^0-9]/g, '').slice(-11));
         }
       },
       error: () => { /* A contact number may still be entered manually. */ },
@@ -375,23 +375,6 @@ export class CheckoutComponent {
           );
           if (error.status === 409) {
             this.cart.load();
-    this.account.addresses().pipe(takeUntilDestroyed()).subscribe({
-      next: addresses => {
-        this.savedAddresses.set(addresses);
-        if (this.step() === 1 && this.address.pristine) {
-          this.selectedAddressId.set(addresses.find(address => address.isDefault)?.id ?? 0);
-        }
-      },
-      error: () => { /* Manual delivery remains available. */ },
-    });
-    this.account.profile().pipe(takeUntilDestroyed()).subscribe({
-      next: profile => {
-        if (this.contactPhone.pristine && contactPhonePattern.test(profile.phone)) {
-          this.contactPhone.setValue(profile.phone);
-        }
-      },
-      error: () => { /* A contact number may still be entered manually. */ },
-    });
             this.step.set(2);
           }
           if (error.status === 401) void this.router.navigate(['/login']);
@@ -406,23 +389,6 @@ export class CheckoutComponent {
     try {
       if (await this.router.navigate(['/checkout/success', order.id])) {
         this.cart.load();
-    this.account.addresses().pipe(takeUntilDestroyed()).subscribe({
-      next: addresses => {
-        this.savedAddresses.set(addresses);
-        if (this.step() === 1 && this.address.pristine) {
-          this.selectedAddressId.set(addresses.find(address => address.isDefault)?.id ?? 0);
-        }
-      },
-      error: () => { /* Manual delivery remains available. */ },
-    });
-    this.account.profile().pipe(takeUntilDestroyed()).subscribe({
-      next: profile => {
-        if (this.contactPhone.pristine && contactPhonePattern.test(profile.phone)) {
-          this.contactPhone.setValue(profile.phone);
-        }
-      },
-      error: () => { /* A contact number may still be entered manually. */ },
-    });
         return;
       }
     } catch {

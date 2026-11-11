@@ -250,20 +250,17 @@ describe('OrderHistoryComponent', () => {
     http.verify();
   });
 
-  it('switches to support when the remaining server window elapses', fakeAsync(() => {
+  it('keeps cancellation available for an old eligible order', fakeAsync(() => {
     const { fixture, page, http } = setup('9');
     http.expectOne('http://localhost:8080/orders/9').flush({ data: {
-      id: 9, createdAt: '2026-11-09T12:00:00Z', total: 25, status: 'simulated_approved',
-      canCancel: true, cancellationRemainingMs: 1000, paymentMethod: 'pix',
+      id: 9, createdAt: '2020-01-09T12:00:00Z', total: 25, status: 'simulated_approved',
+      canCancel: true, paymentMethod: 'pix',
       address: { recipient: 'Cliente teste' }, items: [],
     } });
     fixture.detectChanges();
-    tick(999);
-    expect(page.querySelector('.cancel-order')).not.toBeNull();
-    tick(1);
+    tick(60 * 60 * 1000);
     fixture.detectChanges();
-    expect(page.querySelector('.cancel-order')).toBeNull();
-    expect(page.querySelector('.support-order')?.textContent).toContain('Falar com o suporte');
+    expect(page.querySelector('.cancel-order')).not.toBeNull();
     http.expectNone(request => request.method === 'POST');
     http.verify();
   }));

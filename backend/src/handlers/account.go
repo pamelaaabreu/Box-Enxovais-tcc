@@ -15,6 +15,8 @@ import (
 	"unicode/utf8"
 )
 
+var mobilePhone = regexp.MustCompile("^(1[1-9]|2[12478]|3[1-578]|4[1-9]|5[1345]|6[1-9]|7[134579]|8[1-9]|9[1-9])9[0-9]{8}$")
+
 var phoneFormat = regexp.MustCompile("^[0-9()+ .-]+$")
 var phoneSeparators = strings.NewReplacer("(", "", ")", "", " ", "", "-", "", ".", "")
 
@@ -88,6 +90,7 @@ func (h AccountHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			response.Error(w, 400, "Confira os campos do endereço")
 			return
 		}
+		address.ZipCode = strings.ReplaceAll(address.ZipCode, "-", "")
 		address, err := h.Store.SaveAddress(r.Context(), userID, id, address)
 		accountResult(w, 200, address, err)
 	case http.MethodDelete:
@@ -119,8 +122,8 @@ func validateProfilePatch(p *models.AccountProfilePatch) string {
 	}
 	if p.Phone != nil {
 		phone, ok := normalizeContactPhone(*p.Phone)
-		if !ok {
-			return "Confira o telefone com DDD"
+		if !ok || !mobilePhone.MatchString(phone) || strings.Repeat("9", 9) == phone[2:] {
+			return "Informe um celular com DDD e nove dígitos, começando com 9"
 		}
 		*p.Phone = phone
 	}

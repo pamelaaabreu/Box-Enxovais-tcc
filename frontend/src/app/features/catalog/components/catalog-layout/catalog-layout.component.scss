@@ -114,15 +114,28 @@
   margin-bottom: 12px;
 }
 
-:host(:is(.order-history-surface, .account-surface)) .catalog-content {
+:host(.order-history-surface) .catalog-content {
   max-width: none;
   }
 
-:host(:is(.order-history-surface, .account-surface)) app-main-navbar {
+:host(.order-history-surface) app-main-navbar {
   display: flow-root;
   background-color: #eef0e9;
 }
 
-:host(:is(.order-history-surface, .account-surface)) .catalog-content {
+:host(.order-history-surface) .catalog-content {
   background: linear-gradient(#eef0e9, #fffdf8 96px);
+}
+
+
+:host(.account-surface) .catalog-content {
+  max-width: none;
+  min-height: 0;
+  padding: 0;
+  background: #e8ece4;
+}
+
+:host(.account-surface) app-main-navbar {
+  display: flow-root;
+  background: linear-gradient(#faf9f5 50%, #e8ece4 50%);
 }
