@@ -13,6 +13,14 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
+  createCatalogRegistration(kind: 'categories' | 'brands', name: string) {
+    return this.http.post<{ id: number; name: string }>('http://localhost:8080/admin/catalog/' + kind, { name });
+  }
+
+  getBrands(): Observable<{ id: number; name: string }[]> {
+    return this.http.get<{ id: number; name: string }[]>('http://localhost:8080/admin/products/brands');
+  }
+
   getProductTypes(): Observable<{ id: number; name: string }[]> {
     return this.http.get<{ id: number; name: string }[]>(this.apiUrl + "/categories");
   }

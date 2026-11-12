@@ -1,27 +1,20 @@
-<div class="manage-container">
-  <div class="manage-header">
-    <h1>Gerenciamento de Produto</h1>
-
-    <p>Cadastre as informações do produto e depois envie as imagens.</p>
-  </div>
-
-  <mat-tab-group [(selectedIndex)]="selectedTabIndex">
-    <!-- CADASTRO -->
-    <mat-tab label="Cadastro">
-      <div class="tab-content">
-        <app-product-create
-          (productCreated)="onProductCreated($event)"
-        ></app-product-create>
-      </div>
+<section class="manage-container" [class.with-summary]="selectedTabIndex === 0" aria-label="Cadastrar produto">
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex" [preserveContent]="true" [mat-stretch-tabs]="true">
+    <mat-tab label="Dados do produto">
+      @if (!productId) { <p class="image-note">A aba Imagens é liberada depois que você salvar os dados do produto.</p> }
+      <app-product-create [externalSummary]="true" [previewImage]="previewImage" (productCreated)="onProductCreated($event)" />
     </mat-tab>
-
-    <!-- IMAGENS -->
-    <mat-tab label="Imagens" [disabled]="!productId">
-      <div class="tab-content">
-        <app-product-image-upload
-          [productId]="productId!"
-        ></app-product-image-upload>
-      </div>
+    <mat-tab [disabled]="!productId">
+      <ng-template mat-tab-label>
+        @if (!productId) { <mat-icon aria-hidden="true" class="tab-lock">lock_outline</mat-icon> }
+        Imagens
+      </ng-template>
+      @if (productId; as id) {
+        <div class="tab-content"><app-product-image-upload [productId]="id" (coverChanged)="previewImage = $event" /></div>
+      }
     </mat-tab>
   </mat-tab-group>
-</div>
+  @if (selectedTabIndex === 0) {
+    <ng-container [ngTemplateOutlet]="createForm()?.summary() ?? null" />
+  }
+</section>

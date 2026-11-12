@@ -1,23 +1,40 @@
-.manage-container {
-  padding: 24px;
+.manage-container { max-width: 1120px; margin-inline: auto; }
+.image-note { margin: 10px 0 12px; color: #5b6858; font-size: 12px; }
+.tab-content { padding: 14px 0 4px; }
+.tab-lock { width: 16px; height: 16px; font-size: 16px; margin-inline-end: 6px; }
+.manage-container.with-summary { display: grid; grid-template-columns: minmax(0, 1fr) 260px; align-items: start; gap: 16px; }
+mat-tab-group {
+  min-width: 0;
+  --mat-tab-header-active-label-text-color: #fffdf8;
+  --mat-tab-header-active-hover-label-text-color: #fffdf8;
+  --mat-tab-header-active-focus-label-text-color: #fffdf8;
 }
-
-.manage-header {
-  margin-bottom: 24px;
+@media (max-width: 1190px) { .manage-container.with-summary { grid-template-columns: minmax(0, 1fr); } }
+:host ::ng-deep .mat-mdc-tab-header {
+  padding: 4px;
+  border: 1px solid #d9d2c1;
+  border-radius: 18px;
+  background: #f5f2eb;
 }
-
-.manage-header h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 8px;
+:host ::ng-deep .mat-mdc-tab-label-container { border-bottom: 0; }
+:host ::ng-deep .mat-mdc-tab-labels { gap: 4px; }
+:host ::ng-deep .mat-mdc-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 46px;
+  padding-inline: 8px;
+  border-radius: 14px;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
 }
-
-.manage-header p {
-  color: #6b7280;
-  font-size: 15px;
+:host ::ng-deep .mat-mdc-tab:not(.mdc-tab--active):not(.mat-mdc-tab-disabled):hover { background: #66725514; }
+:host ::ng-deep .mat-mdc-tab.mdc-tab--active {
+  background: #3d4836;
+  box-shadow: 0 4px 12px #3f49372e;
 }
-
-.tab-content {
-  padding-top: 24px;
+:host ::ng-deep .mdc-tab__text-label { color: #5d6656; font-size: 0.9rem; font-weight: 500; }
+:host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label { color: #fffdf8; font-weight: 600; }
+:host ::ng-deep .mdc-tab-indicator { display: none; }
+:host ::ng-deep .mat-mdc-tab:focus-visible { outline: 2px solid #667255; outline-offset: -2px; }
+@media (prefers-reduced-motion: reduce) {
+  :host ::ng-deep .mat-mdc-tab { transition: none; }
 }

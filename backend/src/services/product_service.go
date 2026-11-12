@@ -43,6 +43,7 @@ var productFilterFields = map[string]pagination.FilterField{
 	"stock":             {Column: "page.quantity", Kind: "integer"},
 	"status":            {Column: "page.status", Kind: "text"},
 	"brand_id":          {Column: "page.brand_id", Kind: "integer"},
+	"product_type_ids":  {Column: "page.product_type_id", Kind: "integer_list"},
 	"product_type_id":   {Column: "page.product_type_id", Kind: "integer"},
 	"category_name":     {Column: "page.category_name", Kind: "text"},
 	"created_at":        {Column: "page.created_at", Kind: "timestamp"},

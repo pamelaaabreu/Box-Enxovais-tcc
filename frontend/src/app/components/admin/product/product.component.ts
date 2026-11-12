@@ -2,7 +2,7 @@ import { CurrencyPipe, DecimalPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, EMPTY, catchError, defer, finalize, switchMap, tap } from 'rxjs';
 import { ProductService } from '../../../core/services/product.service';
@@ -34,6 +34,12 @@ export class ProductComponent {
   private readonly requests = new BehaviorSubject<PageOptions>(this.options);
 
   constructor() {
+    const route = inject(ActivatedRoute);
+    const search = route.snapshot.queryParamMap.get('q')?.trim().slice(0, 120) ?? '';
+    if (search) {
+      this.filters.controls.name.setValue(search);
+      this.applyFilters();
+    }
     this.requests.pipe(
       switchMap(options => defer(() => {
         this.loading.set(true); this.error.set('');
@@ -50,6 +56,13 @@ export class ProductComponent {
       })),
       takeUntilDestroyed(),
     ).subscribe();
+    route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
+      const term = params.get('q')?.trim().slice(0, 120) ?? '';
+      if (this.filters.controls.name.value !== term) {
+        this.filters.controls.name.setValue(term);
+        this.applyFilters();
+      }
+    });
   }
 
   applyFilters(): void {

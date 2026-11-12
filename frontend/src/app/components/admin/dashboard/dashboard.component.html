@@ -1,101 +1,57 @@
-<section class="dashboard-section">
-  <div class="dashboard-grid">
-    <div class="card card-sales">
-      <div class="card-header">
-        <span class="card-title">Total Sales</span>
-        <i class="fas fa-shopping-bag card-icon"></i>
-      </div>
-      <div class="card-body">
-        <span class="main-value">0</span>
-        <span class="empty-state"> Nenhuma venda registrada </span>
-        <span class="change-value negative">-2 031</span>
-      </div>
+<section class="dashboard" aria-label="Indicadores da loja" [attr.aria-busy]="status() === 'loading'">
+  @if (status() === 'loading') {
+    <p role="status">Carregando indicadores e gráficos…</p>
+    <div class="metrics" aria-hidden="true">
+      @for (placeholder of [1, 2, 3, 4]; track placeholder) { <div class="panel skeleton"></div> }
     </div>
-
-    <div class="card card-income">
-      <div class="card-header">
-        <span class="card-title">Total Income</span>
-        <i class="fas fa-dollar-sign card-icon"></i>
-      </div>
-      <div class="card-body">
-        <span class="main-value">0</span>
-        <span class="empty-state"> Nenhuma venda registrada </span>
-        <span class="change-value negative">-$2,201</span>
-      </div>
+  } @else if (status() === 'error') {
+    <div class="empty dashboard-error" role="alert">
+      <span class="dashboard-error-icon" aria-hidden="true"><mat-icon>cloud_off</mat-icon></span>
+      <h2>Não foi possível carregar a dashboard</h2>
+      <button type="button" class="action" (click)="load()">Tentar novamente</button>
     </div>
-
-    <div class="card card-sessions">
-      <div class="card-header">
-        <span class="card-title">Total Sessions</span>
-        <i class="fas fa-users card-icon"></i>
-      </div>
-      <div class="card-body">
-        <span class="main-value">0</span>
-        <span class="empty-state"> Nenhuma venda registrada </span>
-        <span class="change-value positive">+3 392</span>
-      </div>
+  } @else {
+    @if (data(); as summary) {
+    <div class="metrics">
+      <article class="panel metric"><mat-icon aria-hidden="true">shopping_bag</mat-icon><h2>Total de pedidos</h2><strong>{{ summary.orders }}</strong><p>Todos os pedidos registrados</p></article>
+      <article class="panel metric"><mat-icon aria-hidden="true">payments</mat-icon><h2>Faturamento simulado</h2><strong>{{ summary.revenueCents / 100 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong><p>Pedidos aprovados em simulação</p></article>
+      <article class="panel metric"><mat-icon aria-hidden="true">inventory_2</mat-icon><h2>Produtos cadastrados</h2><strong>{{ summary.products }}</strong><p>Total de produtos no catálogo</p></article>
+      <article class="panel metric"><mat-icon aria-hidden="true">warning_amber</mat-icon><h2>Estoque baixo</h2><strong>{{ summary.lowStock }}</strong><p>Produtos ativos com até 5 unidades</p></article>
     </div>
-
-    <div class="card card-conversion">
-      <div class="card-header">
-        <span class="card-title">Conversion Rate</span>
-        <i class="fas fa-chart-line card-icon"></i>
-      </div>
-      <div class="card-body">
-        <span class="main-value">0</span>
-        <span class="empty-state"> Nenhuma venda registrada </span>
-        <span class="change-value negative">-1.22%</span>
-      </div>
+    <div class="charts">
+      <section class="panel" aria-labelledby="orders-chart">
+        <h2 id="orders-chart">Evolução dos pedidos</h2>
+        @if (summary.months.length) {
+          <ul class="bars">
+            @for (month of summary.months; track month.month) {
+              <li [title]="month.month + ': ' + month.total + ' pedidos, ' + month.cancelled + ' cancelados'">
+                <span>{{ month.month }}</span><strong>{{ month.total }} · {{ month.cancelled }} cancelados</strong>
+                <span class="track" aria-hidden="true"><span class="bar" [style.width.%]="month.total / maxOrders() * 100"><span class="cancelled" [style.width.%]="month.cancelled / month.total * 100"></span></span></span>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="empty"><mat-icon aria-hidden="true">show_chart</mat-icon><h3>Nenhum pedido registrado</h3><p>Os pedidos realizados na loja aparecerão aqui.</p></div>
+        }
+      </section>
+      <section class="panel" aria-labelledby="categories-chart">
+        <h2 id="categories-chart">Categorias mais vendidas</h2>
+        @if (summary.categories.length) {
+          <ul class="bars">
+            @for (category of summary.categories; track category.name) {
+              <li><span>{{ category.name }}</span><strong>{{ category.units }} un.</strong>
+                <span class="track" aria-hidden="true"><span class="bar" [style.width.%]="category.units / maxUnits() * 100"></span></span>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="empty"><mat-icon aria-hidden="true">category</mat-icon><h3>Nenhuma venda por categoria</h3><p>As unidades de pedidos aprovados aparecerão aqui.</p></div>
+        }
+      </section>
     </div>
-  </div>
-
-  <div class="dashboard-grid-charts">
-    <div class="chart-card sales-performance">
-      <div class="card-header">
-        <span class="card-title">Sales Performance</span>
-
-        <div class="chart-actions">
-          <button>PDF</button>
-          <button>Excel</button>
-        </div>
-        
-        <i class="fas fa-ellipsis-v settings-icon"></i>
-      </div>
-      <div class="chart-placeholder">
-        <div class="chart-viz">Gráfico de Linhas - Desempenho Mensal</div>
-      </div>
-    </div>
-    <div class="chart-card popular-categories">
-      <div class="card-header">
-        <span class="card-title">Popular Categories</span>
-        <i class="fas fa-ellipsis-v settings-icon"></i>
-      </div>
-      <div class="donut-placeholder">
-        <div class="chart-viz">Gráfico de Rosca - Categorias</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="recent-customers-card">
-    <div class="card-header">
-      <span class="card-title">Recent Customers</span>
-      <i class="fas fa-cog settings-icon"></i>
-    </div>
-    <div class="card-body">
-      <ul class="customer-list">
-        <li>
-          <span class="customer-name">Jane Doe</span>
-          <span class="customer-value">$450.00</span>
-        </li>
-        <li>
-          <span class="customer-name">John Smith</span>
-          <span class="customer-value">$82.50</span>
-        </li>
-        <li>
-          <span class="customer-name">Alice Johnson</span>
-          <span class="customer-value">$1,200.99</span>
-        </li>
-      </ul>
-    </div>
-  </div>
+    @if (!summary.products) {
+      <div class="panel empty"><mat-icon aria-hidden="true">inventory_2</mat-icon><h2>Nenhum produto cadastrado</h2><p>Cadastre os primeiros produtos da Box Enxovais.</p><a class="action" routerLink="/admin/products/manage">Cadastrar produto</a></div>
+    }
+    }
+  }
 </section>

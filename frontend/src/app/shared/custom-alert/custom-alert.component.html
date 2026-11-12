@@ -16,7 +16,9 @@
     <h4 class="alert-title">{{ title }}</h4>
     <p class="alert-message" *ngIf="message">{{ message }}</p>
     @if (action) {
-      <button type="button" class="alert-action" (click)="activate()">{{ action.label }}</button>
+      <button type="button" class="alert-action" (click)="activate()">
+        {{ action.label }}
+      </button>
     }
   </div>
 
@@ -32,7 +34,11 @@
   </button>
 
   <!-- Barra de Progresso -->
-  <div aria-hidden="true" class="alert-progress" *ngIf="showProgress && duration > 0">
+  <div
+    aria-hidden="true"
+    class="alert-progress"
+    *ngIf="showProgress && duration > 0"
+  >
     <div
       class="progress-bar"
       [style.animation-duration]="duration + 'ms'"

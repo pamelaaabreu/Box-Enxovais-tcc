@@ -1,6 +1,6 @@
 import { NotFoundComponent } from '../../../not-found/not-found.component';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, catchError, combineLatest, map, of, startWith, switchMap } from 'rxjs';
 import { CatalogService } from '../../services/catalog.service';
@@ -11,12 +11,14 @@ import { CatalogLayoutComponent } from '../../components/catalog-layout/catalog-
 import { BreadcrumbsComponent, BreadcrumbItem } from '../../components/breadcrumbs/breadcrumbs.component';
 import { ProductGridComponent } from '../../components/product-grid/product-grid.component';
 
+import { CAMA_GROUP } from '../../data/categories';
+
 interface CategoryData { category: Category | null; products: CatalogProduct[]; total: number; hasMore: boolean; }
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [NotFoundComponent, CatalogLayoutComponent, BreadcrumbsComponent, ProductGridComponent],
+  imports: [RouterLink, NotFoundComponent, CatalogLayoutComponent, BreadcrumbsComponent, ProductGridComponent],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -73,6 +75,7 @@ export class CategoryComponent {
   readonly products = computed(() => { const state = this.state(); return state.status === 'loaded' ? state.data.products : []; });
   readonly breadcrumbs = computed<BreadcrumbItem[]>(() => [
     { label: 'Home', url: '/home' },
+    ...(CAMA_GROUP.types.includes(this.category()?.name ?? '') ? [{ label: 'Cama', url: '/categoria/cama' }] : []),
     { label: this.category()?.name ?? 'CatÃ¡logo' },
   ]);
 }

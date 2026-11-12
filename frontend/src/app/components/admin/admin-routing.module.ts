@@ -14,6 +14,8 @@ import { ProductManageComponent } from '../../features/product-manage/product-ma
 import { CreatePromotionComponent } from '../../features/create-promotion/create-promotion.component';
 import { AddToPromotionComponent } from '../../features/add-to-promotion/add-to-promotion.component';
 
+import { CatalogRegistrationComponent } from './catalog-registration.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -45,6 +47,7 @@ const routes: Routes = [
           {
             path: 'manage',
             component: ProductManageComponent,
+            canDeactivate: [(page: ProductManageComponent) => page.canLeave()],
           },
         ],
       },
@@ -62,6 +65,13 @@ const routes: Routes = [
             path: 'add-product',
             component: AddToPromotionComponent,
           },
+        ],
+      },
+      {
+        path: 'catalog',
+        children: [
+          { path: 'categories', component: CatalogRegistrationComponent, data: { kind: 'categories' } },
+          { path: 'brands', component: CatalogRegistrationComponent, data: { kind: 'brands' } },
         ],
       },
       // RELATÓRIOS

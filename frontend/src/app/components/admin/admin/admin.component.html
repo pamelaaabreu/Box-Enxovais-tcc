@@ -1,232 +1,60 @@
-<div class="admin-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <img src="/LOGOTIPO.svg" alt="Box Enxovais" class="logo" />
-
-      <button class="menu-toggle" (click)="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-      </button>
+<div class="admin-shell" (keydown.escape)="menuOpen.set(false)">
+  <header class="admin-header">
+    <button type="button" class="menu-toggle" aria-label="Menu administrativo" aria-controls="admin-sidebar"
+      [attr.aria-expanded]="menuOpen()" (click)="menuOpen.set(!menuOpen())"><mat-icon aria-hidden="true">menu</mat-icon></button>
+    <div class="page-title">
+      @if (title() === 'Dashboard') {
+        <h1>Bem-vindo de volta, {{ firstName }}! <span aria-hidden="true">👋</span></h1>
+        <p>Acompanhe o desempenho da Box Enxovais.</p>
+      } @else {
+        <h1>{{ title() }}</h1><p>{{ subtitle() }}</p>
+      }
     </div>
+    <form class="admin-search" role="search" (submit)="search($event)">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input #searchInput type="search" aria-label="Pesquisar produtos" placeholder="Pesquisar produtos…"
+        maxlength="120" [value]="searchTerm()" (input)="searchTerm.set(searchInput.value)" />
+    </form>
+  </header>
+  @if (menuOpen()) {
+    <button class="drawer-backdrop" type="button" aria-label="Fechar menu administrativo" (click)="menuOpen.set(false)"></button>
+  }
+  <aside class="sidebar" id="admin-sidebar" [class.open]="menuOpen()">
+    <img src="logotipo-branca-completa.png" alt="Box Enxovais — Casa bem vivida" class="logo" />
+    <nav aria-label="Administração">
+      <p class="nav-heading">Menu</p>
+      <a routerLink="/admin/dashboard" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">dashboard</mat-icon> Dashboard</a>
+      <details [open]="section() === 'products' && !isProductCreate()">
+        <summary><mat-icon aria-hidden="true">inventory_2</mat-icon> Produtos <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon></summary>
+        <a routerLink="/admin/products" routerLinkActive="active" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored'}">Listagem</a>
 
-    <nav class="sidebar-nav">
-      <ul>
-        <li [class.active]="router.url.includes('/admin/dashboard')">
-          <a
-            routerLink="/admin/dashboard"
-            routerLinkActive="active"
-            (click)="collapseAllMenus()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-layout-grid-icon lucide-layout-grid"
-            >
-              <rect width="7" height="7" x="3" y="3" rx="1" />
-              <rect width="7" height="7" x="14" y="3" rx="1" />
-              <rect width="7" height="7" x="14" y="14" rx="1" />
-              <rect width="7" height="7" x="3" y="14" rx="1" />
-            </svg>
-
-            <span class="nav-text">Dashboard</span>
-          </a>
-        </li>
-
-        <li class="dropdown" [class.open]="isProductMenuOpen">
-          <button
-            type="button"
-            class="dropdown-toggle"
-            (click)="toggleProductMenu($event)"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-box-icon lucide-box"
-            >
-              <path
-                d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
-              />
-              <path d="m3.3 7 8.7 5 8.7-5" />
-              <path d="M12 22V12" />
-            </svg>
-
-            <span class="nav-text">Produtos</span>
-
-            <i
-              class="fas fa-chevron-down arrow"
-              [class.open]="isProductMenuOpen"
-            ></i>
-          </button>
-
-          <ul class="submenu" [class.show]="isProductMenuOpen">
-            <li>
-              <a routerLink="/admin/products" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-                Listagem
-              </a>
-            </li>
-
-            <li>
-              <a routerLink="/admin/products/manage" routerLinkActive="active">
-                Cadastro
-              </a>
-            </li>
-          </ul>
-        </li>
-
-        <li class="dropdown" [class.open]="isPromotionMenuOpen">
-          <button
-            type="button"
-            class="dropdown-toggle"
-            (click)="togglePromotionMenu($event)"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-tags-icon lucide-tags"
-            >
-              <path
-                d="M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z"
-              />
-              <path
-                d="M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193"
-              />
-              <circle cx="10.5" cy="6.5" r=".5" fill="currentColor" />
-            </svg>
-
-            <span class="nav-text">Promoções</span>
-
-            <i
-              class="fas fa-chevron-down arrow"
-              [class.open]="isPromotionMenuOpen"
-            ></i>
-          </button>
-
-          <ul class="submenu" [class.show]="isPromotionMenuOpen">
-            <li>
-              <a
-                routerLink="/admin/promotions/create"
-                routerLinkActive="active"
-              >
-                Criar Promoção
-              </a>
-            </li>
-
-            <li>
-              <a
-                routerLink="/admin/promotions/add-product"
-                routerLinkActive="active"
-              >
-                Adicionar Produto
-              </a>
-            </li>
-          </ul>
-        </li>
-
-        <!-- RELATÓRIOS -->
-        <li [class.active]="router.url.includes('/admin/reports')">
-          <a
-            routerLink="/admin/reports"
-            routerLinkActive="active"
-            (click)="collapseAllMenus()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-file-archive-icon lucide-file-archive"
-            >
-              <path d="M10 12v-1" />
-              <path d="M10 18v-2" />
-              <path d="M10 7V6" />
-              <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-              <path
-                d="M15.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 .274 1.01"
-              />
-              <circle cx="10" cy="20" r="2" />
-            </svg>
-
-            <span class="nav-text">Relatórios</span>
-          </a>
-        </li>
-      </ul>
+      </details>
+      @for (page of pendingPages; track page.icon) {
+        <span class="pending-page" role="link" aria-disabled="true"><mat-icon aria-hidden="true">{{ page.icon }}</mat-icon><span>{{ page.label }}</span></span>
+      }
+      <a routerLink="/admin/reports" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">description</mat-icon> Relatórios</a>
+      <details [open]="section() === 'promotions'">
+        <summary><mat-icon aria-hidden="true">sell</mat-icon> Promoções <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon></summary>
+        <a routerLink="/admin/promotions/create" routerLinkActive="active" ariaCurrentWhenActive="page">Criar promoção</a>
+        <a routerLink="/admin/promotions/add-product" routerLinkActive="active" ariaCurrentWhenActive="page">Adicionar produto</a>
+      </details>
+      <details [open]="section() === 'catalog' || isProductCreate()">
+        <summary><mat-icon aria-hidden="true">category</mat-icon> Cadastros <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon></summary>
+        <a routerLink="/admin/products/manage" routerLinkActive="active" ariaCurrentWhenActive="page">Produtos</a>
+        <a routerLink="/admin/catalog/categories" routerLinkActive="active" ariaCurrentWhenActive="page">Categorias</a>
+        <a routerLink="/admin/catalog/brands" routerLinkActive="active" ariaCurrentWhenActive="page">Marcas</a>
+      </details>
+      <div class="sidebar-actions">
+        <p class="nav-heading">Outros</p>
+        <a routerLink="/account"><mat-icon aria-hidden="true">settings</mat-icon> Configurações</a>
+        <a routerLink="/home"><mat-icon aria-hidden="true">storefront</mat-icon> Voltar para a loja</a>
+        <button type="button" (click)="logout()"><mat-icon aria-hidden="true">logout</mat-icon> Sair da conta</button>
+      </div>
     </nav>
-
-    <!-- FOOTER -->
-    <div class="sidebar-footer">
-      <button class="logout-btn" (click)="logout()">
-        <div class="logout-content">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-log-out"
-          >
-            <path d="m16 17 5-5-5-5" />
-            <path d="M21 12H9" />
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-          </svg>
-
-          <span class="nav-text">Sair</span>
-        </div>
-      </button>
+    <div class="profile">
+      <span class="avatar" aria-hidden="true">{{ initials }}</span>
+      <div><strong>{{ name || 'Administrador' }}</strong><span>{{ email }}</span></div>
     </div>
   </aside>
-
-  <!-- CONTEÚDO -->
-  <main class="content">
-    <header class="topbar">
-      <div class="user-profile">
-        <div class="avatar">
-          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=admin" />
-        </div>
-
-        <div class="info">
-          <span class="user-name">
-            {{ userName || "Administrador" }}
-          </span>
-
-          <span class="user-email">
-            {{ userEmail  }}
-          </span>
-        </div>
-      </div>
-    </header>
-
-    <!-- BODY -->
-    <section class="content-body">
-      <router-outlet></router-outlet>
-    </section>
-  </main>
+  <main class="content"><router-outlet /></main>
 </div>

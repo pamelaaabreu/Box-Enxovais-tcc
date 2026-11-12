@@ -45,3 +45,18 @@ func TestParsePage(t *testing.T) {
 		}
 	}
 }
+
+func TestParseIntegerList(t *testing.T) {
+	fields := map[string]FilterField{
+		"types": {Column: "page.product_type_id", Kind: "integer_list"},
+	}
+	query, err := ParsePage(url.Values{"types": {"32,90"}}, fields, 2)
+	if err != nil || query.Where != " WHERE page.product_type_id IN ($2,$3)" || len(query.Args) != 2 || query.Args[0] != int64(32) || query.Args[1] != int64(90) {
+		t.Fatal(query, err)
+	}
+	for _, value := range []string{"1,", "0", "1,-2", "2147483648", "1,2 OR 1=1"} {
+		if _, err := ParsePage(url.Values{"types": {value}}, fields, 1); err == nil {
+			t.Errorf("accepted %q", value)
+		}
+	}
+}

@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, of, map, catchError, throwError } from 'rxjs';
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../shared/models';
-import { CATEGORIES } from '../data/categories';
+import { CAMA_GROUP, CATEGORIES } from '../data/categories';
 import { Category } from '../interfaces/category.interface';
 import { CatalogProduct } from '../interfaces/product.interface';
 
@@ -33,9 +33,18 @@ export class CatalogService {
       variants: [], featured: false, active: product.status === 'active'};
   }
   getCategoryPage(category: Category, options: PageOptions) {
-    return this.products.getProductsPage({
-      ...options, filters: category.slug === 'todos' ? options.filters : { ...options.filters, product_type_id: category.id },
-    }).pipe(map(page => ({ ...page, items: page.items.map(item => this.adapt(item)) })));
+    const filters = { ...options.filters };
+    if (category.children) {
+      if (!category.children.length) {
+        return of({ items: [], pagination: {
+          total: 0, hasMore: false, offset: options.offset ?? 0, limit: options.limit ?? 20,
+        } });
+      }
+      filters['product_type_ids'] = category.children.map(child => child.id).join(',');
+    } else if (category.slug !== 'todos') {
+      filters['product_type_id'] = category.id;
+    }
+    return this.products.getProductsPage({ ...options, filters }).pipe(map(page => ({ ...page, items: page.items.map(item => this.adapt(item)) })));
   }
 
   getProductsByCategory(slug: string): Observable<CatalogProduct[]> {
@@ -58,6 +67,11 @@ export class CatalogService {
     if (slug === 'todos') return of({ id: 0, slug, name: 'Todos os produtos' });
     return this.products.getProductTypes().pipe(map(types => {
       const categories = types.filter(type => type.name.trim()).map(type => this.category(type.id, type.name.trim()));
+      if (slug === CAMA_GROUP.slug) {
+        const parent = CATEGORIES.find(category => category.slug === CAMA_GROUP.slug)!;
+        const children = CAMA_GROUP.types.flatMap(name => categories.filter(category => category.name === name));
+        return { ...parent, children };
+      }
       const exact = categories.find(category => category.slug === slug);
       if (exact) return exact;
       const matches = categories.filter(category => this.slug(category.name) === slug);

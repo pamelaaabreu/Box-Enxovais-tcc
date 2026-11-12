@@ -20,6 +20,26 @@ describe('CatalogService API mapping',()=>{
   expect(await firstValueFrom(service.getCategoryBySlug('inexistente'))).toBeNull();
  });
 
+ it('resolves Cama to exact group members and keeps the catalog filters', async () => {
+  const getProductsPage = jasmine.createSpy('getProductsPage').and.returnValue(of({ items: [] }));
+  TestBed.configureTestingModule({ providers: [{ provide: ProductService, useValue: {
+    getProductTypes: () => of([
+      { id: 90, name: 'Cama / Edredons' },
+      { id: 32, name: 'Cama / Jogos de cama' },
+      { id: 13, name: 'Cama / Outro' },
+    ]),
+    getProductsPage,
+  } }] });
+  const service = TestBed.inject(CatalogService);
+  const group = (await firstValueFrom(service.getCategoryBySlug('cama')))!;
+  expect(group.children?.map(child => child.id)).toEqual([32, 90]);
+  await firstValueFrom(service.getCategoryPage(group, { limit: 12, filters: { sort: 'name' } }));
+  expect(getProductsPage).toHaveBeenCalledWith({ limit: 12, filters: { product_type_ids: '32,90', sort: 'name' } });
+  const empty = await firstValueFrom(service.getCategoryPage({ ...group, children: [] }, {}));
+  expect(empty.pagination.total).toBe(0);
+  expect(getProductsPage).toHaveBeenCalledTimes(1);
+ });
+
  it('uses real IDs, category names and stock without mock variants',async()=>{
   const product={id:42,name:'Jogo de cama',category_name:'Cama',status:'active',price:129.9,quantity:4,image_paths:[]};
   TestBed.configureTestingModule({providers:[{provide:ProductService,useValue:{getProducts:()=>of([product]),getProduct:(id:number)=>{expect(id).toBe(42);return of(product)}}}]});

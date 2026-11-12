@@ -1,5 +1,16 @@
 import { Category } from '../interfaces/category.interface';
 
+export const CAMA_GROUP = {
+  slug: 'cama',
+  types: [
+    'Cama / Jogos de cama',
+    'Cama / Edredons',
+    'Cama / Colchas e cobre-leitos',
+    'Cama / Mantas e peseiras',
+    'Cama / Protetores de colchão',
+  ],
+};
+
 /** Single category taxonomy shared by navigation and catalog. */
 export const CATEGORIES: readonly Category[] = [
   { id: 1, name: 'Cama', slug: 'cama', description: 'Conforto que transforma seu descanso.' },

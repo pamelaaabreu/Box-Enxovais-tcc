@@ -1,83 +1,12 @@
-.product-form-container {
-  max-width: 500px;
-  margin: 40px auto;
-  padding: 25px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.form-title {
-  text-align: center;
-  font-size: 1.6rem;
-  margin-bottom: 25px;
-  color: #444;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-.form-field {
-  margin-bottom: 20px;
-}
-
-.form-label {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #555;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.form-input,
-.form-file {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background: #fafafa;
-  font-size: 0.95rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.form-input:focus,
-.form-file:focus {
-  border-color: #8e6fb0; 
-  box-shadow: 0 0 6px rgba(142, 111, 176, 0.4);
-  outline: none;
-}
-
-.file-info {
-  font-size: 0.9rem;
-  color: #444;
-  background: #f9f6fb;
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-.form-button {
-  width: 100%;
-  background: linear-gradient(135deg, #8e6fb0, #b89cd7);
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 12px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.form-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(142, 111, 176, 0.3);
-}
-
-.response-message {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 0.95rem;
-  color: #4caf50; 
-  font-weight: 500;
-}
+.image-panel { padding: clamp(14px, 3vw, 26px); background: #fffdf8; border: 1px solid #dde1d5; border-radius: 16px; }
+h2, h3 { font-size: 18px; font-weight: 600; margin: 0 0 10px; }
+h3 { margin-top: 24px; }
+.upload-area { display: grid; gap: 8px; padding: 16px; border: 1px dashed #839076; border-radius: 12px; margin-bottom: 14px; background: #f5f6f0; }
+input { width: 100%; min-width: 0; }
+.preview { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 14px; overflow-wrap: anywhere; }
+.preview img, .image-list img { width: 96px; height: 96px; object-fit: cover; border-radius: 10px; display: block; }
+.image-list { display: flex; flex-wrap: wrap; gap: 14px; padding: 0; list-style: none; }
+.image-list li { display: grid; gap: 6px; font-size: 13px; }
+.error { color: #a2402f; }
+.upload-button { --mdc-filled-button-container-color: #3d4836; }
+mat-spinner { display: inline-block; margin-inline-end: 8px; vertical-align: middle; }

@@ -6,27 +6,42 @@ export const routes: Routes = [
   {
     path: 'account',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/account/account.component').then(m => m.AccountComponent),
+    loadComponent: () =>
+      import('./features/account/account.component').then(
+        (m) => m.AccountComponent,
+      ),
   },
   {
     path: 'meus-pedidos',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/order-history/order-history.component').then(m => m.OrderHistoryComponent),
+    loadComponent: () =>
+      import('./features/order-history/order-history.component').then(
+        (m) => m.OrderHistoryComponent,
+      ),
   },
   {
     path: 'meus-pedidos/:id',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/order-history/order-history.component').then(m => m.OrderHistoryComponent),
+    loadComponent: () =>
+      import('./features/order-history/order-history.component').then(
+        (m) => m.OrderHistoryComponent,
+      ),
   },
   {
     path: 'checkout/success/:id',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/checkout/checkout-success/checkout-success.component').then(m => m.CheckoutSuccessComponent),
+    loadComponent: () =>
+      import('./features/checkout/checkout-success/checkout-success.component').then(
+        (m) => m.CheckoutSuccessComponent,
+      ),
   },
   {
     path: 'checkout',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/checkout/checkout.component').then(m => m.CheckoutComponent),
+    loadComponent: () =>
+      import('./features/checkout/checkout.component').then(
+        (m) => m.CheckoutComponent,
+      ),
   },
   {
     path: 'favorites',
@@ -123,6 +138,7 @@ export const routes: Routes = [
 
   {
     path: 'product-register',
+    canDeactivate: [(page: import('./features/product-manage/register/product-create/product-create.component').ProductCreateComponent) => page.canLeave()],
     canMatch: [AdminGuard],
     loadComponent: () =>
       import('./features/product-manage/register/product-create/product-create.component').then(

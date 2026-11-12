@@ -1,4 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnDestroy,
+  ViewEncapsulation,
+} from '@angular/core';
 import { AlertType } from '../../shared/models';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -9,9 +17,9 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   imports: [CommonModule, MatIconModule],
   templateUrl: './custom-alert.component.html',
-  styleUrls: ['./custom-alert.component.css'],
+  styleUrls: ['./custom-alert.component.scss'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-   encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None,
 })
 export class CustomAlertComponent implements OnInit, OnDestroy {
   @Input() title: string = '';
@@ -20,10 +28,14 @@ export class CustomAlertComponent implements OnInit, OnDestroy {
   @Input() duration: number = 2000;
   @Input() showClose: boolean = true;
   @Input() showProgress: boolean = true;
-  
+
   @Input() action?: { label: string; run: () => void };
   readonly icons: Record<AlertType, string> = {
-    success: 'check', error: 'error_outline', warning: 'warning_amber', info: 'info_outline', loading: 'autorenew',
+    success: 'check',
+    error: 'error_outline',
+    warning: 'warning_amber',
+    info: 'info_outline',
+    loading: 'autorenew',
   };
 
   activate(): void {
@@ -44,7 +56,7 @@ export class CustomAlertComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.visible = true;
-    
+
     if (this.duration > 0) {
       this.timeoutId = setTimeout(() => {
         this.elapsed.emit();

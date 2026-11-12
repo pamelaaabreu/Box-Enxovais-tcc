@@ -231,7 +231,8 @@ app-top-navbar {
   min-width: 0;
 }
 
-.box-form-field, .box-confirm-panel .cancellation-fields {
+.box-form-field,
+.box-confirm-panel .cancellation-fields {
   --mdc-outlined-text-field-container-shape: 12px;
   --mdc-outlined-text-field-outline-color: #a2aa96;
   --mdc-outlined-text-field-focus-outline-color: #667255;

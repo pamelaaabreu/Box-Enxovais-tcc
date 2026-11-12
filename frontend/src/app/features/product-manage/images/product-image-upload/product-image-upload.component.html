@@ -1,31 +1,25 @@
-<div class="product-form-container">
-  <h2 class="form-title">Upload de Imagens</h2>
-
-  <p class="product-linked">
-    Produto #{{ productId }} pronto para receber imagens.
-  </p>
-
-  <div class="form-field">
-    <label for="file" class="form-label"> Selecione a imagem </label>
-
-    <input
-      type="file"
-      id="file"
-      (change)="onFileSelected($event)"
-      class="form-file"
-    />
-  </div>
-
-  <div *ngIf="selectedFile" class="file-info">
-    <p>
-      Arquivo selecionado:
-      <strong>{{ selectedFile.name }}</strong>
-    </p>
-  </div>
-
-  <button (click)="onUpload()" class="form-button">Enviar imagem</button>
-
-  <div *ngIf="uploadResponse" class="response-message">
-    <p>{{ uploadResponse }}</p>
-  </div>
-</div>
+<section class="image-panel">
+  <h2>Imagens do produto</h2>
+  <p>Produto #{{ productId }}. Envie imagens JPEG, PNG ou WebP de até 10 MB.</p>
+  <label class="upload-area">Selecionar imagem
+    <input type="file" accept="image/jpeg,image/png,image/webp" [disabled]="loading || !productId" (change)="onFileSelected(fileInput)" #fileInput />
+  </label>
+  @if (preview) {
+    <div class="preview"><img [src]="preview" alt="Prévia da imagem selecionada" /><span>{{ selectedFile?.name }}</span>
+      <button type="button" mat-button (click)="clearSelection()" [disabled]="loading">Remover seleção</button>
+    </div>
+  }
+  @if (error) { <p role="alert" class="error">{{ error }}</p> }
+  <button type="button" mat-flat-button class="upload-button" [disabled]="!selectedFile || loading || !productId" (click)="onUpload()">
+    @if (loading) { <mat-spinner diameter="18" aria-label="Enviando"></mat-spinner> }
+    {{ loading ? 'Enviando…' : 'Enviar imagem' }}
+  </button>
+  <h3>Imagens cadastradas</h3>
+  @if (images.length) {
+    <ul class="image-list">
+      @for (image of images; track image; let first = $first; let i = $index) {
+        <li><img [src]="imageUrl(image)" [alt]="'Imagem do produto ' + (i + 1)" />{{ first ? 'Capa atual' : 'Imagem ' + (i + 1) }}</li>
+      }
+    </ul>
+  } @else { <p>Nenhuma imagem cadastrada.</p> }
+</section>

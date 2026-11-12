@@ -20,3 +20,17 @@ p { font-size: 15px; line-height: 1.7; color: #706e67; }
 .catalog-pagination { justify-content: center; align-items: center; }
 .catalog-filters button, .catalog-pagination button, .state button { min-height: 44px; padding: 8px 16px; border: 1px solid #667255; border-radius: 999px; background: #fffdf8; color: #3d4836; font: inherit; }
 .catalog-pagination button:disabled { opacity: .5; }
+
+.cama-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  margin-block: 1rem;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: .2em;
+    padding-block: .4rem;
+  }
+}

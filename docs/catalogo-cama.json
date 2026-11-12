@@ -1,0 +1,776 @@
+{
+  "version": 1,
+  "products": [
+    {
+      "key": "cama-essencia-floral-verde-oliva",
+      "name": "Jogo de Cama Essência Floral — Verde Oliva",
+      "category": "Cama / Jogos de cama",
+      "brand": null,
+      "description": "As folhagens em verde-oliva do Essência Floral dão profundidade à composição da cama. Madeira clara e tons de areia equilibram a presença da estampa.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Essência Floral",
+        "Tipo": "Jogo de cama",
+        "Cor": "Verde Oliva",
+        "Estampa": "Floral"
+      },
+      "priceCents": 23990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/jogos-de-cama/essencia/01-floral-verde-oliva.jpg",
+          "alt": "Imagem de referência: floral verde oliva",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-essencia-floral-verde-suave",
+      "name": "Jogo de Cama Essência Floral — Verde Suave",
+      "category": "Cama / Jogos de cama",
+      "brand": null,
+      "description": "No Essência Floral Verde Suave, o desenho de flores e folhas traz cor sem pesar no quarto. Combine com almofadas creme para manter a paleta delicada.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Essência Floral",
+        "Tipo": "Jogo de cama",
+        "Cor": "Verde Suave",
+        "Estampa": "Floral"
+      },
+      "priceCents": 23990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/jogos-de-cama/essencia/02-floral-verde-suave.jpg",
+          "alt": "Imagem de referência: floral verde suave",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-essencia-floral-botanico",
+      "name": "Jogo de Cama Essência Floral — Botânico",
+      "category": "Cama / Jogos de cama",
+      "brand": null,
+      "description": "O Essência Floral Botânico leva o desenho de folhagens ao centro da decoração. Uma cabeceira neutra deixa a estampa aparecer por inteiro.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Essência Floral",
+        "Tipo": "Jogo de cama",
+        "Estampa": "Floral"
+      },
+      "priceCents": 23990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/jogos-de-cama/essencia/03-floral-botanico.jpg",
+          "alt": "Imagem de referência: floral botanico",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-aurora-rose",
+      "name": "Jogo de Cama Aurora Floral — Rosé",
+      "category": "Cama / Jogos de cama",
+      "brand": null,
+      "description": "Na proposta Rosé, o Aurora Floral usa o rosa como ponto de partida para um quarto acolhedor. Tons de marfim ajudam a destacar as flores.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Aurora Floral",
+        "Tipo": "Jogo de cama",
+        "Cor": "Rosé"
+      },
+      "priceCents": 27990,
+      "stock": 8,
+      "status": "inactive",
+      "approved": false,
+      "images": []
+    },
+    {
+      "key": "cama-aurora-vermelho",
+      "name": "Jogo de Cama Aurora Floral — Vermelho",
+      "category": "Cama / Jogos de cama",
+      "brand": null,
+      "description": "O Aurora Floral Vermelho coloca a estampa em evidência e aquece a paleta do quarto. Acessórios lisos deixam o vermelho conduzir a composição.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Aurora Floral",
+        "Tipo": "Jogo de cama",
+        "Cor": "Vermelho",
+        "Estampa": "Floral"
+      },
+      "priceCents": 27990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/jogos-de-cama/aurora/02-floral-vermelho.jpg",
+          "alt": "Imagem de referência: floral vermelho",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-aurora-vinho",
+      "name": "Jogo de Cama Aurora Floral — Vinho",
+      "category": "Cama / Jogos de cama",
+      "brand": null,
+      "description": "Em tom vinho, o Aurora Floral dá um ar mais intimista à cama. Bege e madeira escura acompanham a cor sem competir com o desenho.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Aurora Floral",
+        "Tipo": "Jogo de cama",
+        "Cor": "Vinho",
+        "Estampa": "Floral"
+      },
+      "priceCents": 27990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/jogos-de-cama/aurora/03-floral-vinho.jpg",
+          "alt": "Imagem de referência: floral vinho",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-serenidade-botanico-areia",
+      "name": "Jogo de Cama Serenidade — Areia",
+      "category": "Cama / Jogos de cama",
+      "brand": null,
+      "description": "Na proposta Areia do Serenidade, a paleta neutra cria espaço para os motivos botânicos. Combine com branco-creme para um conjunto de baixo contraste.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Serenidade",
+        "Tipo": "Jogo de cama",
+        "Cor": "Areia"
+      },
+      "priceCents": 32990,
+      "stock": 8,
+      "status": "inactive",
+      "approved": false,
+      "images": []
+    },
+    {
+      "key": "cama-serenidade-botanico-azul",
+      "name": "Jogo de Cama Serenidade — Azul",
+      "category": "Cama / Jogos de cama",
+      "brand": null,
+      "description": "O Serenidade Azul reúne a inspiração botânica e o azul em uma composição equilibrada. Detalhes em madeira clara acrescentam calor à paleta.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Serenidade",
+        "Tipo": "Jogo de cama",
+        "Cor": "Azul",
+        "Estampa": "Botânica"
+      },
+      "priceCents": 32990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/jogos-de-cama/serenidade/02-botanico-azul.jpg",
+          "alt": "Imagem de referência: botanico azul",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-serenidade-botanico-azul-claro",
+      "name": "Jogo de Cama Serenidade — Azul Claro",
+      "category": "Cama / Jogos de cama",
+      "brand": null,
+      "description": "O Azul Claro do Serenidade dá leveza ao desenho botânico. A cor funciona bem com branco e cinza suave em quartos de visual luminoso.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Serenidade",
+        "Tipo": "Jogo de cama",
+        "Cor": "Azul Claro",
+        "Estampa": "Botânica"
+      },
+      "priceCents": 32990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/jogos-de-cama/serenidade/03-botanico-azul-claro.jpg",
+          "alt": "Imagem de referência: botanico azul claro",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-aconchego-creme",
+      "name": "Edredom Aconchego — Creme",
+      "category": "Cama / Edredons",
+      "brand": null,
+      "description": "O Edredom Aconchego Creme forma uma base clara para montar a cama em camadas. Uma manta em tom mais escuro acrescenta contraste ao conjunto.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Aconchego",
+        "Tipo": "Edredom",
+        "Cor": "Creme"
+      },
+      "priceCents": 29990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/edredons/aconchego/creme.jpg",
+          "alt": "Imagem de referência: creme",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-aconchego-marrom-cacau",
+      "name": "Edredom Aconchego — Marrom Cacau",
+      "category": "Cama / Edredons",
+      "brand": null,
+      "description": "O Marrom Cacau do Aconchego traz um tom terroso para a cama. Combine com peças em areia e creme para valorizar a profundidade do marrom.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Aconchego",
+        "Tipo": "Edredom",
+        "Cor": "Marrom Cacau"
+      },
+      "priceCents": 29990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/edredons/aconchego/marrom-cacau.jpg",
+          "alt": "Imagem de referência: marrom cacau",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-aconchego-verde-oliva",
+      "name": "Edredom Aconchego — Verde Oliva",
+      "category": "Cama / Edredons",
+      "brand": null,
+      "description": "No Aconchego Verde Oliva, o verde aproxima a composição de uma paleta natural. Madeira e tons de bege deixam o conjunto mais acolhedor.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Aconchego",
+        "Tipo": "Edredom",
+        "Cor": "Verde Oliva"
+      },
+      "priceCents": 29990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/edredons/aconchego/verde-oliva.jpg",
+          "alt": "Imagem de referência: verde oliva",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-geometrico-azul-petroleo",
+      "name": "Edredom Geométrico — Azul Petróleo",
+      "category": "Cama / Edredons",
+      "brand": null,
+      "description": "O Azul Petróleo dá presença ao desenho do Edredom Geométrico. Peças lisas em cinza-claro ajudam a destacar as formas.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Geométrico",
+        "Tipo": "Edredom",
+        "Cor": "Azul Petróleo",
+        "Estampa": "Geométrica"
+      },
+      "priceCents": 34990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/edredons/geometrico/azul-petroleo.jpg",
+          "alt": "Imagem de referência: azul petroleo",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-geometrico-rosa-nude",
+      "name": "Edredom Geométrico — Rosa Nude",
+      "category": "Cama / Edredons",
+      "brand": null,
+      "description": "O Geométrico Rosa Nude combina linhas marcadas com uma cor suave. Um conjunto branco-creme equilibra a composição e mantém a cama luminosa.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Geométrico",
+        "Tipo": "Edredom",
+        "Cor": "Rosa Nude",
+        "Estampa": "Geométrica"
+      },
+      "priceCents": 34990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/edredons/geometrico/rosa-nude.jpg",
+          "alt": "Imagem de referência: rosa nude",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-geometrico-verde-salvia",
+      "name": "Edredom Geométrico — Verde Sálvia",
+      "category": "Cama / Edredons",
+      "brand": null,
+      "description": "No Geométrico Verde Sálvia, a cor suave acompanha o ritmo da estampa. Combine com tons de areia para uma cama de inspiração contemporânea.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Geométrico",
+        "Tipo": "Edredom",
+        "Cor": "Verde Sálvia",
+        "Estampa": "Geométrica"
+      },
+      "priceCents": 34990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/edredons/geometrico/verde-salvia.jpg",
+          "alt": "Imagem de referência: verde salvia",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-jardim-azul-lavanda",
+      "name": "Edredom Jardim — Azul Lavanda",
+      "category": "Cama / Edredons",
+      "brand": null,
+      "description": "O Azul Lavanda do Edredom Jardim dá um tom delicado à composição floral. Acessórios claros destacam a cor e deixam a estampa em evidência.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Jardim",
+        "Tipo": "Edredom",
+        "Cor": "Azul Lavanda",
+        "Estampa": "Floral"
+      },
+      "priceCents": 38990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/edredons/jardim/azul-lavanda.jpg",
+          "alt": "Imagem de referência: azul lavanda",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-jardim-rose",
+      "name": "Edredom Jardim — Rosé",
+      "category": "Cama / Edredons",
+      "brand": null,
+      "description": "Na proposta Rosé do Jardim, o tom rosado aquece o visual da cama. Uma peseira bege acompanha o floral com pouco contraste.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Jardim",
+        "Tipo": "Edredom",
+        "Cor": "Rosé"
+      },
+      "priceCents": 38990,
+      "stock": 8,
+      "status": "inactive",
+      "approved": false,
+      "images": []
+    },
+    {
+      "key": "cama-jardim-verde-musgo",
+      "name": "Edredom Jardim — Verde Musgo",
+      "category": "Cama / Edredons",
+      "brand": null,
+      "description": "O Jardim Verde Musgo leva uma cor mais profunda à estampa floral. Use com branco-creme para iluminar o conjunto.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Jardim",
+        "Tipo": "Edredom",
+        "Cor": "Verde Musgo",
+        "Estampa": "Floral"
+      },
+      "priceCents": 38990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/edredons/jardim/verde-musgo.jpg",
+          "alt": "Imagem de referência: verde musgo",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-natural-verde-botanico",
+      "name": "Cobre-Leito Natural — Verde Botânico",
+      "category": "Cama / Colchas e cobre-leitos",
+      "brand": null,
+      "description": "O Cobre-Leito Natural Verde Botânico traz a folhagem para o centro da composição. Combine com peças lisas para destacar o desenho.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Natural",
+        "Tipo": "Cobre-leito",
+        "Cor": "Verde Botânico",
+        "Estampa": "Botânica"
+      },
+      "priceCents": 21990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/colchas-e-cobre-leitos/natural/01-verde-botanico.jpg",
+          "alt": "Imagem de referência: verde botanico",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-natural-folhagens-suaves",
+      "name": "Cobre-Leito Natural — Folhagens Suaves",
+      "category": "Cama / Colchas e cobre-leitos",
+      "brand": null,
+      "description": "Na proposta Folhagens Suaves, o Cobre-Leito Natural faz da estampa um detalhe da decoração. Tons de areia e marfim acompanham o desenho sem competir com ele.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Natural",
+        "Tipo": "Cobre-leito",
+        "Estampa": "Botânica"
+      },
+      "priceCents": 21990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/colchas-e-cobre-leitos/natural/02-folhagens-suaves.jpg",
+          "alt": "Imagem de referência: folhagens suaves",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-natural-botanico-neutro",
+      "name": "Cobre-Leito Natural — Botânico Neutro",
+      "category": "Cama / Colchas e cobre-leitos",
+      "brand": null,
+      "description": "O Natural Botânico Neutro insere a folhagem em uma paleta discreta. Uma manta oliva pode acrescentar cor ao pé da cama.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Natural",
+        "Tipo": "Cobre-leito",
+        "Estampa": "Botânica"
+      },
+      "priceCents": 21990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/colchas-e-cobre-leitos/natural/03-botanico-neutro.jpg",
+          "alt": "Imagem de referência: botanico neutro",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-provence-floral-lilas",
+      "name": "Colcha Provence — Lilás",
+      "category": "Cama / Colchas e cobre-leitos",
+      "brand": null,
+      "description": "A Colcha Provence Lilás acrescenta um toque de cor à cama com sua proposta floral. Combine com marfim para destacar o lilás.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Provence",
+        "Tipo": "Colcha",
+        "Cor": "Lilás",
+        "Estampa": "Floral"
+      },
+      "priceCents": 25990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/colchas-e-cobre-leitos/provence/01-floral-lilas.jpg",
+          "alt": "Imagem de referência: floral lilas",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-provence-floral-rosa",
+      "name": "Colcha Provence — Rosa",
+      "category": "Cama / Colchas e cobre-leitos",
+      "brand": null,
+      "description": "O floral da Provence Rosa cria uma composição delicada para o quarto. Uma peseira neutra ajuda a equilibrar a presença do rosa.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Provence",
+        "Tipo": "Colcha",
+        "Cor": "Rosa",
+        "Estampa": "Floral"
+      },
+      "priceCents": 25990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/colchas-e-cobre-leitos/provence/02-floral-rosa.jpg",
+          "alt": "Imagem de referência: floral rosa",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-provence-floral-amarelo-suave",
+      "name": "Colcha Provence — Amarelo Suave",
+      "category": "Cama / Colchas e cobre-leitos",
+      "brand": null,
+      "description": "Na proposta Amarelo Suave, a Colcha Provence traz uma nota de cor quente ao conjunto. Combine com creme para manter a paleta clara.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Provence",
+        "Tipo": "Colcha",
+        "Cor": "Amarelo Suave"
+      },
+      "priceCents": 25990,
+      "stock": 8,
+      "status": "inactive",
+      "approved": false,
+      "images": []
+    },
+    {
+      "key": "cama-manta-tricot-conforto-areia",
+      "name": "Manta Tricot Conforto — Areia",
+      "category": "Cama / Mantas e peseiras",
+      "brand": null,
+      "description": "A Manta Tricot Conforto Areia finaliza a cama com uma camada em tom neutro. Pode ser disposta ao pé da cama para unir peças claras e escuras.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Tricot Conforto",
+        "Tipo": "Manta",
+        "Cor": "Areia"
+      },
+      "priceCents": 15990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/mantas-e-peseiras/manta-tricot-conforto/01-areia.jpg",
+          "alt": "Imagem de referência: areia",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-manta-tricot-conforto-verde-oliva",
+      "name": "Manta Tricot Conforto — Verde Oliva",
+      "category": "Cama / Mantas e peseiras",
+      "brand": null,
+      "description": "Em verde-oliva, a Tricot Conforto acrescenta cor a uma base branca ou bege. Dobrada ao pé da cama, marca o contraste sem cobrir o restante do conjunto.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Tricot Conforto",
+        "Tipo": "Manta",
+        "Cor": "Verde Oliva"
+      },
+      "priceCents": 15990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/mantas-e-peseiras/manta-tricot-conforto/02-verde-oliva.jpg",
+          "alt": "Imagem de referência: verde oliva",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-manta-tricot-conforto-terracota",
+      "name": "Manta Tricot Conforto — Terracota",
+      "category": "Cama / Mantas e peseiras",
+      "brand": null,
+      "description": "A Tricot Conforto Terracota aquece visualmente a composição da cama. Tons de creme e madeira clara fazem um bom contraponto à cor.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Tricot Conforto",
+        "Tipo": "Manta",
+        "Cor": "Terracota"
+      },
+      "priceCents": 15990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/mantas-e-peseiras/manta-tricot-conforto/03-terracota.jpg",
+          "alt": "Imagem de referência: terracota",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-peseira-textura-off-white",
+      "name": "Peseira Textura — Off-White",
+      "category": "Cama / Mantas e peseiras",
+      "brand": null,
+      "description": "A Peseira Textura Off-White clareia o pé da cama e valoriza a sobreposição de peças. Funciona sobre uma colcha estampada ou em uma composição de tons claros.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Textura",
+        "Tipo": "Peseira",
+        "Cor": "Off-White"
+      },
+      "priceCents": 11990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/mantas-e-peseiras/peseira-textura/01-off-white.jpg",
+          "alt": "Imagem de referência: off white",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-peseira-textura-azul-acinzentado",
+      "name": "Peseira Textura — Azul Acinzentado",
+      "category": "Cama / Mantas e peseiras",
+      "brand": null,
+      "description": "O Azul Acinzentado da Peseira Textura acrescenta uma cor discreta ao pé da cama. Combine com roupa de cama branca para destacar a faixa de cor.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Textura",
+        "Tipo": "Peseira",
+        "Cor": "Azul Acinzentado"
+      },
+      "priceCents": 11990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/mantas-e-peseiras/peseira-textura/02-azul-acinzentado.jpg",
+          "alt": "Imagem de referência: azul acinzentado",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-peseira-textura-marrom-taupe",
+      "name": "Peseira Textura — Marrom Taupe",
+      "category": "Cama / Mantas e peseiras",
+      "brand": null,
+      "description": "A Peseira Textura Marrom Taupe dá profundidade ao acabamento da cama. Tons de areia e creme acompanham o marrom em uma composição neutra.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Textura",
+        "Tipo": "Peseira",
+        "Cor": "Marrom Taupe"
+      },
+      "priceCents": 11990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/mantas-e-peseiras/peseira-textura/03-marrom-taupe.jpg",
+          "alt": "Imagem de referência: marrom taupe",
+          "primary": true
+        }
+      ]
+    },
+    {
+      "key": "cama-softcare",
+      "name": "Protetor SoftCare",
+      "category": "Cama / Protetores de colchão",
+      "brand": null,
+      "description": "O SoftCare compõe a base da cama sob a roupa de cama. O desenho matelassado visível nas fotos dá à peça uma aparência discreta.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "SoftCare",
+        "Tipo": "Protetor de colchão"
+      },
+      "priceCents": 9990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/protetores-de-colchao/softcare/01-principal.jpg",
+          "alt": "Vista principal de Protetor SoftCare",
+          "primary": true
+        },
+        {
+          "file": "CAMA/protetores-de-colchao/softcare/02-lateral.jpg",
+          "alt": "Vista lateral do protetor de colchão",
+          "primary": false
+        },
+        {
+          "file": "CAMA/protetores-de-colchao/softcare/03-matelasse.jpg",
+          "alt": "Vista do acabamento matelassê do protetor",
+          "primary": false
+        }
+      ]
+    },
+    {
+      "key": "cama-protege",
+      "name": "Protetor Protege",
+      "category": "Cama / Protetores de colchão",
+      "brand": null,
+      "description": "O Protetor Protege fica sob o lençol e mantém a atenção no conjunto escolhido para o quarto. Seu visual neutro acompanha diferentes propostas de decoração.",
+      "care": null,
+      "characteristics": {
+        "Coleção": "Protege",
+        "Tipo": "Protetor de colchão"
+      },
+      "priceCents": 12990,
+      "stock": 8,
+      "status": "active",
+      "approved": true,
+      "images": [
+        {
+          "file": "CAMA/protetores-de-colchao/protege/01-principal.jpg",
+          "alt": "Vista principal de Protetor Impermeável Protege",
+          "primary": true
+        },
+        {
+          "file": "CAMA/protetores-de-colchao/protege/02-gotas-de-agua.jpg",
+          "alt": "Detalhe de gotas de água sobre o protetor",
+          "primary": false
+        }
+      ]
+    }
+  ]
+}

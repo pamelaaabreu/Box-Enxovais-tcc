@@ -5,10 +5,13 @@ import (
 	"backend/src/models"
 	"backend/src/repositories"
 	"backend/src/services"
+	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -158,4 +161,61 @@ func TestProductCreatePostgres(t *testing.T) {
 	if err := conn.QueryRow(`SELECT count(*) FROM products`).Scan(&count); err != nil || count != 2 {
 		t.Fatalf("invalid requests inserted rows: %d %v", count, err)
 	}
+	t.Run("catalog attributes and upload", func(t *testing.T) {
+		if _, err := conn.Exec("INSERT INTO brands (id,name) VALUES(91,'Marca teste'); INSERT INTO product_types (id,name) VALUES(92,'Toalhas')"); err != nil {
+			t.Fatal(err)
+		}
+		var created struct{ ID int }
+		if err := json.Unmarshal(call(`{"name":"Toalha","price":0,"quantity":5,"status":"archived","brand_id":91,"product_type_id":92,"measurements":{"Largura":"70 cm"}}`, admin, 201), &created); err != nil {
+			t.Fatal(err)
+		}
+		upload := func(payload []byte, bearer string, want int) {
+			t.Helper()
+			var body bytes.Buffer
+			writer := multipart.NewWriter(&body)
+			if err := writer.WriteField("productId", fmt.Sprint(created.ID)); err != nil {
+				t.Fatal(err)
+			}
+			file, err := writer.CreateFormFile("image", "produto.png")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err = file.Write(payload); err != nil {
+				t.Fatal(err)
+			}
+			if err = writer.Close(); err != nil {
+				t.Fatal(err)
+			}
+			r := httptest.NewRequest(http.MethodPost, "/upload-image", &body)
+			r.Header.Set("Content-Type", writer.FormDataContentType())
+			r.Header.Set("Authorization", "Bearer "+bearer)
+			w := httptest.NewRecorder()
+			mux.ServeHTTP(w, r)
+			if w.Code != want {
+				t.Fatalf("upload got %d want %d: %s", w.Code, want, w.Body.String())
+			}
+		}
+		png, err := base64.StdEncoding.DecodeString("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/Z0cAAAAASUVORK5CYII=")
+		if err != nil {
+			t.Fatal(err)
+		}
+		upload(png, token("customer"), http.StatusForbidden)
+		upload([]byte("not an image"), admin, http.StatusUnsupportedMediaType)
+		upload(make([]byte, 10*1024*1024+1), admin, http.StatusBadRequest)
+		upload(png, admin, http.StatusCreated)
+		r := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/products/%d", created.ID), nil)
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, r)
+		var product models.Product
+		if err := json.Unmarshal(w.Body.Bytes(), &product); err != nil || w.Code != 200 || product.BrandID == nil || *product.BrandID != 91 || product.CategoryName != "Toalhas" || product.Measurements["Largura"] != "70 cm" || len(product.ImagePaths) != 1 {
+			t.Fatalf("unexpected product: %s", w.Body.String())
+		}
+		r = httptest.NewRequest(http.MethodGet, "/admin/products/brands", nil)
+		r.Header.Set("Authorization", "Bearer "+admin)
+		w = httptest.NewRecorder()
+		mux.ServeHTTP(w, r)
+		if w.Code != 200 || !strings.Contains(w.Body.String(), "Marca teste") {
+			t.Fatalf("unexpected brands: %s", w.Body.String())
+		}
+	})
 }

@@ -6,7 +6,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './show-password.component.html',
-  styleUrl: './show-password.component.css',
+  styleUrl: './show-password.component.scss',
 })
 export class ShowPasswordComponent {
   showPassword = false;

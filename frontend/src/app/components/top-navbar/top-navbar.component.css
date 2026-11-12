@@ -358,6 +358,7 @@
     max-width: 90px;
   }
 }
+#account-menu li:not(.divider) + li:not(.divider) { margin-top: 4px; }
 #account-menu :is(a, button) {
   justify-content: flex-start;
   gap: 10px;

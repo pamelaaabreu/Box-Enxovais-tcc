@@ -1,0 +1,114 @@
+CAMA - preflight: 28 aprovados, 4 inativos sem capa, 224 unidades previstas.
+31 imagens únicas por SHA-256; 28 capas. Cuidados não confirmados permanecem nulos.
+
+Modo: dry-run (somente leitura)
+
+Jogo de Cama Essência Floral — Verde Oliva | 1/1 imagens verificadas
+  CAMA/jogos-de-cama/essencia/01-floral-verde-oliva.jpg | 492631 bytes | sha256=d172b2ca5963108571c1654c5a84a9b3bcf7d1f80b3fed890b258eb0d7b5f6e0
+
+Jogo de Cama Essência Floral — Verde Suave | 1/1 imagens verificadas
+  CAMA/jogos-de-cama/essencia/02-floral-verde-suave.jpg | 394431 bytes | sha256=8fc065cf3afd24bac7f42f8d23bb53a0e231932d5bf2e3ba38c01fdab1b7bf68
+
+Jogo de Cama Essência Floral — Botânico | 1/1 imagens verificadas
+  CAMA/jogos-de-cama/essencia/03-floral-botanico.jpg | 491911 bytes | sha256=c6223300e0a18a7fcc1a398827b3eab22952861a984c7eb21189c399524927df
+
+Jogo de Cama Aurora Floral — Rosé | 0/0 imagens verificadas
+  Pendente: aprovação editorial; definir uma imagem principal
+
+Jogo de Cama Aurora Floral — Vermelho | 1/1 imagens verificadas
+  CAMA/jogos-de-cama/aurora/02-floral-vermelho.jpg | 524478 bytes | sha256=196968af8b2a4ebbbe6c4e421ee92aad4d69cf214ab43f6a1db30caa3ad0f52a
+
+Jogo de Cama Aurora Floral — Vinho | 1/1 imagens verificadas
+  CAMA/jogos-de-cama/aurora/03-floral-vinho.jpg | 489244 bytes | sha256=869692cba4f5b44a702685bdcb94010435d13892073a79eea5e3f009fc69209a
+
+Jogo de Cama Serenidade — Areia | 0/0 imagens verificadas
+  Pendente: aprovação editorial; definir uma imagem principal
+
+Jogo de Cama Serenidade — Azul | 1/1 imagens verificadas
+  CAMA/jogos-de-cama/serenidade/02-botanico-azul.jpg | 525264 bytes | sha256=01a2815d20a2da1a3ca6fadea11961d3dc854cc318f9c4b11a2a83e3e5d3f32b
+
+Jogo de Cama Serenidade — Azul Claro | 1/1 imagens verificadas
+  CAMA/jogos-de-cama/serenidade/03-botanico-azul-claro.jpg | 503902 bytes | sha256=20cab80e9daca1474095adafa853a5fe90e869bf500dbc4046400be3a2aa1f30
+
+Edredom Aconchego — Creme | 1/1 imagens verificadas
+  CAMA/edredons/aconchego/creme.jpg | 348115 bytes | sha256=6aac05e3161e3f58c67eb8f2111cdba655bb96a6ef8caea6716827a389ddcecd
+
+Edredom Aconchego — Marrom Cacau | 1/1 imagens verificadas
+  CAMA/edredons/aconchego/marrom-cacau.jpg | 393403 bytes | sha256=38f4d9675e28478615a4e4db18376f24b6be18468470db50d9952391d8851952
+
+Edredom Aconchego — Verde Oliva | 1/1 imagens verificadas
+  CAMA/edredons/aconchego/verde-oliva.jpg | 427708 bytes | sha256=30dda27e6686f5790306be9decbecd6ab71e0f26747a1e2d364306cf82da47eb
+
+Edredom Geométrico — Azul Petróleo | 1/1 imagens verificadas
+  CAMA/edredons/geometrico/azul-petroleo.jpg | 459463 bytes | sha256=66867e5c1df2a35e0442155d561318e3e1a27fec12dc78ec651c7b87b938237f
+
+Edredom Geométrico — Rosa Nude | 1/1 imagens verificadas
+  CAMA/edredons/geometrico/rosa-nude.jpg | 433020 bytes | sha256=551c4980c8c84cb1a46e558756892a668afd7ce1226545f583d050a8bcc69f45
+
+Edredom Geométrico — Verde Sálvia | 1/1 imagens verificadas
+  CAMA/edredons/geometrico/verde-salvia.jpg | 447333 bytes | sha256=fafc66b32f4e850c88b783b76d994e11bc7c13237b07dabc88a8913ab7ca26fd
+
+Edredom Jardim — Azul Lavanda | 1/1 imagens verificadas
+  CAMA/edredons/jardim/azul-lavanda.jpg | 215094 bytes | sha256=455239a27c31e32ba7c478531f94b44562c271258f89b0292744d552604a61e7
+
+Edredom Jardim — Rosé | 0/0 imagens verificadas
+  Pendente: aprovação editorial; definir uma imagem principal
+
+Edredom Jardim — Verde Musgo | 1/1 imagens verificadas
+  CAMA/edredons/jardim/verde-musgo.jpg | 212982 bytes | sha256=b7bc322dd0bcea41ef904a14f4377c3fe7e49f74973c57213ff7ed4ec2a768ee
+
+Cobre-Leito Natural — Verde Botânico | 1/1 imagens verificadas
+  CAMA/colchas-e-cobre-leitos/natural/01-verde-botanico.jpg | 491252 bytes | sha256=5b7de09f869a38c13c1973bfe8872773924b1a11ea54a894b64baacbf319f98e
+
+Cobre-Leito Natural — Folhagens Suaves | 1/1 imagens verificadas
+  CAMA/colchas-e-cobre-leitos/natural/02-folhagens-suaves.jpg | 505733 bytes | sha256=15d61b5157a1605794196683432f93a1c761139e0ef38fc965091bf76d61c5bf
+
+Cobre-Leito Natural — Botânico Neutro | 1/1 imagens verificadas
+  CAMA/colchas-e-cobre-leitos/natural/03-botanico-neutro.jpg | 461562 bytes | sha256=764b56d409bc8b285da4c8bf4d2472d1474b0491c5e1d3a4f9dc96914d0b5068
+
+Colcha Provence — Lilás | 1/1 imagens verificadas
+  CAMA/colchas-e-cobre-leitos/provence/01-floral-lilas.jpg | 490302 bytes | sha256=8df03f7e1c2b3eabbc31eeed9690685c53fd5567ea7a146c6e912bac2406f858
+
+Colcha Provence — Rosa | 1/1 imagens verificadas
+  CAMA/colchas-e-cobre-leitos/provence/02-floral-rosa.jpg | 472587 bytes | sha256=4d13fcd03b6656aa9933bfe23135e3eb035532e6c1a252d6136b7c8918b3c36f
+
+Colcha Provence — Amarelo Suave | 0/0 imagens verificadas
+  Pendente: aprovação editorial; definir uma imagem principal
+
+Manta Tricot Conforto — Areia | 1/1 imagens verificadas
+  CAMA/mantas-e-peseiras/manta-tricot-conforto/01-areia.jpg | 357963 bytes | sha256=871ea993801711f992836c74786676473a0084b21964ac2efcbd170d1ea7bd96
+
+Manta Tricot Conforto — Verde Oliva | 1/1 imagens verificadas
+  CAMA/mantas-e-peseiras/manta-tricot-conforto/02-verde-oliva.jpg | 406734 bytes | sha256=6aad74b8e610295cf0a60a5b4bc7a4dabd5adbba559aeca6cc5fe5204defe448
+
+Manta Tricot Conforto — Terracota | 1/1 imagens verificadas
+  CAMA/mantas-e-peseiras/manta-tricot-conforto/03-terracota.jpg | 405232 bytes | sha256=539889fbebb8d5c278ef45c04944e151f7673f715cb263c2b6f27f64e94fef14
+
+Peseira Textura — Off-White | 1/1 imagens verificadas
+  CAMA/mantas-e-peseiras/peseira-textura/01-off-white.jpg | 386929 bytes | sha256=1446e3c36a14f1d2339ee852baa3edd8004b4e00115fc8bdcd7f2a17581c38f1
+
+Peseira Textura — Azul Acinzentado | 1/1 imagens verificadas
+  CAMA/mantas-e-peseiras/peseira-textura/02-azul-acinzentado.jpg | 369073 bytes | sha256=c70340c740758d83047e8c57da500f6ac5518afa882e62d8020f474a3ab2c989
+
+Peseira Textura — Marrom Taupe | 1/1 imagens verificadas
+  CAMA/mantas-e-peseiras/peseira-textura/03-marrom-taupe.jpg | 360521 bytes | sha256=4499e3be80c08b64d7a5c3e368a363979fd451e2776c822d07ee8cde6b21f7f7
+
+Protetor SoftCare | 3/3 imagens verificadas
+  CAMA/protetores-de-colchao/softcare/01-principal.jpg | 228334 bytes | sha256=31bb938b596130fdcba1439f8d8584d9a7bccf4631069915bc877e6908fab8aa
+  CAMA/protetores-de-colchao/softcare/02-lateral.jpg | 306579 bytes | sha256=a6d82dda50c1f5c0fddfc478ac6cc21d49f78acfb0b9a4730777de3d8fb7ca71
+  CAMA/protetores-de-colchao/softcare/03-matelasse.jpg | 299647 bytes | sha256=ce886aae7f2b3ce169a613115671ca2223c66b0f8a7246361ec36f89965ab20a
+
+Protetor Protege | 2/2 imagens verificadas
+  CAMA/protetores-de-colchao/protege/01-principal.jpg | 267594 bytes | sha256=c8ef925dfd10287057b884b6889956c5d7f40c3c1d2d169f9a76f2769a22310b
+  CAMA/protetores-de-colchao/protege/02-gotas-de-agua.jpg | 222606 bytes | sha256=d3bbe96322e74b671dc121358107481d4756b09bc95971bc2d33dc524c760e67
+
+Produtos a criar: 28 | Categorias a criar: 5 | Marcas a criar: 0 | Imagens a associar: 31 | Pendentes: 4 | Existentes: 0
+
+Verificação após a importação
+- 28 produtos criados, ativos, com 8 unidades cada (224 no total).
+- 31 imagens persistidas com caminhos relativos uploads/ e conteúdo igual ao original. As 31 retornaram HTTP 200.
+- 28 capas principais e preços, descrições, características e categorias conferidos contra o manifesto.
+- Tipos criados: Cama / Jogos de cama (7), Cama / Edredons (8), Cama / Colchas e cobre-leitos (5), Cama / Mantas e peseiras (6), Cama / Protetores de colchão (2).
+- Reexecução: 28 existentes, 4 pendentes, zero produtos ou imagens adicionais.
+- Loja pública: busca Aconchego retornou 3 produtos; detalhes do Creme exibiram imagem, R$ 299,90 e Em estoque.
+- O agrupamento Cama / Edredons exibiu 8 produtos. O atalho geral /categoria/cama retornou 404.

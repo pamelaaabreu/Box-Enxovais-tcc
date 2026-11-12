@@ -1,176 +1,335 @@
-<div class="page-wrapper">
-  <!-- HEADER -->
-  <div class="page-header sticky-header">
-    <h2>Adicionar novo produto</h2>
-
-    <button
-      class="btn-save"
-      [disabled]="!productForm.form.valid || !validQuantity() || loading"
-      type="submit"
-      form="productForm"
-    >
-      <ng-container *ngIf="!loading; else loadingTemplate">
-        Salvar produto
-      </ng-container>
-
-      <ng-template #loadingTemplate>
-        <span class="loader"></span>
-        Salvando...
-      </ng-template>
-    </button>
-  </div>
-
-  <!-- FORM CARD -->
-  <div class="page-layout">
-    <div class="card form-card">
-      <form
-        id="productForm"
-        (ngSubmit)="onSubmit(productForm)"
-        #productForm="ngForm"
-        class="product-form"
-      >
-        <!-- linha 1 -->
-        <div class="form-row-2-cols">
-          <div class="floating-group with-icon">
-            <span class="input-icon material-icons">shopping_bag</span>
+<div class="create-grid" [class.with-summary]="!externalSummary">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="product-form">
+    <fieldset [disabled]="loading || !!savedId" [attr.inert]="loading || savedId ? '' : null">
+      <section class="form-section" aria-labelledby="basic-title">
+        <h2 id="basic-title">Informações básicas</h2>
+        <div class="fields">
+          <div class="field wide">
+            <label for="product-name"
+              >Nome do produto *
+              <small>{{ fields.name.value.length }}/100</small></label
+            >
             <input
-              type="text"
-              id="name"
-              name="name"
-              [(ngModel)]="product.name"
-              placeholder=""
+              id="product-name"
+              formControlName="name"
+              maxlength="100"
               required
+              placeholder="Ex.: Toalha de Banho Algodão Premium"
+              [attr.aria-invalid]="fields.name.touched && fields.name.invalid"
+              [attr.aria-describedby]="
+                fields.name.touched && fields.name.invalid ? 'name-error' : null
+              "
             />
-            <label for="name">Nome do Produto</label>
+            @if (fields.name.touched && fields.name.invalid) {
+              <span id="name-error" class="error"
+                ><mat-icon aria-hidden="true">error_outline</mat-icon> Informe o nome do produto.</span
+              >
+            }
           </div>
-
-          <div class="floating-group with-icon">
-            <span class="input-icon material-icons">visibility</span>
-            <select id="status" name="status" [(ngModel)]="product.status">
-              <option value="" disabled hidden></option>
-              <option value="active">Ativo</option>
-              <option value="inactive">Inativo</option>
-            </select>
-            <label for="status">Status</label>
+          <div class="field">
+            <label id="product-category-label" for="product-category">Categoria *</label>
+            <mat-form-field class="product-select" appearance="outline" subscriptSizing="dynamic">
+              <mat-select panelClass="box-form-options" id="product-category" formControlName="category" aria-labelledby="product-category-label" required
+                placeholder="Selecione uma categoria">
+                @if (!categories.length) { <mat-option disabled>Nenhuma categoria cadastrada</mat-option> }
+                @for (category of categories; track category.id) {
+                  <mat-option [value]="category.id">{{ category.name }}</mat-option>
+                }
+              </mat-select>
+              @if (fields.category.touched && fields.category.invalid) {
+                <mat-error id="category-error"><span class="error"><mat-icon aria-hidden="true">error_outline</mat-icon>Selecione uma categoria para continuar.</span></mat-error>
+              }
+            </mat-form-field>
+            <button
+              type="button"
+              class="inline-link category-registration"
+              (click)="openRegistration('categories')"
+            >
+              + Nova categoria
+            </button>
+          </div>
+          <div class="field">
+            <label id="product-brand-label" for="product-brand">Marca</label>
+            <mat-form-field class="product-select" appearance="outline" subscriptSizing="dynamic">
+              <mat-select panelClass="box-form-options" id="product-brand" formControlName="brand" aria-labelledby="product-brand-label"
+                placeholder="Selecione uma marca">
+                @if (brands.length) { <mat-option [value]="null">Sem marca</mat-option> } @else { <mat-option disabled>Nenhuma marca cadastrada</mat-option> }
+                @for (brand of brands; track brand.id) {
+                  <mat-option [value]="brand.id">{{ brand.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <button
+              type="button"
+              class="inline-link"
+              (click)="openRegistration('brands')"
+            >
+              + Nova marca
+            </button>
+          </div>
+          <div class="field">
+            <label id="product-status-label" for="product-status">Status</label>
+            <mat-form-field class="product-select" appearance="outline" subscriptSizing="dynamic">
+              <mat-select panelClass="box-form-options" id="product-status" formControlName="status" aria-labelledby="product-status-label">
+                <mat-option value="active">Ativo</mat-option>
+                <mat-option value="inactive">Inativo</mat-option>
+                <mat-option value="archived">Arquivado</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <span class="hint">Rascunho não aparece na loja.</span>
+          </div>
+          @if (optionsUnavailable) {
+            <div class="wide options-error" role="status">
+              Não foi possível atualizar os cadastros.
+              <button type="button" (click)="loadOptions()">
+                Tentar novamente
+              </button>
+            </div>
+          }
+          <div class="field wide">
+            <label for="product-description">Descrição</label>
+            <textarea
+              id="product-description"
+              formControlName="description"
+              rows="3"
+              placeholder="Fale do material, toque, tamanho e cuidados."
+            ></textarea>
           </div>
         </div>
-
-        <!-- descrição -->
-        <div class="floating-group with-icon">
-          <span class="input-icon material-icons">description</span>
-          <textarea
-            id="description"
-            name="description"
-            [(ngModel)]="product.description"
-            placeholder=""
-          ></textarea>
-          <label for="description">Descrição</label>
-        </div>
-
-        <!-- linha 2 -->
-        <div class="form-row-3-cols">
-          <div class="floating-group with-icon">
-            <span class="input-icon material-icons">attach_money</span>
+      </section>
+      <section class="form-section" aria-labelledby="stock-title">
+        <h2 id="stock-title">Preço e estoque</h2>
+        <div class="fields commerce">
+          <div class="field">
+            <label for="product-price">Preço (R$) *</label>
             <input
-              type="number"
-              id="price"
-              name="price"
-              placeholder=""
-              [(ngModel)]="product.price"
+              id="product-price"
+              formControlName="price"
+              inputmode="decimal"
+              placeholder="0,00"
+              maxlength="16"
               required
+              (blur)="formatPrice()"
+              [attr.aria-invalid]="fields.price.touched && fields.price.invalid"
+              [attr.aria-describedby]="
+                fields.price.touched && fields.price.invalid
+                  ? 'price-error'
+                  : null
+              "
             />
-            <label for="price">Preço (R$)</label>
+            @if (fields.price.touched && fields.price.invalid) {
+              <span id="price-error" class="error"
+                ><mat-icon aria-hidden="true">error_outline</mat-icon> Informe um preço válido maior que zero.</span
+              >
+            }
           </div>
-
-          <div>
-          <div class="floating-group with-icon">
-            <span class="input-icon material-icons">inventory_2</span>
+          <div class="field">
+            <label for="quantity">Quantidade em estoque *</label>
             <input
-              type="number"
               id="quantity"
-              name="quantity"
-              placeholder=""
-              [(ngModel)]="product.quantity"
-              (ngModelChange)="quantityError = ''"
-              #quantityField="ngModel"
+              type="number"
+              formControlName="quantity"
               min="0"
               max="2147483647"
               step="1"
-              pattern="[0-9]+"
-              aria-describedby="quantity-error"
               required
+              placeholder="0"
+              [attr.aria-invalid]="
+                fields.quantity.touched && fields.quantity.invalid
+              "
+              [attr.aria-describedby]="
+                fields.quantity.touched && fields.quantity.invalid
+                  ? 'quantity-error'
+                  : null
+              "
             />
-            <label for="quantity">Quantidade em Estoque</label>
-          </div>
-            <small id="quantity-error" role="alert" *ngIf="quantityError || (quantityField.invalid && (quantityField.dirty || quantityField.touched))">
-              Informe uma quantidade inteira entre 0 e 2147483647.
-            </small>
-          </div>
-
-          <div class="floating-group with-icon">
-            <span class="input-icon material-icons">storefront</span>
-            <select
-              id="brand_id"
-              name="brand_id"
-              [(ngModel)]="product.brand_id"
-            >
-              <option [ngValue]="null"></option>
-              <option [ngValue]="1">Marca A</option>
-              <option [ngValue]="2">Marca B</option>
-            </select>
-            <label for="brand_id">Marca</label>
+            @if (fields.quantity.touched && fields.quantity.invalid) {
+              <span id="quantity-error" class="error"
+                ><mat-icon aria-hidden="true">error_outline</mat-icon> Informe uma quantidade válida.</span
+              >
+            }
           </div>
         </div>
-
-        <hr />
-        <h4>Medidas</h4>
-
-        <div class="form-row-4-cols">
-          <div class="floating-group">
-            <input
-              type="text"
-              name="casal"
-              [(ngModel)]="product.measurements['casal']"
-            />
-            <label>Casal</label>
+        <p class="promotion-hint">
+          Para definir preço promocional, use
+          <a class="inline-link" routerLink="/admin/promotions/add-product"
+            >Promoções</a
+          >
+          após cadastrar o produto.
+        </p>
+      </section>
+      <section class="form-section" aria-labelledby="details-title">
+        <h2 id="details-title">Características <small>(opcional)</small></h2>
+        <div class="fields standard-characteristics">
+          <div class="field">
+            <label for="product-material">Material</label>
+            <input id="product-material" formControlName="material" maxlength="120" placeholder="Ex.: 100% algodão" />
           </div>
-
-          <div class="floating-group">
-            <input
-              type="text"
-              name="queen"
-              [(ngModel)]="product.measurements['queen']"
-            />
-            <label>Queen</label>
+          <div class="field">
+            <label for="product-size">Tamanho</label>
+            <input id="product-size" formControlName="size" maxlength="120" placeholder="Ex.: 70 × 140 cm" />
           </div>
-
-          <div class="floating-group">
-            <input
-              type="text"
-              name="super_king"
-              [(ngModel)]="product.measurements['super_king']"
-            />
-            <label>Super King</label>
-          </div>
-
-          <div class="floating-group">
-            <input
-              type="text"
-              name="solteiro"
-              [(ngModel)]="product.measurements['solteiro']"
-            />
-            <label>Solteiro</label>
+          <div class="field">
+            <label for="product-color">Cor</label>
+            <input id="product-color" formControlName="color" maxlength="120" placeholder="Ex.: Areia" />
           </div>
         </div>
-
-        <div class="floating-group">
-          <textarea
-            name="care_instructions"
-            [(ngModel)]="product.care_instructions"
+        <div formArrayName="measurements">
+          @if (form.hasError('duplicateCharacteristic') && (form.dirty || form.touched)) {
+            <p id="duplicate-characteristic" class="error"><mat-icon aria-hidden="true">error_outline</mat-icon>Essa característica já foi informada.</p>
+          }
+          @for (
+            row of fields.measurements.controls;
+            track row;
+            let i = $index
+          ) {
+            <div class="measurement" [formGroupName]="i">
+              <div class="field">
+                <label [for]="'measure-name-' + i">Nome da característica</label
+                ><input
+                  [id]="'measure-name-' + i"
+                  formControlName="label" [attr.aria-describedby]="form.hasError('duplicateCharacteristic') ? 'duplicate-characteristic' : null"
+                  maxlength="100"
+                  placeholder="Ex.: Material"
+                />
+              </div>
+              <div class="field">
+                <label [for]="'measure-value-' + i">Valor</label
+                ><input
+                  [id]="'measure-value-' + i"
+                  formControlName="value"
+                  maxlength="120"
+                  placeholder="Ex.: 100% algodão"
+                />
+              </div>
+              <button
+                type="button"
+                class="icon-button"
+                (click)="removeMeasurement(i)"
+                [attr.aria-label]="'Remover característica ' + (i + 1)"
+              >
+                <mat-icon aria-hidden="true">delete_outline</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+        <button type="button" class="action" (click)="addMeasurement()">
+          <mat-icon aria-hidden="true">add</mat-icon> Adicionar característica
+        </button>
+        <div class="field care">
+          <label for="product-care">Instruções de cuidado</label
+          ><textarea
+            id="product-care"
+            formControlName="care"
+            rows="2"
           ></textarea>
-          <label>Instruções de Cuidado</label>
         </div>
-      </form>
-    </div>
-  </div>
+      </section>
+    </fieldset>
+    <footer class="form-section form-actions">
+      <a
+        class="action"
+        routerLink="/admin/products"
+        [attr.aria-disabled]="loading"
+        (click)="loading && $event.preventDefault()"
+        >Cancelar</a
+      >
+      <div class="save-actions">
+        <button
+          type="button"
+          class="action"
+          [disabled]="form.invalid || loading || loadingOptions || !!savedId"
+          (click)="onSubmit(true)"
+        >
+          Salvar rascunho
+        </button>
+        <button
+          type="submit"
+          class="action primary btn-save"
+          [disabled]="form.invalid || loading || loadingOptions || !!savedId"
+        >
+          @if (loading) {
+            <mat-spinner diameter="18" aria-label="Salvando"></mat-spinner>
+          }
+          {{
+            savedId
+              ? "Produto cadastrado"
+              : loading
+                ? "Salvando…"
+                : "Salvar e adicionar imagens"
+          }}
+          @if (!loading && !savedId) {
+            <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+          }
+        </button>
+      </div>
+    </footer>
+  </form>
+  @if (!externalSummary) {
+    <ng-container [ngTemplateOutlet]="summary" />
+  }
 </div>
+<ng-template #summary>
+  <aside class="progress-panel" aria-label="Resumo do produto">
+    <section class="form-section">
+      <h2>Pronto para salvar?</h2>
+      <progress
+        [value]="progress"
+        max="100"
+        aria-label="Preenchimento dos requisitos"
+      ></progress>
+      <ul>
+        @for (item of checklist; track item.label) {
+          <li>
+            @let state = fieldState(item.control);
+            <span
+              class="dot"
+              [class.complete]="state === 'Completo'"
+              [class.invalid]="state === 'Inválido'"
+              aria-hidden="true"
+            >
+              @if (state === "Completo") {
+                <mat-icon>check</mat-icon>
+              }
+              @if (state === "Inválido") {
+                <mat-icon>error_outline</mat-icon>
+              }
+            </span>
+            <span
+              >{{ item.label }}
+              <span class="visually-hidden">{{ state }}</span></span
+            >
+          </li>
+        }
+      </ul>
+    </section>
+    <section class="form-section store-preview">
+      <h2>Prévia na loja</h2>
+      <div class="preview-media">
+        @if (previewImage) {
+          <img [src]="previewImage" alt="Imagem do produto" />
+        } @else {
+          Imagem após salvar
+        }
+      </div>
+      <div class="preview-heading">
+        <strong>{{ fields.name.value.trim() || 'Nome do produto' }}</strong>
+        <span class="preview-status" [attr.data-status]="fields.status.value">{{ labels[fields.status.value] }}</span>
+      </div>
+      <p>{{ previewContext }}</p>
+      <strong class="preview-price">{{ pricePreview }}</strong>
+    </section>
+  </aside>
+</ng-template>
+
+<ng-template #registrationContent>
+  <div class="field quick-registration">
+    <label for="quick-registration-name">{{ registrationKind === 'categories' ? 'Nome da categoria' : 'Nome da marca' }} *</label>
+    <input id="quick-registration-name" [formControl]="registrationName" required (input)="registrationApiError = ''"
+      [attr.aria-invalid]="!!registrationError"
+      [attr.aria-describedby]="registrationError ? 'quick-registration-error' : null" />
+    @if (registrationError) {
+      <span id="quick-registration-error" class="error"><mat-icon aria-hidden="true">error_outline</mat-icon>{{ registrationError }}</span>
+    }
+  </div>
+</ng-template>

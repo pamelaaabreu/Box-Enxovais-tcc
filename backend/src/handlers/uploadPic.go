@@ -4,6 +4,7 @@ import (
 	"backend/src/response"
 	"backend/src/services"
 	"errors"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -22,7 +23,9 @@ func (h ProductImageHandler) UploadProductImage(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	if err := r.ParseMultipartForm(10 << 20); err != nil {
+	const maxImageBytes = 10 << 20
+	r.Body = http.MaxBytesReader(w, r.Body, maxImageBytes+(64<<10))
+	if err := r.ParseMultipartForm(maxImageBytes); err != nil {
 		response.Error(w, http.StatusBadRequest, "A imagem é muito grande. Limite de 10MB.")
 		return
 	}
@@ -48,7 +51,27 @@ func (h ProductImageHandler) UploadProductImage(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	filePath, err := h.Service.Upload(r.Context(), productId, handler.Filename, file)
+	if productId <= 0 || handler.Size <= 0 || handler.Size > maxImageBytes {
+		response.Error(w, http.StatusBadRequest, "Produto ou tamanho da imagem inválido")
+		return
+	}
+	var header [512]byte
+	size, err := io.ReadFull(file, header[:])
+	if err != nil && !errors.Is(err, io.ErrUnexpectedEOF) {
+		response.Error(w, http.StatusBadRequest, "Não foi possível ler a imagem")
+		return
+	}
+	extensions := map[string]string{"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp"}
+	ext, valid := extensions[http.DetectContentType(header[:size])]
+	if !valid {
+		response.Error(w, http.StatusUnsupportedMediaType, "Selecione uma imagem JPEG, PNG ou WebP")
+		return
+	}
+	if _, err := file.Seek(0, io.SeekStart); err != nil {
+		response.Error(w, http.StatusBadRequest, "Não foi possível ler a imagem")
+		return
+	}
+	filePath, err := h.Service.Upload(r.Context(), productId, "image"+ext, file)
 	if err != nil {
 		log.Printf("Erro ao salvar imagem do produto: %v", err)
 		response.Error(w, http.StatusInternalServerError, productImageErrorMessage(err))

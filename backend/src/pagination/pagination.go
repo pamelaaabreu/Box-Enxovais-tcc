@@ -82,6 +82,26 @@ func ParsePage(values url.Values, fields map[string]FilterField, firstParameter 
 		if !ok || (op == "contains" && field.Kind != "text") || (field.Kind == "text" && op != "eq" && op != "contains") {
 			return q, fmt.Errorf("Operador não permitido: %s", key)
 		}
+		if field.Kind == "integer_list" {
+			if op != "eq" {
+				return q, fmt.Errorf("Operador não permitido: %s", key)
+			}
+			ids := strings.Split(value, ",")
+			if len(ids) > MaxLimit {
+				return q, fmt.Errorf("Lista de valores inválida: %s", key)
+			}
+			params := make([]string, 0, len(ids))
+			for _, id := range ids {
+				n, err := strconv.ParseInt(id, 10, 32)
+				if err != nil || n <= 0 {
+					return q, fmt.Errorf("Valor inteiro inválido: %s", key)
+				}
+				params = append(params, fmt.Sprintf("$%d", firstParameter+len(q.Args)))
+				q.Args = append(q.Args, n)
+			}
+			clauses = append(clauses, field.Column+" IN ("+strings.Join(params, ",")+")")
+			continue
+		}
 		var arg any = value
 		switch field.Kind {
 		case "integer":

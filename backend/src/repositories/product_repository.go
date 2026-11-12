@@ -20,7 +20,15 @@ const storeProductColumns = `p.id,p.name,p.description,p.care_instructions,
 const storeProductSource = ` FROM products p LEFT JOIN product_types t ON t.id=p.product_type_id`
 
 func (repo ProductRepository) ListTypes(ctx context.Context) ([]models.ProductType, error) {
-	rows, err := repo.DB.QueryContext(ctx, "SELECT id, name FROM product_types ORDER BY name, id")
+	return repo.listProductOptions(ctx, "SELECT id, name FROM product_types ORDER BY name, id")
+}
+
+func (repo ProductRepository) ListBrands(ctx context.Context) ([]models.ProductType, error) {
+	return repo.listProductOptions(ctx, "SELECT id, name FROM brands ORDER BY name, id")
+}
+
+func (repo ProductRepository) listProductOptions(ctx context.Context, query string) ([]models.ProductType, error) {
+	rows, err := repo.DB.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}
