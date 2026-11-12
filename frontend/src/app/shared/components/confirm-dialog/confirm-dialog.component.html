@@ -1,30 +1,54 @@
-<div class="box-confirm" [attr.data-variant]="data.variant" [attr.aria-busy]="processing()">
+<div
+  class="box-confirm"
+  [attr.data-variant]="data.variant"
+  [attr.aria-busy]="processing()"
+>
   <h2 mat-dialog-title class="box-confirm-title" [id]="titleId">
-    <span class="box-confirm-icon"><mat-icon aria-hidden="true">{{ icon }}</mat-icon></span>
+    <span class="box-confirm-icon"
+      ><mat-icon aria-hidden="true">{{ icon }}</mat-icon></span
+    >
     {{ data.title }}
   </h2>
   <mat-dialog-content class="box-confirm-content">
     <p [id]="descriptionId">{{ data.message }}</p>
     @if (data.details?.length) {
       <div class="box-confirm-details">
-        @for (detail of data.details; track $index) { <div>{{ detail }}</div> }
+        @for (detail of data.details; track $index) {
+          <div>{{ detail }}</div>
+        }
       </div>
     }
     <ng-container [ngTemplateOutlet]="data.content ?? null" />
-    @if (error()) { <p class="box-confirm-error" role="alert">{{ error() }}</p> }
+    @if (error()) {
+      <p class="box-confirm-error" role="alert">{{ error() }}</p>
+    }
   </mat-dialog-content>
   <mat-dialog-actions class="box-confirm-actions">
     @if (data.actions; as actions) {
       <ng-container [ngTemplateOutlet]="actions" />
     } @else {
-    <button type="button" class="box-confirm-secondary" [disabled]="processing()" (click)="choose('secondary')">
-      @if (processing() && data.confirmAction === 'secondary') { <mat-spinner diameter="16" aria-label="Processando" /> }
-      {{ data.secondary }}
-    </button>
-    <button type="button" class="box-confirm-primary" [disabled]="processing()" (click)="choose('primary')">
-      @if (processing() && data.confirmAction !== 'secondary') { <mat-spinner diameter="16" aria-label="Processando" /> }
-      {{ data.primary }}
-    </button>
+      <button
+        type="button"
+        class="box-confirm-secondary"
+        [disabled]="processing()"
+        (click)="choose('secondary')"
+      >
+        @if (processing() && data.confirmAction === "secondary") {
+          <mat-spinner diameter="16" aria-label="Processando" />
+        }
+        {{ data.secondary }}
+      </button>
+      <button
+        type="button"
+        class="box-confirm-primary"
+        [disabled]="processing()"
+        (click)="choose('primary')"
+      >
+        @if (processing() && data.confirmAction !== "secondary") {
+          <mat-spinner diameter="16" aria-label="Processando" />
+        }
+        {{ data.primary }}
+      </button>
     }
   </mat-dialog-actions>
 </div>

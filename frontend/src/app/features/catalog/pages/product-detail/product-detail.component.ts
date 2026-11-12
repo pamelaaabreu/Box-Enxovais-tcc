@@ -1,12 +1,12 @@
 import { FavoriteButtonComponent } from '../../../../shared/favorite-button/favorite-button.component';
-import { CATEGORIES } from '../../data/categories';
 import { CartService } from '../../../../core/services/cart.service';
-import { NotFoundComponent } from '../../../not-found/not-found.component';
-import { KeyValuePipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { ProductGridComponent } from '../../components/product-grid/product-grid.component';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { catchError, map, of, startWith, switchMap } from 'rxjs';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Subject, catchError, combineLatest, map, of, startWith, switchMap } from 'rxjs';
 import { CatalogService } from '../../services/catalog.service';
 import { CatalogState } from '../../interfaces/catalog-state';
 import { CatalogProduct } from '../../interfaces/product.interface';
@@ -19,7 +19,7 @@ import { QuantitySelectorComponent } from '../../components/quantity-selector/qu
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [FavoriteButtonComponent, NotFoundComponent, RouterLink, KeyValuePipe, CatalogLayoutComponent, BreadcrumbsComponent, ProductGalleryComponent, ProductPriceComponent, QuantitySelectorComponent],
+  imports: [CurrencyPipe, FavoriteButtonComponent, MatIconModule, ProductGridComponent, RouterLink, CatalogLayoutComponent, BreadcrumbsComponent, ProductGalleryComponent, ProductPriceComponent, QuantitySelectorComponent],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,8 +32,12 @@ export class ProductDetailComponent {
   readonly quantity = signal(1);
   readonly variantId = signal<number | null>(null);
 
-  readonly state = toSignal(this.route.paramMap.pipe(
-    switchMap(params => this.catalog.getProductBySlug(params.get('slug') ?? '').pipe(
+  private readonly reload = new Subject<void>();
+
+  retry(): void { this.reload.next(); }
+
+  readonly state = toSignal(combineLatest([this.route.paramMap, this.reload.pipe(startWith(undefined))]).pipe(
+    switchMap(([params]) => this.catalog.getProductBySlug(params.get('slug') ?? '').pipe(
       map((data): CatalogState<CatalogProduct | null> => ({ status: 'loaded', data })),
       startWith<CatalogState<CatalogProduct | null>>({ status: 'loading' }),
       catchError(() => of<CatalogState<CatalogProduct | null>>({ status: 'error' })),
@@ -41,17 +45,49 @@ export class ProductDetailComponent {
   ), { initialValue: { status: 'loading' } as CatalogState<CatalogProduct | null> });
 
   readonly product = computed(() => { const state = this.state(); return state.status === 'loaded' ? state.data : null; });
+  readonly characteristics = computed(() => Object.entries(this.product()?.measurements ?? {})
+    .filter(([, value]) => value != null && String(value).trim()));
+
+  readonly sizes = computed(() => {
+    const labels: Record<string, string> = {
+      solteiro: 'Solteiro', casal: 'Casal', queen: 'Queen', super_king: 'Super king',
+    };
+    const measurements = this.characteristics();
+    return Object.entries(labels).flatMap(([key, label]) => {
+      const entry = measurements.find(([name]) => name.trim().toLowerCase().replace(/\s+/g, '_') === key);
+      return entry ? [{ key: entry[0], label, value: entry[1] }] : [];
+    });
+  });
+
+  readonly otherCharacteristics = computed(() => {
+    if (this.product()?.variants.length) return this.characteristics();
+    const sizeKeys = new Set(this.sizes().map(({ key }) => key));
+    return this.characteristics().filter(([key]) => !sizeKeys.has(key));
+  });
+
   readonly stock = computed(() => {
     const value = this.product()?.stock ?? this.product()?.quantity ?? 0;
     return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
   });
+  readonly recommendations = toSignal(toObservable(this.product).pipe(
+    switchMap(product => product
+      ? this.catalog.getRecommendations(product).pipe(catchError(() => of([])), startWith([]))
+      : of([])),
+  ), { initialValue: [] });
+
+  readonly remainingStock = computed(() => {
+    const product = this.product();
+    const inCart = this.cart.cart().items.find(item => item.productId === product?.id);
+    return Math.max(0, (inCart?.stock ?? this.stock()) - (inCart?.quantity ?? 0));
+  });
+
   readonly available = computed(() => this.product()?.status === 'active' && this.stock() > 0);
   readonly availabilityLabel = computed(() => {
     if (!this.available()) return 'Produto indisponível';
     if (this.stock() <= 5) return `Últimas ${this.stock()} unidades`;
     return 'Em estoque';
   });
-  readonly canAddToCart = computed(() => this.available() && Number.isInteger(this.quantity()) && this.quantity() >= 1 && this.quantity() <= this.stock());
+  readonly canAddToCart = computed(() => this.available() && Number.isInteger(this.quantity()) && this.quantity() >= 1 && this.quantity() <= this.remainingStock() && !this.cart.pending().has(this.product()!.id));
 
   readonly selectedVariant = computed(() => this.product()?.variants.find(variant => variant.id === this.variantId()) ?? this.product()?.variants.find(variant => variant.stock > 0) ?? this.product()?.variants[0] ?? null);
   readonly availableColors = computed(() => [...new Set(this.product()?.variants.map(v => v.color || 'PadrÃƒÂ£o') ?? [])]);
@@ -83,16 +119,33 @@ export class ProductDetailComponent {
     return colors[color.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()] ?? '#ded3bf';
   }
 
+  readonly careInstructions = computed(() => (this.product()?.care_instructions ?? '')
+    .split(/\r\n?|\n|;/)
+    .map(text => text.trim().replace(/^(?:[-•]\s+|\d+[.)]\s+)/, ''))
+    .filter(Boolean)
+    .map(text => {
+      const normalized = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      let icon = 'info_outline';
+      if (/^(?:ciclo delicado|lavar em ciclo delicado)\b/.test(normalized)) icon = 'water_drop';
+      if (/^nao (?:usar|utilizar) alvejante\b/.test(normalized)) icon = 'block';
+      if (/^secar (?:a|na) sombra\b/.test(normalized)) icon = 'light_mode';
+      return { text, icon };
+    }));
+
   readonly breadcrumbs = computed<BreadcrumbItem[]>(() => {
     const product = this.product();
     return product ? [
       { label: 'Home', url: '/home' },
-      { label: product.category.name, url: CATEGORIES.some(category => category.slug === product.category.slug) ? `/categoria/${product.category.slug}` : undefined },
+      ...(product.category.slug ? [{ label: product.category.name, url: "/categoria/" + product.category.slug }] : []),
       { label: product.name },
     ] : [{ label: 'Home', url: '/home' }, { label: 'Produto' }];
   });
 
   constructor() {
+    effect(() => {
+      const remaining = this.remainingStock();
+      this.quantity.update(quantity => Math.min(quantity, Math.max(1, remaining)));
+    });
     effect(() => {
       // Angular may reuse this page when only the slug changes.
       this.product();

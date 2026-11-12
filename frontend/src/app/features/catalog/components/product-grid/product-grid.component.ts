@@ -12,6 +12,7 @@ import { ProductCardComponent } from '../product-card/product-card.component';
 })
 export class ProductGridComponent {
   readonly products = input<readonly CatalogProduct[]>([]);
+  readonly compact = input(false);
   readonly loading = input(false);
   readonly skeletons = [1, 2, 3, 4];
 }

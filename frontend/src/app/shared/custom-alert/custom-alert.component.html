@@ -7,47 +7,17 @@
   [class]="'alert-' + type"
   [class.toast-exit]="!visible"
 >
-  <!-- Ícone Lucide -->
   <div class="alert-icon" aria-hidden="true">
-    <ng-container [ngSwitch]="type">
-      <i-lucide
-        *ngSwitchCase="'success'"
-        name="check"
-        [size]="16"
-        [strokeWidth]="2.5"
-      ></i-lucide>
-      <i-lucide
-        *ngSwitchCase="'error'"
-        name="x"
-        [size]="16"
-        [strokeWidth]="2.5"
-      ></i-lucide>
-      <i-lucide
-        *ngSwitchCase="'warning'"
-        name="alert-triangle"
-        [size]="16"
-        [strokeWidth]="2.5"
-      ></i-lucide>
-      <i-lucide
-        *ngSwitchCase="'info'"
-        name="info"
-        [size]="16"
-        [strokeWidth]="2.5"
-      ></i-lucide>
-      <i-lucide
-        *ngSwitchCase="'loading'"
-        name="loader-2"
-        [size]="16"
-        [strokeWidth]="2.5"
-        class="spinning"
-      ></i-lucide>
-    </ng-container>
+    <mat-icon [class.spinning]="type === 'loading'">{{ icons[type] }}</mat-icon>
   </div>
 
   <!-- Conteúdo -->
   <div class="alert-content">
     <h4 class="alert-title">{{ title }}</h4>
     <p class="alert-message" *ngIf="message">{{ message }}</p>
+    @if (action) {
+      <button type="button" class="alert-action" (click)="activate()">{{ action.label }}</button>
+    }
   </div>
 
   <!-- Botão Fechar -->
@@ -58,7 +28,7 @@
     (click)="onClose()"
     aria-label="Fechar notificação"
   >
-    <i-lucide name="x" [size]="14" [strokeWidth]="2.5"></i-lucide>
+    <mat-icon aria-hidden="true">close</mat-icon>
   </button>
 
   <!-- Barra de Progresso -->

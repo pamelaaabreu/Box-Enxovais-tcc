@@ -7,14 +7,16 @@
     </a>
   </div>
 
-  <div class="search-bar">
+  <form class="search-bar" role="search" (submit)="$event.preventDefault(); searchProducts(productQuery.value)">
     <input
+      #productQuery
       type="search"
+      maxlength="120"
       aria-label="Buscar produtos"
       placeholder="O que você procura?"
       class="search-input"
     />
-    <span class="search-icon">
+    <button class="search-icon" type="submit" aria-label="Buscar produtos">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -29,8 +31,8 @@
         <circle cx="11" cy="11" r="8" />
         <path d="m21 21-4.3-4.3" />
       </svg>
-    </span>
-  </div>
+    </button>
+  </form>
 
   <div class="account-cart">
     <!-- Renderiza apenas depois de carregar -->

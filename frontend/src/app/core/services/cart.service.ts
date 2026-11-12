@@ -1,3 +1,4 @@
+import { CustomAlertService } from './custom-alert.service';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -28,6 +29,7 @@ const emptyCart = (): Cart => ({ items: [], totalItems: 0, total: 0 });
 export class CartService {
   private readonly http = inject(HttpClient);
   private readonly auth = inject(AuthService);
+  private readonly alerts = inject(CustomAlertService);
   private readonly router = inject(Router);
   private readonly queue = new Subject<CartRequest>();
   private session = 0;
@@ -68,6 +70,12 @@ export class CartService {
                     return next;
                   });
                   this.state.set(response.data);
+                  if (request.method === 'POST' && request.path === '/items') {
+                    const name = response.data.items.find(item => item.productId === request.productId)?.name;
+                    this.alerts.success('Adicionado à sacola', name, {
+                      action: { label: 'Ver sacola', run: () => { void this.router.navigate(['/cart']); } },
+                    });
+                  }
                   if (request.key === Number.MIN_SAFE_INTEGER) void this.router.navigate(['/cart']);
                   if (request.productId && request.method !== 'DELETE')
                     this.feedback.update((value) => ({

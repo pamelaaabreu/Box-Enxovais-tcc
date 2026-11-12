@@ -370,3 +370,6 @@
 #account-menu a.current { background: #f0efe9; font-weight: 600; }
 #account-menu :is(a, button):focus-visible { outline: 2px solid #667255; outline-offset: -2px; }
 #account-menu .restricted { padding: 3px 7px; border-radius: 999px; background: #f2ede4; font-size: 11px; font-weight: 600; }
+
+button.search-icon { border: 0; padding: 0; background: transparent; cursor: pointer; pointer-events: auto; }
+button.search-icon:focus-visible { outline: 2px solid #667255; outline-offset: 3px; }

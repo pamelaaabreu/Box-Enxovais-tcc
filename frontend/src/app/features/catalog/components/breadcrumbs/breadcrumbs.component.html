@@ -3,7 +3,7 @@
     <li>
       @if (item.url && !last) { <a [routerLink]="item.url">{{ item.label }}</a> }
       @else { <span [attr.aria-current]="last ? 'page' : null">{{ item.label }}</span> }
-      @if (!last) { <span class="separator" aria-hidden="true">/</span> }
+      @if (!last) { <mat-icon class="separator" aria-hidden="true">chevron_right</mat-icon> }
     </li>
   }</ol>
 </nav>

@@ -10,3 +10,13 @@ p { font-size: 15px; line-height: 1.7; color: #706e67; }
 .state a:focus-visible { outline: 2px solid #667255; outline-offset: 4px; }
 @media (max-width: 768px) { .toolbar { flex-direction: column; align-items: stretch; } .results { justify-content: space-between; } }
 @media (max-width: 400px) { .results { gap: 12px; } }
+
+.catalog-filters, .catalog-pagination { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; margin-block: 16px; }
+.catalog-filters label { display: grid; gap: 6px; min-width: 0; font-size: 14px; }
+.catalog-filters label:first-child { flex: 1 1 185px; }
+.catalog-filters :is(input, select):not([type=checkbox]) { min-height: 44px; max-width: 100%; width: 100%; padding: 8px; border: 1px solid #d5ded1; border-radius: 10px; background: #fffdf8; font: inherit; }
+.catalog-filters .catalog-stock { display: flex; align-items: center; min-height: 44px; }
+.catalog-filters input[type=number] { max-width: 125px; }
+.catalog-pagination { justify-content: center; align-items: center; }
+.catalog-filters button, .catalog-pagination button, .state button { min-height: 44px; padding: 8px 16px; border: 1px solid #667255; border-radius: 999px; background: #fffdf8; color: #3d4836; font: inherit; }
+.catalog-pagination button:disabled { opacity: .5; }

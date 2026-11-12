@@ -4,6 +4,22 @@ import { CatalogService } from './catalog.service';
 import { ProductService } from '../../../core/services/product.service';
 
 describe('CatalogService API mapping',()=>{
+ it('resolves a database category and lists its products by ID', async () => {
+  const getProductsPage = jasmine.createSpy('getProductsPage').and.returnValue(of({items: []}));
+  TestBed.configureTestingModule({providers:[{provide:ProductService,useValue:{
+    getProductTypes: () => of([{id: 81, name: 'Toalhas'}, {id: 82, name: 'Roupa de banho'}]),
+    getProductsPage,
+  }}]});
+  const service = TestBed.inject(CatalogService);
+  const category = await firstValueFrom(service.getCategoryBySlug('toalhas'));
+  expect(category).toEqual(jasmine.objectContaining({id: 81, name: 'Toalhas'}));
+  const product = service.adapt({id: 10, name: 'Roupão', category_name: 'Roupa de banho', product_type_id: 82} as Parameters<CatalogService['adapt']>[0]);
+  expect(await firstValueFrom(service.getCategoryBySlug(product.category.slug))).toEqual(product.category);
+  await firstValueFrom(service.getCategoryPage(category!, {limit: 12}));
+  expect(getProductsPage).toHaveBeenCalledWith({limit: 12, filters: {product_type_id: 81}});
+  expect(await firstValueFrom(service.getCategoryBySlug('inexistente'))).toBeNull();
+ });
+
  it('uses real IDs, category names and stock without mock variants',async()=>{
   const product={id:42,name:'Jogo de cama',category_name:'Cama',status:'active',price:129.9,quantity:4,image_paths:[]};
   TestBed.configureTestingModule({providers:[{provide:ProductService,useValue:{getProducts:()=>of([product]),getProduct:(id:number)=>{expect(id).toBe(42);return of(product)}}}]});

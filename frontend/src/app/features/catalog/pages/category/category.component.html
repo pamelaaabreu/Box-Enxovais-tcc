@@ -6,7 +6,7 @@
   @if (state().status === 'loading') {
     <app-product-grid [loading]="true" />
   } @else if (state().status === 'error') {
-    <section class="state" role="alert"><h1>Não foi possível carregar o catálogo.</h1><p>Tente novamente mais tarde.</p><a routerLink="/home">Voltar para Home</a></section>
+    <section class="state" role="alert"><h1>Não foi possível carregar o catálogo.</h1><p>Tente novamente mais tarde.</p><button type="button" (click)="movePage(0)">Tentar novamente</button></section>
   } @else {
     @if (category(); as category) {
     <header class="category-heading">
@@ -14,11 +14,37 @@
       <h1>{{ category.name }}</h1>
       <p>{{ category.description }}</p>
     </header>
-    <div class="toolbar">
-      <app-product-filters />
-      <div class="results"><span role="status">{{ products().length }} {{ products().length === 1 ? 'produto' : 'produtos' }}</span><app-product-sort /></div>
-    </div>
-    <app-product-grid [products]="products()" />
+    <form class="catalog-filters" (submit)="$event.preventDefault(); applyFilters(search.value, price.value, available.checked, sort.value)">
+      <label>{{ category.slug === 'todos' ? 'Buscar produtos' : 'Buscar nesta categoria' }}<input #search type="search" maxlength="120" [value]="criteria().search" /></label>
+      <label>Preço máximo<input #price type="number" min="0" step="0.01" [value]="criteria().maxPrice" /></label>
+      <label>Ordenar por
+        <select #sort [value]="criteria().sort">
+          <option value="">Padrão</option><option value="price_asc">Menor preço</option>
+          <option value="price_desc">Maior preço</option><option value="name">Nome</option><option value="recent">Mais recentes</option>
+        </select>
+      </label>
+      <label class="catalog-stock"><input #available type="checkbox" [checked]="criteria().available" /> Em estoque</label>
+      <button type="submit">Aplicar filtros</button>
+    </form>
+    @if (products().length) {
+      <p role="status">{{ page()?.total }} produtos</p>
+      <app-product-grid [products]="products()" />
+    } @else {
+      <section class="state">
+        <h2>Nenhum produto encontrado</h2>
+        <p>{{ criteria().search || criteria().maxPrice || criteria().available ? 'Não encontramos produtos para os filtros selecionados.' : (category.slug === 'todos' ? 'Ainda não há produtos disponíveis no catálogo.' : 'Ainda não há produtos disponíveis nesta categoria.') }}</p>
+        @if (criteria().search || criteria().maxPrice || criteria().available || criteria().offset) {
+          <button type="button" (click)="applyFilters('', '', false, '')">Limpar filtros</button>
+        }
+      </section>
+    }
+    @if (criteria().offset || page()?.hasMore) {
+      <nav class="catalog-pagination" aria-label="Paginação de produtos">
+        <button type="button" [disabled]="!criteria().offset" (click)="movePage(-1)">Anterior</button>
+        <span aria-current="page">{{ pageNumber() }}</span>
+        <button type="button" [disabled]="!page()?.hasMore" (click)="movePage(1)">Próxima</button>
+      </nav>
+    }
   }
   }
 </app-catalog-layout>

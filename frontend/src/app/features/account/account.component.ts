@@ -416,7 +416,7 @@ export class AccountComponent {
     this.run(request, () => {
       this.closeAddressEditor();
       this.loadAddresses();
-      if (defaultSaved) this.alerts.success('Endereço salvo.');
+      if (defaultSaved) this.alerts.success('Endereço salvo', 'Ele já está disponível para usar no checkout.');
       else this.notice.set('Endereço salvo. Não foi possível defini-lo como padrão. Tente pela lista.');
     });
   }

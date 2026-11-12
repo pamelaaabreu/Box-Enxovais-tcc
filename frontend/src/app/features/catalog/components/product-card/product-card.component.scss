@@ -65,3 +65,10 @@ app-product-price {
 article { position: relative; }
 .favorite-action { position: absolute; top: 12px; right: 12px; z-index: 2; }
 .unavailable { color: #883c34; font-size: 12px; }
+
+article.compact { border: 0; background: transparent; box-shadow: none; }
+.compact .media { aspect-ratio: 1; height: auto; border-radius: 14px; overflow: hidden; }
+.compact .information { display: grid; gap: 4px; padding: 8px 0 0; }
+.compact h2 { margin: 0; min-height: 0; font-size: 14px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.compact app-product-price { margin: 0; }
+.compact .product-link:hover h2 { text-decoration: underline; }

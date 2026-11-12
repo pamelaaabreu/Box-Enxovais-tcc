@@ -13,6 +13,10 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
+  getProductTypes(): Observable<{ id: number; name: string }[]> {
+    return this.http.get<{ id: number; name: string }[]>(this.apiUrl + "/categories");
+  }
+
   getProducts(): Observable<Product[]> {
     return this.pagination.getAll<Product>(this.apiUrl);
   }

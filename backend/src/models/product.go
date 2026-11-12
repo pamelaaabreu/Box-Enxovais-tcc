@@ -2,6 +2,11 @@ package models
 
 import "time"
 
+type ProductType struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 type Product struct {
 	Stock            int               `json:"stock"`
 	CategoryName     string            `json:"category_name,omitempty"`

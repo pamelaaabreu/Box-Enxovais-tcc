@@ -1,29 +1,37 @@
-@if (state().status === 'loaded' && !product()) {
-  <app-not-found />
-} @else {
 <app-catalog-layout class="product-page">
   <app-breadcrumbs [items]="breadcrumbs()" />
   @if (state().status === "loading") {
-    <p role="status">Carregando produto…</p>
+    <div class="product-layout product-loading" role="status" aria-label="Carregando produto">
+      <div class="skeleton-media"></div>
+      <div class="skeleton-info"><div></div><div></div><div></div><div></div></div>
+    </div>
   } @else if (state().status === "error") {
     <section class="state" role="alert">
       <h1>Não foi possível carregar o produto.</h1>
-      <p>Tente novamente mais tarde.</p>
-      <a routerLink="/home">Voltar para Home</a>
+      <p>Tente novamente em instantes.</p>
+      <button type="button" class="purchase-button" (click)="retry()">Tentar novamente</button>
+    </section>
+  } @else if (!product()) {
+    <section class="state">
+      <h1>Produto não encontrado</h1>
+      <p>Este produto não está disponível ou não existe mais.</p>
+      <a routerLink="/categoria/todos">Voltar aos produtos</a>
     </section>
   } @else {
     @if (product(); as product) {
       <div class="product-layout">
-        <app-product-gallery [images]="product.images" />
+        <div class="product-media-area">
+          <app-product-gallery [images]="product.images" />
+          <app-favorite-button [productId]="product.id" [productName]="product.name" />
+        </div>
         <section class="product-information" aria-labelledby="product-title">
           <span class="eyebrow">{{ product.category.name }}</span>
           <h1 id="product-title">{{ product.name }}</h1>
-          <app-favorite-button [productId]="product.id" [productName]="product.name" />
           <app-product-price
             [emphasized]="true"
+            [showInstallments]="false"
             [price]="product.price"
           />
-          <p class="availability" [class.availability--unavailable]="!available()" role="status">{{ availabilityLabel() }}</p>
           @if (product.variants.length) {
             <fieldset>
               <legend>Cor</legend>
@@ -44,56 +52,92 @@
               </div>
             </fieldset>
           }
+          @if (!product.variants.length && sizes().length) {
+            <section aria-labelledby="product-measurements">
+              <h2 id="product-measurements" class="measurement-title">Tamanhos e medidas cadastrados</h2>
+              <dl class="measurement-grid">
+                @for (size of sizes(); track size.key) {
+                  <div><dt>{{ size.label }}</dt><dd>{{ size.value }}</dd></div>
+                }
+              </dl>
+            </section>
+          }
+          <p class="availability" [class.availability--unavailable]="!available()" role="status">{{ availabilityLabel() }}</p>
+          <div class="purchase-row">
           <div class="quantity-row">
-            <span>Quantidade</span
-            ><app-quantity-selector
+            <app-quantity-selector
               [value]="quantity()"
+              [max]="remainingStock()"
               (valueChange)="quantity.set($event)"
             />
           </div>
           <button class="purchase-button" type="button" (click)="addToCart()" [disabled]="cart.pending().has(product.id) || !canAddToCart()" [attr.aria-busy]="cart.pending().has(product.id)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 7h14l2 15H3L5 7Z"/><path d="M8 9V5a4 4 0 0 1 8 0v4"/></svg>
+            <mat-icon aria-hidden="true">shopping_bag</mat-icon>
             {{ !available() ? 'Produto indisponível' : cart.pending().has(product.id) ? 'Adicionando…' : 'Adicionar ao carrinho' }}
           </button>
+          </div>
+          <div class="benefits" aria-label="Informações da compra">
+            <div><mat-icon aria-hidden="true">local_shipping</mat-icon>Consulte a entrega no checkout</div>
+            <div><mat-icon aria-hidden="true">swap_horiz</mat-icon>Política de trocas a confirmar</div>
+            <div><mat-icon aria-hidden="true">lock_outline</mat-icon>Compra vinculada à sua conta</div>
+          </div>
+          @if (available() && remainingStock() === 0) {
+            <p role="status">Todas as unidades disponíveis já estão na sacola.</p>
+          }
           @if (cart.feedback()[product.id]) { <p role="status">{{ cart.feedback()[product.id] }}</p> }
           @if (selectedVariant(); as variant) {
             <p class="product-reference">Ref.: {{ variant.sku }}</p>
           }
         </section>
       </div>
-      <div class="product-description">
-        <section>
-          <h2>Descrição</h2>
-          <p>{{ product.description }}</p>
+      @if (product.description || otherCharacteristics().length || careInstructions().length) {
+        <div class="product-description">
+          @if (product.description) {
+            <section><h2>Descrição</h2><p>{{ product.description }}</p></section>
+          }
+          @if (careInstructions().length) {
+            <section>
+              <h2>Cuidados</h2>
+              <ul class="product-care-list">
+                @for (care of careInstructions(); track $index) {
+                  <li class="product-care">
+                    <mat-icon aria-hidden="true">{{ care.icon }}</mat-icon>
+                    <p>{{ care.text }}</p>
+                  </li>
+                }
+              </ul>
+            </section>
+          }
+          @if (otherCharacteristics().length) {
+            <section class="product-characteristics">
+              <h2>Características</h2>
+              <dl>
+                @for (measurement of otherCharacteristics(); track measurement[0]) {
+                  <div><dt>{{ measurement[0] }}</dt><dd>{{ measurement[1] }}</dd></div>
+                }
+              </dl>
+            </section>
+          }
+
+        </div>
+      }
+      @if (recommendations().length) {
+        <section class="recommendations" aria-labelledby="recommendations-title">
+          <h2 id="recommendations-title">Combine com</h2>
+          <app-product-grid [products]="recommendations()" [compact]="true" />
         </section>
-        <section>
-          <h2>Características</h2>
-          <dl>
-            <dt>Categoria</dt>
-            <dd>{{ product.category.name }}</dd>
-            @for (
-              measurement of product.measurements | keyvalue;
-              track measurement.key
-            ) {
-              <dt>{{ measurement.key }}</dt>
-              <dd>{{ measurement.value }}</dd>
-            }
-          </dl>
-        </section>
-        @if (product.care_instructions) {
-          <section>
-            <h2>Cuidados</h2>
-            <p>{{ product.care_instructions }}</p>
-          </section>
-        }
+      }
+      <div class="mobile-purchase" aria-label="Compra rápida">
+        <div class="mobile-product">
+          @if (product.images[0]; as image) {
+            <img [src]="image.url" alt="" width="38" height="38" />
+          }
+          <div><strong>{{ product.name }}</strong><span>{{ product.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span></div>
+        </div>
+        <button class="purchase-button" type="button" (click)="addToCart()" [disabled]="!canAddToCart()">
+          {{ !available() ? 'Produto indisponível' : cart.pending().has(product.id) ? 'Adicionando…' : 'Adicionar ao carrinho' }}
+        </button>
       </div>
-      <section class="benefits" aria-label="Benefícios da loja">
-        <div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 4h13v13H1zM14 9h5l4 5v3h-9"/><circle cx="5" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg><span><strong>Frete Grátis</strong><span>Acima de R$299</span></span></div>
-        <div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a9 9 0 1 1 1 9M3 3v7h7"/></svg><span><strong>Primeira Troca</strong><span>por Nossa Conta</span></span></div>
-        <div><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="12" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4M12 15v3"/></svg><span><strong>Compra 100% Segura</strong><span>Seus dados protegidos</span></span></div>
-      </section>
     }
   }
 </app-catalog-layout>
-
-}

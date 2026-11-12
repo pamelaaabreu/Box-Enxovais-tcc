@@ -1,8 +1,9 @@
 :host { display: block; position: sticky; top: var(--catalog-header-height, 0px); z-index: 20; background: var(--catalog-surface, #faf9f5); padding: 12px 0; margin-bottom: 20px; }
 ol { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
 li { display: inline-flex; gap: 8px; max-width: 100%; font-size: 12px; line-height: 1.6; color: #706e67; }
-span { overflow-wrap: anywhere; }
+span, a { min-width: 0; overflow-wrap: anywhere; }
+[aria-current="page"] { color: #3f4937; font-weight: 600; }
 a { color: #3f4937; font-size: inherit; }
 a:hover { text-decoration: underline; }
 a:focus-visible { outline: 2px solid #667255; outline-offset: 3px; }
-.separator { color: #8b8b80; }
+.separator { flex: 0 0 16px; width: 16px; height: 16px; font-size: 16px; color: #8b8b80; align-self: center; }

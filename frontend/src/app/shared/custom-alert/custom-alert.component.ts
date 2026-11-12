@@ -2,12 +2,12 @@ import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ViewEncapsul
 import { AlertType } from '../../shared/models';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule } from 'lucide-angular';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-custom-alert',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './custom-alert.component.html',
   styleUrls: ['./custom-alert.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -21,13 +21,24 @@ export class CustomAlertComponent implements OnInit, OnDestroy {
   @Input() showClose: boolean = true;
   @Input() showProgress: boolean = true;
   
+  @Input() action?: { label: string; run: () => void };
+  readonly icons: Record<AlertType, string> = {
+    success: 'check', error: 'error_outline', warning: 'warning_amber', info: 'info_outline', loading: 'autorenew',
+  };
+
+  activate(): void {
+    if (this.closing) return;
+    this.action?.run();
+    this.close();
+  }
+
   @Input() recoverySuccess = false;
   @Output() elapsed = new EventEmitter<void>();
 
   @Output() closed = new EventEmitter<void>();
 
   visible: boolean = false;
-  private timeoutId: any;
+  private timeoutId?: ReturnType<typeof setTimeout>;
   private exitTimeoutId?: ReturnType<typeof setTimeout>;
   private closing = false;
 

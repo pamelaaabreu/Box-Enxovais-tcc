@@ -22,7 +22,7 @@
   padding: 20px 14px 20px 18px;
   border: 1px solid #d8d1c4;
   border-left: 4px solid var(--toast-accent);
-  border-radius: 20px;
+  border-radius: 16px;
   background: #fffdf8;
   box-shadow: 0 12px 36px #3f49371f, 0 2px 6px #3f493708;
   font-family: 'Montserrat', sans-serif;
@@ -98,3 +98,17 @@
 .alert-recovery-success .alert-message { color: #3d4836; }
 .alert-recovery-success .alert-progress { background: #e5e9df; }
 .alert-recovery-success .progress-bar { opacity: 1; }
+
+.alert-toast .alert-action {
+  margin-top: 8px;
+  padding: 3px 0;
+  border: 0;
+  background: transparent;
+  color: #3d4836;
+  text-decoration: underline;
+  font: 600 13px/1.5 Montserrat, sans-serif;
+  cursor: pointer;
+}
+.alert-toast .alert-icon mat-icon { width: 20px; height: 20px; font-size: 20px; }
+.alert-toast .alert-close mat-icon { width: 16px; height: 16px; font-size: 16px; }
+.alert-toast button:focus-visible { outline: 2px solid #667255; outline-offset: 2px; }

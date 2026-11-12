@@ -73,6 +73,17 @@ func TestCartPostgres(t *testing.T) {
 	InitRoutesCart(mux, cartHandler)
 	InitRoutesProducts(mux, products, images)
 	InitRoutesPromotions(mux, promotions, products)
+	t.Run("registered categories", func(t *testing.T) {
+		if _, err := conn.Exec("INSERT INTO product_types (id, name) VALUES (81, 'Toalhas'), (82, 'Roupa de banho')"); err != nil {
+			t.Fatal(err)
+		}
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/products/categories", nil))
+		var types []models.ProductType
+		if w.Code != http.StatusOK || json.Unmarshal(w.Body.Bytes(), &types) != nil || len(types) != 2 || types[1] != (models.ProductType{ID: 81, Name: "Toalhas"}) {
+			t.Fatalf("unexpected category response: %d %s", w.Code, w.Body.String())
+		}
+	})
 	testProductPagination(t, conn, mux)
 	call := func(user int, method, path, body string, want int) models.Cart {
 		t.Helper()

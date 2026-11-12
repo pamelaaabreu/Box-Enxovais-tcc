@@ -64,6 +64,15 @@ func (h ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, 200, products[0])
 }
 
+func (h ProductHandler) ListProductTypes(w http.ResponseWriter, r *http.Request) {
+	types, err := h.Service.ListTypes(r.Context())
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, "Erro ao buscar categorias")
+		return
+	}
+	response.JSON(w, http.StatusOK, types)
+}
+
 func (h ProductHandler) ListProducts(w http.ResponseWriter, r *http.Request) {
 	h.writeProductPage(w, r, nil, false)
 }

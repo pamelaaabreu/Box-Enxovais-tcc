@@ -76,6 +76,11 @@ export class TopNavbarComponent implements OnInit {
     this.isAdmin = role?.trim().toLowerCase() === 'admin';
   }
 
+  searchProducts(value: string): void {
+    const term = value.trim();
+    void this.router.navigate(['/categoria', 'todos'], { queryParams: term ? { q: term } : {} });
+  }
+
   toggleMenu(event: MouseEvent): void {
     event.stopPropagation();
     this.isMenuOpen = !this.isMenuOpen;

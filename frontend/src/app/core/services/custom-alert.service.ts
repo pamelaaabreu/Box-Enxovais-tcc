@@ -6,13 +6,11 @@ import {
 } from '@angular/core';
 import { CustomAlertComponent } from '../../shared/custom-alert/custom-alert.component';
 import { AlertType, AlertOptions } from '../../shared/models';
-import { Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class CustomAlertService {
   private alerts: ComponentRef<CustomAlertComponent>[] = [];
-  private subscriptions: Subscription[] = [];
 
   constructor(private appRef: ApplicationRef) {}
 
@@ -30,10 +28,17 @@ export class CustomAlertService {
 
     const mergedOptions = { ...defaultOptions, ...options };
 
+    const existing = this.alerts.find(({ instance }) =>
+      instance.visible && instance.title === title && instance.message === message &&
+      instance.type === type && instance.action?.label === options.action?.label
+    );
+    if (existing) return existing;
+
     const componentRef = createComponent(CustomAlertComponent, {
       environmentInjector: this.appRef.injector,
     });
 
+    componentRef.setInput('action', mergedOptions.action);
     componentRef.setInput('title', title);
     componentRef.setInput('message', message);
     componentRef.setInput('type', type);
@@ -46,7 +51,7 @@ export class CustomAlertService {
       this.removeAlert(componentRef)
     );
 
-    this.subscriptions.push(closedSub);
+    componentRef.onDestroy(() => closedSub.unsubscribe());
 
     // Adicionar ao DOM dentro do container
     this.appRef.attachView(componentRef.hostView);
@@ -57,6 +62,7 @@ export class CustomAlertService {
 
     // Adicionar à lista
     this.alerts.push(componentRef);
+    componentRef.changeDetectorRef.detectChanges();
 
     return componentRef;
   }
@@ -89,7 +95,7 @@ export class CustomAlertService {
   }
 
   error(title: string, message?: string, options?: AlertOptions) {
-    return this.show(title, message, 'error', { duration: 6000, ...options });
+    return this.show(title, message, 'error', { duration: 0, ...options });
   }
 
   warning(title: string, message?: string, options?: AlertOptions) {
@@ -110,7 +116,7 @@ export class CustomAlertService {
   }
 
   hideLoading() {
-    this.alerts.forEach((alert) => {
+    [...this.alerts].forEach((alert) => {
       if (alert.instance.type === 'loading') {
         this.removeAlert(alert);
       }
@@ -162,7 +168,7 @@ export class CustomAlertService {
   }
 
   clearAll() {
-    this.alerts.forEach((alert) => this.removeAlert(alert));
+    [...this.alerts].forEach((alert) => this.removeAlert(alert));
     this.alerts = [];
   }
 }

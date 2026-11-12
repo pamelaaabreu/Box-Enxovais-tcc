@@ -33,6 +33,7 @@ type Page[T any] struct {
 }
 
 type PageQuery struct {
+	Order  string // SQL order chosen by the server, never provided directly by the client
 	Offset int
 	Limit  int
 	Where  string

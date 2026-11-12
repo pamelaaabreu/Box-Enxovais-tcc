@@ -19,6 +19,24 @@ const storeProductColumns = `p.id,p.name,p.description,p.care_instructions,
  p.brand_id,p.created_at,p.updated_at`
 const storeProductSource = ` FROM products p LEFT JOIN product_types t ON t.id=p.product_type_id`
 
+func (repo ProductRepository) ListTypes(ctx context.Context) ([]models.ProductType, error) {
+	rows, err := repo.DB.QueryContext(ctx, "SELECT id, name FROM product_types ORDER BY name, id")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	types := []models.ProductType{}
+	for rows.Next() {
+		var productType models.ProductType
+		if err := rows.Scan(&productType.ID, &productType.Name); err != nil {
+			return nil, err
+		}
+		types = append(types, productType)
+	}
+	return types, rows.Err()
+}
+
 func (repo ProductRepository) Create(ctx context.Context, p models.Product) (int, error) {
 	measurementsJSON, err := json.Marshal(p.Measurements)
 	if err != nil {
@@ -90,7 +108,11 @@ func (repo ProductRepository) Get(ctx context.Context, id int64) ([]models.Produ
 }
 
 func (repo ProductRepository) List(ctx context.Context, page pagination.PageQuery) (pagination.Page[models.Product], error) {
-	return pagination.ReadPage(ctx, repo.DB, "SELECT "+storeProductColumns+",0 AS promotional_price"+storeProductSource+" WHERE p.status='active'", nil, page, "page.id", scanStoreProduct)
+	order := page.Order
+	if order == "" {
+		order = "page.id"
+	}
+	return pagination.ReadPage(ctx, repo.DB, "SELECT "+storeProductColumns+",0 AS promotional_price"+storeProductSource+" WHERE p.status='active'", nil, page, order, scanStoreProduct)
 }
 
 func (repo ProductRepository) ListAdmin(ctx context.Context, page pagination.PageQuery) (pagination.Page[models.Product], error) {

@@ -14,5 +14,6 @@ import { ProductPriceComponent } from '../product-price/product-price.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCardComponent {
+  readonly compact = input(false);
   readonly product = input.required<CatalogProduct>();
 }

@@ -6,6 +6,7 @@ import (
 	"backend/src/repositories"
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 )
 
@@ -25,6 +26,10 @@ func (service ProductService) Create(ctx context.Context, product models.Product
 
 func (service ProductService) Get(ctx context.Context, id int64) ([]models.Product, error) {
 	return service.Store.Get(ctx, id)
+}
+
+func (service ProductService) ListTypes(ctx context.Context) ([]models.ProductType, error) {
+	return service.Store.ListTypes(ctx)
 }
 
 // Filters are mapped to public database fields; internal/sensitive fields are never inferred from requests.
@@ -55,7 +60,26 @@ func (service ProductService) ParsePage(values url.Values, promotional bool) (pa
 		fields["promotional_price"] = pagination.FilterField{Column: "page.promotional_price", Kind: "decimal"}
 		firstParameter = 2
 	}
-	return pagination.ParsePage(values, fields, firstParameter)
+	order := ""
+	if entries, exists := values["sort"]; exists && !promotional {
+		if len(entries) != 1 {
+			return pagination.PageQuery{}, fmt.Errorf("Ordenação inválida")
+		}
+		orders := map[string]string{
+			"price_asc":  "page.price ASC, page.id",
+			"price_desc": "page.price DESC, page.id",
+			"name":       "lower(page.name), page.id",
+			"recent":     "page.created_at DESC NULLS LAST, page.id DESC",
+		}
+		order = orders[entries[0]]
+		if order == "" {
+			return pagination.PageQuery{}, fmt.Errorf("Ordenação inválida")
+		}
+		values.Del("sort")
+	}
+	query, err := pagination.ParsePage(values, fields, firstParameter)
+	query.Order = order
+	return query, err
 }
 
 func (service ProductService) List(ctx context.Context, page pagination.PageQuery) (pagination.Page[models.Product], error) {

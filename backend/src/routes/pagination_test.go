@@ -29,6 +29,11 @@ func testProductPagination(t *testing.T, conn *sql.DB, mux *http.ServeMux) {
 	}{
 		{"/products?limit=1", 200, 2, []int64{1}, true},
 		{"/products?offset=1&limit=1", 200, 2, []int64{3}, false},
+		{"/products?sort=recent&limit=1", 200, 2, []int64{1}, true},
+		{"/products?sort=recent&offset=1&limit=1", 200, 2, []int64{3}, false},
+		{"/products?sort=price_asc&stock__gte=1&price__lte=130&limit=1", 200, 1, []int64{1}, false},
+		{"/products?sort=page.id", 400, 0, nil, false},
+		{"/products?sort=name&sort=recent", 400, 0, nil, false},
 		{"/products?offset=50&limit=1", 200, 2, []int64{}, false},
 		{"/products?stock__gte=1&price__lte=130", 200, 1, []int64{1}, false},
 		{"/products?name__contains=TEST", 200, 1, []int64{1}, false},
