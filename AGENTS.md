@@ -21,3 +21,10 @@ Projeto: e-commerce Angular (frontend), Go + net/http (backend), PostgreSQL. Pre
 - `testador`: proponha/implemente testes mínimos; use skill `testes-sob-demanda`.
 - `infra`: discuta infraestrutura, riscos e opções; use skill `infra-planejamento`; não execute comandos de deploy.
 - Nunca acione todos em cadeia por padrão. Se bastar uma resposta rápida do agente principal, não delegue.
+
+## Diálogos de confirmação
+
+- Use `ConfirmDialogService` e `ConfirmDialogComponent` para novas confirmações. Para formulários especializados, forneça templates em `content` e `actions` e mantenha a lógica no componente da funcionalidade.
+- Para excluir, use `variant: 'danger'` e passe a operação em `execute` para manter o diálogo aberto durante a requisição.
+- Para descartar alterações, use `variant: 'warning'` e `confirmAction: 'secondary'` quando continuar editando for a ação visual principal.
+- Para outra ação perigosa, use `variant: 'danger'`, `disableClose: true` e prossiga apenas quando `afterClosed()` retornar `true`.

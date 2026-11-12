@@ -242,74 +242,72 @@
         <span class="section-icon"
           ><mat-icon aria-hidden="true">location_on</mat-icon></span
         >Meus endereços
+        @if (addressesLoaded() && !editing()) {
+          <span class="address-count">({{ addresses().length }})</span>
+        }
       </h2>
       <div class="section-body">
         @if (addressesLoaded() && !editing()) {
-          @if (!addresses().length) {
-            <p>Você ainda não cadastrou nenhum endereço</p>
-          }
-          @for (item of addresses(); track item.id) {
-            <article class="saved-address">
-              <div class="address-card-heading">
-                <div>
-                  <h3>{{ item.label }}</h3>
-                  @if (item.isDefault) {
-                    <span class="badge">Endereço padrão</span>
+          @if (addresses().length) {
+            <p class="address-list-intro">Usamos esses endereços nas suas compras. O endereço padrão é selecionado automaticamente.</p>
+            <div class="address-list-grid">
+              @for (item of addresses(); track item.id) {
+                <article class="saved-address" [class.is-default]="item.isDefault">
+                  <div class="address-card-heading">
+                    <div class="address-card-identity">
+                      <span class="section-icon">
+                        <mat-icon aria-hidden="true">{{ item.label === 'Casa' ? 'home' : item.label === 'Trabalho' ? 'work_outline' : 'place' }}</mat-icon>
+                      </span>
+                      <div>
+                        <h3>{{ item.label }}</h3>
+                        @if (item.isDefault) {
+                          <span class="badge"><mat-icon aria-hidden="true">check</mat-icon>Endereço padrão</span>
+                        }
+                      </div>
+                    </div>
+                    <div class="address-card-actions">
+                      <button mat-icon-button type="button" [disabled]="busy()"
+                        [attr.aria-label]="'Editar endereço ' + item.label" (click)="editAddress(item)">
+                        <mat-icon aria-hidden="true">edit</mat-icon>
+                      </button>
+                      <button mat-icon-button type="button" class="delete-address" [disabled]="busy()"
+                        [attr.aria-label]="'Excluir endereço ' + item.label" (click)="removeAddress(item)">
+                        <mat-icon aria-hidden="true">delete_outline</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <p>
+                    <strong>{{ item.recipient }}</strong><br />
+                    {{ item.street }}, {{ item.number }}@if (item.complement) { — {{ item.complement }} }<br />
+                    {{ item.neighborhood }} · {{ item.city }} / {{ item.state }}<br />
+                    CEP {{ item.zipCode | mask: "00000-000" }}
+                  </p>
+                  @if (!item.isDefault) {
+                    <button class="make-default" type="button" [disabled]="busy()" (click)="makeDefault(item.id)">
+                      @if (settingDefaultId() === item.id) {
+                        <mat-spinner diameter="16" aria-hidden="true" /> Atualizando…
+                      } @else {
+                        <mat-icon aria-hidden="true">star_outline</mat-icon> Definir como padrão
+                      }
+                    </button>
                   }
-                </div>
-                <div class="actions">
-                  <button
-                    mat-stroked-button
-                    type="button"
-                    [disabled]="busy()"
-                    (click)="editAddress(item)"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    mat-icon-button
-                    class="delete-address"
-                    type="button"
-                    [disabled]="busy()"
-                    [attr.aria-label]="'Excluir endereço ' + item.label"
-                    (click)="removeAddress(deleteDialog, item.id)"
-                  >
-                    <mat-icon aria-hidden="true">delete_outline</mat-icon>
-                  </button>
-                </div>
-              </div>
-              <p>
-                <strong>{{ item.recipient }}</strong
-                ><br />
-                {{ item.street }}, {{ item.number }}
-                @if (item.complement) {
-                  — {{ item.complement }}
-                }
-                <br />
-                {{ item.neighborhood }} · {{ item.city }} / {{ item.state
-                }}<br />
-                CEP {{ item.zipCode | mask: "00000-000" }}
-              </p>
-              @if (!item.isDefault) {
-                <button
-                  mat-stroked-button
-                  type="button"
-                  [disabled]="busy()"
-                  (click)="makeDefault(item.id)"
-                >
-                  Definir como padrão
-                </button>
+                </article>
               }
-            </article>
+              <button class="new-address" type="button" [disabled]="busy()" (click)="editAddress()">
+                <span class="section-icon"><mat-icon aria-hidden="true">add</mat-icon></span>
+                Novo endereço
+              </button>
+            </div>
+          } @else {
+            <div class="address-empty">
+              <span class="section-icon"><mat-icon aria-hidden="true">location_on</mat-icon></span>
+              <h3>Você ainda não tem endereços cadastrados</h3>
+              <p>Cadastre um endereço para agilizar suas compras. Você poderá escolher qual será o padrão.</p>
+              <button mat-flat-button type="button" [disabled]="busy()" (click)="editAddress()">
+                <mat-icon aria-hidden="true">add</mat-icon>Adicionar endereço
+              </button>
+            </div>
           }
-          <button
-            mat-flat-button
-            type="button"
-            [disabled]="busy()"
-            (click)="editAddress()"
-          >
-            <mat-icon aria-hidden="true">add</mat-icon>Adicionar endereço
-          </button>
         }
         @if (editing()) {
           <form
@@ -412,6 +410,9 @@
                       lockedPostalFields().includes(field.key)
                     "
                   >
+                    @if (field.key === "recipient") {
+                      <mat-icon matPrefix aria-hidden="true">person_outline</mat-icon>
+                    }
                     @if (field.key === "zipCode") {
                       <mat-icon matIconPrefix aria-hidden="true"
                         >location_on</mat-icon
@@ -474,7 +475,7 @@
                   </mat-form-field>
                 </div>
                 @if (
-                  field.key === "zipCode" &&
+                  field.key === "street" &&
                   (lockedPostalFields().length || manualAddress())
                 ) {
                   <div class="postal-notice" [class.manual]="manualAddress()">
@@ -501,8 +502,13 @@
               }
             </div>
             <label class="address-default" [attr.inert]="busy() ? '' : null">
-              <input type="checkbox" [formControl]="defaultAddress" />
-              <span>Definir como endereço padrão</span>
+              <span class="address-default-copy">
+                <strong>Endereço padrão</strong>
+                <span id="address-default-description">Usado automaticamente nas suas compras.</span>
+              </span>
+              <input type="checkbox" role="switch" aria-label="Endereço padrão"
+                aria-describedby="address-default-description" [formControl]="defaultAddress" />
+              <span class="address-switch-track" aria-hidden="true"></span>
             </label>
             @if (defaultAddress.disabled && defaultAddress.value) {
               <p class="address-default-hint">
@@ -561,40 +567,3 @@
     </section>
   </main>
 </app-catalog-layout>
-<ng-template #deleteDialog>
-  <h2 mat-dialog-title>Excluir endereço?</h2>
-  <mat-dialog-content
-    >O endereço será removido da sua conta.</mat-dialog-content
-  >
-  <mat-dialog-actions>
-    <button mat-stroked-button [mat-dialog-close]="false">
-      Manter endereço
-    </button>
-    <button mat-flat-button [mat-dialog-close]="true">Excluir endereço</button>
-  </mat-dialog-actions>
-</ng-template>
-
-<ng-template #postalConfirm>
-  <h2 mat-dialog-title>Aplicar os dados do novo CEP?</h2>
-  <mat-dialog-content
-    >Há campos editados manualmente. Você pode manter suas alterações ou aplicar
-    os dados retornados pelo novo CEP.</mat-dialog-content
-  >
-  <mat-dialog-actions>
-    <button mat-stroked-button [mat-dialog-close]="false">
-      Manter alterações
-    </button>
-    <button mat-flat-button [mat-dialog-close]="true">
-      Aplicar dados do CEP
-    </button>
-  </mat-dialog-actions>
-</ng-template>
-
-<ng-template #discardDialog>
-  <h2 mat-dialog-title>Descartar alterações?</h2>
-  <mat-dialog-content>As alterações que você ainda não salvou serão perdidas.</mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button mat-button [mat-dialog-close]="false">Continuar editando</button>
-    <button mat-button [mat-dialog-close]="true">Descartar alterações</button>
-  </mat-dialog-actions>
-</ng-template>

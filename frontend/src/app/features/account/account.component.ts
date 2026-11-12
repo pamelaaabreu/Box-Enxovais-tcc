@@ -1,7 +1,7 @@
-import { Component, DestroyRef, ElementRef, TemplateRef, inject, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
@@ -17,7 +17,7 @@ import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/cat
 
 @Component({
   standalone: true,
-  imports: [CatalogLayoutComponent, RouterLink, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatProgressSpinnerModule, NgxMaskDirective, NgxMaskPipe],
+  imports: [CatalogLayoutComponent, RouterLink, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatProgressSpinnerModule, NgxMaskDirective, NgxMaskPipe],
   providers: [provideNgxMask({ validation: false })],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss',
@@ -27,7 +27,7 @@ export class AccountComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(ConfirmDialogService);
   private readonly fb = inject(FormBuilder).nonNullable;
   readonly addresses = signal<SavedAddress[]>([]);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -56,7 +56,6 @@ export class AccountComponent {
       .filter(Boolean).map(name => name![0]).join('').toLocaleUpperCase('pt-BR');
   }
 
-  private readonly discardDialog = viewChild.required<TemplateRef<unknown>>('discardDialog');
   private savedAddressDraft = '';
 
   selectTab(id: string): void {
@@ -91,9 +90,17 @@ export class AccountComponent {
     this.host.nativeElement.querySelector<HTMLButtonElement>('#tab-' + this.tabs[target].id)?.focus();
   }
 
-  private confirmDiscard(discard: () => void): void {
-    this.dialog.open(this.discardDialog(), { autoFocus: 'first-tabbable' })
-      .afterClosed().pipe(takeUntilDestroyed(this.destroyRef))
+  private confirmDiscard(discard: () => void, address = false): void {
+    this.dialog.open({
+      title: address ? 'Sair sem salvar?' : 'Descartar alterações?',
+      message: address
+        ? 'Você alterou este endereço e ainda não salvou. Se sair agora, as alterações serão perdidas.'
+        : 'Você alterou seus dados e ainda não salvou. Se sair agora, as alterações serão perdidas.',
+      variant: 'warning',
+      primary: 'Continuar editando',
+      secondary: address ? 'Sair sem salvar' : 'Descartar alterações',
+      confirmAction: 'secondary',
+    }).afterClosed().pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(confirmed => { if (confirmed === true) discard(); });
   }
 
@@ -122,7 +129,6 @@ export class AccountComponent {
   readonly manualAddress = signal(false);
   readonly lockedPostalFields = signal<readonly string[]>([]);
   private postalValues: Partial<Record<(typeof this.postalFields)[number], string>> = {};
-  private readonly postalConfirm = viewChild<TemplateRef<unknown>>('postalConfirm');
   private readonly pendingPostalEdits = new Set<string>();
   private customLabel = '';
   get isEditingAddress(): boolean { return this.addressId !== null; }
@@ -311,7 +317,7 @@ export class AccountComponent {
   cancelAddressEdit(): void {
     if (this.busy()) return;
     if (this.savedAddressDraft !== this.addressDraft()) {
-      this.confirmDiscard(() => this.closeAddressEditor());
+      this.confirmDiscard(() => this.closeAddressEditor(), true);
     } else {
       this.closeAddressEditor();
     }
@@ -354,10 +360,15 @@ export class AccountComponent {
         const found = Object.keys(this.postalValues).length > 0;
         this.zipFound.set(found);
         this.zipStatus.set(found ? 'CEP encontrado.' : 'Preencha o endereço manualmente.');
-        const template = this.postalConfirm();
         const conflict = edited.some(key => !!this.postalValues[key] && this.postalValues[key] !== this.address.controls[key].value);
-        if (!conflict || !template) return of(false);
-        const dialog = this.dialog.open(template, { autoFocus: 'first-tabbable' });
+        if (!conflict) return of(false);
+        const dialog = this.dialog.open({
+          title: 'Aplicar os dados do novo CEP?',
+          message: 'Há campos editados manualmente. Você pode manter suas alterações ou aplicar os dados retornados pelo novo CEP.',
+          variant: 'info',
+          primary: 'Aplicar dados do CEP',
+          secondary: 'Manter alterações',
+        });
         return dialog.afterClosed().pipe(finalize(() => dialog.close()));
       }),
       tap(overwrite => {
@@ -410,15 +421,45 @@ export class AccountComponent {
     });
   }
 
-  removeAddress(template: TemplateRef<unknown>, id: number): void {
-    this.dialog.open(template, { autoFocus: 'first-tabbable' }).afterClosed().pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(confirm => {
-        if (confirm === true) this.run(this.account.deleteAddress(id), () => this.loadAddresses());
-      });
+  readonly settingDefaultId = signal<number | null>(null);
+  removeAddress(address: SavedAddress): void {
+    if (this.busy()) return;
+    const street = address.street + ', ' + address.number;
+    const details = [
+      address.complement ? street + ' — ' + address.complement : street,
+      address.city + ' / ' + address.state,
+    ];
+    if (address.isDefault) {
+      details.push('Este é seu endereço padrão. Se houver outros endereços, o mais antigo será definido como padrão.');
+    }
+    this.dialog.open({
+      title: `Excluir o endereço "${address.label}"?`,
+      message: 'Tem certeza de que deseja excluir este endereço? Essa ação não poderá ser desfeita.',
+      details,
+      variant: 'danger',
+      primary: 'Excluir endereço',
+      secondary: 'Manter endereço',
+      disableClose: true,
+      execute: () => this.account.deleteAddress(address.id),
+    }).afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(confirmed => {
+      if (confirmed !== true) return;
+      this.addresses.update(addresses => addresses.filter(item => item.id !== address.id));
+      this.loadAddresses();
+      this.alerts.success('Endereço excluído com sucesso!');
+    });
   }
 
   makeDefault(id: number): void {
-    this.run(this.account.setDefaultAddress(id), () => this.loadAddresses());
+    if (this.busy()) return;
+    this.settingDefaultId.set(id);
+    this.run(this.account.setDefaultAddress(id).pipe(
+      switchMap(() => this.account.addresses().pipe(catchError(() => {
+        this.notice.set('Endereço padrão atualizado. Não foi possível recarregar a lista.');
+        return of(this.addresses().map(address => ({ ...address, isDefault: address.id === id })));
+      }))),
+      tap(addresses => this.addresses.set(addresses)),
+      finalize(() => this.settingDefaultId.set(null)),
+    ), () => this.alerts.success('Endereço padrão atualizado!'), true);
   }
 
   private loadAddresses(): void {

@@ -1,3 +1,4 @@
+import { ConfirmDialogService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
 import {
   CurrencyPipe,
   DatePipe,
@@ -8,7 +9,7 @@ import localePt from '@angular/common/locales/pt';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, Injector, TemplateRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CustomAlertService } from '../../core/services/custom-alert.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -98,7 +99,7 @@ interface OrderPage {
 export class OrderHistoryComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly auth = inject(AuthService);
-  private readonly dialog = inject(MatDialog);
+  private readonly dialog = inject(ConfirmDialogService);
   private readonly alerts = inject(CustomAlertService);
   private cancellationDialog?: MatDialogRef<unknown, boolean>;
   readonly supportPhone = 'tel:08006567846';
@@ -332,19 +333,21 @@ export class OrderHistoryComponent {
     this.reload.next();
   }
 
-  confirmCancellation(template: TemplateRef<unknown>, order: Details): void {
+  confirmCancellation(template: TemplateRef<unknown>, actions: TemplateRef<unknown>, order: Details): void {
     if (!order.canCancel || order.status === 'cancelled' || this.cancellationDialog) return;
     this.cancellationReason.reset();
     this.cancellationDetails.reset();
     this.cancelError.set('');
-    const dialog = this.dialog.open(template, {
-      ariaLabel: 'Cancelar pedido #' + order.id + '?',
-      width: '530px',
-      maxWidth: 'calc(100% - 32px)',
-      autoFocus: 'first-tabbable',
+    const dialog = this.dialog.open({
+      title: 'Cancelar pedido #' + order.id + '?',
+      message: 'Tem certeza de que deseja cancelar esta compra? Esta ação não poderá ser desfeita.',
+      variant: 'danger',
+      icon: 'warning_amber',
+      primary: 'Confirmar cancelamento',
+      secondary: 'Manter pedido',
       disableClose: true,
-      panelClass: 'order-cancellation-dialog',
-      backdropClass: 'order-cancellation-backdrop',
+      content: template,
+      actions,
     });
     this.cancellationDialog = dialog;
     dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {

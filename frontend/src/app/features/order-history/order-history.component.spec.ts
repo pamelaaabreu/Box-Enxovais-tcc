@@ -193,7 +193,7 @@ describe('OrderHistoryComponent', () => {
       page.querySelector<HTMLButtonElement>('.cancel-order')!.click();
       fixture.detectChanges();
       await fixture.whenStable();
-      expect(document.querySelector('[role="dialog"]')?.getAttribute('aria-label')).toContain('#9');
+      expect(document.querySelector('.box-confirm-title')?.textContent).toContain('#9');
     };
     const close = async (selector: string) => {
       document.querySelector<HTMLButtonElement>(selector)!.click();
@@ -202,10 +202,10 @@ describe('OrderHistoryComponent', () => {
       fixture.detectChanges();
     };
     await open();
-    document.querySelector<HTMLElement>('.order-cancellation-backdrop')!.click();
+    document.querySelector<HTMLElement>('.box-confirm-backdrop')!.click();
     document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true }));
     await fixture.whenStable();
-    expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+    expect(document.querySelector('[role="alertdialog"]')).not.toBeNull();
     await close('.cancel-dialog-keep');
     http.expectNone(endpoint);
     await open();
@@ -234,7 +234,7 @@ describe('OrderHistoryComponent', () => {
     expect(page.textContent).toContain('Toalha');
     first.flush({ message: 'Estoque indisponível para reposição' }, { status: 409, statusText: 'Conflict' });
     fixture.detectChanges();
-    expect(document.querySelector('[role="dialog"] [role="alert"]')?.textContent).toContain('Estoque indisponível');
+    expect(document.querySelector('[role="alertdialog"] [role="alert"]')?.textContent).toContain('Estoque indisponível');
     expect(page.textContent).toContain('Cliente teste');
     await close('.cancel-dialog-confirm');
     const dialogClosed = firstValueFrom(TestBed.inject(MatDialog).afterAllClosed);

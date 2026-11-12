@@ -443,6 +443,28 @@ func TestAccountAddressesAndCheckoutPostgres(t *testing.T) {
 	if err != nil || len(addresses) != 1 || !addresses[0].IsDefault {
 		t.Fatalf("default promotion: %v", err)
 	}
+
+	secondary, err := account.SaveAddress(ctx, 1, 0, address)
+	if err != nil || secondary.IsDefault {
+		t.Fatalf("create secondary address: %v", err)
+	}
+	if err := account.DeleteAddress(ctx, 2, secondary.ID); !errors.Is(err, sql.ErrNoRows) {
+		t.Fatalf("delete ownership: %v", err)
+	}
+	if err := account.DeleteAddress(ctx, 1, secondary.ID); err != nil {
+		t.Fatal(err)
+	}
+	reloadedAddresses, err := account.Addresses(ctx, 1)
+	if err != nil || len(reloadedAddresses) != 1 || reloadedAddresses[0].ID != addresses[0].ID || !reloadedAddresses[0].IsDefault {
+		t.Fatalf("deleting secondary address changed the default: %v", err)
+	}
+	if err := account.DeleteAddress(ctx, 1, addresses[0].ID); err != nil {
+		t.Fatal(err)
+	}
+	reloadedAddresses, err = account.Addresses(ctx, 1)
+	if err != nil || len(reloadedAddresses) != 0 {
+		t.Fatalf("expected no addresses after deleting the last one: %v", err)
+	}
 }
 
 func TestAccountProfilePatchPostgres(t *testing.T) {

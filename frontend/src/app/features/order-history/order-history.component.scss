@@ -550,9 +550,7 @@ small {
   vertical-align: middle;
 }
 
-.cancel-order,
-.cancel-dialog-keep,
-.cancel-dialog-confirm {
+.cancel-order {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -574,16 +572,6 @@ small {
   }
 }
 
-.cancel-dialog-keep {
-  color: #3d4836;
-}
-.cancel-dialog-confirm {
-  background: #774638;
-  color: #fffdf8;
-}
-mat-dialog-actions {
-  gap: 8px;
-}
 .cancel-error {
   color: #774638;
 }
@@ -1063,24 +1051,6 @@ mat-dialog-actions {
 .detail-help .cancel-order { color: #3d4836; background: #fff; font-weight: 600; }
 .detail-help .cancelled-badge { justify-self: start; margin-inline-start: 0; }
 
-mat-dialog-actions {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content;
-  gap: 8px;
-  padding: 0;
-}
-.cancel-dialog-keep, .cancel-dialog-confirm {
-  justify-content: center;
-  letter-spacing: normal;
-  text-align: center;
-  border-radius: 999px;
-  font-size: .875rem;
-  font-weight: 600;
-}
-@media (max-width: 560px) {
-  mat-dialog-actions { grid-template-columns: minmax(0, 1fr); }
-}
-
 .order-history-surface:not(.order-history-list) .history {
   max-width: 1200px;
 }
@@ -1192,10 +1162,6 @@ mat-dialog-actions {
 
     .detail-street, > div:nth-child(n + 4) { grid-column: span 2; }
   }
-}
-
-@media (min-width: 561px) {
-  .cancel-dialog-keep, .cancel-dialog-confirm { white-space: nowrap; }
 }
 
 .detail-title {

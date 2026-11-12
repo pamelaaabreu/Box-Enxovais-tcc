@@ -270,7 +270,7 @@
                     }
                   </dl>
                 } @else if (order.canCancel) {
-                  <button type="button" class="cancel-order" (click)="confirmCancellation(cancelDialog, order)">
+                  <button type="button" class="cancel-order" (click)="confirmCancellation(cancelDialog, cancelActions, order)">
                     Cancelar compra
                   </button>
                 } @else {
@@ -278,9 +278,6 @@
                 }
               </div>
               <ng-template #cancelDialog>
-                <h2 mat-dialog-title>Cancelar pedido #{{ order.id }}?</h2>
-                <mat-dialog-content>
-                  <p>Tem certeza de que deseja cancelar esta compra? Esta ação não poderá ser desfeita.</p>
                   <div class="cancellation-fields" [attr.inert]="cancelling() ? '' : null">
                     <mat-form-field appearance="outline" floatLabel="always">
                       <mat-label>Motivo do cancelamento</mat-label>
@@ -305,12 +302,12 @@
                   } @else if (!details()?.canCancel && !cancelling()) {
                     <p class="cancel-error" role="alert">Este pedido não está disponível para cancelamento.</p>
                   }
-                </mat-dialog-content>
-                <mat-dialog-actions>
-                  <button type="button" class="cancel-dialog-keep" [disabled]="cancelling()" mat-dialog-close>
+              </ng-template>
+              <ng-template #cancelActions>
+                  <button type="button" class="cancel-dialog-keep box-confirm-secondary" [disabled]="cancelling()" mat-dialog-close>
                     Manter pedido
                   </button>
-                  <button type="button" class="cancel-dialog-confirm"
+                  <button type="button" class="cancel-dialog-confirm box-confirm-primary"
                     [disabled]="cancelling() || !details()?.canCancel || !canConfirmCancellation" (click)="cancelPurchase()">
                     @if (cancelling()) {
                       <mat-spinner diameter="18" aria-hidden="true" />
@@ -319,7 +316,6 @@
                       Confirmar cancelamento
                     }
                   </button>
-                </mat-dialog-actions>
               </ng-template>
             </section>
             </div>
