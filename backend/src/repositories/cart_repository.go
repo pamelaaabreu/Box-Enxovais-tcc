@@ -31,7 +31,7 @@ type CartRepository struct{ DB *sql.DB }
 
 // Every operation locks the user's cart, serializing adds/updates even across
 // server instances. Products are never reserved by merely placing them in a cart.
-func (repo CartRepository) Apply(ctx context.Context, userID int, operation string, id, quantity int64) (models.Cart, error) {
+func (repo CartRepository) Apply(ctx context.Context, userID int, operation string, id, quantity int64, variants ...int64) (models.Cart, error) {
 	empty := models.Cart{Items: []models.CartItem{}}
 	tx, err := repo.DB.BeginTx(ctx, nil)
 	if err != nil {
@@ -49,7 +49,11 @@ func (repo CartRepository) Apply(ctx context.Context, userID int, operation stri
 	}
 	switch operation {
 	case "add", "update":
-		err = writeCartItem(ctx, tx, cartID, operation, id, quantity)
+		var variantID int64
+		if len(variants) > 0 {
+			variantID = variants[0]
+		}
+		err = writeCartItem(ctx, tx, cartID, operation, id, quantity, variantID)
 	case "reorder":
 		err = reorderItems(ctx, tx, userID, cartID, id)
 	case "remove":
@@ -78,8 +82,8 @@ func (repo CartRepository) Apply(ctx context.Context, userID int, operation stri
 			return empty, err
 		}
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT i.id,p.id,p.name,COALESCE((SELECT image_path FROM product_images WHERE product_id=p.id ORDER BY is_primary DESC NULLS LAST,id LIMIT 1),''),i.quantity,p.quantity,p.status,(LEAST(p.price,COALESCE((SELECT MIN(pp.promotional_price) FROM promotion_products pp JOIN promotions pr ON pr.id=pp.promotion_id WHERE pp.product_id=p.id AND pr.status='active' AND pr.start_date<=NOW() AND pr.end_date>=NOW() AND pp.promotional_price>=0),p.price))*100)::bigint
- FROM cart_items i JOIN products p ON p.id=i.product_id WHERE i.cart_id=$1 ORDER BY i.id`, cartID)
+	rows, err := tx.QueryContext(ctx, `SELECT i.id,p.id,COALESCE(i.variant_id,0),p.name || COALESCE(' — ' || v.size,''),COALESCE((SELECT image_path FROM product_images WHERE product_id=p.id AND (variant_id=i.variant_id OR variant_id IS NULL) ORDER BY variant_id IS NULL,is_primary DESC NULLS LAST,id LIMIT 1),''),i.quantity,COALESCE(v.quantity,p.quantity),p.status,(COALESCE(v.price,LEAST(p.price,COALESCE((SELECT MIN(pp.promotional_price) FROM promotion_products pp JOIN promotions pr ON pr.id=pp.promotion_id WHERE pp.product_id=p.id AND pr.status='active' AND pr.start_date<=NOW() AND pr.end_date>=NOW() AND pp.promotional_price>=0),p.price)))*100)::bigint
+ FROM cart_items i JOIN products p ON p.id=i.product_id LEFT JOIN product_variants v ON v.id=i.variant_id WHERE i.cart_id=$1 ORDER BY i.id`, cartID)
 	if err != nil {
 		return empty, err
 	}
@@ -87,7 +91,7 @@ func (repo CartRepository) Apply(ctx context.Context, userID int, operation stri
 	for rows.Next() {
 		var item models.CartItem
 		var status string
-		if err = rows.Scan(&item.ID, &item.ProductID, &item.Name, &item.Image, &item.Quantity, &item.Stock, &status, &item.UnitPrice); err != nil {
+		if err = rows.Scan(&item.ID, &item.ProductID, &item.VariantID, &item.Name, &item.Image, &item.Quantity, &item.Stock, &status, &item.UnitPrice); err != nil {
 			rows.Close()
 			return empty, err
 		}
@@ -116,14 +120,13 @@ func (repo CartRepository) Apply(ctx context.Context, userID int, operation stri
 	return cart, nil
 }
 
-func writeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, operation string, id, quantity int64) error {
-	var err error
+func writeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, operation string, id, quantity, variantID int64) error {
 	if quantity < 1 || quantity > 1000000 {
 		return ErrCartQuantity
 	}
 	productID := id
 	if operation == "update" {
-		err = tx.QueryRowContext(ctx, `SELECT product_id FROM cart_items WHERE id=$1 AND cart_id=$2`, id, cartID).Scan(&productID)
+		err := tx.QueryRowContext(ctx, "SELECT product_id, COALESCE(variant_id,0) FROM cart_items WHERE id=$1 AND cart_id=$2", id, cartID).Scan(&productID, &variantID)
 		if errors.Is(err, sql.ErrNoRows) {
 			return ErrCartItemNotFound
 		}
@@ -133,20 +136,30 @@ func writeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, operation stri
 	}
 	var stock int64
 	var status string
-	var price int64
-	err = tx.QueryRowContext(ctx, `SELECT quantity,status,(price*100)::bigint FROM products WHERE id=$1 FOR SHARE`, productID).Scan(&stock, &status, &price)
+	var hasVariants bool
+	err := tx.QueryRowContext(ctx, `SELECT quantity,status,EXISTS(SELECT 1 FROM product_variants WHERE product_id=$1)
+	FROM products WHERE id=$1 FOR SHARE`, productID).Scan(&stock, &status, &hasVariants)
 	if errors.Is(err, sql.ErrNoRows) {
 		return ErrCartProduct
 	}
 	if err != nil {
 		return err
 	}
-	if status != "active" || price < 0 {
+	if status != "active" || (operation == "add" && variantID == 0 && hasVariants) {
 		return ErrCartProduct
+	}
+	if variantID > 0 {
+		err = tx.QueryRowContext(ctx, "SELECT quantity FROM product_variants WHERE id=$1 AND product_id=$2 FOR SHARE", variantID, productID).Scan(&stock)
+		if errors.Is(err, sql.ErrNoRows) {
+			return ErrCartProduct
+		}
+		if err != nil {
+			return err
+		}
 	}
 	if operation == "add" {
 		var existing int64
-		err = tx.QueryRowContext(ctx, `SELECT quantity FROM cart_items WHERE cart_id=$1 AND product_id=$2`, cartID, productID).Scan(&existing)
+		err = tx.QueryRowContext(ctx, "SELECT quantity FROM cart_items WHERE cart_id=$1 AND product_id=$2 AND COALESCE(variant_id,0)=$3", cartID, productID, variantID).Scan(&existing)
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			return err
 		}
@@ -158,7 +171,7 @@ func writeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, operation stri
 	if quantity > 1000000 {
 		return ErrCartQuantity
 	}
-	_, err = tx.ExecContext(ctx, `INSERT INTO cart_items(cart_id,product_id,quantity) VALUES($1,$2,$3)
-   ON CONFLICT(cart_id,product_id) DO UPDATE SET quantity=EXCLUDED.quantity,updated_at=NOW()`, cartID, productID, quantity)
+	_, err = tx.ExecContext(ctx, `INSERT INTO cart_items(cart_id,product_id,variant_id,quantity) VALUES($1,$2,NULLIF($3,0),$4)
+	ON CONFLICT(cart_id,product_id,COALESCE(variant_id,0)) DO UPDATE SET quantity=EXCLUDED.quantity,updated_at=NOW()`, cartID, productID, variantID, quantity)
 	return err
 }

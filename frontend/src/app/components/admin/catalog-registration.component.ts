@@ -57,25 +57,7 @@ interface Registration {
       }
     </section>
   `,
-  styles: `
-    .registrations { max-width: 1080px; margin: auto; display: grid; gap: 16px; }
-    .in-dialog { padding: 20px; max-height: 85dvh; overflow: auto; }
-    header, li, .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
-    header, li { justify-content: space-between; }
-    h2, p { margin: 0; }
-    h2 { font-size: 26px; font-weight: 600; }
-    label { display: grid; gap: 6px; max-width: 420px; font-size: 14px; font-weight: 500; }
-    input { width: 100%; min-height: 46px; padding: 8px 12px; border: 1px solid #d8dccf; border-radius: 12px; background: #fffdf8; color: inherit; font: inherit; }
-    input:focus-visible { outline: 2px solid #667255; outline-offset: 1px; }
-    ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-    li, .editor, .empty { background: #fffdf8; padding: 14px; border-radius: 14px; border: 1px solid #dde1d5; }
-    li > div { min-width: 0; overflow-wrap: anywhere; }
-    small { display: block; color: #56604e; }
-    .editor, .empty { display: grid; justify-items: start; gap: 10px; }
-    .editor label { width: 100%; }
-    [role=alert] { color: #a2402f; }
-    .primary { --mdc-filled-button-container-color: #3d4836; --mdc-filled-button-label-text-color: white; }
-  `,
+  styleUrl: './catalog-registration.component.css',
 })
 export class CatalogRegistrationComponent {
   private readonly http = inject(HttpClient);

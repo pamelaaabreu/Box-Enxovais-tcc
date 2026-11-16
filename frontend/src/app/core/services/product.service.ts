@@ -25,8 +25,8 @@ export class ProductService {
     return this.http.get<{ id: number; name: string }[]>(this.apiUrl + "/categories");
   }
 
-  getProducts(): Observable<Product[]> {
-    return this.pagination.getAll<Product>(this.apiUrl);
+  getProducts(filters?: PageOptions['filters']): Observable<Product[]> {
+    return this.pagination.getAll<Product>(this.apiUrl, filters);
   }
 
   getProductsPage(options: PageOptions = {}): Observable<Page<Product>> {

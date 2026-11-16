@@ -1,0 +1,58 @@
+<section class="registrations">
+  <header>
+    <h2>Faixas de CEP</h2>
+    <button mat-flat-button class="primary" type="button" [disabled]="loading() || failed() || saving()" (click)="start()">Nova faixa</button>
+  </header>
+  @if (editing()) {
+    <form class="editor" [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <fieldset class="shipping-fields" [disabled]="saving()">
+        <legend>{{ form.controls.name.value ? 'Dados da faixa' : 'Identificação e cobertura' }}</legend>
+        <label>Nome da região <input formControlName="name" required maxlength="100" /></label>
+        <label>CEP inicial <input formControlName="startCep" required inputmode="numeric" mask="00000-000" placeholder="00000-000" /></label>
+        <label>CEP final <input formControlName="endCep" required inputmode="numeric" mask="00000-000" placeholder="00000-000" /></label>
+        <label>Valor do frete (R$) <input type="number" formControlName="price" required min="0" step="0.01" /></label>
+        <label>Prazo mínimo (dias úteis) <input type="number" formControlName="minDays" required min="0" step="1" /></label>
+        <label>Prazo máximo (dias úteis) <input type="number" formControlName="maxDays" required min="0" step="1" /></label>
+        <label class="shipping-check"><input type="checkbox" formControlName="active" /> Faixa ativa</label>
+      </fieldset>
+      @if (error()) { <p role="alert">{{ error() }}</p> }
+      <div class="actions">
+        <button mat-flat-button class="primary" type="submit" [disabled]="saving() || loading()">{{ saving() ? 'Salvando…' : 'Salvar faixa' }}</button>
+        <button mat-stroked-button type="button" [disabled]="saving()" (click)="editing.set(false); error.set('')">Cancelar</button>
+      </div>
+    </form>
+  } @else if (error()) { <p role="alert">{{ error() }}</p> }
+  <div class="actions">
+    <label>Buscar por nome ou CEP <input type="search" [value]="query()" (input)="query.set($any($event.target).value)" /></label>
+    <label>Status
+      <select [value]="status()" (change)="status.set($any($event.target).value)">
+        <option value="all">Todos</option><option value="active">Ativas</option><option value="inactive">Inativas</option>
+      </select>
+    </label>
+  </div>
+  @if (loading()) {
+    <p role="status">Carregando faixas…</p>
+  } @else if (failed()) {
+    <div role="alert"><p>Não foi possível carregar as faixas.</p><button mat-stroked-button type="button" (click)="load()">Tentar novamente</button></div>
+  } @else if (filtered().length) {
+    <ul>
+      @for (item of filtered(); track item.id) {
+        <li>
+          <div>
+            <strong>{{ item.name }}</strong>
+            <small>{{ formatCep(item.startCep) }} a {{ formatCep(item.endCep) }} · {{ item.active ? 'Ativa' : 'Inativa' }}</small>
+            <small>{{ item.priceCents / 100 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }} · {{ item.minDays }}–{{ item.maxDays }} dias úteis</small>
+          </div>
+          <div class="actions">
+            <button mat-stroked-button type="button" [disabled]="saving() || editing()" (click)="start(item)">Editar</button>
+            <button mat-stroked-button type="button" [disabled]="saving() || editing()" (click)="toggle(item)">{{ item.active ? 'Desativar' : 'Ativar' }}</button>
+            <button mat-stroked-button type="button" [disabled]="saving() || editing()" (click)="remove(item)">Excluir</button>
+          </div>
+        </li>
+      }
+    </ul>
+  } @else {
+    <div class="empty"><p>{{ items().length ? 'Nenhuma faixa encontrada para os filtros.' : 'Nenhuma faixa de CEP cadastrada.' }}</p></div>
+  }
+</section>
+

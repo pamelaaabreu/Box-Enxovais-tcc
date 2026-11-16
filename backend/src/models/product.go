@@ -7,7 +7,18 @@ type ProductType struct {
 	Name string `json:"name"`
 }
 
+type ProductVariant struct {
+	ID            int64    `json:"id"`
+	Size          string   `json:"size"`
+	Price         float64  `json:"price"`
+	Stock         int      `json:"stock"`
+	Dimensions    string   `json:"dimensions,omitempty"`
+	ImagePaths    []string `json:"image_paths,omitempty"`
+	IncludedItems []string `json:"included_items,omitempty"`
+	Simulated     bool     `json:"simulated,omitempty"`
+}
 type Product struct {
+	Variants         []ProductVariant  `json:"variants,omitempty"`
 	Stock            int               `json:"stock"`
 	CategoryName     string            `json:"category_name,omitempty"`
 	ID               int64             `json:"id"`

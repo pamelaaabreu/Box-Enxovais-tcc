@@ -1,3 +1,4 @@
+import { provideNgxMask } from 'ngx-mask';
 import { CustomAlertService } from '../../../../core/services/custom-alert.service';
 import { Component } from '@angular/core';
 import { provideRouter } from '@angular/router';
@@ -54,7 +55,7 @@ describe('Product stock experience',()=>{
  let product: CatalogProduct;
  beforeEach(()=>{
   product={id:42,name:'Produto',stock:10,quantity:10,status:'active',price:129.9,images:[],variants:[],category:{id:1,name:'Cama',slug:'cama'},measurements:{}} as unknown as CatalogProduct;
-  TestBed.configureTestingModule({providers:[provideRouter([]),provideHttpClient(),provideHttpClientTesting(),
+  TestBed.configureTestingModule({providers:[provideRouter([]),provideHttpClient(),provideHttpClientTesting(),provideNgxMask(),
    {provide:AuthService,useValue:{getToken:()=> 'test',userChanged:new Subject<void>()}},
    {provide:CatalogService,useValue:{getProductBySlug:()=>of(product),getRecommendations:()=>of([])}},
   ]});
@@ -144,7 +145,7 @@ describe('Product stock experience',()=>{
   product.care_instructions = 'Ciclo delicado até 40°C;\nNão usar alvejante\nSecar à sombra\nConsultar etiqueta.';
   const fixture = render();
   const items: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('.product-care');
-  expect(Array.from(items, item => item.querySelector('mat-icon')?.textContent)).toEqual(['water_drop', 'block', 'light_mode', 'info_outline']);
+  expect(Array.from(items, item => item.querySelector('svg')?.getAttribute('data-symbol'))).toEqual(['wash', 'bleach', 'dry', 'info']);
   expect(items[0].querySelector('p')?.textContent).toBe('Ciclo delicado até 40°C');
   expect(items[3].querySelector('p')?.textContent).toBe('Consultar etiqueta.');
  });
@@ -161,4 +162,58 @@ describe('Product stock experience',()=>{
   expect(fixture.componentInstance.cart.totalItems()).toBe(0);
   expect(fixture.componentInstance.stock()).toBe(10);
  }));
+
+ it('renders the stored contents and the two Cama breadcrumb links', () => {
+  product.category = { id: 81, name: 'Cama / Jogos de cama', slug: 'cama-jogos-de-cama--81' };
+  product.measurements = { 'Conteúdo': '1 lençol + 2 fronhas', Cor: 'Oliva' };
+  const fixture = render();
+  const contents = [...fixture.nativeElement.querySelectorAll('.included-items li')].map(item => (item as HTMLElement).textContent);
+  expect(contents).toEqual(['1 lençol', '2 fronhas']);
+  expect(fixture.nativeElement.querySelector('app-breadcrumbs a[href="/categoria/cama"]').textContent).toContain('Cama');
+  expect(fixture.nativeElement.querySelector('app-breadcrumbs a[href="/categoria/cama-jogos-de-cama--81"]').textContent).toContain('Jogos de cama');
+ });
+
+ it('validates, submits and displays a masked postal code quote', async () => {
+  const fixture = render();
+  await fixture.whenStable();
+  const form = fixture.nativeElement.querySelector('app-shipping-quote form');
+  form.dispatchEvent(new Event('submit', { cancelable: true }));
+  fixture.detectChanges();
+  expect(fixture.nativeElement.querySelector('#quote-cep').getAttribute('aria-invalid')).toBe('true');
+  const input = fixture.nativeElement.querySelector('#quote-cep');
+  input.value = '87502-100';
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+  fixture.detectChanges();
+  form.dispatchEvent(new Event('submit', { cancelable: true }));
+  const request = http.expectOne(r => r.url.endsWith('/shipping/quote') && r.params.get('cep') === '87502100');
+  request.flush({ priceCents: 1390, minDays: 2, maxDays: 3 });
+  fixture.detectChanges();
+  expect(fixture.nativeElement.querySelector('.result').textContent).toContain('Entrega disponível');
+ });
+
+ it('updates the selected size, price, stock, images, kit and the variant sent to cart', () => {
+  product.variants = [
+   { id: 31, size: 'Casal', price: 129.9, stock: 4, includedItems: ['1 lençol'] },
+   { id: 32, size: 'Queen', price: 149.9, stock: 2, dimensions: '160 × 200 cm', includedItems: ['1 lençol', '2 fronhas'],
+     images: [{ id: 32, url: '/queen.webp', alt: 'Queen', position: 0 }] },
+   { id: 33, size: 'King', price: 179.9, stock: 0 },
+  ];
+  const fixture = render([{id: 11, productId: 42, variantId: 31, name: 'Produto — Casal', stock: 4, quantity: 1}]);
+  const page = fixture.componentInstance;
+  expect(page.remainingStock()).toBe(3);
+  page.selectSize('King');
+  expect(page.selectedVariant()?.id).toBe(31);
+  page.selectSize('Queen');
+  fixture.detectChanges();
+  expect(page.selectedPrice()).toBe(149.9);
+  expect(page.remainingStock()).toBe(2);
+  expect(page.galleryImages()[0].alt).toBe('Queen');
+  expect(fixture.nativeElement.querySelector('.included-items').textContent).toContain('2 fronhas');
+  expect(fixture.nativeElement.textContent).toContain('160 × 200 cm');
+  page.addToCart();
+  const request = http.expectOne('http://localhost:8080/cart/items');
+  expect(request.request.body).toEqual({productId: 42, quantity: 1, variantId: 32});
+  request.flush({data: {items: [], totalItems: 0, total: 0}});
+  TestBed.inject(CustomAlertService).clearAll();
+ });
 });

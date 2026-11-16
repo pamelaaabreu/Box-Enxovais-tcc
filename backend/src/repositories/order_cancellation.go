@@ -49,16 +49,16 @@ func (repo CheckoutRepository) CancelOrder(ctx context.Context, userID int, id i
 }
 
 func restoreOrderStock(ctx context.Context, tx *sql.Tx, id int64) error {
-	rows, err := tx.QueryContext(ctx, `SELECT product_id,SUM(quantity) FROM checkout_order_items WHERE order_id=$1 GROUP BY product_id ORDER BY product_id`, id)
+	rows, err := tx.QueryContext(ctx, `SELECT product_id,COALESCE(variant_id,0),SUM(quantity) FROM checkout_order_items WHERE order_id=$1 GROUP BY product_id,variant_id ORDER BY product_id,variant_id`, id)
 	if err != nil {
 		return err
 	}
 	defer rows.Close()
-	type stockEntry struct{ productID, quantity int64 }
+	type stockEntry struct{ productID, variantID, quantity int64 }
 	var entries []stockEntry
 	for rows.Next() {
 		var entry stockEntry
-		if err := rows.Scan(&entry.productID, &entry.quantity); err != nil {
+		if err := rows.Scan(&entry.productID, &entry.variantID, &entry.quantity); err != nil {
 			return err
 		}
 		entries = append(entries, entry)
@@ -70,7 +70,12 @@ func restoreOrderStock(ctx context.Context, tx *sql.Tx, id int64) error {
 		return ErrOrderRestock
 	}
 	for _, entry := range entries {
-		result, err := tx.ExecContext(ctx, `UPDATE products SET quantity=quantity+$1,updated_at=NOW() WHERE id=$2 AND quantity::bigint+$1 <= 2147483647`, entry.quantity, entry.productID)
+		var result sql.Result
+		if entry.variantID > 0 {
+			result, err = tx.ExecContext(ctx, "UPDATE product_variants SET quantity=quantity+$1 WHERE id=$2 AND product_id=$3 AND quantity::bigint+$1 <= 2147483647", entry.quantity, entry.variantID, entry.productID)
+		} else {
+			result, err = tx.ExecContext(ctx, `UPDATE products SET quantity=quantity+$1,updated_at=NOW() WHERE id=$2 AND quantity::bigint+$1 <= 2147483647`, entry.quantity, entry.productID)
+		}
 		if err != nil {
 			return err
 		}

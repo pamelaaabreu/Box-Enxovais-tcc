@@ -43,8 +43,10 @@
         <a
           [routerLink]="['/categoria', category.slug]"
           class="nav-link"
+          routerLinkActive="is-active"
+          ariaCurrentWhenActive="page"
           (click)="closeMenu()"
-          >{{ category.name }}</a
+          ><span class="nav-label">{{ category.name }}</span></a
         >
       </li>
     </ul>

@@ -4,7 +4,7 @@ import { ProductImage } from './product-image.interface';
 import { ProductVariant } from './product-variant.interface';
 
 /** Storefront specialization of the existing API model; prices keep their original names. */
-export interface CatalogProduct extends Product {
+export interface CatalogProduct extends Omit<Product, 'variants'> {
   id: number;
   slug: string;
   description: string;

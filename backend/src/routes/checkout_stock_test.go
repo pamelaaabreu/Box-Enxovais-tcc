@@ -57,7 +57,7 @@ func checkoutTestDB(t *testing.T) (*sql.DB, func(string)) {
  CREATE TABLE promotion_products(product_id INTEGER,promotion_id INTEGER,promotional_price NUMERIC);
  CREATE TABLE product_images(id INTEGER PRIMARY KEY,product_id INTEGER,image_path TEXT,is_primary BOOLEAN);
  INSERT INTO users VALUES(1),(2);`)
-	for _, name := range []string{"000003_cart.up.sql", "000006_checkout.up.sql", "000007_order_cancellation.up.sql", "000008_order_cancellation_reason.up.sql", "000009_account_addresses.up.sql", "000010_business_phone.up.sql", "000011_user_cnpj.up.sql"} {
+	for _, name := range []string{"000003_cart.up.sql", "000006_checkout.up.sql", "000007_order_cancellation.up.sql", "000008_order_cancellation_reason.up.sql", "000009_account_addresses.up.sql", "000010_business_phone.up.sql", "000011_user_cnpj.up.sql", "000013_product_variants.up.sql"} {
 		if name == "000010_business_phone.up.sql" {
 			exec("UPDATE users SET phone = '+55 (11) 2345-6789' WHERE id = 2")
 		}
@@ -524,5 +524,51 @@ func TestAccountProfilePatchPostgres(t *testing.T) {
 	var cleared bool
 	if err := db.QueryRow("SELECT national_id IS NULL AND birth_date IS NULL FROM users WHERE id=1").Scan(&cleared); err != nil || !cleared {
 		t.Fatal("optional fields were not cleared")
+	}
+}
+
+func TestVariantCheckoutPostgres(t *testing.T) {
+	db, exec := checkoutTestDB(t)
+	ctx := context.Background()
+	exec(`DELETE FROM cart_items;
+    INSERT INTO product_variants(id,product_id,size,price,quantity,dimensions,included_items)
+    VALUES (31,1,'Casal',12.90,2,'140 × 190 cm','["1 lençol"]'),(32,1,'Queen',14.90,1,'160 × 200 cm','["1 lençol","2 fronhas"]');
+    INSERT INTO product_images VALUES(4,1,'uploads/general.webp',true,NULL),(5,1,'uploads/queen.webp',true,32);`)
+	cart := repositories.CartRepository{DB: db}
+	if _, err := cart.Apply(ctx, 1, "add", 1, 1); !errors.Is(err, repositories.ErrCartProduct) {
+		t.Fatalf("base: %v", err)
+	}
+	if _, err := cart.Apply(ctx, 1, "add", 1, 1, 31); err != nil {
+		t.Fatal(err)
+	}
+	state, err := cart.Apply(ctx, 1, "add", 1, 1, 32)
+	if err != nil || len(state.Items) != 2 || state.Items[1].VariantID != 32 || state.Items[1].Image != "uploads/queen.webp" || state.Total != 2780 {
+		t.Fatalf("cart=%+v err=%v", state, err)
+	}
+	if _, err = cart.Apply(ctx, 1, "add", 1, 1, 32); !errors.Is(err, repositories.ErrCartQuantity) {
+		t.Fatalf("stock: %v", err)
+	}
+	repo := repositories.CheckoutRepository{DB: db}
+	order, err := repo.Create(ctx, 1, models.CheckoutRequest{RequestKey: "variant-test", PaymentMethod: "pix", ExpectedTotalCents: 2780})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var base, casal, queen, saved int
+	assertStock := func(wantCasal, wantQueen int) {
+		t.Helper()
+		err := db.QueryRow(`SELECT (SELECT quantity FROM products WHERE id=1),(SELECT quantity FROM product_variants WHERE id=31),
+        (SELECT quantity FROM product_variants WHERE id=32),(SELECT count(*) FROM checkout_order_items WHERE order_id=$1 AND variant_id IN (31,32))`, order.ID).Scan(&base, &casal, &queen, &saved)
+		if err != nil || base != 1 || casal != wantCasal || queen != wantQueen || saved != 2 {
+			t.Fatalf("base/casal/queen/items=%d/%d/%d/%d (%v)", base, casal, queen, saved, err)
+		}
+	}
+	assertStock(1, 0)
+	if _, _, err = repo.CancelOrder(ctx, 1, order.ID, models.CancellationReason{ReasonCode: "wrong_product"}); err != nil {
+		t.Fatal(err)
+	}
+	assertStock(2, 1)
+	state, err = cart.Apply(ctx, 1, "reorder", order.ID, 0)
+	if err != nil || len(state.Items) != 2 || state.Items[0].VariantID != 31 || state.Items[1].VariantID != 32 {
+		t.Fatalf("reorder=%+v (%v)", state, err)
 	}
 }

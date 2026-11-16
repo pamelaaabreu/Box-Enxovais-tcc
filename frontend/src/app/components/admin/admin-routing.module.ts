@@ -72,6 +72,7 @@ const routes: Routes = [
         children: [
           { path: 'categories', component: CatalogRegistrationComponent, data: { kind: 'categories' } },
           { path: 'brands', component: CatalogRegistrationComponent, data: { kind: 'brands' } },
+          { path: 'shipping-ranges', loadComponent: () => import('./shipping-ranges.component').then(module => module.ShippingRangesComponent) },
         ],
       },
       // RELATÓRIOS

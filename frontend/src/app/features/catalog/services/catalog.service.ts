@@ -28,10 +28,35 @@ export class CatalogService {
     const name = product.category_name?.trim() ?? '';
     const id = product.product_type_id ?? 0;
     const category = name ? this.category(id, name) : { id, name: 'Produtos', slug: '' };
-    return {...product, id: product.id!, slug: `${this.slug(product.name)}-${product.id}`, description: product.description ?? '', category,
-      images: [...new Set((product.image_paths ?? []).map(path => path.trim()).filter(Boolean))].map((url, index) => ({id: index, url: /^https?:\/\//.test(url) ? url : `http://localhost:8080/${url.replace(/^\//, '')}`, alt: product.name, position: index})),
-      variants: [], featured: false, active: product.status === 'active'};
+    const imagesOf = (paths: string[] = [], variant = '') => [...new Set(paths.map(path => path.trim()).filter(Boolean))]
+      .map((url, index) => ({
+        id: index,
+        url: /^https?:\/\//.test(url) ? url : `http://localhost:8080/${url.replace(/^\//, '')}`,
+        alt: variant ? `${product.name} — ${variant}` : product.name,
+        position: index,
+      }));
+    return {
+      ...product,
+      name: product.name.replace(/\s+—\s+/g, ' '),
+      id: product.id!,
+      slug: `${this.slug(product.name)}-${product.id}`,
+      description: product.description ?? '',
+      category,
+      images: imagesOf(product.image_paths),
+      variants: (product.variants ?? []).map(variant => ({
+        id: variant.id, size: variant.size, price: variant.price, stock: variant.stock,
+        dimensions: variant.dimensions, images: imagesOf(variant.image_paths, variant.size),
+        includedItems: variant.included_items, simulated: variant.simulated,
+      })),
+      featured: false, active: product.status === 'active',
+    };
   }
+  getCamaFilterProducts(category: Category) {
+    const ids = category.children?.map(child => child.id);
+    if (!ids?.length) return of([]);
+    return this.products.getProducts({ product_type_ids: ids.join(',') });
+  }
+
   getCategoryPage(category: Category, options: PageOptions) {
     const filters = { ...options.filters };
     if (category.children) {
@@ -51,11 +76,30 @@ export class CatalogService {
     return this.products.getProducts().pipe(map(products => products.map(p => this.adapt(p)).filter(p => p.active && p.category.slug === slug)));
   }
   getRecommendations(product: CatalogProduct): Observable<CatalogProduct[]> {
-    return this.products.getProductsPage({ limit: 12 }).pipe(map(page => page.items
-      .filter(item => item.id !== product.id && item.status === 'active')
-      .map(item => this.adapt(item))
-      .sort((a, b) => Number(b.category.id === product.category.id) - Number(a.category.id === product.category.id) || a.id - b.id)
-      .slice(0, 4)));
+    const bedding = CAMA_GROUP.types;
+    const preferredCategories: Record<string, readonly string[]> = {
+      [bedding[0]]: ['Travesseiros', bedding[3], bedding[1]],
+      [bedding[1]]: [bedding[0], 'Almofadas', bedding[3]],
+      [bedding[2]]: [bedding[0], 'Almofadas', bedding[3]],
+      [bedding[3]]: [bedding[0], bedding[2], 'Almofadas'],
+      [bedding[4]]: [bedding[0], 'Travesseiros'],
+      Travesseiros: [bedding[0], bedding[3]],
+    };
+    const preferred = preferredCategories[product.category.name] ?? [];
+    const collection = product.measurements?.['Coleção'];
+    const rank = (candidate: CatalogProduct) => {
+      const index = preferred.indexOf(candidate.category.name);
+      if (index !== -1) return index;
+      if (candidate.category.name !== product.category.name) return preferred.length;
+      return preferred.length + (collection && candidate.measurements?.['Coleção'] === collection ? 2 : 1);
+    };
+    return this.products.getProductsPage({ limit: 100, filters: { stock__gte: 1 } }).pipe(
+      map(page => page.items
+        .filter(item => item.id !== product.id && item.status === 'active' && item.quantity > 0)
+        .map(item => this.adapt(item))
+        .sort((a, b) => rank(a) - rank(b) || a.id - b.id)
+        .slice(0, 4)),
+    );
   }
 
   getProductBySlug(slug: string): Observable<CatalogProduct | null> {

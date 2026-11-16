@@ -12,10 +12,17 @@ import (
 type ProductRepository struct{ DB *sql.DB }
 
 const storeProductColumns = `p.id,p.name,p.description,p.care_instructions,
- COALESCE(p.measurements,'{}') AS measurements,p.price,p.quantity,p.status,
+ COALESCE(p.measurements,'{}') AS measurements,
+ COALESCE((SELECT MIN(v.price) FROM product_variants v WHERE v.product_id=p.id),p.price) AS price,
+ COALESCE((SELECT SUM(v.quantity) FROM product_variants v WHERE v.product_id=p.id),p.quantity) AS quantity,p.status,
  p.product_type_id,COALESCE(t.name,'') AS category_name,
  COALESCE((SELECT json_agg(image_path ORDER BY is_primary DESC NULLS LAST,id)
- FROM product_images WHERE product_id=p.id),'[]') AS image_paths,
+ FROM product_images WHERE product_id=p.id AND variant_id IS NULL),'[]') AS image_paths,
+ COALESCE((SELECT json_agg(json_build_object('id',v.id,'size',v.size,'price',v.price,'stock',v.quantity,
+ 'dimensions',COALESCE(v.dimensions,''),'included_items',v.included_items,'simulated',v.simulated,
+ 'image_paths',COALESCE((SELECT json_agg(i.image_path ORDER BY i.is_primary DESC NULLS LAST,i.id)
+ FROM product_images i WHERE i.variant_id=v.id),'[]')) ORDER BY v.id)
+ FROM product_variants v WHERE v.product_id=p.id),'[]') AS variants,
  p.brand_id,p.created_at,p.updated_at`
 const storeProductSource = ` FROM products p LEFT JOIN product_types t ON t.id=p.product_type_id`
 
@@ -76,10 +83,10 @@ func (repo ProductRepository) Create(ctx context.Context, p models.Product) (int
 
 func scanStoreProduct(rows *sql.Rows) (models.Product, error) {
 	var p models.Product
-	var measurements, images []byte
+	var measurements, images, variants []byte
 	var createdAt, updatedAt sql.NullTime
 	err := rows.Scan(&p.ID, &p.Name, &p.Description, &p.CareInstructions, &measurements,
-		&p.Price, &p.Quantity, &p.Status, &p.ProductTypeID, &p.CategoryName, &images,
+		&p.Price, &p.Quantity, &p.Status, &p.ProductTypeID, &p.CategoryName, &images, &variants,
 		&p.BrandID, &createdAt, &updatedAt, &p.PromotionalPrice)
 	if err != nil {
 		return p, err
@@ -88,6 +95,9 @@ func scanStoreProduct(rows *sql.Rows) (models.Product, error) {
 		return p, err
 	}
 	if err = json.Unmarshal(images, &p.ImagePaths); err != nil {
+		return p, err
+	}
+	if err = json.Unmarshal(variants, &p.Variants); err != nil {
 		return p, err
 	}
 	for i, path := range p.ImagePaths {

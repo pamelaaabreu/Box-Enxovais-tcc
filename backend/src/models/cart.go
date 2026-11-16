@@ -16,6 +16,7 @@ func leftPadCents(value int64) string {
 }
 
 type CartItem struct {
+	VariantID int64  `json:"variantId,omitempty"`
 	ID        int64  `json:"id"`
 	ProductID int64  `json:"productId"`
 	Name      string `json:"name"`

@@ -12,6 +12,16 @@ export interface Product {
   category_name?: string;
   status: string;
   image_paths?: string[];
+  variants?: Array<{
+    id: number;
+    size: string;
+    price: number;
+    stock: number;
+    dimensions?: string;
+    image_paths?: string[];
+    included_items?: string[];
+    simulated?: boolean;
+  }>;
   promotional_price: number;
 }
 

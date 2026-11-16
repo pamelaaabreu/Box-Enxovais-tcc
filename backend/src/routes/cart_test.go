@@ -41,7 +41,7 @@ func TestCartPostgres(t *testing.T) {
 	if _, err = conn.Exec(`SET search_path TO ` + schema); err != nil {
 		t.Fatal(err)
 	}
-	for _, name := range []string{"000001_initial_schema.up.sql", "000002_simplify_customer_registration.up.sql", "000003_cart.up.sql"} {
+	for _, name := range []string{"000001_initial_schema.up.sql", "000002_simplify_customer_registration.up.sql", "000003_cart.up.sql", "000006_checkout.up.sql", "000013_product_variants.up.sql"} {
 		migration, err := os.ReadFile("../../migrations/" + name)
 		if err != nil {
 			t.Fatal(err)

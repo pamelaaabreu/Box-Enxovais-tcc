@@ -17,9 +17,11 @@
       <div class="item">
        <app-product-card [product]="product" />
        <div class="actions">
+        @if (!product.variants.length) {
         <button type="button" (click)="cart.add(product.id)" [disabled]="product.status !== 'active' || product.quantity < 1 || cart.pending().has(product.id)">
          {{ product.status !== 'active' || product.quantity < 1 ? 'Produto indisponível' : cart.pending().has(product.id) ? 'Adicionando…' : 'Adicionar ao carrinho' }}
         </button>
+        }
         <button class="remove" type="button" (click)="favorites.remove(product.id)" [disabled]="!favorites.synchronized() || favorites.pending().has(product.id)" [attr.aria-label]="'Remover ' + product.name + ' dos favoritos'">Remover</button>
        </div>
        @if (cart.feedback()[product.id]) { <p role="status">{{ cart.feedback()[product.id] }}</p> }

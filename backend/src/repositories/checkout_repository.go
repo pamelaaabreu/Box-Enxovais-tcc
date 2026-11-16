@@ -42,7 +42,7 @@ func (repo CheckoutRepository) Create(ctx context.Context, userID int, input mod
 	if !errors.Is(err, sql.ErrNoRows) {
 		return order, err
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT p.id,p.name,i.quantity,p.quantity,p.status FROM cart_items i JOIN products p ON p.id=i.product_id WHERE i.cart_id=$1 ORDER BY p.id FOR UPDATE OF p`, cartID)
+	rows, err := tx.QueryContext(ctx, `SELECT p.id,COALESCE(i.variant_id,0),p.name || COALESCE(' — ' || v.size,''),i.quantity,COALESCE(v.quantity,p.quantity),p.status FROM cart_items i JOIN products p ON p.id=i.product_id LEFT JOIN product_variants v ON v.id=i.variant_id WHERE i.cart_id=$1 ORDER BY p.id,i.variant_id FOR UPDATE OF p`, cartID)
 	if err != nil {
 		return order, err
 	}
@@ -50,7 +50,7 @@ func (repo CheckoutRepository) Create(ctx context.Context, userID int, input mod
 	for rows.Next() {
 		var item models.CartItem
 		var status string
-		if err = rows.Scan(&item.ProductID, &item.Name, &item.Quantity, &item.Stock, &status); err != nil {
+		if err = rows.Scan(&item.ProductID, &item.VariantID, &item.Name, &item.Quantity, &item.Stock, &status); err != nil {
 			rows.Close()
 			return order, err
 		}
@@ -70,7 +70,14 @@ func (repo CheckoutRepository) Create(ctx context.Context, userID int, input mod
 	}
 	for i := range items {
 		item := &items[i]
-		err = tx.QueryRowContext(ctx, `SELECT (LEAST(p.price,COALESCE((SELECT MIN(pp.promotional_price) FROM promotion_products pp JOIN promotions pr ON pr.id=pp.promotion_id WHERE pp.product_id=p.id AND pr.status='active' AND pr.start_date<=NOW() AND pr.end_date>=NOW() AND pp.promotional_price>=0),p.price))*100)::bigint FROM products p WHERE p.id=$1`, item.ProductID).Scan(&item.UnitPrice)
+		if item.VariantID > 0 {
+			err = tx.QueryRowContext(ctx, "SELECT (price*100)::bigint,quantity FROM product_variants WHERE id=$1 AND product_id=$2 FOR UPDATE", item.VariantID, item.ProductID).Scan(&item.UnitPrice, &item.Stock)
+			if errors.Is(err, sql.ErrNoRows) || (err == nil && item.Stock < item.Quantity) {
+				return order, ErrCheckoutConflict
+			}
+		} else {
+			err = tx.QueryRowContext(ctx, `SELECT (LEAST(p.price,COALESCE((SELECT MIN(pp.promotional_price) FROM promotion_products pp JOIN promotions pr ON pr.id=pp.promotion_id WHERE pp.product_id=p.id AND pr.status='active' AND pr.start_date<=NOW() AND pr.end_date>=NOW() AND pp.promotional_price>=0),p.price))*100)::bigint FROM products p WHERE p.id=$1`, item.ProductID).Scan(&item.UnitPrice)
+		}
 		if err != nil {
 			return order, err
 		}
@@ -114,11 +121,15 @@ func (repo CheckoutRepository) Create(ctx context.Context, userID int, input mod
 		return order, err
 	}
 	for _, item := range items {
-		_, err = tx.ExecContext(ctx, `INSERT INTO checkout_order_items(order_id,product_id,name,quantity,unit_price_cents) VALUES($1,$2,$3,$4,$5)`, order.ID, item.ProductID, item.Name, item.Quantity, item.UnitPrice)
+		_, err = tx.ExecContext(ctx, `INSERT INTO checkout_order_items(order_id,product_id,name,quantity,unit_price_cents,variant_id) VALUES($1,$2,$3,$4,$5,NULLIF($6,0))`, order.ID, item.ProductID, item.Name, item.Quantity, item.UnitPrice, item.VariantID)
 		if err != nil {
 			return order, err
 		}
-		_, err = tx.ExecContext(ctx, `UPDATE products SET quantity=quantity-$1,updated_at=NOW() WHERE id=$2`, item.Quantity, item.ProductID)
+		if item.VariantID > 0 {
+			_, err = tx.ExecContext(ctx, "UPDATE product_variants SET quantity=quantity-$1 WHERE id=$2 AND product_id=$3", item.Quantity, item.VariantID, item.ProductID)
+		} else {
+			_, err = tx.ExecContext(ctx, `UPDATE products SET quantity=quantity-$1,updated_at=NOW() WHERE id=$2`, item.Quantity, item.ProductID)
+		}
 		if err != nil {
 			return order, err
 		}

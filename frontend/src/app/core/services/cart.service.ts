@@ -137,12 +137,12 @@ export class CartService {
   reorder(orderId: number): void {
     this.request('POST', '/orders/' + orderId, Number.MIN_SAFE_INTEGER);
   }
-  add(productId: number, quantity = 1): void {
+  add(productId: number, quantity = 1, variantId?: number): void {
     this.request(
       'POST',
       '/items',
       productId,
-      { productId, quantity },
+      { productId, quantity, ...(variantId ? { variantId } : {}) },
       productId,
     );
   }

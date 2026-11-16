@@ -1,5 +1,5 @@
 :host { display: block; height: 100%; }
-img { width: 100%; height: 100%; object-fit: cover; }
+img { width: 100%; height: 100%; object-fit: var(--product-media-fit, cover); }
 .media-placeholder { height: 100%; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; text-align: center; color: #65705d; background: #eceee6; }
 svg { width: 42px; height: 42px; }
 span { font-size: 12px; }

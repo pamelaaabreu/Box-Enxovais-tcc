@@ -1,26 +1,88 @@
-<article [class.compact]="compact()">
-  <app-favorite-button class="favorite-action" [productId]="product().id" [productName]="product().name" />
-  <a
-    class="product-link"
-    [routerLink]="product().active ? ['/produto', product().slug] : null"
-    [attr.aria-disabled]="!product().active"
-    [attr.tabindex]="product().active ? null : -1"
-    [attr.aria-label]="'Ver ' + product().name"
-  >
-    <div class="media">
-      <app-product-media [image]="product().images[0] || null" [showCaption]="false" />
-    </div>
-    <div class="information">
-      @if (!compact()) { <span class="category">{{ product().category.name }}</span> }
-      <h2>{{ product().name }}</h2>
-      @if (!product().active || product().quantity < 1) { <span class="unavailable">Produto indisponível</span> }
-      <app-product-price
-        [price]="product().price"
-        [showInstallments]="!compact()"
+<article [class.compact]="compact()" [class.catalog-tile]="catalogTile()">
+  <div class="media-frame">
+    <a
+      class="media product-link"
+      [routerLink]="details()"
+      [attr.aria-label]="'Ver detalhes de ' + product().name"
+    >
+      <app-product-media
+        [image]="product().images[0] || null"
+        [showCaption]="false"
       />
-      @if (!compact()) { <span class="details"
-        >{{ product().active ? 'Conhecer produto' : 'Produto indisponível' }} <span aria-hidden="true">→</span></span
-      > }
-    </div>
-  </a>
+    </a>
+    <app-favorite-button
+      class="favorite-action"
+      [productId]="product().id"
+      [productName]="product().name"
+    />
+    @if (!compact() && !catalogTile()) {
+      @if (badge(); as text) {
+        <span class="info-badge">{{ text }}</span>
+      }
+      <app-product-price
+        class="price-badge"
+        [price]="product().price"
+        [showInstallments]="false"
+      />
+    }
+  </div>
+  <div class="information">
+    <h2>
+      <a class="product-link" [routerLink]="details()">{{ displayName() }}</a>
+    </h2>
+    @if (catalogTile()) {
+      <span class="price-prefix">A partir de</span>
+    }
+    @if (compact() || catalogTile()) {
+      <app-product-price [price]="product().price" [showInstallments]="false" />
+    }
+    @if (!compact()) {
+      @if (!catalogTile() && attributes().length) {
+        <ul class="attributes" aria-label="Características">
+          @for (attribute of attributes(); track attribute.label) {
+            <li>{{ attribute.label }}: {{ attribute.value }}</li>
+          }
+        </ul>
+      }
+      <div class="card-actions">
+        @if (details(); as link) {
+          <a
+            [routerLink]="link"
+            [attr.aria-label]="'Ver detalhes de ' + product().name"
+            >Ver detalhes</a
+          >
+        }
+        @if (product().variants.length && details(); as link) {
+          <a [routerLink]="link">Escolher tamanho</a>
+        } @else {
+        <button
+          type="button"
+          [class.in-cart]="catalogTile() && inCart()"
+          [disabled]="!canAdd()"
+          (click)="add()"
+        >
+          @if (!catalogTile()) {
+            <mat-icon fontSet="material-icons-outlined" aria-hidden="true"
+              >shopping_bag</mat-icon
+            >
+          }
+          {{
+            pending()
+              ? "Adicionando…"
+              : !available()
+                ? "Indisponível"
+                : catalogTile() && inCart()
+                  ? "Adicionado ao carrinho"
+                  : "Adicionar ao carrinho"
+          }}
+        </button>
+        }
+        @if (cart.feedback()[product().id]; as feedback) {
+          @if (!catalogTile() || feedback !== "Adicionado ao carrinho.") {
+            <span role="status">{{ feedback }}</span>
+          }
+        }
+      </div>
+    }
+  </div>
 </article>

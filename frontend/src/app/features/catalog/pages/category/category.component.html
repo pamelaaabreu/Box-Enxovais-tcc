@@ -1,59 +1,236 @@
-@if (state().status === 'loaded' && !category()) {
+@if (state().status === "loaded" && !category()) {
   <app-not-found />
 } @else {
-<app-catalog-layout>
-  <app-breadcrumbs [items]="breadcrumbs()" />
-  @if (state().status === 'loading') {
-    <app-product-grid [loading]="true" />
-  } @else if (state().status === 'error') {
-    <section class="state" role="alert"><h1>Não foi possível carregar o catálogo.</h1><p>Tente novamente mais tarde.</p><button type="button" (click)="movePage(0)">Tentar novamente</button></section>
-  } @else {
-    @if (category(); as category) {
-    <header class="category-heading">
-      <span class="eyebrow">PARA UMA CASA BEM VIVIDA</span>
-      <h1>{{ category.name }}</h1>
-      <p>{{ category.description }}</p>
-    </header>
-    @if (category.children?.length) {
-      <nav class="cama-groups" aria-label="Agrupamentos de Cama">
-        @for (child of category.children; track child.id) {
-          <a [routerLink]="['/categoria', child.slug]">{{ child.name }}</a>
-        }
-      </nav>
-    }
-    <form class="catalog-filters" (submit)="$event.preventDefault(); applyFilters(search.value, price.value, available.checked, sort.value)">
-      <label>{{ category.slug === 'todos' ? 'Buscar produtos' : 'Buscar nesta categoria' }}<input #search type="search" maxlength="120" [value]="criteria().search" /></label>
-      <label>Preço máximo<input #price type="number" min="0" step="0.01" [value]="criteria().maxPrice" /></label>
-      <label>Ordenar por
-        <select #sort [value]="criteria().sort">
-          <option value="">Padrão</option><option value="price_asc">Menor preço</option>
-          <option value="price_desc">Maior preço</option><option value="name">Nome</option><option value="recent">Mais recentes</option>
-        </select>
-      </label>
-      <label class="catalog-stock"><input #available type="checkbox" [checked]="criteria().available" /> Em estoque</label>
-      <button type="submit">Aplicar filtros</button>
-    </form>
-    @if (products().length) {
-      <p role="status">{{ page()?.total }} produtos</p>
-      <app-product-grid [products]="products()" />
-    } @else {
-      <section class="state">
-        <h2>Nenhum produto encontrado</h2>
-        <p>{{ criteria().search || criteria().maxPrice || criteria().available ? 'Não encontramos produtos para os filtros selecionados.' : (category.slug === 'todos' ? 'Ainda não há produtos disponíveis no catálogo.' : 'Ainda não há produtos disponíveis nesta categoria.') }}</p>
-        @if (criteria().search || criteria().maxPrice || criteria().available || criteria().offset) {
-          <button type="button" (click)="applyFilters('', '', false, '')">Limpar filtros</button>
-        }
+  <app-catalog-layout
+    class="catalog-store"
+    [class.cama-banner]="isCamaCategory()"
+  >
+    @if (state().status === "loading" && !category()) {
+      <app-product-grid [loading]="true" />
+    } @else if (state().status === "error" && !category()) {
+      <section class="state" role="alert">
+        <h1>Não foi possível carregar o catálogo.</h1>
+        <button type="button" (click)="movePage(0)">Tentar novamente</button>
       </section>
+    } @else {
+      @if (category(); as category) {
+        <div class="category-navigation">
+          <app-breadcrumbs
+            class="category-breadcrumbs"
+            [items]="breadcrumbs()"
+          />
+          @if (groups().length) {
+            <nav class="category-chips" aria-label="Agrupamentos de Cama">
+              <a
+                routerLink="/categoria/cama"
+                [attr.aria-current]="category.slug === 'cama' ? 'page' : null"
+                >Todos</a
+              >
+              @for (child of groups(); track child.id) {
+                <a
+                  [routerLink]="['/categoria', child.slug]"
+                  [attr.aria-current]="
+                    category.slug === child.slug ? 'page' : null
+                  "
+                  >{{ child.name.slice(7) }}</a
+                >
+              }
+            </nav>
+          }
+        </div>
+        <div class="catalog-columns">
+          <button
+            class="filter-toggle"
+            type="button"
+            aria-controls="catalog-filters"
+            [attr.aria-expanded]="filtersOpen()"
+            (click)="filtersOpen.set(!filtersOpen())"
+          >
+            Filtros
+          </button>
+          <aside
+            id="catalog-filters"
+            class="filter-panel"
+            [class.filters-open]="filtersOpen()"
+            aria-label="Filtros do catálogo"
+          >
+            @for (facet of facets(); track facet.key) {
+              @if (facet.values.length) {
+                <div class="facet">
+                  <h2>{{ facet.label }}</h2>
+                  <div class="facet-values">
+                    @for (value of facet.values; track value) {
+                      <button
+                        type="button"
+                        [class.swatch]="facet.key === 'color'"
+                        [attr.aria-label]="
+                          facet.key === 'color' ? 'Cor: ' + value : value
+                        "
+                        [attr.aria-pressed]="criteria()[facet.key] === value"
+                        (click)="setFacet(facet.key, value)"
+                      >
+                        @if (facet.key === "color") {
+                          <span
+                            class="swatch-dot"
+                            [style.background]="colorSwatch(value)"
+                            aria-hidden="true"
+                          >
+                            @if (criteria().color === value) {
+                              <span class="swatch-check">✓</span>
+                            }
+                          </span>
+                          <span class="swatch-tooltip" aria-hidden="true">{{
+                            value
+                          }}</span>
+                        } @else {
+                          {{ value }}
+                        }
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            }
+            <form
+              class="catalog-filters"
+              (submit)="
+                $event.preventDefault();
+                applyFilters(
+                  search.value,
+                  price.value,
+                  available.checked,
+                  criteria().sort
+                )
+              "
+            >
+              <label
+                >{{
+                  category.slug === "todos"
+                    ? "Buscar produtos"
+                    : "Buscar nesta categoria"
+                }}<input
+                  #search
+                  type="search"
+                  maxlength="120"
+                  placeholder="Nome do produto"
+                  [value]="criteria().search"
+              /></label>
+              <label
+                >Preço máximo<input
+                  #price
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  inputmode="decimal"
+                  placeholder="R$ 0,00"
+                  [value]="criteria().maxPrice"
+              /></label>
+              <label class="catalog-choice catalog-stock"
+                ><input
+                  #available
+                  type="checkbox"
+                  [checked]="criteria().available"
+                /><span aria-hidden="true" class="choice-mark"></span>Em
+                estoque</label
+              >
+              <button type="submit">Aplicar filtros</button>
+            </form>
+          </aside>
+          <div class="catalog-results">
+            <div class="results-bar">
+              <span role="status">{{
+                page() ? page()?.total + " produtos" : ""
+              }}</span>
+              <div class="catalog-sort">
+                <span id="catalog-sort-label">Ordenar por</span>
+                <mat-select
+                  aria-labelledby="catalog-sort-label"
+                  [panelClass]="['box-form-options', 'catalog-sort-options']"
+                  panelWidth="230px"
+                  [value]="criteria().sort"
+                  (selectionChange)="
+                    applyFilters(
+                      criteria().search,
+                      criteria().maxPrice,
+                      criteria().available,
+                      $event.value
+                    )
+                  "
+                >
+                  <mat-option value="">Mais relevantes</mat-option>
+                  <mat-option value="price_asc">Menor preço</mat-option>
+                  <mat-option value="price_desc">Maior preço</mat-option>
+                  <mat-option value="name">Nome</mat-option>
+                  <mat-option value="recent">Mais recentes</mat-option>
+                </mat-select>
+              </div>
+            </div>
+            @if (state().status === "loading") {
+              <app-product-grid [loading]="true" />
+            } @else if (state().status === "error") {
+              <section class="state" role="alert">
+                <p>Não foi possível carregar o catálogo.</p>
+                <button type="button" (click)="movePage(0)">
+                  Tentar novamente
+                </button>
+              </section>
+            } @else if (products().length) {
+              <app-product-grid [products]="products()" />
+            } @else {
+              <section
+                class="empty-results"
+                aria-labelledby="empty-results-title"
+              >
+                <mat-icon aria-hidden="true">search_off</mat-icon>
+                <h2 id="empty-results-title">Nenhum produto encontrado</h2>
+                <p>Não encontramos produtos com os filtros selecionados.</p>
+                <button type="button" (click)="clearFilters()">
+                  Limpar filtros
+                </button>
+              </section>
+            }
+            @if (criteria().offset || page()?.hasMore) {
+              <nav
+                class="catalog-pagination"
+                aria-label="Paginação de produtos"
+              >
+                <button
+                  type="button"
+                  aria-label="Página anterior"
+                  [disabled]="pageNumber() <= 1 || !page()"
+                  (click)="goToPage(pageNumber() - 1)"
+                >
+                  <mat-icon aria-hidden="true">chevron_left</mat-icon>
+                </button>
+                @for (item of paginationItems(); track item) {
+                  @if (typeof item === "number") {
+                    <button
+                      type="button"
+                      [attr.aria-label]="'Página ' + item"
+                      [attr.aria-current]="
+                        pageNumber() === item ? 'page' : null
+                      "
+                      (click)="goToPage(item)"
+                    >
+                      {{ item }}
+                    </button>
+                  } @else {
+                    <span aria-hidden="true">…</span>
+                  }
+                }
+                <button
+                  type="button"
+                  aria-label="Próxima página"
+                  [disabled]="!page()?.hasMore"
+                  (click)="goToPage(pageNumber() + 1)"
+                >
+                  <mat-icon aria-hidden="true">chevron_right</mat-icon>
+                </button>
+              </nav>
+            }
+          </div>
+        </div>
+      }
     }
-    @if (criteria().offset || page()?.hasMore) {
-      <nav class="catalog-pagination" aria-label="Paginação de produtos">
-        <button type="button" [disabled]="!criteria().offset" (click)="movePage(-1)">Anterior</button>
-        <span aria-current="page">{{ pageNumber() }}</span>
-        <button type="button" [disabled]="!page()?.hasMore" (click)="movePage(1)">Próxima</button>
-      </nav>
-    }
-  }
-  }
-</app-catalog-layout>
-
+  </app-catalog-layout>
 }

@@ -1,0 +1,984 @@
+{
+  "migration": "000014_catalog_demo_variants",
+  "simulated": true,
+  "currency": "BRL",
+  "rules": {
+    "price": "Preço vigente do produto + R$ 20 por posição de tamanho. O primeiro preço permanece igual.",
+    "stock": "Divisão inteira do estoque. O resto fica com os primeiros tamanhos. O estoque-base passa a zero nas conversões.",
+    "measurements": "Dados ilustrativos do catálogo fictício. Dimensões de lençóis e protetores são referências de colchão.",
+    "dependencies": "Produtos com carrinho, estoque debitado em pedido aberto, variantes existentes ou correspondência ambígua não são convertidos.",
+    "images": "Galeria geral do produto. Sem arquivos específicos por tamanho."
+  },
+  "products": [
+    {
+      "id": 1,
+      "name": "Jogo de Cama Essência Floral — Verde Oliva",
+      "category": "Cama / Jogos de cama",
+      "priceCents": 23990,
+      "stock": 8,
+      "status": "preservado-por-dependencia",
+      "existingCartLines": 1,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "proposedVariants": [
+        {
+          "size": "Solteiro",
+          "priceCents": 23990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 88 × 188 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "1 fronha"
+          ],
+          "simulated": true
+        },
+        {
+          "size": "Casal",
+          "priceCents": 25990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 138 × 188 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true
+        },
+        {
+          "size": "Queen",
+          "priceCents": 27990,
+          "stock": 2,
+          "dimensions": "Colchão de referência: 158 × 198 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Jogo de Cama Essência Floral — Verde Suave",
+      "category": "Cama / Jogos de cama",
+      "priceCents": 23990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Solteiro",
+          "priceCents": 23990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 88 × 188 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "1 fronha"
+          ],
+          "simulated": true,
+          "variantId": 1
+        },
+        {
+          "size": "Casal",
+          "priceCents": 25990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 138 × 188 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true,
+          "variantId": 2
+        },
+        {
+          "size": "Queen",
+          "priceCents": 27990,
+          "stock": 2,
+          "dimensions": "Colchão de referência: 158 × 198 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true,
+          "variantId": 3
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Jogo de Cama Essência Floral — Botânico",
+      "category": "Cama / Jogos de cama",
+      "priceCents": 23990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Solteiro",
+          "priceCents": 23990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 88 × 188 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "1 fronha"
+          ],
+          "simulated": true,
+          "variantId": 4
+        },
+        {
+          "size": "Casal",
+          "priceCents": 25990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 138 × 188 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true,
+          "variantId": 5
+        },
+        {
+          "size": "Queen",
+          "priceCents": 27990,
+          "stock": 2,
+          "dimensions": "Colchão de referência: 158 × 198 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true,
+          "variantId": 6
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Jogo de Cama Aurora Floral — Vermelho",
+      "category": "Cama / Jogos de cama",
+      "priceCents": 27990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Casal",
+          "priceCents": 27990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 138 × 188 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true,
+          "variantId": 7
+        },
+        {
+          "size": "Queen",
+          "priceCents": 29990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 158 × 198 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true,
+          "variantId": 8
+        },
+        {
+          "size": "King",
+          "priceCents": 31990,
+          "stock": 2,
+          "dimensions": "Colchão de referência: 193 × 203 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true,
+          "variantId": 9
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Jogo de Cama Aurora Floral — Vinho",
+      "category": "Cama / Jogos de cama",
+      "priceCents": 27990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Casal",
+          "priceCents": 27990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 138 × 188 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true,
+          "variantId": 10
+        },
+        {
+          "size": "Queen",
+          "priceCents": 29990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 158 × 198 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true,
+          "variantId": 11
+        },
+        {
+          "size": "King",
+          "priceCents": 31990,
+          "stock": 2,
+          "dimensions": "Colchão de referência: 193 × 203 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true,
+          "variantId": 12
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Jogo de Cama Serenidade — Azul",
+      "category": "Cama / Jogos de cama",
+      "priceCents": 32990,
+      "stock": 8,
+      "status": "preservado-por-dependencia",
+      "existingCartLines": 1,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "proposedVariants": [
+        {
+          "size": "Casal",
+          "priceCents": 32990,
+          "stock": 4,
+          "dimensions": "Colchão de referência: 138 × 188 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true
+        },
+        {
+          "size": "Queen",
+          "priceCents": 34990,
+          "stock": 4,
+          "dimensions": "Colchão de referência: 158 × 198 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Jogo de Cama Serenidade — Azul Claro",
+      "category": "Cama / Jogos de cama",
+      "priceCents": 32990,
+      "stock": 8,
+      "status": "preservado-por-dependencia",
+      "existingCartLines": 1,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "proposedVariants": [
+        {
+          "size": "Casal",
+          "priceCents": 32990,
+          "stock": 4,
+          "dimensions": "Colchão de referência: 138 × 188 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true
+        },
+        {
+          "size": "Queen",
+          "priceCents": 34990,
+          "stock": 4,
+          "dimensions": "Colchão de referência: 158 × 198 cm",
+          "includedItems": [
+            "1 lençol de elástico",
+            "2 fronhas"
+          ],
+          "simulated": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Edredom Aconchego — Creme",
+      "category": "Cama / Edredons",
+      "priceCents": 29990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Solteiro",
+          "priceCents": 29990,
+          "stock": 4,
+          "dimensions": "Edredom: 150 × 220 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 13
+        },
+        {
+          "size": "Casal",
+          "priceCents": 31990,
+          "stock": 4,
+          "dimensions": "Edredom: 200 × 220 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 14
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Edredom Aconchego — Marrom Cacau",
+      "category": "Cama / Edredons",
+      "priceCents": 29990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Solteiro",
+          "priceCents": 29990,
+          "stock": 4,
+          "dimensions": "Edredom: 150 × 220 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 15
+        },
+        {
+          "size": "Casal",
+          "priceCents": 31990,
+          "stock": 4,
+          "dimensions": "Edredom: 200 × 220 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 16
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Edredom Aconchego — Verde Oliva",
+      "category": "Cama / Edredons",
+      "priceCents": 29990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Solteiro",
+          "priceCents": 29990,
+          "stock": 4,
+          "dimensions": "Edredom: 150 × 220 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 17
+        },
+        {
+          "size": "Casal",
+          "priceCents": 31990,
+          "stock": 4,
+          "dimensions": "Edredom: 200 × 220 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 18
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Edredom Geométrico — Azul Petróleo",
+      "category": "Cama / Edredons",
+      "priceCents": 34990,
+      "stock": 8,
+      "status": "preservado-por-dependencia",
+      "existingCartLines": 1,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "proposedVariants": [
+        {
+          "size": "Casal",
+          "priceCents": 34990,
+          "stock": 4,
+          "dimensions": "Edredom: 200 × 220 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true
+        },
+        {
+          "size": "Queen",
+          "priceCents": 36990,
+          "stock": 4,
+          "dimensions": "Edredom: 240 × 260 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Edredom Geométrico — Rosa Nude",
+      "category": "Cama / Edredons",
+      "priceCents": 34990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Casal",
+          "priceCents": 34990,
+          "stock": 4,
+          "dimensions": "Edredom: 200 × 220 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 19
+        },
+        {
+          "size": "Queen",
+          "priceCents": 36990,
+          "stock": 4,
+          "dimensions": "Edredom: 240 × 260 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 20
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Edredom Geométrico — Verde Sálvia",
+      "category": "Cama / Edredons",
+      "priceCents": 34990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Casal",
+          "priceCents": 34990,
+          "stock": 4,
+          "dimensions": "Edredom: 200 × 220 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 21
+        },
+        {
+          "size": "Queen",
+          "priceCents": 36990,
+          "stock": 4,
+          "dimensions": "Edredom: 240 × 260 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 22
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Edredom Jardim — Azul Lavanda",
+      "category": "Cama / Edredons",
+      "priceCents": 38990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Queen",
+          "priceCents": 38990,
+          "stock": 4,
+          "dimensions": "Edredom: 240 × 260 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 23
+        },
+        {
+          "size": "King",
+          "priceCents": 40990,
+          "stock": 4,
+          "dimensions": "Edredom: 260 × 280 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true,
+          "variantId": 24
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Edredom Jardim — Verde Musgo",
+      "category": "Cama / Edredons",
+      "priceCents": 38990,
+      "stock": 8,
+      "status": "preservado-por-dependencia",
+      "existingCartLines": 1,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "proposedVariants": [
+        {
+          "size": "Queen",
+          "priceCents": 38990,
+          "stock": 4,
+          "dimensions": "Edredom: 240 × 260 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true
+        },
+        {
+          "size": "King",
+          "priceCents": 40990,
+          "stock": 4,
+          "dimensions": "Edredom: 260 × 280 cm",
+          "includedItems": [
+            "1 edredom"
+          ],
+          "simulated": true
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Cobre-Leito Natural — Verde Botânico",
+      "category": "Cama / Colchas e cobre-leitos",
+      "priceCents": 21990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Casal",
+          "priceCents": 21990,
+          "stock": 4,
+          "dimensions": "Cobre-leito: 220 × 240 cm",
+          "includedItems": [
+            "1 cobre-leito"
+          ],
+          "simulated": true,
+          "variantId": 25
+        },
+        {
+          "size": "Queen",
+          "priceCents": 23990,
+          "stock": 4,
+          "dimensions": "Cobre-leito: 240 × 260 cm",
+          "includedItems": [
+            "1 cobre-leito"
+          ],
+          "simulated": true,
+          "variantId": 26
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Cobre-Leito Natural — Folhagens Suaves",
+      "category": "Cama / Colchas e cobre-leitos",
+      "priceCents": 21990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Casal",
+          "priceCents": 21990,
+          "stock": 4,
+          "dimensions": "Cobre-leito: 220 × 240 cm",
+          "includedItems": [
+            "1 cobre-leito"
+          ],
+          "simulated": true,
+          "variantId": 27
+        },
+        {
+          "size": "Queen",
+          "priceCents": 23990,
+          "stock": 4,
+          "dimensions": "Cobre-leito: 240 × 260 cm",
+          "includedItems": [
+            "1 cobre-leito"
+          ],
+          "simulated": true,
+          "variantId": 28
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Cobre-Leito Natural — Botânico Neutro",
+      "category": "Cama / Colchas e cobre-leitos",
+      "priceCents": 21990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Casal",
+          "priceCents": 21990,
+          "stock": 4,
+          "dimensions": "Cobre-leito: 220 × 240 cm",
+          "includedItems": [
+            "1 cobre-leito"
+          ],
+          "simulated": true,
+          "variantId": 29
+        },
+        {
+          "size": "Queen",
+          "priceCents": 23990,
+          "stock": 4,
+          "dimensions": "Cobre-leito: 240 × 260 cm",
+          "includedItems": [
+            "1 cobre-leito"
+          ],
+          "simulated": true,
+          "variantId": 30
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Colcha Provence — Lilás",
+      "category": "Cama / Colchas e cobre-leitos",
+      "priceCents": 25990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Casal",
+          "priceCents": 25990,
+          "stock": 3,
+          "dimensions": "Colcha: 220 × 240 cm",
+          "includedItems": [
+            "1 colcha",
+            "2 porta-travesseiros"
+          ],
+          "simulated": true,
+          "variantId": 31
+        },
+        {
+          "size": "Queen",
+          "priceCents": 27990,
+          "stock": 3,
+          "dimensions": "Colcha: 240 × 260 cm",
+          "includedItems": [
+            "1 colcha",
+            "2 porta-travesseiros"
+          ],
+          "simulated": true,
+          "variantId": 32
+        },
+        {
+          "size": "King",
+          "priceCents": 29990,
+          "stock": 2,
+          "dimensions": "Colcha: 260 × 280 cm",
+          "includedItems": [
+            "1 colcha",
+            "2 porta-travesseiros"
+          ],
+          "simulated": true,
+          "variantId": 33
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Colcha Provence — Rosa",
+      "category": "Cama / Colchas e cobre-leitos",
+      "priceCents": 25990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Casal",
+          "priceCents": 25990,
+          "stock": 3,
+          "dimensions": "Colcha: 220 × 240 cm",
+          "includedItems": [
+            "1 colcha",
+            "2 porta-travesseiros"
+          ],
+          "simulated": true,
+          "variantId": 34
+        },
+        {
+          "size": "Queen",
+          "priceCents": 27990,
+          "stock": 3,
+          "dimensions": "Colcha: 240 × 260 cm",
+          "includedItems": [
+            "1 colcha",
+            "2 porta-travesseiros"
+          ],
+          "simulated": true,
+          "variantId": 35
+        },
+        {
+          "size": "King",
+          "priceCents": 29990,
+          "stock": 2,
+          "dimensions": "Colcha: 260 × 280 cm",
+          "includedItems": [
+            "1 colcha",
+            "2 porta-travesseiros"
+          ],
+          "simulated": true,
+          "variantId": 36
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Manta Tricot Conforto — Areia",
+      "category": "Cama / Mantas e peseiras",
+      "priceCents": 15990,
+      "stock": 8,
+      "status": "formato-unico",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [],
+      "proposedVariants": []
+    },
+    {
+      "id": 22,
+      "name": "Manta Tricot Conforto — Verde Oliva",
+      "category": "Cama / Mantas e peseiras",
+      "priceCents": 15990,
+      "stock": 8,
+      "status": "formato-unico",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [],
+      "proposedVariants": []
+    },
+    {
+      "id": 23,
+      "name": "Manta Tricot Conforto — Terracota",
+      "category": "Cama / Mantas e peseiras",
+      "priceCents": 15990,
+      "stock": 8,
+      "status": "formato-unico",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [],
+      "proposedVariants": []
+    },
+    {
+      "id": 24,
+      "name": "Peseira Textura — Off-White",
+      "category": "Cama / Mantas e peseiras",
+      "priceCents": 11990,
+      "stock": 8,
+      "status": "formato-unico",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [],
+      "proposedVariants": []
+    },
+    {
+      "id": 25,
+      "name": "Peseira Textura — Azul Acinzentado",
+      "category": "Cama / Mantas e peseiras",
+      "priceCents": 11990,
+      "stock": 8,
+      "status": "formato-unico",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [],
+      "proposedVariants": []
+    },
+    {
+      "id": 26,
+      "name": "Peseira Textura — Marrom Taupe",
+      "category": "Cama / Mantas e peseiras",
+      "priceCents": 11990,
+      "stock": 8,
+      "status": "formato-unico",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [],
+      "proposedVariants": []
+    },
+    {
+      "id": 27,
+      "name": "Protetor SoftCare",
+      "category": "Cama / Protetores de colchão",
+      "priceCents": 9990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Solteiro",
+          "priceCents": 9990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 88 × 188 cm",
+          "includedItems": [
+            "1 protetor de colchão"
+          ],
+          "simulated": true,
+          "variantId": 37
+        },
+        {
+          "size": "Casal",
+          "priceCents": 11990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 138 × 188 cm",
+          "includedItems": [
+            "1 protetor de colchão"
+          ],
+          "simulated": true,
+          "variantId": 38
+        },
+        {
+          "size": "Queen",
+          "priceCents": 13990,
+          "stock": 2,
+          "dimensions": "Colchão de referência: 158 × 198 cm",
+          "includedItems": [
+            "1 protetor de colchão"
+          ],
+          "simulated": true,
+          "variantId": 39
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "name": "Protetor Protege",
+      "category": "Cama / Protetores de colchão",
+      "priceCents": 12990,
+      "stock": 8,
+      "status": "cadastrado",
+      "existingCartLines": 0,
+      "pendingStockDebits": 0,
+      "existingVariants": 0,
+      "variants": [
+        {
+          "size": "Casal",
+          "priceCents": 12990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 138 × 188 cm",
+          "includedItems": [
+            "1 protetor de colchão"
+          ],
+          "simulated": true,
+          "variantId": 40
+        },
+        {
+          "size": "Queen",
+          "priceCents": 14990,
+          "stock": 3,
+          "dimensions": "Colchão de referência: 158 × 198 cm",
+          "includedItems": [
+            "1 protetor de colchão"
+          ],
+          "simulated": true,
+          "variantId": 41
+        },
+        {
+          "size": "King",
+          "priceCents": 16990,
+          "stock": 2,
+          "dimensions": "Colchão de referência: 193 × 203 cm",
+          "includedItems": [
+            "1 protetor de colchão"
+          ],
+          "simulated": true,
+          "variantId": 42
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "databaseVersion": 14,
+    "activeProducts": 28,
+    "productsWithVariants": 17,
+    "variantsCreated": 42,
+    "totalStock": 224,
+    "unitsInVariants": 136,
+    "unitsInBaseProducts": 88
+  }
+}

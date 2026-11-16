@@ -10,21 +10,21 @@ import (
 var ErrCartOrderNotFound = errors.New("Pedido não encontrado")
 
 func reorderItems(ctx context.Context, tx *sql.Tx, userID int, cartID, orderID int64) error {
-	rows, err := tx.QueryContext(ctx, `SELECT i.product_id, SUM(i.quantity), MIN(i.name)
+	rows, err := tx.QueryContext(ctx, `SELECT i.product_id, COALESCE(i.variant_id,0), SUM(i.quantity), MIN(i.name)
  FROM checkout_order_items i JOIN checkout_orders o ON o.id=i.order_id
- WHERE o.id=$1 AND o.user_id=$2 GROUP BY i.product_id ORDER BY i.product_id`, orderID, userID)
+ WHERE o.id=$1 AND o.user_id=$2 GROUP BY i.product_id,i.variant_id ORDER BY i.product_id,i.variant_id`, orderID, userID)
 	if err != nil {
 		return err
 	}
 	type item struct {
-		id, quantity int64
-		name         string
+		id, variantID, quantity int64
+		name                    string
 	}
 	var items []item
 	defer rows.Close()
 	for rows.Next() {
 		var line item
-		if err := rows.Scan(&line.id, &line.quantity, &line.name); err != nil {
+		if err := rows.Scan(&line.id, &line.variantID, &line.quantity, &line.name); err != nil {
 			return err
 		}
 		items = append(items, line)
@@ -36,7 +36,7 @@ func reorderItems(ctx context.Context, tx *sql.Tx, userID int, cartID, orderID i
 		return ErrCartOrderNotFound
 	}
 	for _, line := range items {
-		if err := writeCartItem(ctx, tx, cartID, "add", line.id, line.quantity); err != nil {
+		if err := writeCartItem(ctx, tx, cartID, "add", line.id, line.quantity, line.variantID); err != nil {
 			if errors.Is(err, ErrCartProduct) || errors.Is(err, ErrCartQuantity) {
 				return fmt.Errorf("%s: %w. Nenhum produto foi adicionado.", line.name, err)
 			}

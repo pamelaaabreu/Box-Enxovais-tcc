@@ -1,3 +1,5 @@
+import { CAMA_GROUP } from '../../data/categories';
+import { ShippingQuoteComponent } from './shipping-quote.component';
 import { FavoriteButtonComponent } from '../../../../shared/favorite-button/favorite-button.component';
 import { CartService } from '../../../../core/services/cart.service';
 import { CurrencyPipe } from '@angular/common';
@@ -19,14 +21,14 @@ import { QuantitySelectorComponent } from '../../components/quantity-selector/qu
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CurrencyPipe, FavoriteButtonComponent, MatIconModule, ProductGridComponent, RouterLink, CatalogLayoutComponent, BreadcrumbsComponent, ProductGalleryComponent, ProductPriceComponent, QuantitySelectorComponent],
+  imports: [ShippingQuoteComponent, CurrencyPipe, FavoriteButtonComponent, MatIconModule, ProductGridComponent, RouterLink, CatalogLayoutComponent, BreadcrumbsComponent, ProductGalleryComponent, ProductPriceComponent, QuantitySelectorComponent],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductDetailComponent {
   readonly cart = inject(CartService);
-  addToCart(): void { const product = this.product(); if (product && this.canAddToCart()) this.cart.add(product.id, this.quantity()); }
+  addToCart(): void { const product = this.product(); if (product && this.canAddToCart()) this.cart.add(product.id, this.quantity(), this.selectedVariant()?.id); }
   private readonly route = inject(ActivatedRoute);
   private readonly catalog = inject(CatalogService);
   readonly quantity = signal(1);
@@ -48,6 +50,11 @@ export class ProductDetailComponent {
   readonly characteristics = computed(() => Object.entries(this.product()?.measurements ?? {})
     .filter(([, value]) => value != null && String(value).trim()));
 
+  readonly includedItems = computed(() => this.selectedVariant()?.includedItems ?? (this.product()?.measurements?.['Conteúdo'] ?? '')
+    .split(/\r?\n|\s+\+\s+|;/)
+    .map(item => item.trim())
+    .filter(Boolean));
+
   readonly sizes = computed(() => {
     const labels: Record<string, string> = {
       solteiro: 'Solteiro', casal: 'Casal', queen: 'Queen', super_king: 'Super king',
@@ -60,13 +67,14 @@ export class ProductDetailComponent {
   });
 
   readonly otherCharacteristics = computed(() => {
-    if (this.product()?.variants.length) return this.characteristics();
+    const attributes = this.characteristics().filter(([key]) => key !== 'Conteúdo');
+    if (this.product()?.variants.length) return attributes;
     const sizeKeys = new Set(this.sizes().map(({ key }) => key));
-    return this.characteristics().filter(([key]) => !sizeKeys.has(key));
+    return attributes.filter(([key]) => !sizeKeys.has(key));
   });
 
   readonly stock = computed(() => {
-    const value = this.product()?.stock ?? this.product()?.quantity ?? 0;
+    const value = this.selectedVariant()?.stock ?? this.product()?.stock ?? this.product()?.quantity ?? 0;
     return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
   });
   readonly recommendations = toSignal(toObservable(this.product).pipe(
@@ -77,7 +85,8 @@ export class ProductDetailComponent {
 
   readonly remainingStock = computed(() => {
     const product = this.product();
-    const inCart = this.cart.cart().items.find(item => item.productId === product?.id);
+    const variantId = this.selectedVariant()?.id;
+    const inCart = this.cart.cart().items.find(item => item.productId === product?.id && item.variantId === variantId);
     return Math.max(0, (inCart?.stock ?? this.stock()) - (inCart?.quantity ?? 0));
   });
 
@@ -90,28 +99,39 @@ export class ProductDetailComponent {
   readonly canAddToCart = computed(() => this.available() && Number.isInteger(this.quantity()) && this.quantity() >= 1 && this.quantity() <= this.remainingStock() && !this.cart.pending().has(this.product()!.id));
 
   readonly selectedVariant = computed(() => this.product()?.variants.find(variant => variant.id === this.variantId()) ?? this.product()?.variants.find(variant => variant.stock > 0) ?? this.product()?.variants[0] ?? null);
-  readonly availableColors = computed(() => [...new Set(this.product()?.variants.map(v => v.color || 'PadrÃƒÂ£o') ?? [])]);
-  readonly availableSizes = computed(() => [...new Set(this.product()?.variants.map(v => v.size || 'ÃƒÅ¡nico') ?? [])]);
-  readonly selectedColor = computed(() => this.selectedVariant()?.color || 'PadrÃƒÂ£o');
-  readonly selectedSize = computed(() => this.selectedVariant()?.size || 'ÃƒÅ¡nico');
+  readonly selectedPrice = computed(() => this.selectedVariant()?.price ?? this.product()?.price ?? 0);
+  readonly galleryImages = computed(() => {
+    const images = this.selectedVariant()?.images;
+    return images?.length ? images : this.product()?.images ?? [];
+  });
+  readonly availableColors = computed(() => [...new Set(this.product()?.variants.map(v => v.color || 'Padrão') ?? [])]);
+  readonly availableSizes = computed(() => [...new Set(this.product()?.variants.map(v => v.size || 'Único') ?? [])]);
+  readonly selectedColor = computed(() => this.selectedVariant()?.color || 'Padrão');
+  readonly selectedSize = computed(() => this.selectedVariant()?.size || 'Único');
 
   isColorAvailable(color: string): boolean {
-    return this.product()?.variants.some(v => (v.color || 'PadrÃƒÂ£o') === color && v.stock > 0) ?? false;
+    return this.product()?.variants.some(v => (v.color || 'Padrão') === color && v.stock > 0) ?? false;
   }
 
   isSizeAvailable(size: string): boolean {
-    return this.product()?.variants.some(v => (v.color || 'PadrÃƒÂ£o') === this.selectedColor() && (v.size || 'ÃƒÅ¡nico') === size && v.stock > 0) ?? false;
+    return this.product()?.variants.some(v => (v.color || 'Padrão') === this.selectedColor() && (v.size || 'Único') === size && v.stock > 0) ?? false;
   }
 
   selectColor(color: string): void {
-    const variants = this.product()?.variants.filter(v => (v.color || 'PadrÃƒÂ£o') === color && v.stock > 0) ?? [];
-    const variant = variants.find(v => (v.size || 'ÃƒÅ¡nico') === this.selectedSize()) ?? variants[0];
-    if (variant) this.variantId.set(variant.id);
+    const variants = this.product()?.variants.filter(v => (v.color || 'Padrão') === color && v.stock > 0) ?? [];
+    const variant = variants.find(v => (v.size || 'Único') === this.selectedSize()) ?? variants[0];
+    if (variant) {
+      this.variantId.set(variant.id);
+      this.quantity.set(1);
+    }
   }
 
   selectSize(size: string): void {
-    const variant = this.product()?.variants.find(v => (v.color || 'PadrÃƒÂ£o') === this.selectedColor() && (v.size || 'ÃƒÅ¡nico') === size && v.stock > 0);
-    if (variant) this.variantId.set(variant.id);
+    const variant = this.product()?.variants.find(v => (v.color || 'Padrão') === this.selectedColor() && (v.size || 'Único') === size && v.stock > 0);
+    if (variant) {
+      this.variantId.set(variant.id);
+      this.quantity.set(1);
+    }
   }
 
   swatchColor(color: string): string {
@@ -125,18 +145,25 @@ export class ProductDetailComponent {
     .filter(Boolean)
     .map(text => {
       const normalized = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-      let icon = 'info_outline';
-      if (/^(?:ciclo delicado|lavar em ciclo delicado)\b/.test(normalized)) icon = 'water_drop';
-      if (/^nao (?:usar|utilizar) alvejante\b/.test(normalized)) icon = 'block';
-      if (/^secar (?:a|na) sombra\b/.test(normalized)) icon = 'light_mode';
-      return { text, icon };
+      let icon = 'info';
+      if (/\ba seco\b/.test(normalized)) icon = 'dry-clean';
+      else if (/\b(?:lavar|ciclo)\b/.test(normalized)) icon = 'wash';
+      else if (/\balvejante\b/.test(normalized)) icon = 'bleach';
+      else if (/\b(?:secar|secadora)\b/.test(normalized)) icon = 'dry';
+      else if (/\bpassar\b/.test(normalized)) icon = 'iron';
+      return { text, icon, prohibited: normalized.startsWith('nao ') };
     }));
 
   readonly breadcrumbs = computed<BreadcrumbItem[]>(() => {
     const product = this.product();
+    const camaSubcategory = CAMA_GROUP.types.includes(product?.category.name ?? '');
     return product ? [
       { label: 'Home', url: '/home' },
-      ...(product.category.slug ? [{ label: product.category.name, url: "/categoria/" + product.category.slug }] : []),
+      ...(camaSubcategory ? [{ label: 'Cama', url: '/categoria/cama' }] : []),
+      ...(product.category.slug ? [{
+        label: camaSubcategory ? product.category.name.slice('Cama / '.length) : product.category.name,
+        url: '/categoria/' + product.category.slug,
+      }] : []),
       { label: product.name },
     ] : [{ label: 'Home', url: '/home' }, { label: 'Produto' }];
   });

@@ -41,7 +41,13 @@
             (input)="changeSearch(orderSearch.value)"
           />
           @if (searchDraft()) {
-            <button type="button" aria-label="Limpar pesquisa" (click)="submitSearch(''); orderSearch.focus()">×</button>
+            <button
+              type="button"
+              aria-label="Limpar pesquisa"
+              (click)="submitSearch(''); orderSearch.focus()"
+            >
+              ×
+            </button>
           }
         </form>
       </div>
@@ -100,8 +106,11 @@
       </div>
     }
     @if (reorderCart(); as cart) {
-      @if (cart.reordering()) { <p role="status">Adicionando produtos ao carrinho…</p> }
-      @else if (cart.error()) { <p role="alert" class="cancel-error">{{ cart.error() }}</p> }
+      @if (cart.reordering()) {
+        <p role="status">Adicionando produtos ao carrinho…</p>
+      } @else if (cart.error()) {
+        <p role="alert" class="cancel-error">{{ cart.error() }}</p>
+      }
     }
     @switch (state()) {
       @case ("loading") {
@@ -149,166 +158,264 @@
                     <span class="cancelled-badge">Cancelado</span>
                   }
                 </div>
-            <p>
-              Realizado em
-              <time [attr.datetime]="order.createdAt">{{
-                order.createdAt
-                  | date: "dd/MM/yyyy 'às' HH:mm" : "-0300" : "pt-BR"
-              }}</time> · {{ units(order) }} {{ units(order) === 1 ? "item" : "itens" }}
-            </p>
+                <p>
+                  Realizado em
+                  <time [attr.datetime]="order.createdAt">{{
+                    order.createdAt
+                      | date: "dd/MM/yyyy 'às' HH:mm" : "-0300" : "pt-BR"
+                  }}</time>
+                  · {{ units(order) }}
+                  {{ units(order) === 1 ? "item" : "itens" }}
+                </p>
               </div>
               <a class="action" routerLink="/home">Continuar comprando</a>
             </div>
           </header>
           <div class="detail-grid">
-              <section class="order detail-panel detail-products">
-                <h2>
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    aria-hidden="true"
-                  >
-                    <path d="m3 7 9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4m-9 4v10" />
-                  </svg>
-                  Produtos do pedido <small class="detail-count">{{ units(order) }} {{ units(order) === 1 ? "item" : "itens" }}</small>
-                </h2>
-                @for (item of order.items; track item.id) {
-                  <div class="detail-item">
-                    <ng-container
-                      [ngTemplateOutlet]="thumbnail"
-                      [ngTemplateOutletContext]="{ $implicit: item }"
-                    />
-                    <div>
-                      <strong>{{ item.name }}</strong>
-                      <div class="detail-item-meta">
-                        <span>Qtd.: {{ item.quantity }}</span>
-                        <span>{{ item.unitPrice | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR" }} / un.</span>
-                      </div>
-                      @if (item.productId) {
-                        <a [routerLink]="['/produto', item.productId]">Ver produto →</a>
-                      }
+            <section class="order detail-panel detail-products">
+              <h2>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  aria-hidden="true"
+                >
+                  <path d="m3 7 9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4m-9 4v10" />
+                </svg>
+                Produtos do pedido
+                <small class="detail-count"
+                  >{{ units(order) }}
+                  {{ units(order) === 1 ? "item" : "itens" }}</small
+                >
+              </h2>
+              @for (item of order.items; track item.id) {
+                <div class="detail-item">
+                  <ng-container
+                    [ngTemplateOutlet]="thumbnail"
+                    [ngTemplateOutletContext]="{ $implicit: item }"
+                  />
+                  <div>
+                    <strong>{{ item.name }}</strong>
+                    <div class="detail-item-meta">
+                      <span>Qtd.: {{ item.quantity }}</span>
+                      <span
+                        >{{
+                          item.unitPrice
+                            | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                        }}
+                        / un.</span
+                      >
                     </div>
-                    <div class="detail-item-total">
-                      <small>Subtotal do item</small
-                      ><strong>{{
-                        item.subtotal
-                          | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-                      }}</strong>
-                    </div>
+                    @if (item.productId) {
+                      <a [routerLink]="['/produto', item.productId]"
+                        >Ver produto →</a
+                      >
+                    }
                   </div>
-                }
-                <p class="detail-product-count">{{ order.items.length }} {{ order.items.length === 1 ? 'produto' : 'produtos' }} · {{ units(order) }} {{ units(order) === 1 ? 'unidade' : 'unidades' }}</p>
-              </section>
-              <section class="order detail-panel detail-delivery">
-                <h2>
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM15 10a3 3 0 1 0-6 0 3 3 0 0 0 6 0Z"
-                    />
-                  </svg>
-                  Endereço de entrega
-                </h2>
-                <dl class="detail-address">
-                  <div><dt>Destinatário</dt><dd>{{ order.address.recipient }}</dd></div>
-                  <div><dt>CEP</dt><dd>{{ order.address.zipCode }}</dd></div>
-                  <div class="detail-street"><dt>Endereço</dt><dd>{{ order.address.street }}, {{ order.address.number }} @if (order.address.complement) { — {{ order.address.complement }} }</dd></div>
-                  <div><dt>Bairro</dt><dd>{{ order.address.neighborhood }}</dd></div>
-                  <div><dt>Cidade / UF</dt><dd>{{ order.address.city }} — {{ order.address.state }}</dd></div>
-                </dl>
-              </section>
-            <div class="detail-side">
-            <section class="order detail-panel detail-summary">
-              <h2>Resumo do pedido</h2>
-              <dl>
+                  <div class="detail-item-total">
+                    <small>Subtotal do item</small
+                    ><strong>{{
+                      item.subtotal
+                        | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                    }}</strong>
+                  </div>
+                </div>
+              }
+              <p class="detail-product-count">
+                {{ order.items.length }}
+                {{ order.items.length === 1 ? "produto" : "produtos" }} ·
+                {{ units(order) }}
+                {{ units(order) === 1 ? "unidade" : "unidades" }}
+              </p>
+            </section>
+            <section class="order detail-panel detail-delivery">
+              <h2>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM15 10a3 3 0 1 0-6 0 3 3 0 0 0 6 0Z"
+                  />
+                </svg>
+                Endereço de entrega
+              </h2>
+              <dl class="detail-address">
                 <div>
-                  <dt>Forma de pagamento</dt>
-                  <dd>{{ payments[order.paymentMethod] }}</dd>
+                  <dt>Destinatário</dt>
+                  <dd>{{ order.address.recipient }}</dd>
                 </div>
                 <div>
-                  <dt>Subtotal ({{ units(order) }} {{ units(order) === 1 ? "item" : "itens" }})</dt>
+                  <dt>CEP</dt>
+                  <dd>{{ order.address.zipCode }}</dd>
+                </div>
+                <div class="detail-street">
+                  <dt>Endereço</dt>
                   <dd>
-                    {{
-                      subtotal(order)
-                        | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-                    }}
+                    {{ order.address.street }}, {{ order.address.number }}
+                    @if (order.address.complement) {
+                      — {{ order.address.complement }}
+                    }
                   </dd>
                 </div>
-                <div class="detail-total">
-                  <dt>Total do pedido</dt>
-                  <dd>
-                    {{
-                      order.total
-                        | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-                    }}
-                  </dd>
+                <div>
+                  <dt>Bairro</dt>
+                  <dd>{{ order.address.neighborhood }}</dd>
+                </div>
+                <div>
+                  <dt>Cidade / UF</dt>
+                  <dd>{{ order.address.city }} — {{ order.address.state }}</dd>
                 </div>
               </dl>
             </section>
-            <section class="order detail-panel detail-help">
-              <h2>Precisa de ajuda?</h2>
-              <p>Tem alguma dúvida sobre este pedido? Estamos por aqui.</p>
-              <div class="detail-help-actions">
-                @if (order.status === "cancelled") {
-                  <span class="cancelled-badge cancelled-indicator">Pedido cancelado</span>
-                  <a class="cancelled-support" [href]="supportPhone">Falar com atendente</a>
-                  <dl class="cancellation-info">
-                    <dt>Motivo do cancelamento</dt>
-                    <dd>{{ cancellationReasons.get(order.cancellation?.reasonCode ?? '') ?? 'Motivo não informado' }}</dd>
-                    @if (order.cancellation?.reasonDetails?.trim(); as note) {
-                      <dd class="cancellation-note">
-                        <mat-icon aria-hidden="true">chat_bubble_outline</mat-icon>
-                        <span>{{ note }}</span>
+            <div class="detail-side">
+              <section class="order detail-panel detail-summary">
+                <h2>Resumo do pedido</h2>
+                <dl>
+                  <div>
+                    <dt>Forma de pagamento</dt>
+                    <dd>{{ payments[order.paymentMethod] }}</dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Subtotal ({{ units(order) }}
+                      {{ units(order) === 1 ? "item" : "itens" }})
+                    </dt>
+                    <dd>
+                      {{
+                        subtotal(order)
+                          | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                      }}
+                    </dd>
+                  </div>
+                  <div class="detail-total">
+                    <dt>Total do pedido</dt>
+                    <dd>
+                      {{
+                        order.total
+                          | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                      }}
+                    </dd>
+                  </div>
+                </dl>
+              </section>
+              <section class="order detail-panel detail-help">
+                <h2>Precisa de ajuda?</h2>
+                <p>Tem alguma dúvida sobre este pedido? Estamos por aqui.</p>
+                <div class="detail-help-actions">
+                  @if (order.status === "cancelled") {
+                    <span class="cancelled-badge cancelled-indicator"
+                      >Pedido cancelado</span
+                    >
+                    <a class="cancelled-support" [href]="supportPhone"
+                      >Falar com atendente</a
+                    >
+                    <dl class="cancellation-info">
+                      <dt>Motivo do cancelamento</dt>
+                      <dd>
+                        {{
+                          cancellationReasons.get(
+                            order.cancellation?.reasonCode ?? ""
+                          ) ?? "Motivo não informado"
+                        }}
                       </dd>
-                    }
-                  </dl>
-                } @else if (order.canCancel) {
-                  <button type="button" class="cancel-order" (click)="confirmCancellation(cancelDialog, cancelActions, order)">
-                    Cancelar compra
-                  </button>
-                } @else {
-                  <a class="action support-order" [href]="supportPhone">Falar com o suporte</a>
-                }
-              </div>
-              <ng-template #cancelDialog>
-                  <div class="cancellation-fields" [attr.inert]="cancelling() ? '' : null">
+                      @if (order.cancellation?.reasonDetails?.trim(); as note) {
+                        <dd class="cancellation-note">
+                          <mat-icon aria-hidden="true"
+                            >chat_bubble_outline</mat-icon
+                          >
+                          <span>{{ note }}</span>
+                        </dd>
+                      }
+                    </dl>
+                  } @else if (order.canCancel) {
+                    <button
+                      type="button"
+                      class="cancel-order"
+                      (click)="
+                        confirmCancellation(cancelDialog, cancelActions, order)
+                      "
+                    >
+                      Cancelar compra
+                    </button>
+                  } @else {
+                    <a class="action support-order" [href]="supportPhone"
+                      >Falar com o suporte</a
+                    >
+                  }
+                </div>
+                <ng-template #cancelDialog>
+                  <div
+                    class="cancellation-fields"
+                    [attr.inert]="cancelling() ? '' : null"
+                  >
                     <mat-form-field appearance="outline" floatLabel="always">
                       <mat-label>Motivo do cancelamento</mat-label>
-                      <mat-select [formControl]="cancellationReason" panelClass="box-form-options" required>
+                      <mat-select
+                        [formControl]="cancellationReason"
+                        panelClass="box-form-options"
+                        required
+                      >
                         @for (reason of cancellationReasons; track reason[0]) {
-                          <mat-option [value]="reason[0]">{{ reason[1] }}</mat-option>
+                          <mat-option [value]="reason[0]">{{
+                            reason[1]
+                          }}</mat-option>
                         }
                       </mat-select>
                       <mat-error>Selecione o motivo do cancelamento.</mat-error>
                     </mat-form-field>
-                    @if (cancellationReason.value === 'other') {
+                    @if (cancellationReason.value === "other") {
                       <mat-form-field appearance="outline">
                         <mat-label>Observação</mat-label>
-                        <textarea matInput [formControl]="cancellationDetails" maxlength="500" rows="3" required pattern="[\s\S]*\S[\s\S]*"></textarea>
-                        <mat-hint align="end">{{ cancellationDetails.value.length }}/500</mat-hint>
-                        <mat-error>Preencha a observação com até 500 caracteres.</mat-error>
+                        <textarea
+                          matInput
+                          [formControl]="cancellationDetails"
+                          maxlength="500"
+                          rows="3"
+                          required
+                          pattern="[\s\S]*\S[\s\S]*"
+                        ></textarea>
+                        <mat-hint align="end"
+                          >{{ cancellationDetails.value.length }}/500</mat-hint
+                        >
+                        <mat-error
+                          >Preencha a observação com até 500
+                          caracteres.</mat-error
+                        >
                       </mat-form-field>
                     }
                   </div>
                   @if (cancelError()) {
                     <p class="cancel-error" role="alert">{{ cancelError() }}</p>
                   } @else if (!details()?.canCancel && !cancelling()) {
-                    <p class="cancel-error" role="alert">Este pedido não está disponível para cancelamento.</p>
+                    <p class="cancel-error" role="alert">
+                      Este pedido não está disponível para cancelamento.
+                    </p>
                   }
-              </ng-template>
-              <ng-template #cancelActions>
-                  <button type="button" class="cancel-dialog-keep box-confirm-secondary" [disabled]="cancelling()" mat-dialog-close>
+                </ng-template>
+                <ng-template #cancelActions>
+                  <button
+                    type="button"
+                    class="cancel-dialog-keep box-confirm-secondary"
+                    [disabled]="cancelling()"
+                    mat-dialog-close
+                  >
                     Manter pedido
                   </button>
-                  <button type="button" class="cancel-dialog-confirm box-confirm-primary"
-                    [disabled]="cancelling() || !details()?.canCancel || !canConfirmCancellation" (click)="cancelPurchase()">
+                  <button
+                    type="button"
+                    class="cancel-dialog-confirm box-confirm-primary"
+                    [disabled]="
+                      cancelling() ||
+                      !details()?.canCancel ||
+                      !canConfirmCancellation
+                    "
+                    (click)="cancelPurchase()"
+                  >
                     @if (cancelling()) {
                       <mat-spinner diameter="18" aria-hidden="true" />
                       <span role="status">Cancelando…</span>
@@ -316,8 +423,8 @@
                       Confirmar cancelamento
                     }
                   </button>
-              </ng-template>
-            </section>
+                </ng-template>
+              </section>
             </div>
           </div>
         } @else {
@@ -373,8 +480,10 @@
                     @if (order.items.length > 2) {
                       <small class="order-extra"
                         >+ {{ order.items.length - 2 }}
-                        {{ order.items.length === 3 ? "produto" : "produtos" }} neste
-                        pedido</small
+                        {{
+                          order.items.length === 3 ? "produto" : "produtos"
+                        }}
+                        neste pedido</small
                       >
                     }
                   </div>
@@ -384,7 +493,14 @@
                         | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
                     }}</strong>
                     <div class="order-card-actions">
-                      <button class="order-rebuy" type="button" [disabled]="reorderCart()?.reordering()" (click)="reorder(order.id)">Comprar novamente</button>
+                      <button
+                        class="order-rebuy"
+                        type="button"
+                        [disabled]="reorderCart()?.reordering()"
+                        (click)="reorder(order.id)"
+                      >
+                        Comprar novamente
+                      </button>
                       <a
                         class="action"
                         [routerLink]="['/meus-pedidos', order.id]"
@@ -400,10 +516,22 @@
               <h2>Nenhum pedido encontrado</h2>
               @if (search()) {
                 <p>Não encontramos pedidos para sua pesquisa.</p>
-                <button class="clear-filters" type="button" (click)="submitSearch('')">Limpar pesquisa</button>
+                <button
+                  class="clear-filters"
+                  type="button"
+                  (click)="submitSearch('')"
+                >
+                  Limpar pesquisa
+                </button>
               } @else {
                 <p>Não encontramos pedidos para os filtros selecionados.</p>
-                <button class="clear-filters" type="button" (click)="clearFilters()">Limpar filtros</button>
+                <button
+                  class="clear-filters"
+                  type="button"
+                  (click)="clearFilters()"
+                >
+                  Limpar filtros
+                </button>
               }
             </div>
           } @else {

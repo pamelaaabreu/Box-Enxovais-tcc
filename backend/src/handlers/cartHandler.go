@@ -22,7 +22,7 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	operation := "get"
-	var id, quantity int64
+	var id, quantity, variantID int64
 	if r.PathValue("id") != "" {
 		var err error
 		id, err = strconv.ParseInt(r.PathValue("id"), 10, 64)
@@ -45,14 +45,16 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		var body struct {
 			ProductID int64 `json:"productId"`
+			VariantID int64 `json:"variantId"`
 			Quantity  int64 `json:"quantity"`
 		}
-		if !decodeCartBody(w, r, &body) || body.ProductID <= 0 || body.Quantity < 1 || body.Quantity > 1000000 {
+		if !decodeCartBody(w, r, &body) || body.ProductID <= 0 || body.VariantID < 0 || body.Quantity < 1 || body.Quantity > 1000000 {
 			response.Error(w, 400, "Produto ou quantidade inválidos")
 			return
 		}
 		operation = "add"
 		id = body.ProductID
+		variantID = body.VariantID
 		quantity = body.Quantity
 	case http.MethodPatch:
 		var body struct {
@@ -70,7 +72,7 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			operation = "remove"
 		}
 	}
-	cart, err := h.Store.Apply(r.Context(), userID, operation, id, quantity)
+	cart, err := h.Store.Apply(r.Context(), userID, operation, id, quantity, variantID)
 	if err != nil {
 		status := 500
 		message := "Não foi possível atualizar o carrinho. Tente novamente."

@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, Input, ViewChild, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CATEGORIES } from '../../features/catalog/data/categories';
 
 @Component({
   selector: 'app-main-navbar',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './main-navbar.component.html',
   styleUrl: './main-navbar.component.css',
 })

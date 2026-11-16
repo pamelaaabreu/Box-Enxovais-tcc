@@ -10,6 +10,7 @@ import { ProductImage } from '../../interfaces/product-image.interface';
 })
 export class ProductMediaComponent {
   readonly image = input<ProductImage | null>(null);
+  readonly priority = input(false);
   readonly compact = input(false);
   readonly showCaption = input(true);
   readonly failedUrl = signal<string | null>(null);

@@ -125,6 +125,7 @@ func run() error {
 	mux.HandleFunc("GET /checkout/success/{id}", middlewares.AuthMiddleware(checkout.ServeHTTP))
 	routes.InitRoutesFavorites(mux, favorites)
 	routes.InitRoutesProducts(mux, products, images)
+	routes.InitRoutesShipping(mux, database)
 	routes.InitRoutesNewsletter(mux, newsletter)
 	routes.InitRoutesPromotions(mux, promotions, products)
 

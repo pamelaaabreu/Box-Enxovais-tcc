@@ -261,3 +261,17 @@ app-top-navbar {
   --mat-full-pseudo-checkbox-selected-icon-color: #667255;
   --mat-minimal-pseudo-checkbox-selected-checkmark-color: #667255;
 }
+
+.mat-mdc-select-panel.catalog-sort-options {
+  padding-block: 4px;
+}
+
+.catalog-sort-options .mat-mdc-option {
+  min-height: 42px;
+  padding-inline: 14px;
+}
+
+.catalog-sort-options .mat-mdc-option .mdc-list-item__primary-text {
+  font: 500 13px/1.4 Montserrat, sans-serif;
+  white-space: nowrap;
+}

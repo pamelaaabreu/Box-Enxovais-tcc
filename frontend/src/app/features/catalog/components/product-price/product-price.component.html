@@ -1,2 +1,8 @@
-<strong>{{ price() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
-@if (showInstallments()) { <span>ou 4x de {{ price() / 4 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }} sem juros</span> }
+<strong>{{ price() | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR" }}</strong>
+@if (showInstallments()) {
+  <span
+    >ou 4x de
+    {{ price() / 4 | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR" }} sem
+    juros</span
+  >
+}
