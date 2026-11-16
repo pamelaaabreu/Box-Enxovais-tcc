@@ -14,6 +14,13 @@ import { ProductMediaComponent } from '../product-media/product-media.component'
 export class ProductGalleryComponent {
   readonly images = input<readonly ProductImage[]>([]);
   readonly orderedImages = computed(() => [...this.images()].sort((a, b) => a.position - b.position));
+  move(direction: -1 | 1): void {
+    const images = this.orderedImages();
+    if (images.length < 2) return;
+    const index = images.findIndex(image => image.id === this.selectedImage()?.id);
+    this.selectedId.set(images[(index + direction + images.length) % images.length].id);
+  }
+
   readonly selectedId = linkedSignal(() => this.orderedImages()[0]?.id ?? null);
   readonly selectedImage = computed<ProductImage | null>(() => this.orderedImages().find(image => image.id === this.selectedId()) ?? this.orderedImages()[0] ?? null);
 }

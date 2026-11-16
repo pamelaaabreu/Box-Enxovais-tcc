@@ -1,60 +1,160 @@
 <div class="admin-shell" (keydown.escape)="menuOpen.set(false)">
   <header class="admin-header">
-    <button type="button" class="menu-toggle" aria-label="Menu administrativo" aria-controls="admin-sidebar"
-      [attr.aria-expanded]="menuOpen()" (click)="menuOpen.set(!menuOpen())"><mat-icon aria-hidden="true">menu</mat-icon></button>
+    <button
+      type="button"
+      class="menu-toggle"
+      aria-label="Menu administrativo"
+      aria-controls="admin-sidebar"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="menuOpen.set(!menuOpen())"
+    >
+      <mat-icon aria-hidden="true">menu</mat-icon>
+    </button>
     <div class="page-title">
-      @if (title() === 'Dashboard') {
-        <h1>Bem-vindo de volta, {{ firstName }}! <span aria-hidden="true">👋</span></h1>
+      @if (title() === "Dashboard") {
+        <h1>
+          Bem-vindo de volta, {{ firstName }}!
+          <span aria-hidden="true">👋</span>
+        </h1>
         <p>Acompanhe o desempenho da Box Enxovais.</p>
       } @else {
-        <h1>{{ title() }}</h1><p>{{ subtitle() }}</p>
+        <h1>{{ title() }}</h1>
+        <p>{{ subtitle() }}</p>
       }
     </div>
     <form class="admin-search" role="search" (submit)="search($event)">
       <mat-icon aria-hidden="true">search</mat-icon>
-      <input #searchInput type="search" aria-label="Pesquisar produtos" placeholder="Pesquisar produtos…"
-        maxlength="120" [value]="searchTerm()" (input)="searchTerm.set(searchInput.value)" />
+      <input
+        #searchInput
+        type="search"
+        aria-label="Pesquisar produtos"
+        placeholder="Pesquisar produtos…"
+        maxlength="120"
+        [value]="searchTerm()"
+        (input)="searchTerm.set(searchInput.value)"
+      />
     </form>
   </header>
   @if (menuOpen()) {
-    <button class="drawer-backdrop" type="button" aria-label="Fechar menu administrativo" (click)="menuOpen.set(false)"></button>
+    <button
+      class="drawer-backdrop"
+      type="button"
+      aria-label="Fechar menu administrativo"
+      (click)="menuOpen.set(false)"
+    ></button>
   }
   <aside class="sidebar" id="admin-sidebar" [class.open]="menuOpen()">
-    <img src="logotipo-branca-completa.png" alt="Box Enxovais — Casa bem vivida" class="logo" />
+    <img
+      src="logotipo-branca-completa.png"
+      alt="Box Enxovais — Casa bem vivida"
+      class="logo"
+    />
     <nav aria-label="Administração">
       <p class="nav-heading">Menu</p>
-      <a routerLink="/admin/dashboard" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">dashboard</mat-icon> Dashboard</a>
+      <a
+        routerLink="/admin/dashboard"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        ><mat-icon aria-hidden="true">dashboard</mat-icon> Dashboard</a
+      >
       <details [open]="section() === 'products' && !isProductCreate()">
-        <summary><mat-icon aria-hidden="true">inventory_2</mat-icon> Produtos <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon></summary>
-        <a routerLink="/admin/products" routerLinkActive="active" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored'}">Listagem</a>
-
+        <summary>
+          <mat-icon aria-hidden="true">inventory_2</mat-icon> Produtos
+          <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon>
+        </summary>
+        <a
+          routerLink="/admin/products"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          [routerLinkActiveOptions]="{
+            paths: 'exact',
+            queryParams: 'ignored',
+            matrixParams: 'ignored',
+            fragment: 'ignored',
+          }"
+          >Listagem</a
+        >
       </details>
       @for (page of pendingPages; track page.icon) {
-        <span class="pending-page" role="link" aria-disabled="true"><mat-icon aria-hidden="true">{{ page.icon }}</mat-icon><span>{{ page.label }}</span></span>
+        <span class="pending-page" role="link" aria-disabled="true"
+          ><mat-icon aria-hidden="true">{{ page.icon }}</mat-icon
+          ><span>{{ page.label }}</span></span
+        >
       }
-      <a routerLink="/admin/reports" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">description</mat-icon> Relatórios</a>
+      <a
+        routerLink="/admin/reports"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        ><mat-icon aria-hidden="true">description</mat-icon> Relatórios</a
+      >
       <details [open]="section() === 'promotions'">
-        <summary><mat-icon aria-hidden="true">sell</mat-icon> Promoções <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon></summary>
-        <a routerLink="/admin/promotions/create" routerLinkActive="active" ariaCurrentWhenActive="page">Criar promoção</a>
-        <a routerLink="/admin/promotions/add-product" routerLinkActive="active" ariaCurrentWhenActive="page">Adicionar produto</a>
+        <summary>
+          <mat-icon aria-hidden="true">sell</mat-icon> Promoções
+          <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon>
+        </summary>
+        <a
+          routerLink="/admin/promotions/create"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          >Criar promoção</a
+        >
+        <a
+          routerLink="/admin/promotions/add-product"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          >Adicionar produto</a
+        >
       </details>
       <details [open]="section() === 'catalog' || isProductCreate()">
-        <summary><mat-icon aria-hidden="true">category</mat-icon> Cadastros <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon></summary>
-        <a routerLink="/admin/products/manage" routerLinkActive="active" ariaCurrentWhenActive="page">Produtos</a>
-        <a routerLink="/admin/catalog/categories" routerLinkActive="active" ariaCurrentWhenActive="page">Categorias</a>
-        <a routerLink="/admin/catalog/brands" routerLinkActive="active" ariaCurrentWhenActive="page">Marcas</a>
-        <a routerLink="/admin/catalog/shipping-ranges" routerLinkActive="active" ariaCurrentWhenActive="page">Faixas de CEP</a>
+        <summary>
+          <mat-icon aria-hidden="true">category</mat-icon> Cadastros
+          <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon>
+        </summary>
+        <a
+          routerLink="/admin/products/manage"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          >Produtos</a
+        >
+        <a
+          routerLink="/admin/catalog/categories"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          >Categorias</a
+        >
+        <a
+          routerLink="/admin/catalog/brands"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          >Marcas</a
+        >
+        <a
+          routerLink="/admin/catalog/shipping-ranges"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          >Faixas de CEP</a
+        >
       </details>
       <div class="sidebar-actions">
         <p class="nav-heading">Outros</p>
-        <a routerLink="/account"><mat-icon aria-hidden="true">settings</mat-icon> Configurações</a>
-        <a routerLink="/home"><mat-icon aria-hidden="true">storefront</mat-icon> Voltar para a loja</a>
-        <button type="button" (click)="logout()"><mat-icon aria-hidden="true">logout</mat-icon> Sair da conta</button>
+        <a routerLink="/account"
+          ><mat-icon aria-hidden="true">settings</mat-icon> Configurações</a
+        >
+        <a routerLink="/home"
+          ><mat-icon aria-hidden="true">storefront</mat-icon> Voltar para a
+          loja</a
+        >
+        <button type="button" (click)="logout()">
+          <mat-icon aria-hidden="true">logout</mat-icon> Sair da conta
+        </button>
       </div>
     </nav>
     <div class="profile">
       <span class="avatar" aria-hidden="true">{{ initials }}</span>
-      <div><strong>{{ name || 'Administrador' }}</strong><span>{{ email }}</span></div>
+      <div>
+        <strong>{{ name || "Administrador" }}</strong
+        ><span>{{ email }}</span>
+      </div>
     </div>
   </aside>
   <main class="content"><router-outlet /></main>

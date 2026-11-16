@@ -1,5 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { filter } from 'rxjs';
@@ -9,7 +15,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-admin',
   imports: [RouterLink, RouterLinkActive, RouterOutlet, MatIconModule],
   templateUrl: './admin.component.html',
-  styleUrl: './admin.component.css',
+  styleUrl: './admin.component.scss',
 })
 export class AdminComponent {
   private readonly auth = inject(AuthService);
@@ -28,19 +34,29 @@ export class AdminComponent {
     { label: 'Métricas analíticas', icon: 'monitoring' },
     { label: 'Informações de clientes', icon: 'groups' },
   ];
-  readonly initials = (this.name || this.email || 'Administrador').trim().split(/\s+/).slice(0, 2)
-    .map(part => part.charAt(0).toUpperCase()).join('');
+  readonly initials = (this.name || this.email || 'Administrador')
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join('');
 
   constructor() {
     this.syncPage();
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd), takeUntilDestroyed())
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(),
+      )
       .subscribe(() => this.syncPage());
   }
 
   private syncPage(): void {
     const section = this.router.url.split(/[/?#]/)[2];
     this.section.set(section);
-    this.isProductCreate.set(this.router.url.split(/[?#]/)[0] === '/admin/products/manage');
+    this.isProductCreate.set(
+      this.router.url.split(/[?#]/)[0] === '/admin/products/manage',
+    );
     if (this.isProductCreate()) {
       this.title.set('Cadastrar produto');
       this.subtitle.set('Cadastros › Produtos');
@@ -54,7 +70,10 @@ export class AdminComponent {
       promotions: ['Promoções', 'Organize as ofertas do catálogo.'],
       reports: ['Relatórios', 'Consulte os relatórios da loja.'],
     };
-    const [title, subtitle] = pages[section] ?? ['Dashboard', 'Visão geral de pedidos, catálogo e estoque.'];
+    const [title, subtitle] = pages[section] ?? [
+      'Dashboard',
+      'Visão geral de pedidos, catálogo e estoque.',
+    ];
     this.title.set(title);
     this.subtitle.set(subtitle);
   }
@@ -62,7 +81,10 @@ export class AdminComponent {
   search(event: Event): void {
     event.preventDefault();
     const term = this.searchTerm().trim();
-    if (term) void this.router.navigate(['/admin/products'], { queryParams: { q: term } });
+    if (term)
+      void this.router.navigate(['/admin/products'], {
+        queryParams: { q: term },
+      });
   }
 
   logout(): void {

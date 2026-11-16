@@ -1,3 +1,4 @@
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideNgxMask } from 'ngx-mask';
 import { CustomAlertService } from '../../../../core/services/custom-alert.service';
 import { Component } from '@angular/core';
@@ -55,7 +56,7 @@ describe('Product stock experience',()=>{
  let product: CatalogProduct;
  beforeEach(()=>{
   product={id:42,name:'Produto',stock:10,quantity:10,status:'active',price:129.9,images:[],variants:[],category:{id:1,name:'Cama',slug:'cama'},measurements:{}} as unknown as CatalogProduct;
-  TestBed.configureTestingModule({providers:[provideRouter([]),provideHttpClient(),provideHttpClientTesting(),provideNgxMask(),
+  TestBed.configureTestingModule({imports:[NoopAnimationsModule],providers:[provideRouter([]),provideHttpClient(),provideHttpClientTesting(),provideNgxMask(),
    {provide:AuthService,useValue:{getToken:()=> 'test',userChanged:new Subject<void>()}},
    {provide:CatalogService,useValue:{getProductBySlug:()=>of(product),getRecommendations:()=>of([])}},
   ]});
@@ -110,10 +111,14 @@ describe('Product stock experience',()=>{
   expect(fixture.nativeElement.textContent).toContain('Produto não encontrado');
  });
 
- it('shows registered towel sizes as descriptive measurements', () => {
+ it('shows registered towel sizes as descriptive measurements', async () => {
   product.name = 'Toalha de Banho Algodão Premium';
   product.measurements = { Solteiro: '160 x 220 cm', Queen: '240 x 260 cm', super_king: '260 x 280 cm', 'Dimensões': '70 x 140 cm' };
   const fixture = render();
+  await fixture.whenStable();
+  fixture.nativeElement.querySelectorAll('[role=tab]')[1].click();
+  fixture.detectChanges();
+  await fixture.whenStable();
   const info = fixture.nativeElement.querySelector('.product-description').textContent;
   expect(info).toContain('70 x 140 cm');
   const sizes = fixture.nativeElement.querySelector('.measurement-grid');
@@ -141,9 +146,13 @@ describe('Product stock experience',()=>{
   expect(fixture.nativeElement.querySelector('.product-care-list')).toBeNull();
  });
 
- it('renders registered care as list items and uses a neutral icon for free text', () => {
+ it('renders registered care as list items and uses a neutral icon for free text', async () => {
   product.care_instructions = 'Ciclo delicado até 40°C;\nNão usar alvejante\nSecar à sombra\nConsultar etiqueta.';
   const fixture = render();
+  await fixture.whenStable();
+  fixture.nativeElement.querySelectorAll('[role=tab]')[2].click();
+  fixture.detectChanges();
+  await fixture.whenStable();
   const items: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('.product-care');
   expect(Array.from(items, item => item.querySelector('svg')?.getAttribute('data-symbol'))).toEqual(['wash', 'bleach', 'dry', 'info']);
   expect(items[0].querySelector('p')?.textContent).toBe('Ciclo delicado até 40°C');

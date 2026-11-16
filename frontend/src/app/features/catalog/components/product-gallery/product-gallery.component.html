@@ -4,6 +4,14 @@
       <app-product-media [image]="image" [priority]="true" />
       <mat-icon aria-hidden="true">zoom_in</mat-icon>
     </button>
+    @if (orderedImages().length > 1) {
+      <button type="button" class="gallery-nav previous" aria-label="Imagem anterior" (click)="move(-1)">
+        <mat-icon aria-hidden="true">chevron_left</mat-icon>
+      </button>
+      <button type="button" class="gallery-nav next" aria-label="Próxima imagem" (click)="move(1)">
+        <mat-icon aria-hidden="true">chevron_right</mat-icon>
+      </button>
+    }
   } @else {
     <app-product-media [image]="null" />
   }

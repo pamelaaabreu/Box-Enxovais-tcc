@@ -3,6 +3,7 @@ import { ShippingQuoteComponent } from './shipping-quote.component';
 import { FavoriteButtonComponent } from '../../../../shared/favorite-button/favorite-button.component';
 import { CartService } from '../../../../core/services/cart.service';
 import { CurrencyPipe } from '@angular/common';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { ProductGridComponent } from '../../components/product-grid/product-grid.component';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
@@ -21,7 +22,7 @@ import { QuantitySelectorComponent } from '../../components/quantity-selector/qu
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [ShippingQuoteComponent, CurrencyPipe, FavoriteButtonComponent, MatIconModule, ProductGridComponent, RouterLink, CatalogLayoutComponent, BreadcrumbsComponent, ProductGalleryComponent, ProductPriceComponent, QuantitySelectorComponent],
+  imports: [ShippingQuoteComponent, CurrencyPipe, FavoriteButtonComponent, MatIconModule, MatTabsModule, ProductGridComponent, RouterLink, CatalogLayoutComponent, BreadcrumbsComponent, ProductGalleryComponent, ProductPriceComponent, QuantitySelectorComponent],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

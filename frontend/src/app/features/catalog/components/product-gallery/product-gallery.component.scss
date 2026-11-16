@@ -1,5 +1,5 @@
 :host { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; min-width: 0; }
-.main-image { aspect-ratio: 1; border-radius: 18px; overflow: hidden; background: #f0ede5; }
+.main-image { position: relative; aspect-ratio: 1; border-radius: 18px; overflow: hidden; background: #f0ede5; }
 .main-image app-product-media { --product-media-fit: cover; }
 .zoom-trigger { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; background: transparent; cursor: zoom-in; }
 .zoom-trigger mat-icon, .close-zoom { position: absolute; top: 12px; left: 12px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #fffdf8; color: #3d4836; }
@@ -13,8 +13,21 @@ dialog { position: fixed; inset: 0; width: fit-content; max-width: min(96vw, 130
 dialog::backdrop { background: #22271cbd; }
 .close-zoom { left: auto; right: 12px; border: 1px solid #d7dacf; cursor: pointer; }
 .zoom-image { display: block; max-width: 100%; max-height: 94dvh; object-fit: contain; }
-@media (min-width: 1024px) {
-  :host:has(.thumbnails) { grid-template-columns: 78px minmax(0, 1fr); align-items: start; }
-  .main-image { grid-column: -2 / -1; grid-row: 1; }
-  .thumbnails { grid-column: 1; grid-row: 1; flex-direction: column; overflow: auto; max-height: 32rem; }
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #dedbd0;
+  border-radius: 50%;
+  background: #fffdf8;
+  color: #3d4836;
+  cursor: pointer;
 }
+.gallery-nav:hover { background: #eef0e9; }
+.previous { left: 10px; }
+.next { right: 10px; }
