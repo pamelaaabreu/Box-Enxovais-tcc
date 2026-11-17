@@ -60,10 +60,20 @@ export class CategoryComponent {
   ), { initialValue: null });
 
   readonly groups = computed(() => this.cama()?.group.children ?? []);
+  private readonly pillowFacets = toSignal(this.route.paramMap.pipe(
+    switchMap(params => params.get('slug') === 'travesseiros'
+      ? this.catalog.getProductsByCategory('travesseiros').pipe(catchError(() => of([])))
+      : of([])),
+  ), { initialValue: [] });
+
   readonly facets = computed(() => {
     const category = this.category();
-    const products = (this.cama()?.products ?? []).filter(p => category?.slug === 'cama' || p.product_type_id === category?.id);
-    return ([['color', 'Cor'], ['size', 'Tamanho'], ['pattern', 'Estampa']] as const).map(([key, label]) => ({
+    const pillows = category?.slug === 'travesseiros';
+    const products = pillows ? this.pillowFacets()
+      : (this.cama()?.products ?? []).filter(p => category?.slug === 'cama' || p.product_type_id === category?.id);
+    const fields = pillows ? ([['size', 'Tamanho']] as const)
+      : ([['color', 'Cor'], ['size', 'Tamanho'], ['pattern', 'Estampa']] as const);
+    return fields.map(([key, label]) => ({
       key, label, values: [...new Set(products.map(p => p.measurements?.[label]).filter((v): v is string => typeof v === 'string' && !!v.trim()))]
         .sort((a, b) => a.localeCompare(b, 'pt-BR')),
     }));

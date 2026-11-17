@@ -29,6 +29,18 @@ import { QuantitySelectorComponent } from '../../components/quantity-selector/qu
 })
 export class ProductDetailComponent {
   readonly cart = inject(CartService);
+  readonly openingCheckout = signal(false);
+
+  async buyNow(): Promise<void> {
+    const product = this.product();
+    if (!product || this.openingCheckout() || !this.canAddToCart()) return;
+    this.openingCheckout.set(true);
+    try {
+      await this.cart.buyNow(product.id, this.quantity(), this.selectedVariant()?.id);
+    } finally {
+      this.openingCheckout.set(false);
+    }
+  }
   addToCart(): void { const product = this.product(); if (product && this.canAddToCart()) this.cart.add(product.id, this.quantity(), this.selectedVariant()?.id); }
   private readonly route = inject(ActivatedRoute);
   private readonly catalog = inject(CatalogService);
@@ -55,6 +67,8 @@ export class ProductDetailComponent {
     .split(/\r?\n|\s+\+\s+|;/)
     .map(item => item.trim())
     .filter(Boolean));
+
+  readonly fixedSize = computed(() => this.characteristics().find(([key]) => key.trim().toLowerCase() === 'tamanho')?.[1]);
 
   readonly sizes = computed(() => {
     const labels: Record<string, string> = {
@@ -93,8 +107,9 @@ export class ProductDetailComponent {
 
   readonly available = computed(() => this.product()?.status === 'active' && this.stock() > 0);
   readonly availabilityLabel = computed(() => {
-    if (!this.available()) return 'Produto indisponível';
-    if (this.stock() <= 5) return `Últimas ${this.stock()} unidades`;
+    const remaining = this.remainingStock();
+    if (!this.available() || remaining === 0) return 'Produto indisponível';
+    if (remaining <= 5) return `Últimas ${remaining} unidades`;
     return 'Em estoque';
   });
   readonly canAddToCart = computed(() => this.available() && Number.isInteger(this.quantity()) && this.quantity() >= 1 && this.quantity() <= this.remainingStock() && !this.cart.pending().has(this.product()!.id));

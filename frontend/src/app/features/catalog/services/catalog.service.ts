@@ -29,12 +29,17 @@ export class CatalogService {
     const id = product.product_type_id ?? 0;
     const category = name ? this.category(id, name) : { id, name: 'Produtos', slug: '' };
     const imagesOf = (paths: string[] = [], variant = '') => [...new Set(paths.map(path => path.trim()).filter(Boolean))]
-      .map((url, index) => ({
-        id: index,
-        url: /^https?:\/\//.test(url) ? url : `http://localhost:8080/${url.replace(/^\//, '')}`,
-        alt: variant ? `${product.name} — ${variant}` : product.name,
-        position: index,
-      }));
+      .map((path, index) => {
+        const url = /^https?:\/\//.test(path) ? path : `http://localhost:8080/${path.replace(/^\//, '')}`;
+        const optimizedCover = url.endsWith('/cama-detalhe-023-2-capa-1448.jpg');
+        return {
+          id: index,
+          url,
+          srcset: optimizedCover ? `${url.replace('-1448.jpg', '-640.jpg')} 640w, ${url} 1448w` : undefined,
+          alt: variant ? `${product.name} — ${variant}` : product.name,
+          position: index,
+        };
+      });
     return {
       ...product,
       name: product.name.replace(/\s+—\s+/g, ' '),
@@ -94,11 +99,26 @@ export class CatalogService {
       return preferred.length + (collection && candidate.measurements?.['Coleção'] === collection ? 2 : 1);
     };
     return this.products.getProductsPage({ limit: 100, filters: { stock__gte: 1 } }).pipe(
-      map(page => page.items
-        .filter(item => item.id !== product.id && item.status === 'active' && item.quantity > 0)
-        .map(item => this.adapt(item))
-        .sort((a, b) => rank(a) - rank(b) || a.id - b.id)
-        .slice(0, 4)),
+      map(page => {
+        const ranked = page.items
+          .filter(item => item.id !== product.id && item.status === 'active' && item.quantity > 0)
+          .map(item => this.adapt(item))
+          .sort((a, b) => rank(a) - rank(b) || a.id - b.id);
+        const seen = new Set<string>();
+        const varied: CatalogProduct[] = [];
+        const repeated: CatalogProduct[] = [];
+        for (const item of ranked) {
+          const collection = item.measurements?.['Coleção']?.trim();
+          const key = collection ? item.category.name + '/' + collection : String(item.id);
+          if (seen.has(key)) {
+            repeated.push(item);
+          } else {
+            seen.add(key);
+            varied.push(item);
+          }
+        }
+        return [...varied, ...repeated].slice(0, 4);
+      }),
     );
   }
 

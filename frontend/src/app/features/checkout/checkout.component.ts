@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,7 +10,7 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   EMPTY,
   catchError,
@@ -184,6 +184,16 @@ export class CheckoutComponent {
   };
   constructor() {
     this.cart.load();
+    if (inject(ActivatedRoute, { optional: true })?.snapshot?.queryParamMap?.get('compra') === 'agora') {
+      const added = signal(false);
+      this.cart.consumeQuickPurchase(() => added.set(true));
+      effect(() => {
+        if (added() && this.ready() && this.selectedAddress() && this.contactPhone.valid && this.step() === 1) {
+          added.set(false);
+          this.step.set(2);
+        }
+      });
+    }
     this.account.addresses().pipe(takeUntilDestroyed()).subscribe({
       next: addresses => {
         this.savedAddresses.set(addresses);

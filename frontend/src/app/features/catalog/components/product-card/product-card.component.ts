@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { FavoriteButtonComponent } from '../../../../shared/favorite-button/favorite-button.component';
 import {
   ChangeDetectionStrategy,
@@ -19,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   imports: [
     MatIconModule,
+    NgTemplateOutlet,
     FavoriteButtonComponent,
     RouterLink,
     ProductMediaComponent,
@@ -36,6 +38,9 @@ export class ProductCardComponent {
   readonly details = computed(() =>
     this.product().active ? ['/produto', this.product().slug] : null,
   );
+  readonly productType = computed(() => this.product().measurements?.['Tipo']?.trim()
+    || this.product().category?.name?.split('/').at(-1)?.trim());
+
   readonly available = computed(
     () => this.product().active && this.product().quantity > 0,
   );

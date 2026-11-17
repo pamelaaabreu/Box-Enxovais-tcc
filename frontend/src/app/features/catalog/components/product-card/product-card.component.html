@@ -10,11 +10,47 @@
         [showCaption]="false"
       />
     </a>
+    @if (compact()) {
+      <div class="recommendation-actions">
+        <app-favorite-button [productId]="product().id" [productName]="product().name" />
+        @if (product().images[0]; as image) {
+          <button class="overlay-action" type="button" title="Ampliar imagem" [attr.aria-label]="'Ampliar imagem de ' + product().name" (click)="preview.showModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5" />
+            </svg>
+          </button>
+          <dialog #preview class="recommendation-preview" [attr.aria-label]="product().name">
+            <button class="overlay-action preview-close" type="button" autofocus aria-label="Fechar imagem" title="Fechar imagem" (click)="preview.close()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+            </button>
+            @if (preview.open) {
+              <img [src]="image.url" [alt]="image.alt" />
+            }
+          </dialog>
+        }
+        <ng-template #cartIcon>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 8h14l1 13H4L5 8Z M9 10V6a3 3 0 0 1 6 0v4" />
+          </svg>
+        </ng-template>
+        @if (product().variants.length) {
+          <a class="overlay-action" [routerLink]="details()" title="Escolher tamanho" [attr.aria-label]="'Escolher tamanho de ' + product().name">
+            <ng-container [ngTemplateOutlet]="cartIcon" />
+          </a>
+        } @else {
+          <button class="overlay-action" type="button" [disabled]="!canAdd()" (click)="add()" title="Adicionar ao carrinho"
+            [attr.aria-label]="'Adicionar ' + product().name + ' ao carrinho'" [attr.aria-busy]="pending()">
+            <ng-container [ngTemplateOutlet]="cartIcon" />
+          </button>
+        }
+      </div>
+    } @else {
     <app-favorite-button
       class="favorite-action"
       [productId]="product().id"
       [productName]="product().name"
     />
+    }
     @if (!compact() && !catalogTile()) {
       @if (badge(); as text) {
         <span class="info-badge">{{ text }}</span>
@@ -27,6 +63,9 @@
     }
   </div>
   <div class="information">
+    @if (compact() && productType(); as type) {
+      <span class="recommendation-type">{{ type }}</span>
+    }
     <h2>
       <a class="product-link" [routerLink]="details()">{{ displayName() }}</a>
     </h2>

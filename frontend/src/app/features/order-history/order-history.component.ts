@@ -94,7 +94,7 @@ interface OrderPage {
     MatProgressSpinnerModule,
   ],
   templateUrl: './order-history.component.html',
-  styleUrl: './order-history.component.scss',
+  styleUrls: ['./order-history.component.scss', './order-history-detail.scss'],
 })
 export class OrderHistoryComponent {
   private readonly destroyRef = inject(DestroyRef);

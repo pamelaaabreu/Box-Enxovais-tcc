@@ -31,7 +31,7 @@
   max-width: none;
   padding-top: 12px;
   padding-inline: max(32px, calc((100% - 1216px) / 2));
-  background: linear-gradient(#eef0e9, #fffdf8 96px);
+  background: linear-gradient(180deg, #eef0e9 0, #f7f7f0 280px, #fffdf8 620px);
 }
 
 :host(.product-page) app-main-navbar { display: flow-root; }

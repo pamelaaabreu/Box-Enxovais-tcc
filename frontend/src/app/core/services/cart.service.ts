@@ -16,7 +16,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from './auth.service';
 import { Cart } from '../interfaces/cart.interface';
 
+type QuickPurchase = { productId: number; quantity: number; variantId?: number };
+
 type CartRequest = {
+  onAdded?: () => void;
   method: string;
   path: string;
   body?: unknown;
@@ -33,6 +36,7 @@ export class CartService {
   private readonly router = inject(Router);
   private readonly queue = new Subject<CartRequest>();
   private session = 0;
+  private quickPurchase?: QuickPurchase;
   private readonly state = signal<Cart>(emptyCart());
   readonly cart = this.state.asReadonly();
   readonly totalItems = computed(() => this.cart().totalItems);
@@ -70,12 +74,13 @@ export class CartService {
                     return next;
                   });
                   this.state.set(response.data);
-                  if (request.method === 'POST' && request.path === '/items') {
+                  if (request.method === 'POST' && request.path === '/items' && !request.onAdded) {
                     const name = response.data.items.find(item => item.productId === request.productId)?.name;
                     this.alerts.success('Adicionado à sacola', name, {
                       action: { label: 'Ver sacola', run: () => { void this.router.navigate(['/cart']); } },
                     });
                   }
+                  request.onAdded?.();
                   if (request.key === Number.MIN_SAFE_INTEGER) void this.router.navigate(['/cart']);
                   if (request.productId && request.method !== 'DELETE')
                     this.feedback.update((value) => ({
@@ -137,13 +142,31 @@ export class CartService {
   reorder(orderId: number): void {
     this.request('POST', '/orders/' + orderId, Number.MIN_SAFE_INTEGER);
   }
-  add(productId: number, quantity = 1, variantId?: number): void {
+  async buyNow(productId: number, quantity: number, variantId?: number): Promise<void> {
+    const purchase = { productId, quantity, variantId };
+    this.quickPurchase = purchase;
+    try {
+      if (await this.router.navigate(['/checkout'], { queryParams: { compra: 'agora' } })) return;
+    } catch {
+      this.alerts.error('Não foi possível abrir o checkout', 'Tente novamente.');
+    }
+    if (this.quickPurchase === purchase) this.quickPurchase = undefined;
+  }
+
+  consumeQuickPurchase(onAdded: () => void): void {
+    const purchase = this.quickPurchase;
+    this.quickPurchase = undefined;
+    if (purchase) this.add(purchase.productId, purchase.quantity, purchase.variantId, onAdded);
+  }
+
+  add(productId: number, quantity = 1, variantId?: number, onAdded?: () => void): void {
     this.request(
       'POST',
       '/items',
       productId,
       { productId, quantity, ...(variantId ? { variantId } : {}) },
       productId,
+      onAdded,
     );
   }
   update(id: number, quantity: number): void {
@@ -161,6 +184,7 @@ export class CartService {
     key: number,
     body?: unknown,
     productId?: number,
+    onAdded?: () => void,
   ): void {
     if (!this.auth.getToken()) {
       void this.router.navigate(['/login']);
@@ -179,6 +203,7 @@ export class CartService {
       body,
       productId,
       session: this.session,
+      onAdded,
     });
   }
 }

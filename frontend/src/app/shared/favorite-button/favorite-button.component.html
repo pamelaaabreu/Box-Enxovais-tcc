@@ -5,6 +5,7 @@
   [class.selected]="favorites.isFavorite(productId())"
   [attr.aria-pressed]="favorites.isFavorite(productId())"
   [attr.aria-busy]="busy()"
+  [attr.title]="favorites.isFavorite(productId()) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
   [attr.aria-label]="
     busy()
       ? 'Carregando favoritos'

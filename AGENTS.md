@@ -16,6 +16,8 @@ Projeto: e-commerce Angular (frontend), Go + net/http (backend), PostgreSQL. Pre
 - Go: segurança e autorização **sempre validadas no backend**; não dependa de botões desabilitados nem de guards Angular. Preserve contratos HTTP e migrações existentes.
 - Se o pedido for só discutir ou revisar, **não edite nada**.
 
+- UI: reutilize os padrões de campos, validações, feedbacks, toasts e foco documentados em [Mensagens e estados de interface](docs/design-system/mensagens-e-estados-ui.md).
+
 ## Especialistas opcionais (somente sob comando)
 - `revisor`: auditoria de diff sem editar; use skill `revisao-cirurgica`.
 - `testador`: proponha/implemente testes mínimos; use skill `testes-sob-demanda`.

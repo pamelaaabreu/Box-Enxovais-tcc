@@ -1,0 +1,306 @@
+{
+  "imageOrigin": "Ilustrações geradas para demonstração",
+  "migration": 21,
+  "products": [
+    {
+      "id": 30,
+      "name": "Travesseiro Aconchego Firme",
+      "price": "79.90",
+      "stock": 9,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Fibra siliconada",
+        "Tamanho": "50 × 70 cm",
+        "Material": "Fibra siliconada de poliéster",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-3.png",
+      "variants": [],
+      "slug": "travesseiro-aconchego-firme-30",
+      "priceCents": 7990,
+      "simulated": true,
+      "availableStock": 9
+    },
+    {
+      "id": 31,
+      "name": "Travesseiro Conforto Duplo",
+      "price": "109.90",
+      "stock": 0,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Apoio",
+        "Tamanho": "50 × 70 cm",
+        "Material": "Fibra siliconada de poliéster",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-11.png",
+      "variants": [],
+      "slug": "travesseiro-conforto-duplo-31",
+      "priceCents": 10990,
+      "simulated": true,
+      "availableStock": 0
+    },
+    {
+      "id": 32,
+      "name": "Travesseiro Memória Fresca",
+      "price": "159.90",
+      "stock": 7,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Viscoelástico",
+        "Tamanho": "50 × 70 cm",
+        "Material": "Espuma viscoelástica",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-6.png",
+      "variants": [],
+      "slug": "travesseiro-memoria-fresca-32",
+      "priceCents": 15990,
+      "simulated": true,
+      "availableStock": 7
+    },
+    {
+      "id": 33,
+      "name": "Travesseiro Curva Serena",
+      "price": "129.90",
+      "stock": 0,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Anatômico",
+        "Tamanho": "40 × 60 cm",
+        "Material": "Espuma viscoelástica",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-9.png",
+      "variants": [],
+      "slug": "travesseiro-curva-serena-33",
+      "priceCents": 12990,
+      "simulated": true,
+      "availableStock": 0
+    },
+    {
+      "id": 34,
+      "name": "Travesseiro Pluma Serena",
+      "price": "74.90",
+      "stock": 0,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Fibra siliconada",
+        "Tamanho": "50 × 70 cm",
+        "Material": "Fibra siliconada de poliéster",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-4.png",
+      "variants": [],
+      "slug": "travesseiro-pluma-serena-34",
+      "priceCents": 7490,
+      "simulated": true,
+      "availableStock": 0
+    },
+    {
+      "id": 35,
+      "name": "Travesseiro Contorno Suave",
+      "price": "149.90",
+      "stock": 0,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Anatômico",
+        "Tamanho": "40 × 60 cm",
+        "Material": "Espuma viscoelástica",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-8.png",
+      "variants": [
+        {
+          "id": 43,
+          "size": "Altura média",
+          "priceCents": 16490,
+          "stock": 4,
+          "dimensions": "40 × 60 cm · 13 cm de altura",
+          "contents": [
+            "1 travesseiro"
+          ],
+          "simulated": true
+        },
+        {
+          "id": 44,
+          "size": "Altura baixa",
+          "priceCents": 14990,
+          "stock": 3,
+          "dimensions": "40 × 60 cm · 10 cm de altura",
+          "contents": [
+            "1 travesseiro"
+          ],
+          "simulated": true
+        }
+      ],
+      "slug": "travesseiro-contorno-suave-35",
+      "priceCents": 14990,
+      "simulated": true,
+      "availableStock": 7.0
+    },
+    {
+      "id": 36,
+      "name": "Travesseiro Nuvem Leve",
+      "price": "59.90",
+      "stock": 14,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Fibra siliconada",
+        "Tamanho": "50 × 70 cm",
+        "Material": "Fibra siliconada de poliéster",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-1.png",
+      "variants": [],
+      "slug": "travesseiro-nuvem-leve-36",
+      "priceCents": 5990,
+      "simulated": true,
+      "availableStock": 14
+    },
+    {
+      "id": 37,
+      "name": "Travesseiro Memória Clássica",
+      "price": "139.90",
+      "stock": 0,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Viscoelástico",
+        "Tamanho": "50 × 70 cm",
+        "Material": "Espuma viscoelástica",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-5.png",
+      "variants": [
+        {
+          "id": 45,
+          "size": "Altura média",
+          "priceCents": 15490,
+          "stock": 6,
+          "dimensions": "50 × 70 cm · 13 cm de altura",
+          "contents": [
+            "1 travesseiro"
+          ],
+          "simulated": true
+        },
+        {
+          "id": 46,
+          "size": "Altura baixa",
+          "priceCents": 13990,
+          "stock": 4,
+          "dimensions": "50 × 70 cm · 10 cm de altura",
+          "contents": [
+            "1 travesseiro"
+          ],
+          "simulated": true
+        }
+      ],
+      "slug": "travesseiro-memoria-classica-37",
+      "priceCents": 13990,
+      "simulated": true,
+      "availableStock": 10.0
+    },
+    {
+      "id": 38,
+      "name": "Travesseiro Apoio Versátil",
+      "price": "89.90",
+      "stock": 4,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Apoio",
+        "Tamanho": "18 × 50 cm",
+        "Material": "Fibra siliconada de poliéster",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-12.png",
+      "variants": [],
+      "slug": "travesseiro-apoio-versatil-38",
+      "priceCents": 8990,
+      "simulated": true,
+      "availableStock": 4
+    },
+    {
+      "id": 39,
+      "name": "Travesseiro Apoio Lateral",
+      "price": "99.90",
+      "stock": 12,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Apoio",
+        "Tamanho": "50 × 70 cm",
+        "Material": "Fibra siliconada de poliéster",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-10.png",
+      "variants": [],
+      "slug": "travesseiro-apoio-lateral-39",
+      "priceCents": 9990,
+      "simulated": true,
+      "availableStock": 12
+    },
+    {
+      "id": 40,
+      "name": "Travesseiro Brisa Macia",
+      "price": "69.90",
+      "stock": 3,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Fibra siliconada",
+        "Tamanho": "50 × 70 cm",
+        "Material": "Fibra siliconada de poliéster",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-2.png",
+      "variants": [],
+      "slug": "travesseiro-brisa-macia-40",
+      "priceCents": 6990,
+      "simulated": true,
+      "availableStock": 3
+    },
+    {
+      "id": 41,
+      "name": "Travesseiro Memória Compacta",
+      "price": "119.90",
+      "stock": 2,
+      "measurements": {
+        "Tipo": "Travesseiro",
+        "Formato": "Viscoelástico",
+        "Tamanho": "40 × 60 cm",
+        "Material": "Espuma viscoelástica",
+        "Conteúdo": "1 travesseiro",
+        "Tecido externo": "Malha de poliéster",
+        "Origem dos dados": "Dados simulados para demonstração"
+      },
+      "image": "uploads/travesseiro-demo-7.png",
+      "variants": [],
+      "slug": "travesseiro-memoria-compacta-41",
+      "priceCents": 11990,
+      "simulated": true,
+      "availableStock": 2
+    }
+  ],
+  "categorySlug": "travesseiros",
+  "category": "Travesseiros"
+}

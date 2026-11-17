@@ -198,6 +198,19 @@ describe('Product stock experience',()=>{
   request.flush({ priceCents: 1390, minDays: 2, maxDays: 3 });
   fixture.detectChanges();
   expect(fixture.nativeElement.querySelector('.result').textContent).toContain('Entrega disponível');
+
+  form.dispatchEvent(new Event('submit', { cancelable: true }));
+  http.expectOne(r => r.url.endsWith('/shipping/quote')).flush({}, { status: 404, statusText: 'Not Found' });
+  http.expectOne('https://viacep.com.br/ws/87502100/json/').flush({ localidade: 'Umuarama' });
+  fixture.detectChanges();
+  expect(fixture.nativeElement.querySelector('app-shipping-quote').textContent).toContain('Entrega indisponível');
+  expect(fixture.nativeElement.querySelector('#quote-cep-error')).toBeNull();
+
+  form.dispatchEvent(new Event('submit', { cancelable: true }));
+  http.expectOne(r => r.url.endsWith('/shipping/quote')).error(new ProgressEvent('error'));
+  fixture.detectChanges();
+  expect(fixture.nativeElement.querySelector('app-shipping-quote').textContent).toContain('Não foi possível calcular');
+  expect(fixture.nativeElement.querySelector('#quote-cep-error')).toBeNull();
  });
 
  it('updates the selected size, price, stock, images, kit and the variant sent to cart', () => {

@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { NEVER } from 'rxjs';
 
 import { AuthService } from '../../core/services/auth.service';
@@ -11,6 +11,40 @@ import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/cat
 import { CheckoutComponent } from './checkout.component';
 
 describe('CheckoutComponent', () => {
+  for (const mode of ['payment', 'delivery', 'stock-error'] as const) {
+    it('keeps purchase validation intact in quick checkout: ' + mode, async () => {
+      TestBed.configureTestingModule({
+        imports: [CheckoutComponent],
+        providers: [
+          provideHttpClient(), provideHttpClientTesting(), provideRouter([]),
+          { provide: AuthService, useValue: { getToken: () => 'test', userChanged: NEVER } },
+          { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({ compra: 'agora' }) } } },
+        ],
+      }).overrideComponent(CheckoutComponent, {
+        remove: { imports: [CatalogLayoutComponent] },
+        add: { schemas: [CUSTOM_ELEMENTS_SCHEMA] },
+      });
+      const http = TestBed.inject(HttpTestingController);
+      const cart = TestBed.inject(CartService);
+      spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
+      await cart.buyNow(2, 1, 3);
+      const fixture = TestBed.createComponent(CheckoutComponent);
+      http.expectOne('http://localhost:8080/cart').flush({ data: { items: [], totalItems: 0, total: 0 } });
+      const add = http.expectOne({ method: 'POST', url: 'http://localhost:8080/cart/items' });
+      expect(add.request.body).toEqual({ productId: 2, quantity: 1, variantId: 3 });
+      if (mode === 'stock-error') add.flush({ message: 'Sem estoque' }, { status: 409, statusText: 'Conflict' });
+      else add.flush({ data: { items: [{ id: 42, productId: 2, variantId: 3, quantity: 1, available: true }], totalItems: 1, total: 25000 } });
+      const address = { id: 1, isDefault: true, zipCode: '01001-000', recipient: 'Teste', street: 'Praça', number: '1', neighborhood: 'Sé', city: 'São Paulo', state: 'SP' };
+      http.expectOne('http://localhost:8080/me/addresses').flush({ data: mode === 'delivery' ? [] : [address] });
+      http.expectOne('http://localhost:8080/me').flush({ data: { phone: '11912345678' } });
+      fixture.detectChanges();
+      expect(fixture.componentInstance.step()).toBe(mode === 'payment' ? 2 : 1);
+      if (mode === 'stock-error') expect(cart.error()).toBe('Sem estoque');
+      cart.consumeQuickPurchase(() => fail('Intenção repetida'));
+      http.verify();
+    });
+  }
+
   it('submits delivery edits and confirms with the address shown in review', async () => {
     TestBed.configureTestingModule({
       imports: [CheckoutComponent],
