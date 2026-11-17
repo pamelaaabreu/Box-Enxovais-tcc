@@ -64,6 +64,21 @@ func (h ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, 200, products[0])
 }
 
+func (h ProductHandler) ListRelatedProducts(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil || id <= 0 {
+		response.Error(w, http.StatusBadRequest, "ID inválido")
+		return
+	}
+	products, err := h.Service.Store.ListRelated(r.Context(), id)
+	if err != nil {
+		log.Printf("list related products: %v", err)
+		response.Error(w, http.StatusInternalServerError, "Erro ao buscar produtos relacionados")
+		return
+	}
+	response.JSON(w, http.StatusOK, products)
+}
+
 func (h ProductHandler) ListProductBrands(w http.ResponseWriter, r *http.Request) {
 	brands, err := h.Service.Store.ListBrands(r.Context())
 	if err != nil {

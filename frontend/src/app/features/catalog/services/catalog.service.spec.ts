@@ -50,21 +50,13 @@ describe('CatalogService API mapping',()=>{
   expect(await firstValueFrom(service.getProductBySlug('inexistente'))).toBeNull();
  });
 
- it('prioritizes complementary stocked products over other colors of the same collection', async () => {
-  const product = (id: number, category_name: string, quantity = 4, status = 'active') => ({
-   id, name: 'Produto ' + id, category_name, product_type_id: category_name === 'Cama / Jogos de cama' ? 32 : 90,
-   quantity, status, price: 129.90, measurements: { 'Coleção': 'Essência' }, promotional_price: 0,
-  });
-  const selected = product(1, 'Cama / Jogos de cama');
-  const getProductsPage = jasmine.createSpy('getProductsPage').and.returnValue(of({items: [
-   selected, product(2, selected.category_name), product(3, 'Travesseiros', 0),
-   product(6, 'Cama / Edredons'), product(5, 'Cama / Mantas e peseiras'),
-   product(4, 'Travesseiros'), product(7, 'Travesseiros', 4, 'inactive'),
-  ]}));
-  TestBed.configureTestingModule({providers: [{provide: ProductService, useValue: {getProductsPage}}]});
+ it('preserves the server ordering for coordinated recommendations', async () => {
+  const product = (id: number) => ({ id, name: 'Produto ' + id, status: 'active' }) as Parameters<CatalogService['adapt']>[0];
+  const getRelatedProducts = jasmine.createSpy('getRelatedProducts').and.returnValue(of([product(9), product(2)]));
+  TestBed.configureTestingModule({ providers: [{ provide: ProductService, useValue: { getRelatedProducts } }] });
   const service = TestBed.inject(CatalogService);
-  const recommendations = await firstValueFrom(service.getRecommendations(service.adapt(selected)));
-  expect(getProductsPage).toHaveBeenCalledOnceWith({limit: 100, filters: {stock__gte: 1}});
-  expect(recommendations.map(item => item.id)).toEqual([4, 5, 6, 2]);
+  const products = await firstValueFrom(service.getRecommendations(service.adapt(product(1))));
+  expect(getRelatedProducts).toHaveBeenCalledOnceWith(1);
+  expect(products.map(item => item.id)).toEqual([9, 2]);
  });
 });

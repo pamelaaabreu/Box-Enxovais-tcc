@@ -572,3 +572,69 @@ func TestVariantCheckoutPostgres(t *testing.T) {
 		t.Fatalf("reorder=%+v (%v)", state, err)
 	}
 }
+
+func TestVariantLastUnitPostgres(t *testing.T) {
+	db, exec := checkoutTestDB(t)
+	ctx := context.Background()
+	exec("DELETE FROM cart_items; INSERT INTO product_variants(id,product_id,size,price,quantity) VALUES (31,1,'Casal',12.90,3);")
+	cart := repositories.CartRepository{DB: db}
+	checkout := repositories.CheckoutRepository{DB: db}
+	stock := func(want int) {
+		t.Helper()
+		var got int
+		if err := db.QueryRow("SELECT quantity FROM product_variants WHERE id=31").Scan(&got); err != nil || got != want {
+			t.Fatalf("variant stock=%d, want %d (%v)", got, want, err)
+		}
+	}
+	state, err := cart.Apply(ctx, 1, "add", 1, 1, 31)
+	if err != nil || len(state.Items) != 1 || !state.Items[0].Available || state.Items[0].Stock != 3 {
+		t.Fatalf("first add: %+v (%v)", state, err)
+	}
+	stock(3)
+	id := state.Items[0].ID
+	if state, err = cart.Apply(ctx, 1, "update", id, 3); err != nil || state.TotalItems != 3 || !state.Items[0].Available {
+		t.Fatalf("update: %+v (%v)", state, err)
+	}
+	if _, err = cart.Apply(ctx, 1, "add", 1, 1, 31); !errors.Is(err, repositories.ErrCartQuantity) {
+		t.Fatalf("extra unit: %v", err)
+	}
+	if state, err = cart.Apply(ctx, 1, "remove", id, 0); err != nil || state.TotalItems != 0 {
+		t.Fatalf("remove: %+v (%v)", state, err)
+	}
+	stock(3)
+	exec("UPDATE product_variants SET quantity=1 WHERE id=31")
+	for _, user := range []int{1, 2} {
+		if state, err = cart.Apply(ctx, user, "add", 1, 1, 31); err != nil || state.TotalItems != 1 || !state.Items[0].Available {
+			t.Fatalf("last unit cart for %d: %+v (%v)", user, state, err)
+		}
+	}
+	stock(1)
+	input := models.CheckoutRequest{RequestKey: "last-variant", PaymentMethod: "pix", ExpectedTotalCents: 1290}
+	results := make([]models.CheckoutOrder, 2)
+	buy := func(user int) error {
+		order, err := checkout.Create(ctx, user, input)
+		results[user-1] = order
+		return err
+	}
+	outcomes := checkoutParallel(func() error { return buy(1) }, func() error { return buy(2) })
+	winner := 1
+	if outcomes[0] != nil {
+		winner = 2
+	}
+	if outcomes[winner-1] != nil || !errors.Is(outcomes[2-winner], repositories.ErrCheckoutConflict) {
+		t.Fatalf("last unit checkout: %v", outcomes)
+	}
+	stock(0)
+	order, err := checkout.Create(ctx, winner, input)
+	if err != nil || order.ID != results[winner-1].ID {
+		t.Fatalf("retry: %+v (%v)", order, err)
+	}
+	stock(0)
+	reason := models.CancellationReason{ReasonCode: "wrong_product"}
+	if _, _, err = checkout.CancelOrder(ctx, winner, order.ID, reason); err != nil {
+		t.Fatal(err)
+	}
+	stock(1)
+	_, _, _ = checkout.CancelOrder(ctx, winner, order.ID, reason)
+	stock(1)
+}

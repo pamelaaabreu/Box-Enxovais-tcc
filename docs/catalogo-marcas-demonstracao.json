@@ -1,0 +1,330 @@
+[
+  {
+    "id": 1,
+    "name": "Jogo de Cama Essência Floral — Verde Oliva",
+    "collection": "Essência Floral",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Percal de algodão com folhagens verde-oliva em fundo claro, para dar contraste à roupa de cama."
+  },
+  {
+    "id": 2,
+    "name": "Edredom Essência Floral — Verde Suave",
+    "collection": "Essência Floral",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Edredom em percal de algodão com folhagens verde-suave, para compor o quarto em tons leves."
+  },
+  {
+    "id": 3,
+    "name": "Jogo de Cama Essência Floral — Botânico",
+    "collection": "Essência Floral",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Jogo de cama em percal de algodão com desenho botânico, para destacar a estampa na decoração."
+  },
+  {
+    "id": 4,
+    "name": "Jogo de Cama Aurora Floral — Vermelho",
+    "collection": "Aurora Floral",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Estampa floral vermelha sobre tecido misto de algodão e poliéster, para levar cor à cama."
+  },
+  {
+    "id": 5,
+    "name": "Jogo de Cama Aurora Floral — Vinho",
+    "collection": "Aurora Floral",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Flores em tom vinho sobre tecido misto de algodão e poliéster, para compor uma cama de tons intensos."
+  },
+  {
+    "id": 6,
+    "name": "Jogo de Cama Serenidade — Azul",
+    "collection": "Serenidade",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Cetim de algodão em azul, para composições de cama com uma paleta fria e discreta."
+  },
+  {
+    "id": 7,
+    "name": "Jogo de Cama Serenidade — Azul Claro",
+    "collection": "Serenidade",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Jogo de cama em cetim de algodão e azul claro, para combinar com tecidos lisos e tons neutros."
+  },
+  {
+    "id": 8,
+    "name": "Edredom Aconchego — Creme",
+    "collection": "Aconchego",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Edredom creme em microfibra de poliéster, para montar a cama em uma paleta clara e neutra."
+  },
+  {
+    "id": 9,
+    "name": "Edredom Aconchego — Marrom Cacau",
+    "collection": "Aconchego",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Edredom marrom cacau em microfibra de poliéster, para uma composição de cama em tons terrosos."
+  },
+  {
+    "id": 10,
+    "name": "Edredom Aconchego — Verde Oliva",
+    "collection": "Aconchego",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Microfibra de poliéster em verde-oliva, para combinar o edredom com tons naturais de madeira e areia."
+  },
+  {
+    "id": 11,
+    "name": "Edredom Geométrico — Azul Petróleo",
+    "collection": "Geométrico",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Desenho geométrico azul-petróleo em tecido misto, para dar contraste a lençóis claros."
+  },
+  {
+    "id": 12,
+    "name": "Edredom Geométrico — Rosa Nude",
+    "collection": "Geométrico",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Edredom geométrico rosa nude em tecido misto de algodão e poliéster, para um quarto de tons suaves."
+  },
+  {
+    "id": 13,
+    "name": "Edredom Geométrico — Verde Sálvia",
+    "collection": "Geométrico",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Edredom geométrico verde-sálvia em tecido misto, para compor a cama com uma cor delicada."
+  },
+  {
+    "id": 14,
+    "name": "Edredom Jardim — Azul Lavanda",
+    "collection": "Jardim",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Edredom floral azul lavanda com tecido externo de algodão, para uma composição de cores suaves."
+  },
+  {
+    "id": 15,
+    "name": "Edredom Jardim — Verde Musgo",
+    "collection": "Jardim",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Estampa floral verde-musgo sobre tecido externo de algodão, para destacar o edredom na cama."
+  },
+  {
+    "id": 16,
+    "name": "Cobre-Leito Natural — Verde Botânico",
+    "collection": "Natural",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Cobre-leito em tecido misto com folhagens verdes, para dar um toque botânico à composição."
+  },
+  {
+    "id": 17,
+    "name": "Cobre-Leito Natural — Folhagens Suaves",
+    "collection": "Natural",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Cobre-leito de algodão e poliéster com folhagens suaves, para combinar com roupas de cama claras."
+  },
+  {
+    "id": 18,
+    "name": "Cobre-Leito Natural — Botânico Neutro",
+    "collection": "Natural",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Cobre-leito de desenho botânico em tons neutros, confeccionado em tecido misto de algodão e poliéster."
+  },
+  {
+    "id": 19,
+    "name": "Colcha Provence — Lilás",
+    "collection": "Provence",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Colcha lilás em microfibra de poliéster, para compor o quarto com um ponto de cor suave."
+  },
+  {
+    "id": 20,
+    "name": "Colcha Provence — Rosa",
+    "collection": "Provence",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Colcha rosa em microfibra de poliéster, para coordenar com lençóis e fronhas de tons claros."
+  },
+  {
+    "id": 21,
+    "name": "Manta Tricot Conforto — Areia",
+    "collection": "Tricot Conforto",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Manta de tricô de acrílico em tom areia, para usar como camada decorativa no quarto ou no sofá."
+  },
+  {
+    "id": 22,
+    "name": "Manta Tricot Conforto — Verde Oliva",
+    "collection": "Tricot Conforto",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Tricô de acrílico em verde-oliva, para acrescentar cor e textura à composição da cama."
+  },
+  {
+    "id": 23,
+    "name": "Manta Tricot Conforto — Terracota",
+    "collection": "Tricot Conforto",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Manta terracota em tricô de acrílico, para adicionar um tom terroso à cama ou ao sofá."
+  },
+  {
+    "id": 24,
+    "name": "Peseira Textura — Off-White",
+    "collection": "Textura",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Peseira off-white em tecido misto de algodão e poliéster, para finalizar a cama em tons claros."
+  },
+  {
+    "id": 25,
+    "name": "Peseira Textura — Azul Acinzentado",
+    "collection": "Textura",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Peseira azul acinzentado em algodão e poliéster, para criar um contraste discreto aos pés da cama."
+  },
+  {
+    "id": 26,
+    "name": "Peseira Textura — Marrom Taupe",
+    "collection": "Textura",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Tecido misto de algodão e poliéster em marrom taupe, para finalizar a cama com uma cor neutra."
+  },
+  {
+    "id": 27,
+    "name": "Protetor SoftCare",
+    "collection": "SoftCare",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Protetor em malha de poliéster para usar como camada entre o colchão e a roupa de cama."
+  },
+  {
+    "id": 28,
+    "name": "Protetor Protege",
+    "collection": "Protege",
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Protetor de colchão em tecido misto de algodão e poliéster, para usar sob o lençol."
+  },
+  {
+    "id": 29,
+    "name": "Toalha de Banho Premium 100% Algodão",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Toalha de banho em tecido felpudo de algodão para compor o enxoval do banheiro."
+  },
+  {
+    "id": 30,
+    "name": "Travesseiro Aconchego Firme",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Travesseiro com enchimento de fibra siliconada de poliéster, para compor o enxoval da cama."
+  },
+  {
+    "id": 31,
+    "name": "Travesseiro Conforto Duplo",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Travesseiro de fibra siliconada para combinar com a roupa de cama e as fronhas do enxoval."
+  },
+  {
+    "id": 32,
+    "name": "Travesseiro Memória Fresca",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Espuma viscoelástica com revestimento de malha de poliéster, em um travesseiro de 50 × 70 cm."
+  },
+  {
+    "id": 33,
+    "name": "Travesseiro Curva Serena",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Travesseiro de espuma viscoelástica com perfil curvo, para quem prefere um formato anatômico."
+  },
+  {
+    "id": 34,
+    "name": "Travesseiro Pluma Serena",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Travesseiro de fibra siliconada de poliéster em tamanho 50 × 70 cm, para uso no quarto."
+  },
+  {
+    "id": 35,
+    "name": "Travesseiro Contorno Suave",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Travesseiro de espuma viscoelástica com contorno anatômico e opções de altura."
+  },
+  {
+    "id": 36,
+    "name": "Travesseiro Nuvem Leve",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Fibra siliconada de poliéster em um travesseiro de 50 × 70 cm para compor a cama."
+  },
+  {
+    "id": 37,
+    "name": "Travesseiro Memória Clássica",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Travesseiro de espuma viscoelástica com alternativas de altura, para escolher a versão preferida."
+  },
+  {
+    "id": 38,
+    "name": "Travesseiro Apoio Versátil",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Travesseiro em formato de rolo de 18 × 50 cm, com enchimento de fibra siliconada e capa têxtil."
+  },
+  {
+    "id": 39,
+    "name": "Travesseiro Apoio Lateral",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Travesseiro com fibra siliconada de poliéster, para combinar com as peças do enxoval do quarto."
+  },
+  {
+    "id": 40,
+    "name": "Travesseiro Brisa Macia",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Travesseiro de fibra siliconada de poliéster em tamanho 50 × 70 cm para uso na cama."
+  },
+  {
+    "id": 41,
+    "name": "Travesseiro Memória Compacta",
+    "collection": null,
+    "brand": "Box Enxovais",
+    "origin": "Marca própria do catálogo demonstrativo",
+    "summary": "Travesseiro compacto de espuma viscoelástica, com medida cadastrada de 40 × 60 cm."
+  }
+]

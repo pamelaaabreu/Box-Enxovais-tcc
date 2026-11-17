@@ -81,45 +81,7 @@ export class CatalogService {
     return this.products.getProducts().pipe(map(products => products.map(p => this.adapt(p)).filter(p => p.active && p.category.slug === slug)));
   }
   getRecommendations(product: CatalogProduct): Observable<CatalogProduct[]> {
-    const bedding = CAMA_GROUP.types;
-    const preferredCategories: Record<string, readonly string[]> = {
-      [bedding[0]]: ['Travesseiros', bedding[3], bedding[1]],
-      [bedding[1]]: [bedding[0], 'Almofadas', bedding[3]],
-      [bedding[2]]: [bedding[0], 'Almofadas', bedding[3]],
-      [bedding[3]]: [bedding[0], bedding[2], 'Almofadas'],
-      [bedding[4]]: [bedding[0], 'Travesseiros'],
-      Travesseiros: [bedding[0], bedding[3]],
-    };
-    const preferred = preferredCategories[product.category.name] ?? [];
-    const collection = product.measurements?.['Coleção'];
-    const rank = (candidate: CatalogProduct) => {
-      const index = preferred.indexOf(candidate.category.name);
-      if (index !== -1) return index;
-      if (candidate.category.name !== product.category.name) return preferred.length;
-      return preferred.length + (collection && candidate.measurements?.['Coleção'] === collection ? 2 : 1);
-    };
-    return this.products.getProductsPage({ limit: 100, filters: { stock__gte: 1 } }).pipe(
-      map(page => {
-        const ranked = page.items
-          .filter(item => item.id !== product.id && item.status === 'active' && item.quantity > 0)
-          .map(item => this.adapt(item))
-          .sort((a, b) => rank(a) - rank(b) || a.id - b.id);
-        const seen = new Set<string>();
-        const varied: CatalogProduct[] = [];
-        const repeated: CatalogProduct[] = [];
-        for (const item of ranked) {
-          const collection = item.measurements?.['Coleção']?.trim();
-          const key = collection ? item.category.name + '/' + collection : String(item.id);
-          if (seen.has(key)) {
-            repeated.push(item);
-          } else {
-            seen.add(key);
-            varied.push(item);
-          }
-        }
-        return [...varied, ...repeated].slice(0, 4);
-      }),
-    );
+    return this.products.getRelatedProducts(product.id).pipe(map(items => items.map(item => this.adapt(item))));
   }
 
   getProductBySlug(slug: string): Observable<CatalogProduct | null> {

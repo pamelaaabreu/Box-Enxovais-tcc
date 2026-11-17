@@ -54,6 +54,17 @@
             [class.filters-open]="filtersOpen()"
             aria-label="Filtros do catálogo"
           >
+            @if (collections().length) {
+              <div class="facet">
+                <h2>Coleção</h2>
+                <div class="facet-values">
+                  @for (option of collections(); track option[0]) {
+                    <button type="button" [attr.aria-pressed]="criteria().collection === option[0]"
+                      (click)="setFacet('collection', option[0])">{{ option[1] }}</button>
+                  }
+                </div>
+              </div>
+            }
             @for (facet of facets(); track facet.key) {
               @if (facet.values.length) {
                 <div class="facet">

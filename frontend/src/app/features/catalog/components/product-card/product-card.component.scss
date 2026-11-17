@@ -305,3 +305,6 @@ article.compact {
 .recommendation-preview::backdrop { background: #252c20bf; }
 .recommendation-preview img { display: block; max-width: 100%; max-height: 92dvh; object-fit: contain; }
 .preview-close { position: absolute; top: 10px; right: 10px; }
+.product-brand { display: block; color: #596655; font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
+
+.compact .product-brand { color: #414d3b; font-weight: 500; }

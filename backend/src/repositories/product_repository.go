@@ -23,8 +23,8 @@ const storeProductColumns = `p.id,p.name,p.description,p.care_instructions,
  'image_paths',COALESCE((SELECT json_agg(i.image_path ORDER BY i.is_primary DESC NULLS LAST,i.id)
  FROM product_images i WHERE i.variant_id=v.id),'[]')) ORDER BY v.id)
  FROM product_variants v WHERE v.product_id=p.id),'[]') AS variants,
- p.brand_id,p.created_at,p.updated_at`
-const storeProductSource = ` FROM products p LEFT JOIN product_types t ON t.id=p.product_type_id`
+ p.brand_id,COALESCE(b.name,'') AS brand_name,p.purchase_summary,p.created_at,p.updated_at`
+const storeProductSource = ` FROM products p LEFT JOIN product_types t ON t.id=p.product_type_id LEFT JOIN brands b ON b.id=p.brand_id`
 
 func (repo ProductRepository) ListTypes(ctx context.Context) ([]models.ProductType, error) {
 	return repo.listProductOptions(ctx, "SELECT id, name FROM product_types ORDER BY name, id")
@@ -60,8 +60,8 @@ func (repo ProductRepository) Create(ctx context.Context, p models.Product) (int
 
 	query := `
         INSERT INTO products 
-        (name, description, care_instructions, measurements, price, quantity, brand_id, product_type_id, status) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+        (name, description, care_instructions, measurements, price, quantity, brand_id, product_type_id, status, purchase_summary)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING id`
 
 	var productID int
@@ -76,6 +76,7 @@ func (repo ProductRepository) Create(ctx context.Context, p models.Product) (int
 		p.BrandID,
 		p.ProductTypeID,
 		p.Status,
+		p.PurchaseSummary,
 	).Scan(&productID)
 
 	return productID, err
@@ -87,7 +88,7 @@ func scanStoreProduct(rows *sql.Rows) (models.Product, error) {
 	var createdAt, updatedAt sql.NullTime
 	err := rows.Scan(&p.ID, &p.Name, &p.Description, &p.CareInstructions, &measurements,
 		&p.Price, &p.Quantity, &p.Status, &p.ProductTypeID, &p.CategoryName, &images, &variants,
-		&p.BrandID, &createdAt, &updatedAt, &p.PromotionalPrice)
+		&p.BrandID, &p.BrandName, &p.PurchaseSummary, &createdAt, &updatedAt, &p.PromotionalPrice)
 	if err != nil {
 		return p, err
 	}
@@ -125,8 +126,47 @@ func (repo ProductRepository) Get(ctx context.Context, id int64) ([]models.Produ
 	return products, rows.Err()
 }
 
+const CatalogCoordinatedOrder = "coordinated"
+
+const collectionCoordinatedOrder = `CASE WHEN NULLIF(page.measurements->>'coordinated_family','') IS NOT NULL
+ AND bool_or(page.measurements->>'coordinated_pair_type'='jogo-cama') OVER (PARTITION BY page.measurements->>'collection_slug',page.measurements->>'coordinated_family')
+ AND bool_or(page.measurements->>'coordinated_pair_type'='edredom') OVER (PARTITION BY page.measurements->>'collection_slug',page.measurements->>'coordinated_family') THEN 0 ELSE 1 END,
+ CASE WHEN NULLIF(page.measurements->>'coordinated_family','') IS NOT NULL
+      THEN min(page.id) OVER (PARTITION BY page.measurements->>'collection_slug',page.measurements->>'coordinated_family') ELSE page.id END,
+ CASE page.measurements->>'coordinated_pair_type' WHEN 'jogo-cama' THEN 0 WHEN 'edredom' THEN 1 ELSE 2 END,
+ page.id`
+
+func (repo ProductRepository) ListRelated(ctx context.Context, id int64) ([]models.Product, error) {
+	source := "SELECT " + storeProductColumns + ",0 AS promotional_price" + storeProductSource + `
+ JOIN products origin ON origin.id=$1 AND origin.status='active'
+ WHERE p.status='active' AND p.id<>origin.id`
+	order := `(SELECT CASE
+ WHEN relation.same_family AND (origin.measurements->>'coordinated_pair_type',page.measurements->>'coordinated_pair_type')
+        IN (('jogo-cama','edredom'),('edredom','jogo-cama')) THEN 0
+ WHEN relation.same_family THEN 1
+ WHEN relation.same_collection THEN 2
+ ELSE 3 END * 10 + CASE
+ WHEN NULLIF(origin.measurements->>'Cor','')=page.measurements->>'Cor' THEN 0
+ WHEN NULLIF(origin.measurements->>'Estampa','')=page.measurements->>'Estampa' THEN 1
+ WHEN origin.product_type_id=page.product_type_id THEN 2
+ ELSE 3 END
+ FROM products origin
+ CROSS JOIN LATERAL (SELECT
+  COALESCE(NULLIF(origin.measurements->>'collection_slug',''),NULLIF(origin.measurements->>'Coleção',''))
+    =COALESCE(NULLIF(page.measurements->>'collection_slug',''),NULLIF(page.measurements->>'Coleção','')) AS same_collection,
+  NULLIF(origin.measurements->>'coordinated_family','')=page.measurements->>'coordinated_family'
+    AND NULLIF(origin.measurements->>'collection_slug','')=page.measurements->>'collection_slug' AS same_family
+ ) relation WHERE origin.id=$1), page.id`
+	page, err := pagination.ReadPage(ctx, repo.DB, source, []any{id},
+		pagination.PageQuery{Limit: 4, Where: " WHERE page.quantity>0"}, order, scanStoreProduct)
+	return page.Items, err
+}
+
 func (repo ProductRepository) List(ctx context.Context, page pagination.PageQuery) (pagination.Page[models.Product], error) {
 	order := page.Order
+	if order == CatalogCoordinatedOrder {
+		order = collectionCoordinatedOrder
+	}
 	if order == "" {
 		order = "page.id"
 	}

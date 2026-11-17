@@ -16,10 +16,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from './auth.service';
 import { Cart } from '../interfaces/cart.interface';
 
-type QuickPurchase = { productId: number; quantity: number; variantId?: number };
+export type QuickPurchase = { productId: number; quantity: number; variantId?: number; reuseCartItem: boolean };
 
 type CartRequest = {
   onAdded?: () => void;
+  onAddError?: (message: string, status: number) => void;
   method: string;
   path: string;
   body?: unknown;
@@ -98,6 +99,7 @@ export class CartService {
                         : error.error?.message ||
                           'Não foi possível atualizar o carrinho.';
                   this.error.set(message);
+                  request.onAddError?.(message, error.status);
                   if (request.productId)
                     this.feedback.update((value) => ({
                       ...value,
@@ -142,8 +144,8 @@ export class CartService {
   reorder(orderId: number): void {
     this.request('POST', '/orders/' + orderId, Number.MIN_SAFE_INTEGER);
   }
-  async buyNow(productId: number, quantity: number, variantId?: number): Promise<void> {
-    const purchase = { productId, quantity, variantId };
+  async buyNow(productId: number, quantity: number, variantId?: number, reuseCartItem = false): Promise<void> {
+    const purchase = { productId, quantity, variantId, reuseCartItem };
     this.quickPurchase = purchase;
     try {
       if (await this.router.navigate(['/checkout'], { queryParams: { compra: 'agora' } })) return;
@@ -153,13 +155,18 @@ export class CartService {
     if (this.quickPurchase === purchase) this.quickPurchase = undefined;
   }
 
-  consumeQuickPurchase(onAdded: () => void): void {
+  consumeQuickPurchase(onReady: (purchase: QuickPurchase) => void): void {
     const purchase = this.quickPurchase;
     this.quickPurchase = undefined;
-    if (purchase) this.add(purchase.productId, purchase.quantity, purchase.variantId, onAdded);
+    if (!purchase) return;
+    if (purchase.reuseCartItem) {
+      onReady(purchase);
+    } else {
+      this.add(purchase.productId, purchase.quantity, purchase.variantId, () => onReady(purchase));
+    }
   }
 
-  add(productId: number, quantity = 1, variantId?: number, onAdded?: () => void): void {
+  add(productId: number, quantity = 1, variantId?: number, onAdded?: () => void, onAddError?: (message: string, status: number) => void): void {
     this.request(
       'POST',
       '/items',
@@ -167,6 +174,7 @@ export class CartService {
       { productId, quantity, ...(variantId ? { variantId } : {}) },
       productId,
       onAdded,
+      onAddError,
     );
   }
   update(id: number, quantity: number): void {
@@ -185,6 +193,7 @@ export class CartService {
     body?: unknown,
     productId?: number,
     onAdded?: () => void,
+    onAddError?: (message: string, status: number) => void,
   ): void {
     if (!this.auth.getToken()) {
       void this.router.navigate(['/login']);
@@ -204,6 +213,7 @@ export class CartService {
       productId,
       session: this.session,
       onAdded,
+      onAddError,
     });
   }
 }

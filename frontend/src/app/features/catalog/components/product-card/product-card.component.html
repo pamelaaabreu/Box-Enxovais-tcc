@@ -69,6 +69,11 @@
     <h2>
       <a class="product-link" [routerLink]="details()">{{ displayName() }}</a>
     </h2>
+    @if (product().brand_name; as brand) {
+      @if (!displayName().toLocaleLowerCase('pt-BR').includes(brand.toLocaleLowerCase('pt-BR'))) {
+        <span class="product-brand">{{ brand }}</span>
+      }
+    }
     @if (catalogTile()) {
       <span class="price-prefix">A partir de</span>
     }

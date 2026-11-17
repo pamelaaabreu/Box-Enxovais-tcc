@@ -2,6 +2,8 @@ export interface Product {
   id?: number;
   name: string;
   description?: string;
+  purchase_summary?: string;
+  brand_name?: string;
   care_instructions?: string;
   measurements: { [key: string]: string };
   price: number;

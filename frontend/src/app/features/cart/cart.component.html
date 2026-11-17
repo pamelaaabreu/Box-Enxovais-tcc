@@ -108,6 +108,7 @@
                       [routerLink]="['/produto', item.productId]"
                       >{{ item.name }}</a
                     >
+                    <small>No seu carrinho ({{ item.quantity }})</small>
                     @if (!item.available) {
                       <p class="stock-warning" role="alert">
                         Quantidade indisponível. Ajuste ou remova este produto.

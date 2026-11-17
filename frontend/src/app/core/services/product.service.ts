@@ -48,6 +48,10 @@ export class ProductService {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
+  getRelatedProducts(id: number): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/${id}/related`);
+  }
+
   getProductsByIds(ids: number[]): Observable<Product[]> {
     const requests = ids.map((id) => this.getProduct(id));
     return forkJoin(requests);

@@ -23,6 +23,8 @@ type Product struct {
 	CategoryName     string            `json:"category_name,omitempty"`
 	ID               int64             `json:"id"`
 	Name             string            `json:"name"`
+	PurchaseSummary  *string           `json:"purchase_summary,omitempty"`
+	BrandName        string            `json:"brand_name,omitempty"`
 	Description      *string           `json:"description,omitempty"`
 	CareInstructions *string           `json:"care_instructions,omitempty"`
 	Measurements     map[string]string `json:"measurements,omitempty"`

@@ -39,12 +39,18 @@
             <span class="eyebrow">{{ product.category.name }}</span>
           <p
             class="availability"
-            [class.availability--low]="available() && remainingStock() > 0 && remainingStock() <= 5"
-            [class.availability--unavailable]="!available() || remainingStock() === 0"
+            [class.availability--low]="available() && stock() <= 5"
+            [class.availability--unavailable]="!available()"
             role="status"
           >
             {{ availabilityLabel() }}
           </p>
+          @if (selectedCartItem(); as item) {
+            <p class="cart-presence" role="status">
+              <mat-icon fontSet="material-icons-outlined" aria-hidden="true">shopping_bag</mat-icon>
+              {{ item.quantity }} na sacola
+            </p>
+          }
           </div>
           <h1 id="product-title">{{ product.name }}</h1>
           <app-product-price
@@ -52,8 +58,8 @@
             [showInstallments]="false"
             [price]="selectedPrice()"
           />
-          @if (product.description) {
-            <p class="purchase-description">{{ product.description }}</p>
+          @if (product.purchase_summary) {
+            <p class="purchase-description">{{ product.purchase_summary }}</p>
           }
           @if (product.variants.length) {
             <fieldset [hidden]="availableColors().length <= 1">
@@ -123,13 +129,19 @@
           }
           @if (includedItems().length) {
             <section class="included-items" aria-labelledby="included-title">
-              <h2 id="included-title">O que acompanha este produto?</h2>
+              <mat-icon aria-hidden="true">inventory_2</mat-icon>
+              <div class="included-content">
+              <h2 id="included-title">O conjunto inclui</h2>
               <ul>
                 @for (item of includedItems(); track $index) {
                   <li>{{ item }}</li>
                 }
               </ul>
+              </div>
             </section>
+          }
+          @if (cartNeedsAdjustment()) {
+            <p class="cart-stock-warning" role="status">Ajuste ou remova este item da sacola para continuar.</p>
           }
           <div class="purchase-row">
             <div class="quantity-row">
@@ -139,37 +151,33 @@
                 (valueChange)="quantity.set($event)"
               />
             </div>
-            <button
-              class="purchase-button"
-              type="button"
-              (click)="addToCart()"
-              [disabled]="openingCheckout() || cart.pending().has(product.id) || !canAddToCart()"
-              [attr.aria-busy]="cart.pending().has(product.id)"
-            >
-              <mat-icon aria-hidden="true">shopping_bag</mat-icon>
-              {{
-                !available()
-                  ? "Produto indisponível"
-                  : cart.pending().has(product.id)
-                    ? "Adicionando…"
-                    : "Adicionar ao carrinho"
-              }}
-            </button>
+            @if (showCartLink()) {
+              <a class="purchase-button" routerLink="/cart">Ver sacola</a>
+            } @else {
+              <button
+                class="purchase-button"
+                type="button"
+                (click)="addToCart()"
+                [disabled]="openingCheckout() || cart.pending().has(product.id) || !canAddToCart()"
+                [attr.aria-busy]="cart.pending().has(product.id)"
+              >
+                <mat-icon aria-hidden="true">shopping_bag</mat-icon>
+                {{
+                  !available()
+                    ? "Produto indisponível"
+                    : cart.pending().has(product.id)
+                      ? "Adicionando…"
+                      : "Adicionar ao carrinho"
+                }}
+              </button>
+            }
             <button class="purchase-button buy-now" type="button" (click)="buyNow()"
-              [disabled]="openingCheckout() || !canAddToCart()" [attr.aria-busy]="openingCheckout()">
+              [disabled]="openingCheckout() || !canBuyNow()" [attr.aria-busy]="openingCheckout()">
               {{ openingCheckout() ? 'Abrindo checkout…' : 'Comprar agora' }}
             </button>
             <app-favorite-button class="purchase-favorite" [productId]="product.id" [productName]="product.name" />
           </div>
           <app-shipping-quote />
-          @if (available() && remainingStock() === 0) {
-            <p role="status">
-              Todas as unidades disponíveis já estão na sacola.
-            </p>
-          }
-          @if (cart.feedback()[product.id]) {
-            <p role="status">{{ cart.feedback()[product.id] }}</p>
-          }
         </section>
       </div>
       <mat-tab-group
@@ -180,15 +188,66 @@
       >
         <mat-tab label="Descrição">
           <section class="detail-panel">
-            <p>
-              {{ product.description || "Descrição ainda não disponível." }}
-            </p>
+            @for (paragraph of descriptionParagraphs(); track $index) {
+              <p>{{ paragraph }}</p>
+            } @empty {
+              <p>Descrição ainda não disponível.</p>
+            }
+            @if (descriptionBrand(); as brand) {
+              <p>Este produto faz parte do catálogo da marca {{ brand }}.</p>
+            }
+            @if (technicalMaterials().length) {
+              <h2>Materiais e acabamento</h2>
+              <dl>
+                @for (entry of technicalMaterials(); track entry[0]) {
+                  <div><dt>{{ entry[0] }}</dt><dd>{{ entry[1] }}</dd></div>
+                }
+              </dl>
+            }
+            @if (selectedVariant() || fixedSize() || sizes().length || includedItems().length) {
+              <h2>Medidas e o que acompanha</h2>
+              <dl>
+                @if (selectedVariant(); as variant) {
+                  <div><dt>Tamanho</dt><dd>{{ variant.size }}</dd></div>
+                  @if (variant.dimensions; as dimensions) {
+                    @if (dimensions.toLowerCase().startsWith('colchão de referência')) {
+                      <div><dt>Compatibilidade</dt><dd>{{ dimensions }}</dd></div>
+                    } @else {
+                      <div><dt>Dimensões cadastradas</dt><dd>{{ dimensions }}</dd></div>
+                    }
+                  }
+                } @else {
+                  @if (fixedSize(); as size) {
+                    <div><dt>Medida cadastrada</dt><dd>{{ size }}</dd></div>
+                  }
+                  @for (entry of sizes(); track entry.key) {
+                    <div><dt>{{ entry.label }}</dt><dd>{{ entry.value }}</dd></div>
+                  }
+                }
+                @if (includedItems().length) {
+                  <div>
+                    <dt>Conteúdo</dt>
+                    <dd><ul>
+                      @for (item of includedItems(); track $index) {
+                        <li>{{ item }}</li>
+                      }
+                    </ul></dd>
+                  </div>
+                }
+              </dl>
+            }
           </section>
         </mat-tab>
         <mat-tab label="Informações adicionais">
           <section class="detail-panel product-characteristics">
-            @if (otherCharacteristics().length) {
+            @if (product.brand_name || selectedVariant()?.dimensions || otherCharacteristics().length) {
               <dl>
+                @if (product.brand_name; as brand) {
+                  <div><dt>Marca</dt><dd>{{ brand }}</dd></div>
+                }
+                @if (selectedVariant()?.dimensions; as dimensions) {
+                  <div><dt>Dimensões cadastradas</dt><dd>{{ dimensions }}</dd></div>
+                }
                 @for (
                   measurement of otherCharacteristics();
                   track measurement[0]
@@ -282,20 +341,24 @@
             }}</span>
           </div>
         </div>
-        <button
-          class="purchase-button"
-          type="button"
-          (click)="addToCart()"
-          [disabled]="!canAddToCart()"
-        >
-          {{
-            !available()
-              ? "Produto indisponível"
-              : cart.pending().has(product.id)
-                ? "Adicionando…"
-                : "Adicionar ao carrinho"
-          }}
-        </button>
+        @if (showCartLink()) {
+          <a class="purchase-button" routerLink="/cart">Ver sacola</a>
+        } @else {
+          <button
+            class="purchase-button"
+            type="button"
+            (click)="addToCart()"
+            [disabled]="openingCheckout() || !canAddToCart()"
+          >
+            {{
+              !available()
+                ? "Produto indisponível"
+                : cart.pending().has(product.id)
+                  ? "Adicionando…"
+                  : "Adicionar ao carrinho"
+            }}
+          </button>
+        }
       </div>
     }
   }

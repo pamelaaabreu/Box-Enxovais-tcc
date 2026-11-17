@@ -1,3 +1,4 @@
+import { CustomAlertService } from '../../../../core/services/custom-alert.service';
 import { CAMA_GROUP } from '../../data/categories';
 import { ShippingQuoteComponent } from './shipping-quote.component';
 import { FavoriteButtonComponent } from '../../../../shared/favorite-button/favorite-button.component';
@@ -29,19 +30,27 @@ import { QuantitySelectorComponent } from '../../components/quantity-selector/qu
 })
 export class ProductDetailComponent {
   readonly cart = inject(CartService);
+  private readonly alerts = inject(CustomAlertService);
   readonly openingCheckout = signal(false);
 
   async buyNow(): Promise<void> {
     const product = this.product();
-    if (!product || this.openingCheckout() || !this.canAddToCart()) return;
+    if (!product || this.openingCheckout() || !this.canBuyNow()) return;
     this.openingCheckout.set(true);
     try {
-      await this.cart.buyNow(product.id, this.quantity(), this.selectedVariant()?.id);
+      await this.cart.buyNow(product.id, this.quantity(), this.selectedVariant()?.id, !!this.selectedCartItem());
     } finally {
       this.openingCheckout.set(false);
     }
   }
-  addToCart(): void { const product = this.product(); if (product && this.canAddToCart()) this.cart.add(product.id, this.quantity(), this.selectedVariant()?.id); }
+  addToCart(): void {
+    const product = this.product();
+    if (!product || this.openingCheckout() || !this.canAddToCart()) return;
+    this.cart.add(product.id, this.quantity(), this.selectedVariant()?.id, undefined, (message, status) => {
+      if (status === 409) this.cart.load();
+      if (status !== 401) this.alerts.error('Não foi possível adicionar à sacola', message);
+    });
+  }
   private readonly route = inject(ActivatedRoute);
   private readonly catalog = inject(CatalogService);
   readonly quantity = signal(1);
@@ -60,8 +69,16 @@ export class ProductDetailComponent {
   ), { initialValue: { status: 'loading' } as CatalogState<CatalogProduct | null> });
 
   readonly product = computed(() => { const state = this.state(); return state.status === 'loaded' ? state.data : null; });
+  readonly descriptionParagraphs = computed(() => (this.product()?.description ?? '')
+    .split(/\r?\n+/).map(paragraph => paragraph.trim()).filter(Boolean));
+  readonly descriptionBrand = computed(() => {
+    const brand = this.product()?.brand_name?.trim();
+    return brand && !this.descriptionParagraphs().some(paragraph =>
+      paragraph.toLocaleLowerCase('pt-BR').includes(brand.toLocaleLowerCase('pt-BR'))) ? brand : '';
+  });
   readonly characteristics = computed(() => Object.entries(this.product()?.measurements ?? {})
-    .filter(([, value]) => value != null && String(value).trim()));
+    .filter(([key, value]) => !['collection_slug', 'coordinated_family', 'coordinated_pair_type'].includes(key)
+      && value != null && String(value).trim()));
 
   readonly includedItems = computed(() => this.selectedVariant()?.includedItems ?? (this.product()?.measurements?.['Conteúdo'] ?? '')
     .split(/\r?\n|\s+\+\s+|;/)
@@ -81,15 +98,21 @@ export class ProductDetailComponent {
     });
   });
 
+  readonly technicalMaterials = computed(() => this.characteristics().filter(([key]) =>
+    /^(material|tecido externo|composição(?: têxtil)?|enchimento|acabamento)$/i.test(key.trim())));
   readonly otherCharacteristics = computed(() => {
-    const attributes = this.characteristics().filter(([key]) => key !== 'Conteúdo');
-    if (this.product()?.variants.length) return attributes;
-    const sizeKeys = new Set(this.sizes().map(({ key }) => key));
-    return attributes.filter(([key]) => !sizeKeys.has(key));
+    const attributes = this.characteristics().filter(([key]) => key !== 'Conteúdo' && key !== 'Marca' && !key.startsWith('Origem dos'));
+    return attributes;
+  });
+
+  readonly selectedCartItem = computed(() => {
+    const productId = this.product()?.id;
+    const variantId = this.selectedVariant()?.id ?? 0;
+    return this.cart.cart().items.find(item => item.productId === productId && (item.variantId ?? 0) === variantId);
   });
 
   readonly stock = computed(() => {
-    const value = this.selectedVariant()?.stock ?? this.product()?.stock ?? this.product()?.quantity ?? 0;
+    const value = this.selectedCartItem()?.stock ?? this.selectedVariant()?.stock ?? this.product()?.stock ?? this.product()?.quantity ?? 0;
     return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
   });
   readonly recommendations = toSignal(toObservable(this.product).pipe(
@@ -98,19 +121,25 @@ export class ProductDetailComponent {
       : of([])),
   ), { initialValue: [] });
 
-  readonly remainingStock = computed(() => {
-    const product = this.product();
-    const variantId = this.selectedVariant()?.id;
-    const inCart = this.cart.cart().items.find(item => item.productId === product?.id && item.variantId === variantId);
-    return Math.max(0, (inCart?.stock ?? this.stock()) - (inCart?.quantity ?? 0));
-  });
-
+  readonly remainingStock = computed(() => Math.max(0, this.stock() - (this.selectedCartItem()?.quantity ?? 0)));
   readonly available = computed(() => this.product()?.status === 'active' && this.stock() > 0);
+  readonly cartNeedsAdjustment = computed(() => {
+    const item = this.selectedCartItem();
+    return !!item && (!this.available() || !item.available || item.quantity > this.stock());
+  });
+  readonly showCartLink = computed(() => !!this.selectedCartItem() && (!this.available() || this.remainingStock() === 0));
   readonly availabilityLabel = computed(() => {
-    const remaining = this.remainingStock();
-    if (!this.available() || remaining === 0) return 'Produto indisponível';
-    if (remaining <= 5) return `Últimas ${remaining} unidades`;
+    const stock = this.stock();
+    if (!this.available()) return 'Produto indisponível';
+    if (stock === 1) return 'Última unidade';
+    if (stock <= 5) return `Últimas ${stock} unidades`;
     return 'Em estoque';
+  });
+  readonly canBuyNow = computed(() => {
+    const item = this.selectedCartItem();
+    return item
+      ? this.available() && !this.cartNeedsAdjustment() && !this.cart.pending().has(item.productId)
+      : this.canAddToCart();
   });
   readonly canAddToCart = computed(() => this.available() && Number.isInteger(this.quantity()) && this.quantity() >= 1 && this.quantity() <= this.remainingStock() && !this.cart.pending().has(this.product()!.id));
 

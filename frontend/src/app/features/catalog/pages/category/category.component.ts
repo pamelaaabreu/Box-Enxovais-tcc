@@ -31,7 +31,7 @@ export class CategoryComponent {
   private readonly catalog = inject(CatalogService);
 
   private readonly pageSize = 12;
-  private readonly query = new BehaviorSubject({ search: '', maxPrice: '', available: false, sort: '', offset: 0, color: '', size: '', pattern: '' });
+  private readonly query = new BehaviorSubject({ search: '', maxPrice: '', available: false, sort: '', offset: 0, color: '', size: '', pattern: '', collection: '' });
   readonly criteria = toSignal(this.query, { requireSync: true });
 
   applyFilters(search: string, maxPrice: string, available: boolean, sort: string): void {
@@ -78,19 +78,30 @@ export class CategoryComponent {
         .sort((a, b) => a.localeCompare(b, 'pt-BR')),
     }));
   });
+  readonly collections = computed(() => {
+    const category = this.category();
+    const products = (this.cama()?.products ?? []).filter(p => category?.slug === 'cama' || p.product_type_id === category?.id);
+    const options = new Map<string, string>();
+    for (const product of products) {
+      const label = product.measurements?.['Coleção']?.trim();
+      if (label) options.set(product.measurements?.['collection_slug'] || label, label);
+    }
+    return [...options.entries()].sort((a, b) => a[1].localeCompare(b[1], 'pt-BR'));
+  });
+
   colorSwatch(value: string): string {
     const key = value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .toLowerCase().trim().replace(/[\s-]+/g, ' ');
     return CATALOG_SWATCHES[key] ?? '#d5d4cc';
   }
 
-  setFacet(key: 'color' | 'size' | 'pattern', value: string): void {
+  setFacet(key: 'color' | 'size' | 'pattern' | 'collection', value: string): void {
     const current = this.query.value;
     this.query.next({ ...current, [key]: current[key] === value ? '' : value, offset: 0 });
   }
 
   clearFilters(): void {
-    this.query.next({ search: '', maxPrice: '', available: false, sort: '', offset: 0, color: '', size: '', pattern: '' });
+    this.query.next({ search: '', maxPrice: '', available: false, sort: '', offset: 0, color: '', size: '', pattern: '', collection: '' });
   }
 
   private readonly resolvedCategory = signal<Category | null>(null);
@@ -99,12 +110,12 @@ export class CategoryComponent {
     switchMap(([params, query]) => {
       const slug = params.get('slug') ?? '';
       this.resolvedCategory.set(null);
-      this.query.next({ search: (query.get('q') ?? '').trim().slice(0, 120), maxPrice: '', available: false, sort: '', offset: 0, color: '', size: '', pattern: '' });
+      this.query.next({ search: (query.get('q') ?? '').trim().slice(0, 120), maxPrice: '', available: false, sort: '', offset: 0, color: '', size: '', pattern: '', collection: (query.get('collection') ?? '').trim().slice(0, 120) });
       return this.catalog.getCategoryBySlug(slug).pipe(
       switchMap(category => {
         this.resolvedCategory.set(category);
         return this.query.pipe(
-        switchMap(({ search, maxPrice, available, sort, offset, color, size, pattern }) => {
+        switchMap(({ search, maxPrice, available, sort, offset, color, size, pattern, collection }) => {
           if (!category) return of<CatalogState<CategoryData>>({ status: 'loaded', data: { category, products: [], total: 0, hasMore: false } });
           const filters: Record<string, string | number> = {};
           if (search) filters['name__contains'] = search;
@@ -113,6 +124,7 @@ export class CategoryComponent {
           if (color) filters['color'] = color;
           if (size) filters['size'] = size;
           if (pattern) filters['pattern'] = pattern;
+          if (collection) filters['collection'] = collection;
           if (sort) filters['sort'] = sort;
           return this.catalog.getCategoryPage(category, { offset, limit: this.pageSize, filters }).pipe(
             map(({ items, pagination }): CatalogState<CategoryData> => ({

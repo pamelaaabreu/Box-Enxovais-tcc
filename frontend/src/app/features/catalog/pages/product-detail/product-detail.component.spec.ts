@@ -75,7 +75,7 @@ describe('Product stock experience',()=>{
   product.stock=stock;
   const fixture=render();
   const label=fixture.nativeElement.querySelector('.availability').textContent.trim();
-  expect(label).toBe(stock===0?'Produto indisponível':stock<=5?`Últimas ${stock} unidades`:'Em estoque');
+  expect(label).toBe(stock===0?'Produto indisponível':stock===1?'Última unidade':stock<=5?`Últimas ${stock} unidades`:'Em estoque');
   const button:HTMLButtonElement=fixture.nativeElement.querySelector('.purchase-button');
   expect(button.disabled).toBe(stock===0);
   if(stock===0){button.click();fixture.componentInstance.addToCart();http.expectNone('http://localhost:8080/cart/items');expect(button.textContent).toContain('Produto indisponível');}
@@ -94,7 +94,29 @@ describe('Product stock experience',()=>{
   const add = http.expectOne('http://localhost:8080/cart/items');
   expect(add.request.body).toEqual({ productId: 42, quantity: 2 });
   add.flush({ data: { items: [{ id: 1, productId: 42, name: 'Produto', quantity: 5, stock: 5, available: true }], totalItems: 5, total: 0 } });
+  fixture.detectChanges();
   expect(page.canAddToCart()).toBeFalse();
+  expect(page.canBuyNow()).toBeTrue();
+  const buy = spyOn(page.cart, 'buyNow').and.resolveTo();
+  fixture.nativeElement.querySelector('.buy-now').click();
+  expect(buy).toHaveBeenCalledOnceWith(42, 1, undefined, true);
+  expect(page.stock()).toBe(5);
+  expect(fixture.nativeElement.querySelector('.cart-presence').textContent).toContain('5 na sacola');
+  expect(fixture.nativeElement.querySelector('.availability').textContent).toContain('Últimas 5 unidades');
+  expect(fixture.nativeElement.querySelector('.purchase-row a[href="/cart"]').textContent).toContain('Ver sacola');
+  expect(fixture.nativeElement.textContent).not.toContain('Adicionado ao carrinho.');
+  page.cart.load();
+  http.expectOne('http://localhost:8080/cart').flush({
+   data: { items: [{ id: 1, productId: 42, quantity: 5, stock: 0, available: false }], totalItems: 5, total: 0 },
+  });
+  fixture.detectChanges();
+  expect(fixture.nativeElement.querySelector('.availability').textContent).toContain('Produto indisponível');
+  expect(fixture.nativeElement.querySelector('.cart-stock-warning').textContent).toContain('Ajuste ou remova');
+  expect(page.canBuyNow()).toBeFalse();
+  page.cart.load();
+  http.expectOne('http://localhost:8080/cart').flush({ data: { items: [], totalItems: 0, total: 0 } });
+  fixture.detectChanges();
+  expect(fixture.nativeElement.querySelector('.cart-presence')).toBeNull();
   TestBed.inject(CustomAlertService).clearAll();
  });
 
@@ -164,13 +186,51 @@ describe('Product stock experience',()=>{
   expect(fixture.nativeElement.querySelector('.purchase-button').disabled).toBeTrue();http.expectNone('http://localhost:8080/cart/items');
  });
  ['Só temos 2 unidades disponíveis','Este produto ficou sem estoque'].forEach(message=>it(`shows backend conflict: ${message}`,()=>{
+  const alert = spyOn(TestBed.inject(CustomAlertService), 'error');
   const fixture=render();fixture.componentInstance.quantity.set(3);fixture.detectChanges();fixture.nativeElement.querySelector('.purchase-button').click();
   const request=http.expectOne('http://localhost:8080/cart/items');expect(request.request.body).toEqual({productId:42,quantity:3});
   request.flush({success:false,message},{status:409,statusText:'Conflict'});fixture.detectChanges();
-  expect(fixture.nativeElement.textContent).toContain(message);
+  http.expectOne('http://localhost:8080/cart').flush({data:{items:[],totalItems:0,total:0}});
+  expect(alert).toHaveBeenCalledWith('Não foi possível adicionar à sacola', message);
+  expect(fixture.nativeElement.textContent).not.toContain(message);
   expect(fixture.componentInstance.cart.totalItems()).toBe(0);
   expect(fixture.componentInstance.stock()).toBe(10);
  }));
+
+ it('separates the purchase summary from technical details and keeps the registered material in the technical description', () => {
+  product.name = 'Jogo de Cama';
+  product.brand_name = 'Box Enxovais';
+  product.measurements = { Material: 'Percal de algodão' };
+  product.purchase_summary = 'Folhagens em fundo claro.';
+  product.description = 'Descrição detalhada do desenho botânico.';
+  product.variants = [
+   { id: 31, size: 'Casal', stock: 3, price: 200, dimensions: 'Colchão de referência: 138 × 188 cm', includedItems: ['1 edredom'] },
+   { id: 32, size: 'Queen', stock: 2, price: 220, dimensions: 'Colchão de referência: 158 × 198 cm', includedItems: ['1 edredom'] },
+  ];
+  const fixture = render();
+  const page = fixture.componentInstance;
+  expect(fixture.nativeElement.querySelector('#product-title').textContent.trim()).toBe('Jogo de Cama');
+  expect(fixture.nativeElement.querySelector('#product-title').nextElementSibling.tagName).toBe('APP-PRODUCT-PRICE');
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('Percal de algodão');
+  expect(fixture.nativeElement.querySelector('.purchase-description').textContent).toContain('Folhagens');
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).not.toContain('Folhagens');
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('Compatibilidade');
+  page.selectSize('Queen');
+  fixture.detectChanges();
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('158 × 198 cm');
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).not.toContain('fronha');
+ });
+
+ it('keeps the structured cotton percentage in the technical description', () => {
+  product.name = 'Edredom';
+  product.measurements = { Material: 'Percal', 'Composição têxtil': '100% algodão' };
+  product.brand_name = 'Box Enxovais';
+  const fixture = render();
+  expect(fixture.nativeElement.querySelector('#product-title').textContent.trim()).toBe('Edredom');
+  expect(fixture.nativeElement.querySelector('#product-title').nextElementSibling.tagName).toBe('APP-PRODUCT-PRICE');
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('100% algodão');
+  expect(fixture.nativeElement.querySelector('.purchase-description')).toBeNull();
+ });
 
  it('renders the stored contents and the two Cama breadcrumb links', () => {
   product.category = { id: 81, name: 'Cama / Jogos de cama', slug: 'cama-jogos-de-cama--81' };
@@ -223,11 +283,13 @@ describe('Product stock experience',()=>{
   const fixture = render([{id: 11, productId: 42, variantId: 31, name: 'Produto — Casal', stock: 4, quantity: 1}]);
   const page = fixture.componentInstance;
   expect(page.remainingStock()).toBe(3);
+  expect(fixture.nativeElement.querySelector('.cart-presence').textContent).toContain('1 na sacola');
   page.selectSize('King');
   expect(page.selectedVariant()?.id).toBe(31);
   page.selectSize('Queen');
   fixture.detectChanges();
   expect(page.selectedPrice()).toBe(149.9);
+  expect(fixture.nativeElement.querySelector('.cart-presence')).toBeNull();
   expect(page.remainingStock()).toBe(2);
   expect(page.galleryImages()[0].alt).toBe('Queen');
   expect(fixture.nativeElement.querySelector('.included-items').textContent).toContain('2 fronhas');

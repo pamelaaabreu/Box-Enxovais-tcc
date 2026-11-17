@@ -84,7 +84,7 @@ func TestFavoritesPostgres(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, name := range []string{
-		"000001_initial_schema.up.sql", "000002_simplify_customer_registration.up.sql", "000003_cart.up.sql", "000006_checkout.up.sql", "000013_product_variants.up.sql",
+		"000001_initial_schema.up.sql", "000002_simplify_customer_registration.up.sql", "000003_cart.up.sql", "000006_checkout.up.sql", "000013_product_variants.up.sql", "000024_catalog_brand_editorial.up.sql",
 		"000004_products_quantity_nonnegative.up.sql", "000005_favorites.up.sql",
 	} {
 		migration, err := os.ReadFile("../../migrations/" + name)

@@ -23,7 +23,7 @@ import {
   timer,
 } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CartService } from '../../core/services/cart.service';
+import { CartService, QuickPurchase } from '../../core/services/cart.service';
 import { AccountService, SavedAddress, contactPhonePattern, mobilePhonePattern } from '../../core/services/account.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/catalog-layout.component';
@@ -185,11 +185,15 @@ export class CheckoutComponent {
   constructor() {
     this.cart.load();
     if (inject(ActivatedRoute, { optional: true })?.snapshot?.queryParamMap?.get('compra') === 'agora') {
-      const added = signal(false);
-      this.cart.consumeQuickPurchase(() => added.set(true));
+      const quickPurchase = signal<QuickPurchase | null>(null);
+      this.cart.consumeQuickPurchase(purchase => quickPurchase.set(purchase));
       effect(() => {
-        if (added() && this.ready() && this.selectedAddress() && this.contactPhone.valid && this.step() === 1) {
-          added.set(false);
+        const purchase = quickPurchase();
+        if (!purchase || this.cart.loading() || !this.ready()) return;
+        const hasSelectedItem = this.cart.cart().items.some(item => item.productId === purchase.productId &&
+          (item.variantId ?? 0) === (purchase.variantId ?? 0) && item.available && item.quantity > 0);
+        if (hasSelectedItem && this.selectedAddress() && this.contactPhone.valid && this.step() === 1) {
+          quickPurchase.set(null);
           this.step.set(2);
         }
       });

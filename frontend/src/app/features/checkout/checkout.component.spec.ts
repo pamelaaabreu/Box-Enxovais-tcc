@@ -11,7 +11,7 @@ import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/cat
 import { CheckoutComponent } from './checkout.component';
 
 describe('CheckoutComponent', () => {
-  for (const mode of ['payment', 'delivery', 'stock-error'] as const) {
+  for (const mode of ['payment', 'delivery', 'stock-error', 'reuse', 'removed', 'unavailable'] as const) {
     it('keeps purchase validation intact in quick checkout: ' + mode, async () => {
       TestBed.configureTestingModule({
         imports: [CheckoutComponent],
@@ -27,18 +27,26 @@ describe('CheckoutComponent', () => {
       const http = TestBed.inject(HttpTestingController);
       const cart = TestBed.inject(CartService);
       spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
-      await cart.buyNow(2, 1, 3);
+      const reuse = mode === 'reuse' || mode === 'removed' || mode === 'unavailable';
+      await cart.buyNow(2, 1, 3, reuse);
       const fixture = TestBed.createComponent(CheckoutComponent);
-      http.expectOne('http://localhost:8080/cart').flush({ data: { items: [], totalItems: 0, total: 0 } });
+      const cartItems = reuse && mode !== 'removed'
+        ? [{ id: 42, productId: 2, variantId: 3, quantity: 8, available: mode !== 'unavailable' }]
+        : [];
+      http.expectOne('http://localhost:8080/cart').flush({ data: { items: cartItems, totalItems: cartItems.length ? 8 : 0, total: 0 } });
+      if (reuse) {
+        http.expectNone({ method: 'POST', url: 'http://localhost:8080/cart/items' });
+      } else {
       const add = http.expectOne({ method: 'POST', url: 'http://localhost:8080/cart/items' });
       expect(add.request.body).toEqual({ productId: 2, quantity: 1, variantId: 3 });
       if (mode === 'stock-error') add.flush({ message: 'Sem estoque' }, { status: 409, statusText: 'Conflict' });
       else add.flush({ data: { items: [{ id: 42, productId: 2, variantId: 3, quantity: 1, available: true }], totalItems: 1, total: 25000 } });
+      }
       const address = { id: 1, isDefault: true, zipCode: '01001-000', recipient: 'Teste', street: 'Praça', number: '1', neighborhood: 'Sé', city: 'São Paulo', state: 'SP' };
       http.expectOne('http://localhost:8080/me/addresses').flush({ data: mode === 'delivery' ? [] : [address] });
       http.expectOne('http://localhost:8080/me').flush({ data: { phone: '11912345678' } });
       fixture.detectChanges();
-      expect(fixture.componentInstance.step()).toBe(mode === 'payment' ? 2 : 1);
+      expect(fixture.componentInstance.step()).toBe(mode === 'payment' || mode === 'reuse' ? 2 : 1);
       if (mode === 'stock-error') expect(cart.error()).toBe('Sem estoque');
       cart.consumeQuickPurchase(() => fail('Intenção repetida'));
       http.verify();

@@ -45,6 +45,7 @@ var productFilterFields = map[string]pagination.FilterField{
 	"brand_id":          {Column: "page.brand_id", Kind: "integer"},
 	"product_type_ids":  {Column: "page.product_type_id", Kind: "integer_list"},
 	"product_type_id":   {Column: "page.product_type_id", Kind: "integer"},
+	"collection":        {Column: "COALESCE(NULLIF(page.measurements->>'collection_slug',''),page.measurements->>'Coleção')", Kind: "text"},
 	"color":             {Column: "page.measurements->>'Cor'", Kind: "text"},
 	"size":              {Column: "page.measurements->>'Tamanho'", Kind: "text"},
 	"pattern":           {Column: "page.measurements->>'Estampa'", Kind: "text"},
@@ -82,6 +83,9 @@ func (service ProductService) ParsePage(values url.Values, promotional bool) (pa
 		values.Del("sort")
 	}
 	query, err := pagination.ParsePage(values, fields, firstParameter)
+	if order == "" && !promotional && (values.Has("collection") || values.Has("collection__eq")) {
+		order = repositories.CatalogCoordinatedOrder
+	}
 	query.Order = order
 	return query, err
 }
