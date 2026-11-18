@@ -60,4 +60,52 @@ describe('CategoryComponent route state', () => {
     const fixture = TestBed.createComponent(CategoryComponent);
     expect(fixture.componentInstance.state().status).toBe('error');
   });
+
+  it('shows towel facets and sends color, type and collection filters to the server', () => {
+    const products = [
+      {id: 1, name: 'Toalha', product_type_id: 7, measurements: {Cor: 'Areia', Tipo: 'Toalha de banho', 'Coleção': 'Essência', collection_slug: 'toalhas-essencia'}},
+      {id: 2, name: 'Jogo', product_type_id: 7, measurements: {Cor: 'Terracota', Tipo: 'Jogo de toalhas', 'Coleção': 'Spa', collection_slug: 'toalhas-spa'}},
+    ].map(product => ({
+      ...product, price: 79.9, quantity: 12, status: 'active', promotional_price: 0,
+      slug: String(product.id), active: true, featured: false, description: '',
+      category: {id: 7, name: 'Toalhas', slug: 'toalhas'}, images: [], variants: [],
+    })) as CatalogProduct[];
+    const getCategoryPage = jasmine.createSpy('getCategoryPage').and.returnValue(of(emptyPage));
+    TestBed.configureTestingModule({providers: [
+      {provide: ActivatedRoute, useValue: {queryParamMap: of(convertToParamMap({})), paramMap: of(convertToParamMap({slug:'toalhas'}))}},
+      {provide: CatalogService, useValue: {getCategoryBySlug: () => of({id:7,name:'Toalhas',slug:'toalhas'}), getProductsByCategory: () => of(products), getCategoryPage}},
+    ]});
+    TestBed.overrideComponent(CategoryComponent, {set: {template:'',imports:[]}});
+    const page = TestBed.createComponent(CategoryComponent).componentInstance;
+    expect(page.facets().map(facet => facet.key)).toEqual(['color','type']);
+    expect(page.collections().map(option => option[0])).toEqual(['toalhas-essencia','toalhas-spa']);
+    page.setFacet('type','Toalha de banho');
+    page.setFacet('color','Areia');
+    page.setFacet('collection','toalhas-essencia');
+    expect(getCategoryPage.calls.mostRecent().args[1].filters).toEqual({type:'Toalha de banho',color:'Areia',collection:'toalhas-essencia'});
+    page.clearFilters();
+    expect(getCategoryPage.calls.mostRecent().args[1].filters).toEqual({});
+  });
+  it('loads cushion cover filters from real attributes and combines type, dimension, color and collection', () => {
+    const products = [
+      {id:101,name:'Capa de Almofada Tricô Losangos Oliva',price:69.9,quantity:8,status:'active',product_type_id:9,
+       measurements:{Tipo:'Tricô',Cor:'Oliva',Tamanho:'50 × 50 cm','Coleção':'Tricô Losangos',collection_slug:'almofadas-tricot-losangos'},
+       category:{id:9,name:'Almofadas',slug:'almofadas'},images:[],variants:[],active:true,featured:false,slug:'capa-101',description:'',promotional_price:0},
+    ] as CatalogProduct[];
+    const getProductsByCategory = jasmine.createSpy('getProductsByCategory').and.returnValue(of(products));
+    const getCategoryPage = jasmine.createSpy('getCategoryPage').and.returnValue(of(emptyPage));
+    TestBed.configureTestingModule({providers:[
+      {provide:ActivatedRoute,useValue:{queryParamMap:of(convertToParamMap({})),paramMap:of(convertToParamMap({slug:'almofadas'}))}},
+      {provide:CatalogService,useValue:{getCategoryBySlug:()=>of({id:9,name:'Almofadas',slug:'almofadas'}),getProductsByCategory,getCategoryPage}},
+    ]});
+    TestBed.overrideComponent(CategoryComponent,{set:{template:'',imports:[]}});
+    const page=TestBed.createComponent(CategoryComponent).componentInstance;
+    expect(getProductsByCategory).toHaveBeenCalledOnceWith('almofadas');
+    expect(page.facets().map(f=>f.key)).toEqual(['color','type','size']);
+    page.setFacet('type','Tricô');page.setFacet('size','50 × 50 cm');
+    page.setFacet('color','Oliva');page.setFacet('collection','almofadas-tricot-losangos');
+    expect(getCategoryPage.calls.mostRecent().args[1].filters).toEqual({type:'Tricô',size:'50 × 50 cm',color:'Oliva',collection:'almofadas-tricot-losangos'});
+    page.clearFilters();expect(getCategoryPage.calls.mostRecent().args[1].filters).toEqual({});
+  });
+
 });

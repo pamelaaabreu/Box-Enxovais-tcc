@@ -108,7 +108,55 @@ func TestCatalogTowelsPostgres(t *testing.T) {
 		return result.Items
 	}
 	towels := page("&category_name=Toalhas", 10)
+	var manifest struct {
+		Items []struct {
+			ID         string
+			Name       string
+			Price      int
+			Stock      int
+			Color      string
+			GSM        int
+			Dimensions string
+			Pieces     []string
+			Summary    string
+			Detail     string
+			Material   string
+			Kind       string
+			Care       []string
+		}
+	}
+	catalog, err := os.ReadFile("../../demo-assets/toalhas-2026/catalogo.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := json.Unmarshal(catalog, &manifest); err != nil {
+		t.Fatal(err)
+	}
+	if len(manifest.Items) != 10 {
+		t.Fatal("manifest must contain ten SKUs")
+	}
 	for _, product := range towels {
+		matched := false
+		for _, item := range manifest.Items {
+			if product.Measurements["catalog_import_key"] != "toalhas-2026-"+item.ID {
+				continue
+			}
+			matched = true
+			if product.Name != item.Name || product.Price != float64(item.Price)/100 ||
+				product.Quantity != item.Stock || product.BrandName != "Box Enxovais" ||
+				product.Measurements["Cor"] != item.Color || product.Measurements["Tipo"] != item.Kind ||
+				product.Measurements["Gramatura"] != fmt.Sprintf("%d g/m²", item.GSM) ||
+				product.Measurements["Dimensões"] != item.Dimensions ||
+				product.Measurements["Conteúdo"] != strings.Join(item.Pieces, "; ") ||
+				product.Description == nil || *product.Description != item.Detail ||
+				product.PurchaseSummary == nil || *product.PurchaseSummary != item.Summary ||
+				product.CareInstructions == nil || *product.CareInstructions != strings.Join(item.Care, "\n") {
+				t.Fatalf("manifest mismatch for %s", item.ID)
+			}
+		}
+		if !matched {
+			t.Fatal("unexpected towel")
+		}
 		if len(product.ImagePaths) != 5 || len(product.Variants) != 0 ||
 			product.Measurements["Material"] != "100% algodão" || product.Measurements["Gramatura"] == "" {
 			t.Fatalf("incomplete towel %d", product.ID)

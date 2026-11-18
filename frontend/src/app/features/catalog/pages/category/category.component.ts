@@ -135,10 +135,10 @@ export class CategoryComponent {
     { initialValue: [] },
   );
 
-  private readonly towelFacets = toSignal(
+  private readonly accessoryFacets = toSignal(
     this.route.paramMap.pipe(
-      switchMap(params => params.get('slug') === 'toalhas'
-        ? this.catalog.getProductsByCategory('toalhas').pipe(catchError(() => of([])))
+      switchMap(params => ['toalhas', 'almofadas', 'mesa'].includes(params.get('slug') ?? '')
+        ? this.catalog.getProductsByCategory(params.get('slug')!).pipe(catchError(() => of([])))
         : of([])),
     ),
     { initialValue: [] },
@@ -149,14 +149,16 @@ export class CategoryComponent {
     const pillows = category?.slug === 'travesseiros';
     const products = pillows
       ? this.pillowFacets()
-      : category?.slug === 'toalhas' ? this.towelFacets()
+      : ['toalhas', 'almofadas', 'mesa'].includes(category?.slug ?? '') ? this.accessoryFacets()
       : (this.cama()?.products ?? []).filter(
           (p) =>
             category?.slug === 'cama' || p.product_type_id === category?.id,
         );
     const fields = pillows
       ? ([['size', 'Tamanho']] as const)
-      : category?.slug === 'toalhas'
+      : category?.slug === 'almofadas'
+        ? ([['color', 'Cor'], ['type', 'Tipo'], ['size', 'Tamanho']] as const)
+      : ['toalhas', 'mesa'].includes(category?.slug ?? '')
         ? ([['color', 'Cor'], ['type', 'Tipo']] as const)
       : ([
           ['color', 'Cor'],
@@ -177,7 +179,7 @@ export class CategoryComponent {
   });
   readonly collections = computed(() => {
     const category = this.category();
-    const products = category?.slug === 'toalhas' ? this.towelFacets() : (this.cama()?.products ?? []).filter(
+    const products = ['toalhas', 'almofadas', 'mesa'].includes(category?.slug ?? '') ? this.accessoryFacets() : (this.cama()?.products ?? []).filter(
       (p) => category?.slug === 'cama' || p.product_type_id === category?.id,
     );
     const options = new Map<string, string>();

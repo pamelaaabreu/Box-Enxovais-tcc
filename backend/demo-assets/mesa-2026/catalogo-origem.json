@@ -1,0 +1,122 @@
+[
+  {
+    "nome": "Toalha de Mesa Natural Areia",
+    "tipo": "toalha de mesa",
+    "colecao": "Natural Areia",
+    "cor": "Areia",
+    "preco_centavos": 14990,
+    "estoque": 10,
+    "medida": "140 × 220 cm",
+    "conteudo": "1 toalha de mesa",
+    "imagem_capa": "toalha_mesa_natural_areia_01.png",
+    "imagem_pendente": false
+  },
+  {
+    "nome": "Toalha de Mesa Essência Oliva",
+    "tipo": "toalha de mesa",
+    "colecao": "Essência Oliva",
+    "cor": "Verde oliva",
+    "preco_centavos": 15990,
+    "estoque": 8,
+    "medida": "140 × 220 cm",
+    "conteudo": "1 toalha de mesa",
+    "imagem_capa": null,
+    "imagem_pendente": true
+  },
+  {
+    "nome": "Toalha de Mesa Terracota",
+    "tipo": "toalha de mesa",
+    "colecao": "Terracota",
+    "cor": "Terracota",
+    "preco_centavos": 15990,
+    "estoque": 8,
+    "medida": "140 × 220 cm",
+    "conteudo": "1 toalha de mesa",
+    "imagem_capa": null,
+    "imagem_pendente": true
+  },
+  {
+    "nome": "Caminho de Mesa Essência Oliva",
+    "tipo": "caminho de mesa",
+    "colecao": "Essência Oliva",
+    "cor": "Verde oliva",
+    "preco_centavos": 7990,
+    "estoque": 12,
+    "medida": "40 × 180 cm",
+    "conteudo": "1 caminho de mesa",
+    "imagem_capa": "caminho_mesa_essencia_oliva_01.png",
+    "imagem_pendente": false
+  },
+  {
+    "nome": "Caminho de Mesa Natural Areia",
+    "tipo": "caminho de mesa",
+    "colecao": "Natural Areia",
+    "cor": "Areia",
+    "preco_centavos": 7990,
+    "estoque": 12,
+    "medida": "40 × 180 cm",
+    "conteudo": "1 caminho de mesa",
+    "imagem_capa": null,
+    "imagem_pendente": true
+  },
+  {
+    "nome": "Caminho de Mesa Terracota",
+    "tipo": "caminho de mesa",
+    "colecao": "Terracota",
+    "cor": "Terracota",
+    "preco_centavos": 8490,
+    "estoque": 10,
+    "medida": "40 × 180 cm",
+    "conteudo": "1 caminho de mesa",
+    "imagem_capa": null,
+    "imagem_pendente": true
+  },
+  {
+    "nome": "Jogo Americano Terracota 4 Peças",
+    "tipo": "jogo americano",
+    "colecao": "Terracota",
+    "cor": "Terracota",
+    "preco_centavos": 9990,
+    "estoque": 12,
+    "medida": "35 × 45 cm por peça",
+    "conteudo": "4 jogos americanos",
+    "imagem_capa": "jogo_americano_terracota_01.png",
+    "imagem_pendente": false
+  },
+  {
+    "nome": "Jogo Americano Essência Oliva 4 Peças",
+    "tipo": "jogo americano",
+    "colecao": "Essência Oliva",
+    "cor": "Verde oliva",
+    "preco_centavos": 9990,
+    "estoque": 12,
+    "medida": "35 × 45 cm por peça",
+    "conteudo": "4 jogos americanos",
+    "imagem_capa": null,
+    "imagem_pendente": true
+  },
+  {
+    "nome": "Jogo Americano Natural Areia 6 Peças",
+    "tipo": "jogo americano",
+    "colecao": "Natural Areia",
+    "cor": "Areia",
+    "preco_centavos": 13990,
+    "estoque": 10,
+    "medida": "35 × 45 cm por peça",
+    "conteudo": "6 jogos americanos",
+    "imagem_capa": null,
+    "imagem_pendente": true
+  },
+  {
+    "nome": "Jogo Americano Terracota 6 Peças",
+    "tipo": "jogo americano",
+    "colecao": "Terracota",
+    "cor": "Terracota",
+    "preco_centavos": 13990,
+    "estoque": 10,
+    "medida": "35 × 45 cm por peça",
+    "conteudo": "6 jogos americanos",
+    "imagem_capa": null,
+    "imagem_pendente": true
+  }
+]

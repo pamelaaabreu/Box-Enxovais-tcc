@@ -141,8 +141,17 @@ func (repo ProductRepository) ListRelated(ctx context.Context, id int64) ([]mode
  JOIN products origin ON origin.id=$1 AND origin.status='active'
  WHERE p.status='active' AND p.id<>origin.id`
 	order := `(SELECT CASE
+ WHEN EXISTS(SELECT 1 FROM product_types o WHERE o.id=origin.product_type_id AND o.name='Almofadas') THEN CASE
+  WHEN EXISTS(SELECT 1 FROM product_types t WHERE t.id=page.product_type_id AND t.name='Cama / Mantas e peseiras')
+   AND lower(page.measurements->>'Cor')=ANY(string_to_array(COALESCE(origin.measurements->>'coordination_colors',''),';')) THEN 0
+  WHEN EXISTS(SELECT 1 FROM product_types t WHERE t.id=page.product_type_id AND t.name IN ('Cama / Jogos de cama','Cama / Edredons','Cama / Colchas e cobre-leitos'))
+   AND lower(page.measurements->>'Cor')=ANY(string_to_array(COALESCE(origin.measurements->>'coordination_colors',''),';')) THEN 1
+  WHEN relation.same_collection THEN 2
+  WHEN EXISTS(SELECT 1 FROM product_types t WHERE t.id=page.product_type_id AND t.name='Cama / Mantas e peseiras') THEN 3
+  WHEN origin.product_type_id=page.product_type_id THEN 4
+  ELSE 5 END
  WHEN origin.product_type_id=page.product_type_id AND EXISTS (
-  SELECT 1 FROM product_types origin_type WHERE origin_type.id=origin.product_type_id AND origin_type.name='Toalhas'
+  SELECT 1 FROM product_types origin_type WHERE origin_type.id=origin.product_type_id AND origin_type.name IN ('Toalhas','Mesa')
  ) THEN CASE
   WHEN (relation.same_collection OR NULLIF(origin.measurements->>'Cor','')=page.measurements->>'Cor')
        AND origin.measurements->>'Tipo'<>page.measurements->>'Tipo' THEN 0

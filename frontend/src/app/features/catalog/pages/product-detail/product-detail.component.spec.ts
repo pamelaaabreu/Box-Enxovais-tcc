@@ -304,4 +304,32 @@ describe('Product stock experience',()=>{
   request.flush({data: {items: [], totalItems: 0, total: 0}});
   TestBed.inject(CustomAlertService).clearAll();
  });
+
+ it('shows fixed towel dimensions and contents without a size selector or repeated brand paragraph', () => {
+  product.name = 'Toalha de Banho Essência Areia 100% Algodão';
+  product.brand_name = 'Box Enxovais';
+  product.category = {id: 7, name: 'Toalhas', slug: 'toalhas'};
+  product.measurements = {Tipo: 'Toalha de banho', Material: '100% algodão', Tamanho: '70 × 140 cm', 'Dimensões': '70 × 140 cm', 'Gramatura': '450 g/m²', 'Conteúdo': '1 toalha de banho'};
+  product.variants = [];
+  const fixture = render();
+  expect(fixture.nativeElement.querySelector('.sizes')).toBeNull();
+  expect(fixture.nativeElement.querySelector('.fixed-size')).toBeNull();
+  expect(fixture.nativeElement.querySelector('.product-reference').textContent).toContain('70 × 140 cm');
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('1 toalha de banho');
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).not.toContain('Este produto faz parte');
+ });
+ it('shows a fixed cushion cover dimension and excludes filling without a redundant size selector', () => {
+  product.name='Capa de Almofada Tricô Losangos Oliva';
+  product.category={id:9,name:'Almofadas',slug:'almofadas'};
+  product.measurements={Tipo:'Tricô',Cor:'Oliva',Tamanho:'50 × 50 cm','Dimensões':'50 × 50 cm',Material:'Tricô','Conteúdo':'1 capa de almofada; enchimento não incluso',coordination_colors:'verde oliva'};
+  product.variants=[];
+  const fixture=render();
+  expect(fixture.nativeElement.querySelector('.sizes')).toBeNull();
+  expect(fixture.nativeElement.querySelector('.fixed-size')).toBeNull();
+  expect(fixture.nativeElement.querySelector('.product-reference').textContent).toContain('50 × 50 cm');
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('1 capa de almofada');
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('enchimento não incluso');
+  expect(fixture.componentInstance.characteristics().some(([key])=>key==='coordination_colors')).toBeFalse();
+ });
+
 });

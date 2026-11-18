@@ -1,0 +1,128 @@
+{
+  "products": [
+    {
+      "slug": "capa-tricot-losangos-areia",
+      "name": "Capa de Almofada Tricô Losangos Areia",
+      "collection": "Tricô Losangos",
+      "color": "Areia",
+      "size": "50 x 50 cm",
+      "price_cents": 6990,
+      "stock": 8,
+      "type": "tricot",
+      "fabric_description": "tricô com relevo em losangos",
+      "contents": "1 capa de almofada; enchimento não incluso",
+      "cover_file": "imagens/capa-tricot-losangos-areia.png"
+    },
+    {
+      "slug": "capa-tricot-losangos-oliva",
+      "name": "Capa de Almofada Tricô Losangos Oliva",
+      "collection": "Tricô Losangos",
+      "color": "Oliva",
+      "size": "50 x 50 cm",
+      "price_cents": 6990,
+      "stock": 8,
+      "type": "tricot",
+      "fabric_description": "tricô com relevo em losangos",
+      "contents": "1 capa de almofada; enchimento não incluso",
+      "cover_file": "imagens/capa-tricot-losangos-oliva.png"
+    },
+    {
+      "slug": "capa-tricot-losangos-terracota",
+      "name": "Capa de Almofada Tricô Losangos Terracota",
+      "collection": "Tricô Losangos",
+      "color": "Terracota",
+      "size": "50 x 50 cm",
+      "price_cents": 6990,
+      "stock": 8,
+      "type": "tricot",
+      "fabric_description": "tricô com relevo em losangos",
+      "contents": "1 capa de almofada; enchimento não incluso",
+      "cover_file": "imagens/capa-tricot-losangos-terracota.png"
+    },
+    {
+      "slug": "capa-trelica-nude",
+      "name": "Capa de Almofada Treliça Nude",
+      "collection": "Treliça Elegance",
+      "color": "Nude",
+      "size": "30 x 50 cm",
+      "price_cents": 5990,
+      "stock": 8,
+      "type": "retangular",
+      "fabric_description": "tecido aveludado com faixas geométricas em relevo",
+      "contents": "1 capa de almofada; enchimento não incluso",
+      "cover_file": "imagens/capa-trelica-nude.png"
+    },
+    {
+      "slug": "capa-trelica-salvia",
+      "name": "Capa de Almofada Treliça Sálvia",
+      "collection": "Treliça Elegance",
+      "color": "Verde Sálvia",
+      "size": "30 x 50 cm",
+      "price_cents": 5990,
+      "stock": 8,
+      "type": "retangular",
+      "fabric_description": "tecido aveludado com faixas geométricas em relevo",
+      "contents": "1 capa de almofada; enchimento não incluso",
+      "cover_file": "imagens/capa-trelica-salvia.png"
+    },
+    {
+      "slug": "capa-trelica-creme",
+      "name": "Capa de Almofada Treliça Creme",
+      "collection": "Treliça Elegance",
+      "color": "Creme",
+      "size": "30 x 50 cm",
+      "price_cents": 5990,
+      "stock": 8,
+      "type": "retangular",
+      "fabric_description": "tecido aveludado com faixas geométricas em relevo",
+      "contents": "1 capa de almofada; enchimento não incluso",
+      "cover_file": "imagens/capa-trelica-creme.png"
+    },
+    {
+      "slug": "capa-tricot-canelado-azul",
+      "name": "Capa de Almofada Tricô Canelado Azul Serenidade",
+      "collection": "Tricô Canelado",
+      "color": "Azul Serenidade",
+      "size": "45 x 45 cm",
+      "price_cents": 6490,
+      "stock": 8,
+      "type": "tricot",
+      "fabric_description": "tricô com faixas caneladas horizontais",
+      "contents": "1 capa de almofada; enchimento não incluso",
+      "cover_file": "imagens/capa-tricot-canelado-azul.png"
+    },
+    {
+      "slug": "capa-tricot-canelado-mostarda",
+      "name": "Capa de Almofada Tricô Canelado Mostarda",
+      "collection": "Tricô Canelado",
+      "color": "Mostarda",
+      "size": "45 x 45 cm",
+      "price_cents": 6490,
+      "stock": 8,
+      "type": "tricot",
+      "fabric_description": "tricô com faixas caneladas horizontais",
+      "contents": "1 capa de almofada; enchimento não incluso",
+      "cover_file": "imagens/capa-tricot-canelado-mostarda.png"
+    }
+  ],
+  "proposed_kits": [
+    {
+      "name": "Kit 2 Capas Tricô Losangos Areia e Oliva",
+      "slugs": [
+        "capa-tricot-losangos-areia",
+        "capa-tricot-losangos-oliva"
+      ],
+      "price_cents": 12990,
+      "stock_policy": "limitado pelo menor estoque disponível das duas capas"
+    },
+    {
+      "name": "Kit 2 Capas Treliça Nude e Creme",
+      "slugs": [
+        "capa-trelica-nude",
+        "capa-trelica-creme"
+      ],
+      "price_cents": 10990,
+      "stock_policy": "limitado pelo menor estoque disponível das duas capas"
+    }
+  ]
+}

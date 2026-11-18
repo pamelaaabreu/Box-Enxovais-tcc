@@ -1,0 +1,362 @@
+{
+  "project": "Box Enxovais TCC",
+  "category": "Toalhas",
+  "catalog_version": "toalhas-10-itens-proposta",
+  "pricing_unit": "BRL centavos",
+  "note": "10 imagens principais fornecidas; galeria de cinco imagens ainda precisa de capturas complementares por SKU. Alguns arquivos mostram mais de uma toalha como ambientação; conferir correspondência da capa com o conteúdo comercial.",
+  "items": [
+    {
+      "id": "01",
+      "filename": "01_toalha_banho_essencia_areia.png",
+      "source": "toalhas_de_banho_bege_em_banheiro_elegante.png",
+      "name": "Toalha de Banho Essência Areia 100% Algodão",
+      "kind": "Toalha de banho",
+      "price": 7990,
+      "stock": 12,
+      "color": "Areia",
+      "gsm": 450,
+      "dimensions": "70 × 140 cm",
+      "pieces": [
+        "1 toalha de banho"
+      ],
+      "summary": "Toalha de banho 100% algodão com toque macio e tonalidade areia neutra.",
+      "detail": "A Essência Areia traz felpa confortável e tonalidade discreta para compor banheiros claros e elegantes.",
+      "image_relpath": "imagens_toalhas/01_toalha_banho_essencia_areia.png",
+      "material": "100% algodão",
+      "brand": "Box Enxovais",
+      "category": "Toalhas",
+      "care": [
+        "Lavar à máquina a até 40 °C, em ciclo adequado",
+        "Não usar alvejante",
+        "Secar à sombra ou conforme etiqueta",
+        "Passar em temperatura baixa quando necessário"
+      ],
+      "gallery_idea": [
+        "capa fornecida (verificar correspondência com conteúdo do SKU)",
+        "peça aberta/pendurada",
+        "peça dobrada",
+        "close de felpa e barra",
+        "conjunto completo e acabamento"
+      ]
+    },
+    {
+      "id": "02",
+      "filename": "02_jogo_toalhas_spa_terracota.png",
+      "source": "conjunto_de_toalhas_terracota_no_spa.png",
+      "name": "Jogo de Toalhas Spa Terracota 5 Peças",
+      "kind": "Jogo de toalhas",
+      "price": 18990,
+      "stock": 8,
+      "color": "Terracota",
+      "gsm": 450,
+      "dimensions": "2 banho: 70 × 140 cm; 2 rosto: 50 × 80 cm; 1 piso: 45 × 70 cm",
+      "pieces": [
+        "2 toalhas de banho",
+        "2 toalhas de rosto",
+        "1 toalha de piso"
+      ],
+      "summary": "Jogo de toalhas terracota com tonalidade quente e toque confortável.",
+      "detail": "O Spa Terracota reúne toalhas coordenadas para banho, rosto e piso, com acabamento discreto e visual acolhedor.",
+      "image_relpath": "imagens_toalhas/02_jogo_toalhas_spa_terracota.png",
+      "material": "100% algodão",
+      "brand": "Box Enxovais",
+      "category": "Toalhas",
+      "care": [
+        "Lavar à máquina a até 40 °C, em ciclo adequado",
+        "Não usar alvejante",
+        "Secar à sombra ou conforme etiqueta",
+        "Passar em temperatura baixa quando necessário"
+      ],
+      "gallery_idea": [
+        "capa fornecida (verificar correspondência com conteúdo do SKU)",
+        "peça aberta/pendurada",
+        "peça dobrada",
+        "close de felpa e barra",
+        "conjunto completo e acabamento"
+      ]
+    },
+    {
+      "id": "03",
+      "filename": "03_jogo_toalhas_lavanda.png",
+      "source": "toalhas_lavanda_em_banheiro_elegante.png",
+      "name": "Jogo de Toalhas Lavanda 4 Peças",
+      "kind": "Jogo de toalhas",
+      "price": 15990,
+      "stock": 8,
+      "color": "Lavanda",
+      "gsm": 430,
+      "dimensions": "2 banho: 70 × 140 cm; 2 rosto: 50 × 80 cm",
+      "pieces": [
+        "2 toalhas de banho",
+        "2 toalhas de rosto"
+      ],
+      "summary": "Conjunto em tom lavanda com toque suave e estilo delicado.",
+      "detail": "O Jogo Lavanda equilibra conforto e cor delicada, criando uma composição leve para banheiros contemporâneos.",
+      "image_relpath": "imagens_toalhas/03_jogo_toalhas_lavanda.png",
+      "material": "100% algodão",
+      "brand": "Box Enxovais",
+      "category": "Toalhas",
+      "care": [
+        "Lavar à máquina a até 40 °C, em ciclo adequado",
+        "Não usar alvejante",
+        "Secar à sombra ou conforme etiqueta",
+        "Passar em temperatura baixa quando necessário"
+      ],
+      "gallery_idea": [
+        "capa fornecida (verificar correspondência com conteúdo do SKU)",
+        "peça aberta/pendurada",
+        "peça dobrada",
+        "close de felpa e barra",
+        "conjunto completo e acabamento"
+      ]
+    },
+    {
+      "id": "04",
+      "filename": "04_jogo_toalhas_salvia_creme.png",
+      "source": "toalhas_luxuosas_em_tons_de_sálvia_e_creme.png",
+      "name": "Jogo de Toalhas Sálvia e Creme 5 Peças",
+      "kind": "Jogo de toalhas",
+      "price": 19990,
+      "stock": 8,
+      "color": "Sálvia e creme",
+      "gsm": 450,
+      "dimensions": "2 banho: 70 × 140 cm; 2 rosto: 50 × 80 cm; 1 piso: 45 × 70 cm",
+      "pieces": [
+        "2 toalhas de banho",
+        "2 toalhas de rosto",
+        "1 toalha de piso"
+      ],
+      "summary": "Toalhas coordenadas em verde-sálvia e creme para uma composição natural.",
+      "detail": "O contraste suave entre sálvia e creme acrescenta delicadeza ao banheiro, com peças para banho, rosto e piso.",
+      "image_relpath": "imagens_toalhas/04_jogo_toalhas_salvia_creme.png",
+      "material": "100% algodão",
+      "brand": "Box Enxovais",
+      "category": "Toalhas",
+      "care": [
+        "Lavar à máquina a até 40 °C, em ciclo adequado",
+        "Não usar alvejante",
+        "Secar à sombra ou conforme etiqueta",
+        "Passar em temperatura baixa quando necessário"
+      ],
+      "gallery_idea": [
+        "capa fornecida (verificar correspondência com conteúdo do SKU)",
+        "peça aberta/pendurada",
+        "peça dobrada",
+        "close de felpa e barra",
+        "conjunto completo e acabamento"
+      ]
+    },
+    {
+      "id": "05",
+      "filename": "05_toalha_banho_verde_salvia.png",
+      "source": "toalha_verde_sálvia_em_estilo_spa.png",
+      "name": "Toalha de Banho Verde Sálvia 100% Algodão",
+      "kind": "Toalha de banho",
+      "price": 7990,
+      "stock": 12,
+      "color": "Verde sálvia",
+      "gsm": 450,
+      "dimensions": "70 × 140 cm",
+      "pieces": [
+        "1 toalha de banho"
+      ],
+      "summary": "Toalha de banho em verde-sálvia com acabamento discreto e toque macio.",
+      "detail": "O tom verde-sálvia traz serenidade à rotina e harmoniza com acessórios em madeira e cerâmica clara.",
+      "image_relpath": "imagens_toalhas/05_toalha_banho_verde_salvia.png",
+      "material": "100% algodão",
+      "brand": "Box Enxovais",
+      "category": "Toalhas",
+      "care": [
+        "Lavar à máquina a até 40 °C, em ciclo adequado",
+        "Não usar alvejante",
+        "Secar à sombra ou conforme etiqueta",
+        "Passar em temperatura baixa quando necessário"
+      ],
+      "gallery_idea": [
+        "capa fornecida (verificar correspondência com conteúdo do SKU)",
+        "peça aberta/pendurada",
+        "peça dobrada",
+        "close de felpa e barra",
+        "conjunto completo e acabamento"
+      ]
+    },
+    {
+      "id": "06",
+      "filename": "06_jogo_toalhas_azul_po.png",
+      "source": "toalhas_azul_pó_no_banheiro_spa.png",
+      "name": "Jogo de Toalhas Azul Pó 5 Peças",
+      "kind": "Jogo de toalhas",
+      "price": 18990,
+      "stock": 8,
+      "color": "Azul pó",
+      "gsm": 450,
+      "dimensions": "2 banho: 70 × 140 cm; 2 rosto: 50 × 80 cm; 1 piso: 45 × 70 cm",
+      "pieces": [
+        "2 toalhas de banho",
+        "2 toalhas de rosto",
+        "1 toalha de piso"
+      ],
+      "summary": "Jogo azul-pó com visual sereno e textura agradável.",
+      "detail": "O Azul Pó combina peças práticas em um conjunto de banho com paleta suave e acabamento alinhado.",
+      "image_relpath": "imagens_toalhas/06_jogo_toalhas_azul_po.png",
+      "material": "100% algodão",
+      "brand": "Box Enxovais",
+      "category": "Toalhas",
+      "care": [
+        "Lavar à máquina a até 40 °C, em ciclo adequado",
+        "Não usar alvejante",
+        "Secar à sombra ou conforme etiqueta",
+        "Passar em temperatura baixa quando necessário"
+      ],
+      "gallery_idea": [
+        "capa fornecida (verificar correspondência com conteúdo do SKU)",
+        "peça aberta/pendurada",
+        "peça dobrada",
+        "close de felpa e barra",
+        "conjunto completo e acabamento"
+      ]
+    },
+    {
+      "id": "07",
+      "filename": "07_jogo_toalhas_blush.png",
+      "source": "toalhas_blush_em_spa_sofisticado.png",
+      "name": "Jogo de Toalhas Blush 5 Peças",
+      "kind": "Jogo de toalhas",
+      "price": 18990,
+      "stock": 8,
+      "color": "Blush",
+      "gsm": 430,
+      "dimensions": "2 banho: 70 × 140 cm; 2 rosto: 50 × 80 cm; 1 piso: 45 × 70 cm",
+      "pieces": [
+        "2 toalhas de banho",
+        "2 toalhas de rosto",
+        "1 toalha de piso"
+      ],
+      "summary": "Jogo blush com toque suave e tonalidade rosada delicada.",
+      "detail": "A coleção Blush entrega uma composição confortável de banho, rosto e piso, com presença de cor sem excessos.",
+      "image_relpath": "imagens_toalhas/07_jogo_toalhas_blush.png",
+      "material": "100% algodão",
+      "brand": "Box Enxovais",
+      "category": "Toalhas",
+      "care": [
+        "Lavar à máquina a até 40 °C, em ciclo adequado",
+        "Não usar alvejante",
+        "Secar à sombra ou conforme etiqueta",
+        "Passar em temperatura baixa quando necessário"
+      ],
+      "gallery_idea": [
+        "capa fornecida (verificar correspondência com conteúdo do SKU)",
+        "peça aberta/pendurada",
+        "peça dobrada",
+        "close de felpa e barra",
+        "conjunto completo e acabamento"
+      ]
+    },
+    {
+      "id": "08",
+      "filename": "08_jogo_toalhas_aconchego_neutro.png",
+      "source": "toalhas_de_luxo_no_banheiro_aconchegante.png",
+      "name": "Jogo de Toalhas Aconchego Neutro 5 Peças",
+      "kind": "Jogo de toalhas",
+      "price": 19990,
+      "stock": 8,
+      "color": "Bege e creme",
+      "gsm": 500,
+      "dimensions": "2 banho: 70 × 140 cm; 2 rosto: 50 × 80 cm; 1 piso: 45 × 70 cm",
+      "pieces": [
+        "2 toalhas de banho",
+        "2 toalhas de rosto",
+        "1 toalha de piso"
+      ],
+      "summary": "Jogo em bege e creme com felpa encorpada e aparência sofisticada.",
+      "detail": "O Aconchego Neutro oferece uma combinação de tons versáteis para banheiros de estética natural.",
+      "image_relpath": "imagens_toalhas/08_jogo_toalhas_aconchego_neutro.png",
+      "material": "100% algodão",
+      "brand": "Box Enxovais",
+      "category": "Toalhas",
+      "care": [
+        "Lavar à máquina a até 40 °C, em ciclo adequado",
+        "Não usar alvejante",
+        "Secar à sombra ou conforme etiqueta",
+        "Passar em temperatura baixa quando necessário"
+      ],
+      "gallery_idea": [
+        "capa fornecida (verificar correspondência com conteúdo do SKU)",
+        "peça aberta/pendurada",
+        "peça dobrada",
+        "close de felpa e barra",
+        "conjunto completo e acabamento"
+      ]
+    },
+    {
+      "id": "09",
+      "filename": "09_toalha_banho_branca_premium.png",
+      "source": "toalha_de_banho_branca_no_banheiro_luxuoso.png",
+      "name": "Toalha de Banho Branca Premium 100% Algodão",
+      "kind": "Toalha de banho",
+      "price": 8990,
+      "stock": 12,
+      "color": "Branco",
+      "gsm": 500,
+      "dimensions": "70 × 140 cm",
+      "pieces": [
+        "1 toalha de banho"
+      ],
+      "summary": "Toalha branca com felpa encorpada e visual atemporal.",
+      "detail": "A Branca Premium combina textura macia, acabamento limpo e tonalidade clássica para um banheiro elegante.",
+      "image_relpath": "imagens_toalhas/09_toalha_banho_branca_premium.png",
+      "material": "100% algodão",
+      "brand": "Box Enxovais",
+      "category": "Toalhas",
+      "care": [
+        "Lavar à máquina a até 40 °C, em ciclo adequado",
+        "Não usar alvejante",
+        "Secar à sombra ou conforme etiqueta",
+        "Passar em temperatura baixa quando necessário"
+      ],
+      "gallery_idea": [
+        "capa fornecida (verificar correspondência com conteúdo do SKU)",
+        "peça aberta/pendurada",
+        "peça dobrada",
+        "close de felpa e barra",
+        "conjunto completo e acabamento"
+      ]
+    },
+    {
+      "id": "10",
+      "filename": "10_trio_toalhas_spa_neutras.png",
+      "source": "trio_de_toalhas_luxuosas_no_spa.png",
+      "name": "Trio de Toalhas Spa Neutras 3 Peças",
+      "kind": "Kit de toalhas",
+      "price": 11990,
+      "stock": 8,
+      "color": "Neutros",
+      "gsm": 430,
+      "dimensions": "1 banho: 70 × 140 cm; 1 rosto: 50 × 80 cm; 1 piso: 45 × 70 cm",
+      "pieces": [
+        "1 toalha de banho",
+        "1 toalha de rosto",
+        "1 toalha de piso"
+      ],
+      "summary": "Trio coordenado de toalhas em cores neutras.",
+      "detail": "O Spa Neutras traz três peças de funções diferentes, em tons delicados para compor o lavabo e banheiro.",
+      "image_relpath": "imagens_toalhas/10_trio_toalhas_spa_neutras.png",
+      "material": "100% algodão",
+      "brand": "Box Enxovais",
+      "category": "Toalhas",
+      "care": [
+        "Lavar à máquina a até 40 °C, em ciclo adequado",
+        "Não usar alvejante",
+        "Secar à sombra ou conforme etiqueta",
+        "Passar em temperatura baixa quando necessário"
+      ],
+      "gallery_idea": [
+        "capa fornecida (verificar correspondência com conteúdo do SKU)",
+        "peça aberta/pendurada",
+        "peça dobrada",
+        "close de felpa e barra",
+        "conjunto completo e acabamento"
+      ]
+    }
+  ]
+}

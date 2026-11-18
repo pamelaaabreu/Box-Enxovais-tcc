@@ -109,7 +109,7 @@
               </div>
             </fieldset>
           }
-          @if (!product.variants.length && product.category.slug !== 'toalhas' && fixedSize(); as size) {
+          @if (!product.variants.length && !['toalhas', 'almofadas'].includes(product.category.slug) && fixedSize(); as size) {
             <section aria-labelledby="product-size">
               <h2 id="product-size" class="measurement-title">Tamanho</h2>
               <span class="fixed-size">{{ size }}</span>
@@ -238,21 +238,23 @@
                     ) {
                       <div>
                         <dt>Compatibilidade</dt>
-                        <dd>{{ dimensions }}</dd>
+                        <dd>{{ dimensionReference() }}</dd>
                       </div>
                     } @else {
                       <div>
                         <dt>Dimensões cadastradas</dt>
-                        <dd>{{ dimensions }}</dd>
+                        <dd>{{ dimensionReference() }}</dd>
                       </div>
                     }
                   }
                 } @else {
                   @if (fixedSize(); as size) {
                     <div>
-                      <dt>Medida cadastrada</dt>
+                      <dt>Dimensões</dt>
                       <dd>{{ size }}</dd>
                     </div>
+                  } @else if (dimensionReference()) {
+                    <div><dt>Dimensões por peça</dt><dd>{{ dimensionReference() }}</dd></div>
                   }
                   @for (entry of sizes(); track entry.key) {
                     <div>
@@ -294,7 +296,7 @@
                 @if (selectedVariant()?.dimensions; as dimensions) {
                   <div>
                     <dt>Dimensões cadastradas</dt>
-                    <dd>{{ dimensions }}</dd>
+                    <dd>{{ dimensionReference() }}</dd>
                   </div>
                 }
                 @for (

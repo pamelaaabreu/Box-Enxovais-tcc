@@ -1,0 +1,90 @@
+{
+  "version": 39,
+  "dirty": false,
+  "previous_products_preserved": 57,
+  "products": [
+    {
+      "id": 109,
+      "slug": "capa-tricot-losangos-areia",
+      "name": "Capa de Almofada Tricô Losangos Areia",
+      "price_cents": 6990,
+      "stock": 8,
+      "gallery_count": 5,
+      "product_url": "http://localhost:4200/produto/109",
+      "api_url": "http://localhost:8080/products/109"
+    },
+    {
+      "id": 110,
+      "slug": "capa-tricot-losangos-oliva",
+      "name": "Capa de Almofada Tricô Losangos Oliva",
+      "price_cents": 6990,
+      "stock": 8,
+      "gallery_count": 5,
+      "product_url": "http://localhost:4200/produto/110",
+      "api_url": "http://localhost:8080/products/110"
+    },
+    {
+      "id": 111,
+      "slug": "capa-tricot-losangos-terracota",
+      "name": "Capa de Almofada Tricô Losangos Terracota",
+      "price_cents": 6990,
+      "stock": 8,
+      "gallery_count": 5,
+      "product_url": "http://localhost:4200/produto/111",
+      "api_url": "http://localhost:8080/products/111"
+    },
+    {
+      "id": 105,
+      "slug": "capa-trelica-nude",
+      "name": "Capa de Almofada Treliça Nude",
+      "price_cents": 5990,
+      "stock": 8,
+      "gallery_count": 5,
+      "product_url": "http://localhost:4200/produto/105",
+      "api_url": "http://localhost:8080/products/105"
+    },
+    {
+      "id": 106,
+      "slug": "capa-trelica-salvia",
+      "name": "Capa de Almofada Treliça Sálvia",
+      "price_cents": 5990,
+      "stock": 8,
+      "gallery_count": 5,
+      "product_url": "http://localhost:4200/produto/106",
+      "api_url": "http://localhost:8080/products/106"
+    },
+    {
+      "id": 104,
+      "slug": "capa-trelica-creme",
+      "name": "Capa de Almofada Treliça Creme",
+      "price_cents": 5990,
+      "stock": 8,
+      "gallery_count": 5,
+      "product_url": "http://localhost:4200/produto/104",
+      "api_url": "http://localhost:8080/products/104"
+    },
+    {
+      "id": 107,
+      "slug": "capa-tricot-canelado-azul",
+      "name": "Capa de Almofada Tricô Canelado Azul Serenidade",
+      "price_cents": 6490,
+      "stock": 8,
+      "gallery_count": 5,
+      "product_url": "http://localhost:4200/produto/107",
+      "api_url": "http://localhost:8080/products/107"
+    },
+    {
+      "id": 108,
+      "slug": "capa-tricot-canelado-mostarda",
+      "name": "Capa de Almofada Tricô Canelado Mostarda",
+      "price_cents": 6490,
+      "stock": 8,
+      "gallery_count": 5,
+      "product_url": "http://localhost:4200/produto/108",
+      "api_url": "http://localhost:8080/products/108"
+    }
+  ],
+  "new_stock": 64,
+  "kits_imported": 0,
+  "media_http_200": 40
+}

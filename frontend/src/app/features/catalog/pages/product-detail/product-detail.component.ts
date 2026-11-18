@@ -148,7 +148,7 @@ export class ProductDetailComponent {
         ![
           'collection_slug',
           'coordinated_family',
-          'coordinated_pair_type', 'catalog_slug', 'catalog_import_key',
+          'coordinated_pair_type', 'catalog_slug', 'catalog_import_key', 'coordination_colors',
         ].includes(key) &&
         value != null &&
         String(value).trim(),

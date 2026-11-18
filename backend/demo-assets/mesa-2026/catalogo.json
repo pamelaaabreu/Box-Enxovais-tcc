@@ -1,0 +1,407 @@
+[
+  {
+    "nome": "Toalha de Mesa Natural Areia",
+    "tipo": "toalha de mesa",
+    "colecao": "Natural Areia",
+    "cor": "Areia",
+    "preco_centavos": 14990,
+    "estoque": 10,
+    "medida": "140 × 220 cm",
+    "conteudo": "1 toalha de mesa",
+    "imagem_capa": "toalha_mesa_natural_areia_01.png",
+    "imagem_pendente": false,
+    "slug": "toalha-de-mesa-natural-areia",
+    "key": "mesa-2026-toalha-de-mesa-natural-areia",
+    "attributes": {
+      "Tipo": "Toalhas de mesa",
+      "Cor": "Areia",
+      "Coleção": "Natural Areia",
+      "collection_slug": "mesa-natural-areia",
+      "Dimensões": "140 × 220 cm",
+      "Material": "Tecido misto de algodão e linho",
+      "Composição têxtil": "55% algodão e 45% linho",
+      "Acabamento": "Bainha costurada",
+      "Conteúdo": "1 toalha de mesa",
+      "catalog_import_key": "mesa-2026-toalha-de-mesa-natural-areia",
+      "catalog_slug": "toalha-de-mesa-natural-areia"
+    },
+    "summary": "Trama de algodão e linho em areia, com bainha costurada. 1 toalha de mesa.",
+    "description": "Toalha de Mesa Natural Areia traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor areia permite coordenar a peça com outros itens da coleção Natural Areia. Dimensões: 140 × 220 cm. Acompanha 1 toalha de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
+    "care": "Lavar em ciclo delicado a até 30 °C, com cores semelhantes\nNão usar alvejante\nNão deixar de molho\nSecar à sombra, sem torcer\nNão usar secadora\nPassar pelo avesso em temperatura média, até 150 °C\nNão lavar a seco",
+    "images": [
+      {
+        "file": "mesa-2026-toalha-de-mesa-natural-areia-01.png",
+        "origin": "fornecida",
+        "position": 1,
+        "alt": "Toalha de Mesa Natural Areia — vista principal"
+      },
+      {
+        "file": "mesa-2026-toalha-de-mesa-natural-areia-02.png",
+        "origin": "fornecida",
+        "position": 2,
+        "alt": "Toalha de Mesa Natural Areia — segunda vista"
+      }
+    ]
+  },
+  {
+    "nome": "Toalha de Mesa Essência Oliva",
+    "tipo": "toalha de mesa",
+    "colecao": "Essência Oliva",
+    "cor": "Verde oliva",
+    "preco_centavos": 15990,
+    "estoque": 8,
+    "medida": "140 × 220 cm",
+    "conteudo": "1 toalha de mesa",
+    "imagem_capa": null,
+    "imagem_pendente": false,
+    "slug": "toalha-de-mesa-essencia-oliva",
+    "key": "mesa-2026-toalha-de-mesa-essencia-oliva",
+    "attributes": {
+      "Tipo": "Toalhas de mesa",
+      "Cor": "Verde oliva",
+      "Coleção": "Essência Oliva",
+      "collection_slug": "mesa-essencia-oliva",
+      "Dimensões": "140 × 220 cm",
+      "Material": "Tecido misto de algodão e linho",
+      "Composição têxtil": "55% algodão e 45% linho",
+      "Acabamento": "Bainha costurada",
+      "Conteúdo": "1 toalha de mesa",
+      "catalog_import_key": "mesa-2026-toalha-de-mesa-essencia-oliva",
+      "catalog_slug": "toalha-de-mesa-essencia-oliva"
+    },
+    "summary": "Trama de algodão e linho em verde oliva, com bainha costurada. 1 toalha de mesa.",
+    "description": "Toalha de Mesa Essência Oliva traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor verde oliva permite coordenar a peça com outros itens da coleção Essência Oliva. Dimensões: 140 × 220 cm. Acompanha 1 toalha de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
+    "care": "Lavar em ciclo delicado a até 30 °C, com cores semelhantes\nNão usar alvejante\nNão deixar de molho\nSecar à sombra, sem torcer\nNão usar secadora\nPassar pelo avesso em temperatura média, até 150 °C\nNão lavar a seco",
+    "images": [
+      {
+        "file": "mesa-2026-toalha-de-mesa-essencia-oliva-01.png",
+        "origin": "gerada com image_gen",
+        "position": 1,
+        "alt": "Toalha de Mesa Essência Oliva — vista principal",
+        "prompt": "Olive rectangular tablecloth 140 x 220 cm; woven cotton/linen, neutral room, no accessories"
+      }
+    ]
+  },
+  {
+    "nome": "Toalha de Mesa Terracota",
+    "tipo": "toalha de mesa",
+    "colecao": "Terracota",
+    "cor": "Terracota",
+    "preco_centavos": 15990,
+    "estoque": 8,
+    "medida": "140 × 220 cm",
+    "conteudo": "1 toalha de mesa",
+    "imagem_capa": null,
+    "imagem_pendente": false,
+    "slug": "toalha-de-mesa-terracota",
+    "key": "mesa-2026-toalha-de-mesa-terracota",
+    "attributes": {
+      "Tipo": "Toalhas de mesa",
+      "Cor": "Terracota",
+      "Coleção": "Terracota",
+      "collection_slug": "mesa-terracota",
+      "Dimensões": "140 × 220 cm",
+      "Material": "Tecido misto de algodão e linho",
+      "Composição têxtil": "55% algodão e 45% linho",
+      "Acabamento": "Bainha costurada",
+      "Conteúdo": "1 toalha de mesa",
+      "catalog_import_key": "mesa-2026-toalha-de-mesa-terracota",
+      "catalog_slug": "toalha-de-mesa-terracota"
+    },
+    "summary": "Trama de algodão e linho em terracota, com bainha costurada. 1 toalha de mesa.",
+    "description": "Toalha de Mesa Terracota traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor terracota permite coordenar a peça com outros itens da coleção Terracota. Dimensões: 140 × 220 cm. Acompanha 1 toalha de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
+    "care": "Lavar em ciclo delicado a até 30 °C, com cores semelhantes\nNão usar alvejante\nNão deixar de molho\nSecar à sombra, sem torcer\nNão usar secadora\nPassar pelo avesso em temperatura média, até 150 °C\nNão lavar a seco",
+    "images": [
+      {
+        "file": "mesa-2026-toalha-de-mesa-terracota-01.png",
+        "origin": "gerada com image_gen",
+        "position": 1,
+        "alt": "Toalha de Mesa Terracota — vista principal",
+        "prompt": "one terracotta rectangular tablecloth 140 x 220 cm draped over a rectangular dining table, no other textiles"
+      }
+    ]
+  },
+  {
+    "nome": "Caminho de Mesa Essência Oliva",
+    "tipo": "caminho de mesa",
+    "colecao": "Essência Oliva",
+    "cor": "Verde oliva",
+    "preco_centavos": 7990,
+    "estoque": 12,
+    "medida": "40 × 180 cm",
+    "conteudo": "1 caminho de mesa",
+    "imagem_capa": "caminho_mesa_essencia_oliva_01.png",
+    "imagem_pendente": false,
+    "slug": "caminho-de-mesa-essencia-oliva",
+    "key": "mesa-2026-caminho-de-mesa-essencia-oliva",
+    "attributes": {
+      "Tipo": "Caminhos de mesa",
+      "Cor": "Verde oliva",
+      "Coleção": "Essência Oliva",
+      "collection_slug": "mesa-essencia-oliva",
+      "Dimensões": "40 × 180 cm",
+      "Material": "Tecido misto de algodão e linho",
+      "Composição têxtil": "55% algodão e 45% linho",
+      "Acabamento": "Bainha costurada",
+      "Conteúdo": "1 caminho de mesa",
+      "catalog_import_key": "mesa-2026-caminho-de-mesa-essencia-oliva",
+      "catalog_slug": "caminho-de-mesa-essencia-oliva"
+    },
+    "summary": "Trama de algodão e linho em verde oliva, com bainha costurada. 1 caminho de mesa.",
+    "description": "Caminho de Mesa Essência Oliva traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor verde oliva permite coordenar a peça com outros itens da coleção Essência Oliva. Dimensões: 40 × 180 cm. Acompanha 1 caminho de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
+    "care": "Lavar em ciclo delicado a até 30 °C, com cores semelhantes\nNão usar alvejante\nNão deixar de molho\nSecar à sombra, sem torcer\nNão usar secadora\nPassar pelo avesso em temperatura média, até 150 °C\nNão lavar a seco",
+    "images": [
+      {
+        "file": "mesa-2026-caminho-de-mesa-essencia-oliva-01.png",
+        "origin": "fornecida",
+        "position": 1,
+        "alt": "Caminho de Mesa Essência Oliva — vista principal"
+      },
+      {
+        "file": "mesa-2026-caminho-de-mesa-essencia-oliva-02.png",
+        "origin": "fornecida",
+        "position": 2,
+        "alt": "Caminho de Mesa Essência Oliva — segunda vista"
+      }
+    ]
+  },
+  {
+    "nome": "Caminho de Mesa Natural Areia",
+    "tipo": "caminho de mesa",
+    "colecao": "Natural Areia",
+    "cor": "Areia",
+    "preco_centavos": 7990,
+    "estoque": 12,
+    "medida": "40 × 180 cm",
+    "conteudo": "1 caminho de mesa",
+    "imagem_capa": null,
+    "imagem_pendente": false,
+    "slug": "caminho-de-mesa-natural-areia",
+    "key": "mesa-2026-caminho-de-mesa-natural-areia",
+    "attributes": {
+      "Tipo": "Caminhos de mesa",
+      "Cor": "Areia",
+      "Coleção": "Natural Areia",
+      "collection_slug": "mesa-natural-areia",
+      "Dimensões": "40 × 180 cm",
+      "Material": "Tecido misto de algodão e linho",
+      "Composição têxtil": "55% algodão e 45% linho",
+      "Acabamento": "Bainha costurada",
+      "Conteúdo": "1 caminho de mesa",
+      "catalog_import_key": "mesa-2026-caminho-de-mesa-natural-areia",
+      "catalog_slug": "caminho-de-mesa-natural-areia"
+    },
+    "summary": "Trama de algodão e linho em areia, com bainha costurada. 1 caminho de mesa.",
+    "description": "Caminho de Mesa Natural Areia traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor areia permite coordenar a peça com outros itens da coleção Natural Areia. Dimensões: 40 × 180 cm. Acompanha 1 caminho de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
+    "care": "Lavar em ciclo delicado a até 30 °C, com cores semelhantes\nNão usar alvejante\nNão deixar de molho\nSecar à sombra, sem torcer\nNão usar secadora\nPassar pelo avesso em temperatura média, até 150 °C\nNão lavar a seco",
+    "images": [
+      {
+        "file": "mesa-2026-caminho-de-mesa-natural-areia-01.png",
+        "origin": "gerada com image_gen",
+        "position": 1,
+        "alt": "Caminho de Mesa Natural Areia — vista principal",
+        "prompt": "one sand beige rectangular table runner 40 x 180 cm laid lengthwise on a bare wooden dining table, narrow runner only, no tablecloth or placemats"
+      }
+    ]
+  },
+  {
+    "nome": "Caminho de Mesa Terracota",
+    "tipo": "caminho de mesa",
+    "colecao": "Terracota",
+    "cor": "Terracota",
+    "preco_centavos": 8490,
+    "estoque": 10,
+    "medida": "40 × 180 cm",
+    "conteudo": "1 caminho de mesa",
+    "imagem_capa": null,
+    "imagem_pendente": false,
+    "slug": "caminho-de-mesa-terracota",
+    "key": "mesa-2026-caminho-de-mesa-terracota",
+    "attributes": {
+      "Tipo": "Caminhos de mesa",
+      "Cor": "Terracota",
+      "Coleção": "Terracota",
+      "collection_slug": "mesa-terracota",
+      "Dimensões": "40 × 180 cm",
+      "Material": "Tecido misto de algodão e linho",
+      "Composição têxtil": "55% algodão e 45% linho",
+      "Acabamento": "Bainha costurada",
+      "Conteúdo": "1 caminho de mesa",
+      "catalog_import_key": "mesa-2026-caminho-de-mesa-terracota",
+      "catalog_slug": "caminho-de-mesa-terracota"
+    },
+    "summary": "Trama de algodão e linho em terracota, com bainha costurada. 1 caminho de mesa.",
+    "description": "Caminho de Mesa Terracota traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor terracota permite coordenar a peça com outros itens da coleção Terracota. Dimensões: 40 × 180 cm. Acompanha 1 caminho de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
+    "care": "Lavar em ciclo delicado a até 30 °C, com cores semelhantes\nNão usar alvejante\nNão deixar de molho\nSecar à sombra, sem torcer\nNão usar secadora\nPassar pelo avesso em temperatura média, até 150 °C\nNão lavar a seco",
+    "images": [
+      {
+        "file": "mesa-2026-caminho-de-mesa-terracota-01.png",
+        "origin": "gerada com image_gen",
+        "position": 1,
+        "alt": "Caminho de Mesa Terracota — vista principal",
+        "prompt": "one terracotta rectangular table runner 40 x 180 cm laid lengthwise on a bare wooden dining table, narrow runner only, no tablecloth or placemats"
+      }
+    ]
+  },
+  {
+    "nome": "Jogo Americano Terracota 4 Peças",
+    "tipo": "jogo americano",
+    "colecao": "Terracota",
+    "cor": "Terracota",
+    "preco_centavos": 9990,
+    "estoque": 12,
+    "medida": "35 × 45 cm por peça",
+    "conteudo": "4 jogos americanos",
+    "imagem_capa": "jogo_americano_terracota_01.png",
+    "imagem_pendente": false,
+    "slug": "jogo-americano-terracota-4-pecas",
+    "key": "mesa-2026-jogo-americano-terracota-4-pecas",
+    "attributes": {
+      "Tipo": "Jogos americanos",
+      "Cor": "Terracota",
+      "Coleção": "Terracota",
+      "collection_slug": "mesa-terracota",
+      "Dimensões": "35 × 45 cm por peça",
+      "Material": "Tecido misto de algodão e linho",
+      "Composição têxtil": "55% algodão e 45% linho",
+      "Acabamento": "Bainha costurada",
+      "Conteúdo": "4 jogos americanos",
+      "catalog_import_key": "mesa-2026-jogo-americano-terracota-4-pecas",
+      "catalog_slug": "jogo-americano-terracota-4-pecas"
+    },
+    "summary": "Trama de algodão e linho em terracota, com bainha costurada. 4 jogos americanos.",
+    "description": "Jogo Americano Terracota 4 Peças traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor terracota permite coordenar a peça com outros itens da coleção Terracota. Dimensões: 35 × 45 cm por peça. Acompanha 4 jogos americanos. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
+    "care": "Lavar em ciclo delicado a até 30 °C, com cores semelhantes\nNão usar alvejante\nNão deixar de molho\nSecar à sombra, sem torcer\nNão usar secadora\nPassar pelo avesso em temperatura média, até 150 °C\nNão lavar a seco",
+    "images": [
+      {
+        "file": "mesa-2026-jogo-americano-terracota-4-pecas-01.png",
+        "origin": "fornecida",
+        "position": 1,
+        "alt": "Jogo Americano Terracota 4 Peças — vista principal"
+      },
+      {
+        "file": "mesa-2026-jogo-americano-terracota-4-pecas-02.png",
+        "origin": "fornecida",
+        "position": 2,
+        "alt": "Jogo Americano Terracota 4 Peças — segunda vista"
+      }
+    ]
+  },
+  {
+    "nome": "Jogo Americano Essência Oliva 4 Peças",
+    "tipo": "jogo americano",
+    "colecao": "Essência Oliva",
+    "cor": "Verde oliva",
+    "preco_centavos": 9990,
+    "estoque": 12,
+    "medida": "35 × 45 cm por peça",
+    "conteudo": "4 jogos americanos",
+    "imagem_capa": null,
+    "imagem_pendente": false,
+    "slug": "jogo-americano-essencia-oliva-4-pecas",
+    "key": "mesa-2026-jogo-americano-essencia-oliva-4-pecas",
+    "attributes": {
+      "Tipo": "Jogos americanos",
+      "Cor": "Verde oliva",
+      "Coleção": "Essência Oliva",
+      "collection_slug": "mesa-essencia-oliva",
+      "Dimensões": "35 × 45 cm por peça",
+      "Material": "Tecido misto de algodão e linho",
+      "Composição têxtil": "55% algodão e 45% linho",
+      "Acabamento": "Bainha costurada",
+      "Conteúdo": "4 jogos americanos",
+      "catalog_import_key": "mesa-2026-jogo-americano-essencia-oliva-4-pecas",
+      "catalog_slug": "jogo-americano-essencia-oliva-4-pecas"
+    },
+    "summary": "Trama de algodão e linho em verde oliva, com bainha costurada. 4 jogos americanos.",
+    "description": "Jogo Americano Essência Oliva 4 Peças traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor verde oliva permite coordenar a peça com outros itens da coleção Essência Oliva. Dimensões: 35 × 45 cm por peça. Acompanha 4 jogos americanos. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
+    "care": "Lavar em ciclo delicado a até 30 °C, com cores semelhantes\nNão usar alvejante\nNão deixar de molho\nSecar à sombra, sem torcer\nNão usar secadora\nPassar pelo avesso em temperatura média, até 150 °C\nNão lavar a seco",
+    "images": [
+      {
+        "file": "mesa-2026-jogo-americano-essencia-oliva-4-pecas-01.png",
+        "origin": "gerada com image_gen",
+        "position": 1,
+        "alt": "Jogo Americano Essência Oliva 4 Peças — vista principal",
+        "prompt": "exactly four plain olive green rectangular placemats 35 x 45 cm each arranged separately on a bare wooden dining table, all four fully visible, no tablecloth or runner"
+      }
+    ]
+  },
+  {
+    "nome": "Jogo Americano Natural Areia 6 Peças",
+    "tipo": "jogo americano",
+    "colecao": "Natural Areia",
+    "cor": "Areia",
+    "preco_centavos": 13990,
+    "estoque": 10,
+    "medida": "35 × 45 cm por peça",
+    "conteudo": "6 jogos americanos",
+    "imagem_capa": null,
+    "imagem_pendente": false,
+    "slug": "jogo-americano-natural-areia-6-pecas",
+    "key": "mesa-2026-jogo-americano-natural-areia-6-pecas",
+    "attributes": {
+      "Tipo": "Jogos americanos",
+      "Cor": "Areia",
+      "Coleção": "Natural Areia",
+      "collection_slug": "mesa-natural-areia",
+      "Dimensões": "35 × 45 cm por peça",
+      "Material": "Tecido misto de algodão e linho",
+      "Composição têxtil": "55% algodão e 45% linho",
+      "Acabamento": "Bainha costurada",
+      "Conteúdo": "6 jogos americanos",
+      "catalog_import_key": "mesa-2026-jogo-americano-natural-areia-6-pecas",
+      "catalog_slug": "jogo-americano-natural-areia-6-pecas"
+    },
+    "summary": "Trama de algodão e linho em areia, com bainha costurada. 6 jogos americanos.",
+    "description": "Jogo Americano Natural Areia 6 Peças traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor areia permite coordenar a peça com outros itens da coleção Natural Areia. Dimensões: 35 × 45 cm por peça. Acompanha 6 jogos americanos. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
+    "care": "Lavar em ciclo delicado a até 30 °C, com cores semelhantes\nNão usar alvejante\nNão deixar de molho\nSecar à sombra, sem torcer\nNão usar secadora\nPassar pelo avesso em temperatura média, até 150 °C\nNão lavar a seco",
+    "images": [
+      {
+        "file": "mesa-2026-jogo-americano-natural-areia-6-pecas-01.png",
+        "origin": "gerada com image_gen",
+        "position": 1,
+        "alt": "Jogo Americano Natural Areia 6 Peças — vista principal",
+        "prompt": "exactly six sand beige rectangular placemats 35 x 45 cm each arranged separately on a bare wooden dining table, all six fully visible, no tablecloth or runner"
+      }
+    ]
+  },
+  {
+    "nome": "Jogo Americano Terracota 6 Peças",
+    "tipo": "jogo americano",
+    "colecao": "Terracota",
+    "cor": "Terracota",
+    "preco_centavos": 13990,
+    "estoque": 10,
+    "medida": "35 × 45 cm por peça",
+    "conteudo": "6 jogos americanos",
+    "imagem_capa": null,
+    "imagem_pendente": false,
+    "slug": "jogo-americano-terracota-6-pecas",
+    "key": "mesa-2026-jogo-americano-terracota-6-pecas",
+    "attributes": {
+      "Tipo": "Jogos americanos",
+      "Cor": "Terracota",
+      "Coleção": "Terracota",
+      "collection_slug": "mesa-terracota",
+      "Dimensões": "35 × 45 cm por peça",
+      "Material": "Tecido misto de algodão e linho",
+      "Composição têxtil": "55% algodão e 45% linho",
+      "Acabamento": "Bainha costurada",
+      "Conteúdo": "6 jogos americanos",
+      "catalog_import_key": "mesa-2026-jogo-americano-terracota-6-pecas",
+      "catalog_slug": "jogo-americano-terracota-6-pecas"
+    },
+    "summary": "Trama de algodão e linho em terracota, com bainha costurada. 6 jogos americanos.",
+    "description": "Jogo Americano Terracota 6 Peças traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor terracota permite coordenar a peça com outros itens da coleção Terracota. Dimensões: 35 × 45 cm por peça. Acompanha 6 jogos americanos. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
+    "care": "Lavar em ciclo delicado a até 30 °C, com cores semelhantes\nNão usar alvejante\nNão deixar de molho\nSecar à sombra, sem torcer\nNão usar secadora\nPassar pelo avesso em temperatura média, até 150 °C\nNão lavar a seco",
+    "images": [
+      {
+        "file": "mesa-2026-jogo-americano-terracota-6-pecas-01.png",
+        "origin": "gerada com image_gen",
+        "position": 1,
+        "alt": "Jogo Americano Terracota 6 Peças — vista principal",
+        "prompt": "exactly six terracotta rectangular placemats 35 x 45 cm each arranged separately on a bare wooden dining table, all six fully visible, no tablecloth or runner"
+      }
+    ]
+  }
+]
