@@ -236,8 +236,9 @@ describe('Product stock experience',()=>{
   product.category = { id: 81, name: 'Cama / Jogos de cama', slug: 'cama-jogos-de-cama--81' };
   product.measurements = { 'Conteúdo': '1 lençol + 2 fronhas', Cor: 'Oliva' };
   const fixture = render();
-  const contents = [...fixture.nativeElement.querySelectorAll('.included-items li')].map(item => (item as HTMLElement).textContent);
+  const contents = [...fixture.nativeElement.querySelectorAll('.detail-panel dd li')].map(item => (item as HTMLElement).textContent);
   expect(contents).toEqual(['1 lençol', '2 fronhas']);
+  expect(fixture.nativeElement.querySelector('.product-information').textContent).not.toContain('O conjunto inclui');
   expect(fixture.nativeElement.querySelector('app-breadcrumbs a[href="/categoria/cama"]').textContent).toContain('Cama');
   expect(fixture.nativeElement.querySelector('app-breadcrumbs a[href="/categoria/cama-jogos-de-cama--81"]').textContent).toContain('Jogos de cama');
  });
@@ -292,8 +293,10 @@ describe('Product stock experience',()=>{
   expect(fixture.nativeElement.querySelector('.cart-presence')).toBeNull();
   expect(page.remainingStock()).toBe(2);
   expect(page.galleryImages()[0].alt).toBe('Queen');
-  expect(fixture.nativeElement.querySelector('.included-items').textContent).toContain('2 fronhas');
-  expect(fixture.nativeElement.textContent).toContain('160 × 200 cm');
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('2 fronhas');
+  const reference = fixture.nativeElement.querySelector('.product-reference').textContent;
+  expect(reference).toContain('Medida cadastrada:');
+  expect(reference).toContain('160 × 200 cm');
   page.addToCart();
   const request = http.expectOne('http://localhost:8080/cart/items');
   expect(request.request.body).toEqual({productId: 42, quantity: 1, variantId: 32});

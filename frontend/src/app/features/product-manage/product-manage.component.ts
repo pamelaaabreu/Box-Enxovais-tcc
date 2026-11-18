@@ -11,14 +11,22 @@ import { ProductImageUploadComponent } from './images/product-image-upload/produ
 @Component({
   selector: 'app-product-manage',
   standalone: true,
-  imports: [NgTemplateOutlet, MatTabsModule, MatIconModule, ProductCreateComponent, ProductImageUploadComponent],
+  imports: [
+    NgTemplateOutlet,
+    MatTabsModule,
+    MatIconModule,
+    ProductCreateComponent,
+    ProductImageUploadComponent,
+  ],
   templateUrl: './product-manage.component.html',
   styleUrls: ['./product-manage.component.css'],
 })
 export class ProductManageComponent {
   readonly createForm = viewChild(ProductCreateComponent);
 
-  canLeave() { return this.createForm()?.canLeave() ?? true; }
+  canLeave() {
+    return this.createForm()?.canLeave() ?? true;
+  }
 
   selectedTabIndex = 0;
 

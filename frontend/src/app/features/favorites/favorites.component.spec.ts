@@ -22,10 +22,10 @@ describe('Favorites page', () => {
    openPage: jasmine.createSpy(), closePage: jasmine.createSpy(), loadPage: jasmine.createSpy(),
    toggle: jasmine.createSpy(), remove: jasmine.createSpy(),
   };
-  const cart = { pending: () => new Set(), feedback: () => ({}), add: jasmine.createSpy() };
+  const cart = { cart: () => ({ items: [] }), pending: () => new Set(), feedback: () => ({}), add: jasmine.createSpy() };
   TestBed.configureTestingModule({ providers: [provideRouter([]),
    { provide: FavoritesService, useValue: favorites }, { provide: CartService, useValue: cart },
-   { provide: CatalogService, useValue: { adapt: (p: Product) => ({ ...p, slug: String(p.id), active: p.status === 'active', category: { name: 'Casa' }, images: [] }) } },
+   { provide: CatalogService, useValue: { adapt: (p: Product) => ({ ...p, slug: String(p.id), active: p.status === 'active', category: { name: 'Casa' }, images: [], variants: p.variants ?? [] }) } },
   ] });
   TestBed.overrideComponent(FavoritesComponent, { remove: { imports: [CatalogLayoutComponent] }, add: { imports: [TestFavoritesLayout] } });
   const fixture = TestBed.createComponent(FavoritesComponent); fixture.detectChanges();
@@ -40,8 +40,8 @@ describe('Favorites page', () => {
   ] as Product[], pagination: { offset: 0, limit: 20, total: 2, hasMore: false } }); fixture.detectChanges();
   const purchases: HTMLButtonElement[] = [...fixture.nativeElement.querySelectorAll('.actions button:first-child')];
   expect(purchases.length).toBe(2); expect(purchases.every(button => button.disabled)).toBeTrue();
-  const inactiveLink = fixture.nativeElement.querySelectorAll('.product-link')[1];
-  expect(inactiveLink.getAttribute('href')).toBeNull(); expect(inactiveLink.getAttribute('aria-disabled')).toBe('true');
+  const inactiveLink = fixture.nativeElement.querySelectorAll('app-product-card')[1].querySelector('h2 .product-link');
+  expect(inactiveLink.getAttribute('href')).toBeNull(); expect(inactiveLink.closest('app-product-card')!.querySelector('button[disabled]')).not.toBeNull();
   fixture.nativeElement.querySelectorAll('.remove')[1].click(); expect(favorites.remove).toHaveBeenCalledWith(2);
   fixture.destroy(); expect(favorites.closePage).toHaveBeenCalled();
  });

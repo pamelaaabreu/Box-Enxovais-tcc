@@ -59,4 +59,34 @@ describe('CatalogService API mapping',()=>{
   expect(getRelatedProducts).toHaveBeenCalledOnceWith(1);
   expect(products.map(item => item.id)).toEqual([9, 2]);
  });
+ it('uses the persisted cotton title while retaining its original product link', () => {
+  TestBed.configureTestingModule({providers: [{provide: ProductService, useValue: {}}]});
+  const service = TestBed.inject(CatalogService);
+  const source = {
+   id: 5, name: 'Jogo de Cama Aurora Floral Vinho 100% Algodão', price: 279.90, quantity: 8, status: 'active', promotional_price: 0,
+   category_name: 'Cama / Jogos de cama', measurements: {catalog_slug: 'jogo-de-cama-aurora-floral-vinho-5'},
+  } as Parameters<CatalogService['adapt']>[0];
+  const item = service.adapt(source);
+  expect(item.name).toBe(source.name);
+  expect(item.slug).toBe('jogo-de-cama-aurora-floral-vinho-5');
+ });
+ it('shows a stored 200 Fios title and keeps cotton specifications and the legacy slug', () => {
+  TestBed.configureTestingModule({providers: [{provide: ProductService, useValue: {}}]});
+  const service = TestBed.inject(CatalogService);
+  const source = {
+   id: 78, name: 'Edredom Essência Floral Verde Oliva 200 Fios',
+   price: 289.90, quantity: 8, status: 'active', promotional_price: 0,
+   category_name: 'Cama / Edredons',
+   measurements: {
+    catalog_slug: 'edredom-essencia-floral-verde-oliva-78',
+    'Tecido externo': 'Percal de algodão — 100% algodão — 200 fios',
+    'Contagem de fios': '200 fios',
+   },
+  } as Parameters<CatalogService['adapt']>[0];
+  const item = service.adapt(source);
+  expect(item.name).toBe(source.name);
+  expect(item.slug).toBe(source.measurements!['catalog_slug']);
+  expect(item.measurements?.['Contagem de fios']).toBe('200 fios');
+  expect(item.measurements?.['Tecido externo']).toContain('100% algodão');
+ });
 });

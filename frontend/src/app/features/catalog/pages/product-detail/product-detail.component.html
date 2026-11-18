@@ -37,20 +37,22 @@
         <section class="product-information" aria-labelledby="product-title">
           <div class="product-meta">
             <span class="eyebrow">{{ product.category.name }}</span>
-          <p
-            class="availability"
-            [class.availability--low]="available() && stock() <= 5"
-            [class.availability--unavailable]="!available()"
-            role="status"
-          >
-            {{ availabilityLabel() }}
-          </p>
-          @if (selectedCartItem(); as item) {
-            <p class="cart-presence" role="status">
-              <mat-icon fontSet="material-icons-outlined" aria-hidden="true">shopping_bag</mat-icon>
-              {{ item.quantity }} na sacola
+            <p
+              class="availability"
+              [class.availability--low]="available() && stock() <= 5"
+              [class.availability--unavailable]="!available()"
+              role="status"
+            >
+              {{ availabilityLabel() }}
             </p>
-          }
+            @if (selectedCartItem(); as item) {
+              <p class="cart-presence" role="status">
+                <mat-icon fontSet="material-icons-outlined" aria-hidden="true"
+                  >shopping_bag</mat-icon
+                >
+                {{ item.quantity }} na sacola
+              </p>
+            }
           </div>
           <h1 id="product-title">{{ product.name }}</h1>
           <app-product-price
@@ -83,7 +85,13 @@
               </div>
             </fieldset>
             <fieldset>
-              <legend>{{ product.category.slug === 'travesseiros' ? 'Altura' : 'Tamanho' }}</legend>
+              <legend>
+                {{
+                  product.category.slug === "travesseiros"
+                    ? "Altura"
+                    : "Tamanho"
+                }}
+              </legend>
               <div class="variants sizes">
                 @for (size of availableSizes(); track size) {
                   <button
@@ -124,24 +132,18 @@
           }
           @if (selectedVariant(); as variant) {
             @if (variant.dimensions) {
-              <p class="product-reference">{{ variant.dimensions }}</p>
+              <p class="product-reference" aria-live="polite">
+                @if (!variant.dimensions.includes(":")) {
+                  <span>Medida cadastrada:</span>
+                }
+                {{ variant.dimensions }}
+              </p>
             }
           }
-          @if (includedItems().length) {
-            <section class="included-items" aria-labelledby="included-title">
-              <mat-icon aria-hidden="true">inventory_2</mat-icon>
-              <div class="included-content">
-              <h2 id="included-title">O conjunto inclui</h2>
-              <ul>
-                @for (item of includedItems(); track $index) {
-                  <li>{{ item }}</li>
-                }
-              </ul>
-              </div>
-            </section>
-          }
           @if (cartNeedsAdjustment()) {
-            <p class="cart-stock-warning" role="status">Ajuste ou remova este item da sacola para continuar.</p>
+            <p class="cart-stock-warning" role="status">
+              Ajuste ou remova este item da sacola para continuar.
+            </p>
           }
           <div class="purchase-row">
             <div class="quantity-row">
@@ -158,7 +160,11 @@
                 class="purchase-button"
                 type="button"
                 (click)="addToCart()"
-                [disabled]="openingCheckout() || cart.pending().has(product.id) || !canAddToCart()"
+                [disabled]="
+                  openingCheckout() ||
+                  cart.pending().has(product.id) ||
+                  !canAddToCart()
+                "
                 [attr.aria-busy]="cart.pending().has(product.id)"
               >
                 <mat-icon aria-hidden="true">shopping_bag</mat-icon>
@@ -171,11 +177,20 @@
                 }}
               </button>
             }
-            <button class="purchase-button buy-now" type="button" (click)="buyNow()"
-              [disabled]="openingCheckout() || !canBuyNow()" [attr.aria-busy]="openingCheckout()">
-              {{ openingCheckout() ? 'Abrindo checkout…' : 'Comprar agora' }}
+            <button
+              class="purchase-button buy-now"
+              type="button"
+              (click)="buyNow()"
+              [disabled]="openingCheckout() || !canBuyNow()"
+              [attr.aria-busy]="openingCheckout()"
+            >
+              {{ openingCheckout() ? "Abrindo checkout…" : "Comprar agora" }}
             </button>
-            <app-favorite-button class="purchase-favorite" [productId]="product.id" [productName]="product.name" />
+            <app-favorite-button
+              class="purchase-favorite"
+              [productId]="product.id"
+              [productName]="product.name"
+            />
           </div>
           <app-shipping-quote />
         </section>
@@ -200,38 +215,67 @@
               <h2>Materiais e acabamento</h2>
               <dl>
                 @for (entry of technicalMaterials(); track entry[0]) {
-                  <div><dt>{{ entry[0] }}</dt><dd>{{ entry[1] }}</dd></div>
+                  <div>
+                    <dt>{{ entry[0] }}</dt>
+                    <dd>{{ entry[1] }}</dd>
+                  </div>
                 }
               </dl>
             }
-            @if (selectedVariant() || fixedSize() || sizes().length || includedItems().length) {
+            @if (
+              selectedVariant() ||
+              fixedSize() ||
+              sizes().length ||
+              includedItems().length
+            ) {
               <h2>Medidas e o que acompanha</h2>
               <dl>
                 @if (selectedVariant(); as variant) {
-                  <div><dt>Tamanho</dt><dd>{{ variant.size }}</dd></div>
+                  <div>
+                    <dt>Tamanho</dt>
+                    <dd>{{ variant.size }}</dd>
+                  </div>
                   @if (variant.dimensions; as dimensions) {
-                    @if (dimensions.toLowerCase().startsWith('colchão de referência')) {
-                      <div><dt>Compatibilidade</dt><dd>{{ dimensions }}</dd></div>
+                    @if (
+                      dimensions
+                        .toLowerCase()
+                        .startsWith("colchão de referência")
+                    ) {
+                      <div>
+                        <dt>Compatibilidade</dt>
+                        <dd>{{ dimensions }}</dd>
+                      </div>
                     } @else {
-                      <div><dt>Dimensões cadastradas</dt><dd>{{ dimensions }}</dd></div>
+                      <div>
+                        <dt>Dimensões cadastradas</dt>
+                        <dd>{{ dimensions }}</dd>
+                      </div>
                     }
                   }
                 } @else {
                   @if (fixedSize(); as size) {
-                    <div><dt>Medida cadastrada</dt><dd>{{ size }}</dd></div>
+                    <div>
+                      <dt>Medida cadastrada</dt>
+                      <dd>{{ size }}</dd>
+                    </div>
                   }
                   @for (entry of sizes(); track entry.key) {
-                    <div><dt>{{ entry.label }}</dt><dd>{{ entry.value }}</dd></div>
+                    <div>
+                      <dt>{{ entry.label }}</dt>
+                      <dd>{{ entry.value }}</dd>
+                    </div>
                   }
                 }
                 @if (includedItems().length) {
                   <div>
                     <dt>Conteúdo</dt>
-                    <dd><ul>
-                      @for (item of includedItems(); track $index) {
-                        <li>{{ item }}</li>
-                      }
-                    </ul></dd>
+                    <dd>
+                      <ul>
+                        @for (item of includedItems(); track $index) {
+                          <li>{{ item }}</li>
+                        }
+                      </ul>
+                    </dd>
                   </div>
                 }
               </dl>
@@ -240,13 +284,23 @@
         </mat-tab>
         <mat-tab label="Informações adicionais">
           <section class="detail-panel product-characteristics">
-            @if (product.brand_name || selectedVariant()?.dimensions || otherCharacteristics().length) {
+            @if (
+              product.brand_name ||
+              selectedVariant()?.dimensions ||
+              otherCharacteristics().length
+            ) {
               <dl>
                 @if (product.brand_name; as brand) {
-                  <div><dt>Marca</dt><dd>{{ brand }}</dd></div>
+                  <div>
+                    <dt>Marca</dt>
+                    <dd>{{ brand }}</dd>
+                  </div>
                 }
                 @if (selectedVariant()?.dimensions; as dimensions) {
-                  <div><dt>Dimensões cadastradas</dt><dd>{{ dimensions }}</dd></div>
+                  <div>
+                    <dt>Dimensões cadastradas</dt>
+                    <dd>{{ dimensions }}</dd>
+                  </div>
                 }
                 @for (
                   measurement of otherCharacteristics();

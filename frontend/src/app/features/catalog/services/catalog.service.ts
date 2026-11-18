@@ -44,7 +44,7 @@ export class CatalogService {
       ...product,
       name: product.name.replace(/\s+—\s+/g, ' '),
       id: product.id!,
-      slug: `${this.slug(product.name)}-${product.id}`,
+      slug: product.measurements?.['catalog_slug'] || `${this.slug(product.name)}-${product.id}`,
       description: product.description ?? '',
       category,
       images: imagesOf(product.image_paths),

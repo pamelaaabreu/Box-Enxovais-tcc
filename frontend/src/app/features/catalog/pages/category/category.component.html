@@ -59,8 +59,13 @@
                 <h2>Coleção</h2>
                 <div class="facet-values">
                   @for (option of collections(); track option[0]) {
-                    <button type="button" [attr.aria-pressed]="criteria().collection === option[0]"
-                      (click)="setFacet('collection', option[0])">{{ option[1] }}</button>
+                    <button
+                      type="button"
+                      [attr.aria-pressed]="criteria().collection === option[0]"
+                      (click)="setFacet('collection', option[0])"
+                    >
+                      {{ option[1] }}
+                    </button>
                   }
                 </div>
               </div>
