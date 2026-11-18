@@ -109,7 +109,7 @@
               </div>
             </fieldset>
           }
-          @if (!product.variants.length && fixedSize(); as size) {
+          @if (!product.variants.length && product.category.slug !== 'toalhas' && fixedSize(); as size) {
             <section aria-labelledby="product-size">
               <h2 id="product-size" class="measurement-title">Tamanho</h2>
               <span class="fixed-size">{{ size }}</span>
@@ -130,15 +130,13 @@
               </dl>
             </section>
           }
-          @if (selectedVariant(); as variant) {
-            @if (variant.dimensions) {
-              <p class="product-reference" aria-live="polite">
-                @if (!variant.dimensions.includes(":")) {
-                  <span>Medida cadastrada:</span>
-                }
-                {{ variant.dimensions }}
-              </p>
-            }
+          @if (dimensionReference(); as dimensions) {
+            <p class="product-reference" aria-live="polite">
+              @if (!dimensions.includes(":")) {
+                <span>{{ product.measurements?.['Tipo'] === 'Edredom' ? 'Dimensões do edredom:' : 'Dimensões:' }}</span>
+              }
+              {{ dimensions }}
+            </p>
           }
           @if (cartNeedsAdjustment()) {
             <p class="cart-stock-warning" role="status">
@@ -207,9 +205,6 @@
               <p>{{ paragraph }}</p>
             } @empty {
               <p>Descrição ainda não disponível.</p>
-            }
-            @if (descriptionBrand(); as brand) {
-              <p>Este produto faz parte do catálogo da marca {{ brand }}.</p>
             }
             @if (technicalMaterials().length) {
               <h2>Materiais e acabamento</h2>

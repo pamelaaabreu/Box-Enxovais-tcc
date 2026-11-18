@@ -69,7 +69,7 @@ export class CategoryComponent {
     offset: 0,
     color: '',
     size: '',
-    pattern: '',
+    pattern: '', type: '',
     collection: '',
   });
   readonly criteria = toSignal(this.query, { requireSync: true });
@@ -135,17 +135,29 @@ export class CategoryComponent {
     { initialValue: [] },
   );
 
+  private readonly towelFacets = toSignal(
+    this.route.paramMap.pipe(
+      switchMap(params => params.get('slug') === 'toalhas'
+        ? this.catalog.getProductsByCategory('toalhas').pipe(catchError(() => of([])))
+        : of([])),
+    ),
+    { initialValue: [] },
+  );
+
   readonly facets = computed(() => {
     const category = this.category();
     const pillows = category?.slug === 'travesseiros';
     const products = pillows
       ? this.pillowFacets()
+      : category?.slug === 'toalhas' ? this.towelFacets()
       : (this.cama()?.products ?? []).filter(
           (p) =>
             category?.slug === 'cama' || p.product_type_id === category?.id,
         );
     const fields = pillows
       ? ([['size', 'Tamanho']] as const)
+      : category?.slug === 'toalhas'
+        ? ([['color', 'Cor'], ['type', 'Tipo']] as const)
       : ([
           ['color', 'Cor'],
           ['size', 'Tamanho'],
@@ -165,7 +177,7 @@ export class CategoryComponent {
   });
   readonly collections = computed(() => {
     const category = this.category();
-    const products = (this.cama()?.products ?? []).filter(
+    const products = category?.slug === 'toalhas' ? this.towelFacets() : (this.cama()?.products ?? []).filter(
       (p) => category?.slug === 'cama' || p.product_type_id === category?.id,
     );
     const options = new Map<string, string>();
@@ -190,7 +202,7 @@ export class CategoryComponent {
   }
 
   setFacet(
-    key: 'color' | 'size' | 'pattern' | 'collection',
+    key: 'color' | 'size' | 'pattern' | 'collection' | 'type',
     value: string,
   ): void {
     const current = this.query.value;
@@ -210,7 +222,7 @@ export class CategoryComponent {
       offset: 0,
       color: '',
       size: '',
-      pattern: '',
+      pattern: '', type: '',
       collection: '',
     });
   }
@@ -230,7 +242,7 @@ export class CategoryComponent {
           offset: 0,
           color: '',
           size: '',
-          pattern: '',
+          pattern: '', type: '',
           collection: (query.get('collection') ?? '').trim().slice(0, 120),
         });
         return this.catalog.getCategoryBySlug(slug).pipe(
@@ -247,6 +259,7 @@ export class CategoryComponent {
                   color,
                   size,
                   pattern,
+                  type,
                   collection,
                 }) => {
                   if (!category)
@@ -266,6 +279,7 @@ export class CategoryComponent {
                   if (color) filters['color'] = color;
                   if (size) filters['size'] = size;
                   if (pattern) filters['pattern'] = pattern;
+                  if (type) filters['type'] = type;
                   if (collection) filters['collection'] = collection;
                   if (sort) filters['sort'] = sort;
                   return this.catalog

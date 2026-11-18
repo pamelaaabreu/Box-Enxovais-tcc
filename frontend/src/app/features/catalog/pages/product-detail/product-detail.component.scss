@@ -252,7 +252,10 @@ button:focus-visible,
   border-bottom: 1px solid var(--product-border);
 }
 .product-description dt {
-  font-weight: 600;
+  font-weight: 500;
+}
+.product-description dd {
+  font-weight: 400;
 }
 .product-description dd {
   margin: 0;
@@ -277,10 +280,10 @@ button:focus-visible,
   color: #667255;
 }
 .product-reference {
-  margin: 14px 0 0;
+  margin: 10px 0 0;
   color: var(--product-dark);
-  font-size: clamp(14px, 1.2vw, 16px);
-  font-weight: 600;
+  font-size: clamp(14px, 1.1vw, 15px);
+  font-weight: 500;
   line-height: 1.45;
   overflow-wrap: anywhere;
 }
@@ -413,11 +416,17 @@ a.purchase-button:focus-visible {
 .detail-panel p {
   color: var(--product-muted);
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.6;
 }
 .detail-panel {
   padding-top: 16px;
+}
+.detail-panel > p {
+  margin-bottom: 12px;
+}
+.detail-panel > p:last-of-type {
+  margin-bottom: 22px;
 }
 .recommendations h2 {
   margin-bottom: 16px;

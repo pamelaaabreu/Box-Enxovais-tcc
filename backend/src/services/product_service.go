@@ -48,6 +48,7 @@ var productFilterFields = map[string]pagination.FilterField{
 	"collection":        {Column: "COALESCE(NULLIF(page.measurements->>'collection_slug',''),page.measurements->>'Coleção')", Kind: "text"},
 	"color":             {Column: "page.measurements->>'Cor'", Kind: "text"},
 	"size":              {Column: "page.measurements->>'Tamanho'", Kind: "text"},
+	"type":              {Column: "page.measurements->>'Tipo'", Kind: "text"},
 	"pattern":           {Column: "page.measurements->>'Estampa'", Kind: "text"},
 	"category_name":     {Column: "page.category_name", Kind: "text"},
 	"created_at":        {Column: "page.created_at", Kind: "timestamp"},

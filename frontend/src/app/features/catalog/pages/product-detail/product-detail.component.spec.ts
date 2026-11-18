@@ -212,6 +212,7 @@ describe('Product stock experience',()=>{
   expect(fixture.nativeElement.querySelector('#product-title').textContent.trim()).toBe('Jogo de Cama');
   expect(fixture.nativeElement.querySelector('#product-title').nextElementSibling.tagName).toBe('APP-PRODUCT-PRICE');
   expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('Percal de algodão');
+  expect(fixture.nativeElement.querySelector('.detail-panel').textContent).not.toContain('Este produto faz parte do catálogo da marca');
   expect(fixture.nativeElement.querySelector('.purchase-description').textContent).toContain('Folhagens');
   expect(fixture.nativeElement.querySelector('.detail-panel').textContent).not.toContain('Folhagens');
   expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('Compatibilidade');
@@ -295,7 +296,7 @@ describe('Product stock experience',()=>{
   expect(page.galleryImages()[0].alt).toBe('Queen');
   expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('2 fronhas');
   const reference = fixture.nativeElement.querySelector('.product-reference').textContent;
-  expect(reference).toContain('Medida cadastrada:');
+  expect(reference).toContain('Dimensões:');
   expect(reference).toContain('160 × 200 cm');
   page.addToCart();
   const request = http.expectOne('http://localhost:8080/cart/items');

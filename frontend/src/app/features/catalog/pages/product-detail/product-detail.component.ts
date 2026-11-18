@@ -142,24 +142,13 @@ export class ProductDetailComponent {
       .map((paragraph) => paragraph.trim())
       .filter(Boolean),
   );
-  readonly descriptionBrand = computed(() => {
-    const brand = this.product()?.brand_name?.trim();
-    return brand &&
-      !this.descriptionParagraphs().some((paragraph) =>
-        paragraph
-          .toLocaleLowerCase('pt-BR')
-          .includes(brand.toLocaleLowerCase('pt-BR')),
-      )
-      ? brand
-      : '';
-  });
   readonly characteristics = computed(() =>
     Object.entries(this.product()?.measurements ?? {}).filter(
       ([key, value]) =>
         ![
           'collection_slug',
           'coordinated_family',
-          'coordinated_pair_type', 'catalog_slug',
+          'coordinated_pair_type', 'catalog_slug', 'catalog_import_key',
         ].includes(key) &&
         value != null &&
         String(value).trim(),
@@ -180,6 +169,10 @@ export class ProductDetailComponent {
       this.characteristics().find(
         ([key]) => key.trim().toLowerCase() === 'tamanho',
       )?.[1],
+  );
+
+  readonly dimensionReference = computed(() =>
+    this.selectedVariant()?.dimensions || this.product()?.measurements?.['Dimensões'] || '',
   );
 
   readonly sizes = computed(() => {

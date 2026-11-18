@@ -141,6 +141,13 @@ func (repo ProductRepository) ListRelated(ctx context.Context, id int64) ([]mode
  JOIN products origin ON origin.id=$1 AND origin.status='active'
  WHERE p.status='active' AND p.id<>origin.id`
 	order := `(SELECT CASE
+ WHEN origin.product_type_id=page.product_type_id AND EXISTS (
+  SELECT 1 FROM product_types origin_type WHERE origin_type.id=origin.product_type_id AND origin_type.name='Toalhas'
+ ) THEN CASE
+  WHEN (relation.same_collection OR NULLIF(origin.measurements->>'Cor','')=page.measurements->>'Cor')
+       AND origin.measurements->>'Tipo'<>page.measurements->>'Tipo' THEN 0
+  WHEN relation.same_collection OR NULLIF(origin.measurements->>'Cor','')=page.measurements->>'Cor' THEN 1
+  ELSE 2 END
  WHEN relation.same_family AND (origin.measurements->>'coordinated_pair_type',page.measurements->>'coordinated_pair_type')
         IN (('jogo-cama','edredom'),('edredom','jogo-cama')) THEN 0
  WHEN relation.same_family THEN 1
