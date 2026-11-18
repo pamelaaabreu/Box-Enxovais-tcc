@@ -1,0 +1,89 @@
+:root {
+  --box-focus-color: #52663f;
+  --box-focus-on-dark: #d0dfb9;
+  --box-focus-width: 2px;
+  --box-focus-offset: 3px;
+  --box-header-clearance: 180px;
+  --bs-focus-ring-color: transparent;
+  --mdc-outlined-text-field-focus-outline-color: #52663f;
+  --mdc-outlined-text-field-focus-outline-width: 1px;
+  --mdc-filled-text-field-focus-active-indicator-color: #52663f;
+  --mat-select-focused-arrow-color: #52663f;
+  --mat-option-focus-state-layer-color: #eef0e9;
+  --mat-menu-item-focus-state-layer-color: #eef0e9;
+  --p-focus-ring-color: #52663f;
+  --p-focus-ring-width: 2px;
+  --p-focus-ring-offset: 3px;
+  --p-focus-ring-shadow: none;
+}
+
+html {
+  scroll-padding-block: var(--box-header-clearance) 24px;
+}
+
+html body :is(a[href], button, input, textarea, select, summary, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]) {
+  scroll-margin-block: 16px;
+}
+
+html body :is(a[href], button, input, textarea, select, summary, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]):not(.mat-mdc-input-element, .mdc-checkbox__native-control, .mdc-radio__native-control):not(:where(.search-bar, .admin-search, .orders-search, .catalog-choice, .payment-card, .address-default, .stars) input):not(:where(.mat-mdc-form-field) mat-select):focus-visible {
+  outline: var(--box-focus-width) solid var(--box-focus-color);
+  outline-offset: var(--box-focus-offset);
+  box-shadow: none;
+}
+
+html body a:not([class]):focus-visible {
+  border-radius: 4px;
+}
+
+html body .category-toggle {
+  --box-focus-color: #52663f;
+}
+
+html body :is(.navbar-custom, .footer, .sidebar) {
+  --box-focus-color: var(--box-focus-on-dark);
+}
+
+html body .navbar-custom .nav-link {
+  border-radius: 12px;
+  --box-focus-offset: -4px;
+}
+
+html body .navbar-container.navbar-hidden:focus-within {
+  visibility: visible;
+}
+
+html body :is(.zoom-trigger, .mat-mdc-tab, .gallery-nav, .mdc-icon-button, .mat-mdc-menu-item) {
+  --box-focus-offset: -3px;
+}
+
+html body :is(input[type="checkbox"], input[type="radio"]) {
+  accent-color: #52663f;
+}
+
+html body :is(.mat-mdc-form-field:has(:focus-visible) .mat-mdc-text-field-wrapper, .search-bar:has(.search-input:focus-visible), .admin-search:has(input:focus-visible), .orders-search:has(input:focus-visible), .catalog-choice:has(input:focus-visible), .payment-card:has(input:focus-visible), .address-default:has(input:focus-visible), .stars label:has(input:focus-visible)) {
+  outline: var(--box-focus-width) solid var(--box-focus-color);
+  outline-offset: var(--box-focus-offset);
+  box-shadow: none;
+}
+
+html body :is(.mat-mdc-form-field input, .mat-mdc-form-field textarea, .mat-mdc-form-field mat-select, .search-bar .search-input, .admin-search input, .orders-search input, .catalog-choice input, .payment-card input, .address-default input, .stars input):focus-visible {
+  outline-width: 0;
+  box-shadow: none;
+}
+
+html body .mat-mdc-form-field {
+  --mdc-outlined-text-field-focus-outline-width: 1px;
+}
+
+html body :is(.mat-mdc-checkbox, .mat-mdc-radio-button):has(input:focus-visible) :is(.mdc-checkbox__background, .mdc-radio__background) {
+  outline: var(--box-focus-width) solid var(--box-focus-color);
+  outline-offset: var(--box-focus-offset);
+}
+
+@media (max-width: 1000px) {
+  :root { --box-header-clearance: 280px; }
+}
+
+@media (forced-colors: active) {
+  :root { --box-focus-color: Highlight; --box-focus-on-dark: Highlight; }
+}

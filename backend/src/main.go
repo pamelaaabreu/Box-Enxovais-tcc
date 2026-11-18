@@ -20,8 +20,6 @@ import (
 	"os/signal"
 	"path/filepath"
 	"syscall"
-
-	"github.com/sendgrid/sendgrid-go"
 )
 
 func enableCORS(next http.Handler, origin string) http.Handler {
@@ -86,12 +84,8 @@ func run() error {
 		Store: repositories.FavoritesRepository{DB: database},
 	}}
 	cart := handlers.CartHandler{Store: repositories.CartRepository{DB: database}}
-	var newsletterClient *sendgrid.Client
-	if cfg.SendGridAPIKey != "" {
-		newsletterClient = sendgrid.NewSendClient(cfg.SendGridAPIKey)
-	}
 	newsletter := handlers.NewsletterHandler{Service: services.NewsletterService{
-		Store: repositories.SubscriberRepository{DB: database}, Client: newsletterClient,
+		Store: repositories.SubscriberRepository{DB: database},
 	}}
 
 	mux := http.NewServeMux()

@@ -6,12 +6,14 @@
       </svg>
     </div>
     <div class="newsletter-content">
-      <h2>Receba novidades da Box Enxovais</h2>
+      <h2>Assine nossa newsletter</h2>
       <p>Cadastre seu e-mail para acompanhar novidades e campanhas da loja.</p>
     </div>
     <div class="newsletter-form">
       <form (ngSubmit)="onSubmit(newsletterForm)" #newsletterForm="ngForm">
         <input
+          aria-label="Seu e-mail para receber novidades"
+          autocomplete="email"
           type="email"
           name="email"
           placeholder="Digite seu e-mail"

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
 import { CategoryComponent } from './category.component';
 import { CatalogService } from '../../services/catalog.service';
@@ -9,6 +9,7 @@ import { Page } from '../../../../core/services/pagination.service';
 const emptyPage: Page<CatalogProduct> = { items: [], pagination: { offset: 0, limit: 12, total: 0, hasMore: false } };
 
 describe('CategoryComponent route state', () => {
+  beforeEach(() => TestBed.configureTestingModule({providers:[{provide:Router,useValue:null}]}));
   it('updates the same instance on a slug change and ignores an older pending response', () => {
     const params = new BehaviorSubject(convertToParamMap({ slug: 'cama' }));
     const pending = new Subject<Page<CatalogProduct>>();
@@ -123,6 +124,43 @@ describe('CategoryComponent route state', () => {
     page.setFacet('type','Cortinas');page.setFacet('opacity','blackout');page.setFacet('material','Poliéster');
     expect(getCategoryPage.calls.mostRecent().args[1].filters).toEqual({type:'Cortinas',opacity:'blackout',material:'Poliéster'});
     page.clearFilters();expect(getCategoryPage.calls.mostRecent().args[1].filters).toEqual({});
+  });
+
+  it('restores pagination, sorting and combined filters from the URL', () => {
+    const query = new BehaviorSubject(convertToParamMap({page:'2',sort:'price_desc',q:'Tapete',maxPrice:'100',available:'1',color:'Areia',type:'Tapetes',collection:'natural'}));
+    const getCategoryPage = jasmine.createSpy('getCategoryPage').and.returnValue(of(emptyPage));
+    TestBed.configureTestingModule({providers:[
+      {provide:ActivatedRoute,useValue:{queryParamMap:query,paramMap:of(convertToParamMap({slug:'decoracao'}))}},
+      {provide:CatalogService,useValue:{getCategoryBySlug:()=>of({id:10,name:'Decoração',slug:'decoracao'}),getProductsByCategory:()=>of([]),getCategoryPage}},
+    ]});
+    TestBed.overrideComponent(CategoryComponent,{set:{template:'',imports:[]}});
+    const page = TestBed.createComponent(CategoryComponent).componentInstance;
+    expect(page.pageNumber()).toBe(2);
+    expect(getCategoryPage.calls.mostRecent().args[1]).toEqual({offset:12,limit:12,filters:{name__contains:'Tapete',price__lte:'100',stock__gte:1,color:'Areia',type:'Tapetes',collection:'natural',sort:'price_desc'}});
+    query.next(convertToParamMap({page:'3',sort:'name'}));
+    expect(page.pageNumber()).toBe(3);
+    expect(page.criteria().color).toBe('');
+    expect(getCategoryPage.calls.mostRecent().args[1]).toEqual({offset:24,limit:12,filters:{sort:'name'}});
+  });
+
+  it('writes filter and page state to the URL while retaining unrelated parameters', () => {
+    const navigate = jasmine.createSpy('navigate').and.resolveTo(true);
+    TestBed.overrideProvider(Router,{useValue:{navigate}});
+    const params = new BehaviorSubject(convertToParamMap({page:'2',color:'Areia',sort:'name'}));
+    TestBed.configureTestingModule({providers:[
+      {provide:ActivatedRoute,useValue:{queryParamMap:params,paramMap:of(convertToParamMap({slug:'mesa'}))}},
+      {provide:CatalogService,useValue:{getCategoryBySlug:()=>of({id:7,name:'Mesa',slug:'mesa'}),getProductsByCategory:()=>of([]),getCategoryPage:()=>of(emptyPage)}},
+    ]});
+    TestBed.overrideComponent(CategoryComponent,{set:{template:'',imports:[]}});
+    const page = TestBed.createComponent(CategoryComponent).componentInstance;
+    page.applyFilters('  Toalha  ','100',true,'price_asc');
+    const options = navigate.calls.mostRecent().args[1];
+    expect(options.queryParamsHandling).toBe('merge');
+    expect(options.queryParams).toEqual(jasmine.objectContaining({page:null,q:'Toalha',color:'Areia',maxPrice:'100',available:'1',sort:'price_asc'}));
+    params.next(convertToParamMap({q:'Toalha',sort:'price_asc'}));
+    expect(page.criteria().offset).toBe(0);
+    page.clearFilters();
+    expect(navigate.calls.mostRecent().args[1].queryParams.q).toBeNull();
   });
 
 });

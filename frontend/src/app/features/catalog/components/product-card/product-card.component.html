@@ -1,27 +1,64 @@
-<article [class.compact]="compact()" [class.catalog-tile]="catalogTile()">
+<article
+  [class.home-tile]="homeTile()"
+  [class.compact]="compact()"
+  [class.catalog-tile]="catalogTile()"
+>
   <div class="media-frame">
     <a
       class="media product-link"
       [routerLink]="details()"
       [attr.aria-label]="'Ver detalhes de ' + product().name"
     >
-      <app-product-media
-        [image]="cardImage()"
-        [showCaption]="false"
-      />
+      <app-product-media [image]="cardImage()" [showCaption]="false" />
     </a>
     @if (compact()) {
       <div class="recommendation-actions">
-        <app-favorite-button [productId]="product().id" [productName]="product().name" />
+        <app-favorite-button
+          [productId]="product().id"
+          [productName]="product().name"
+        />
         @if (cardImage(); as image) {
-          <button class="overlay-action" type="button" title="Ampliar imagem" [attr.aria-label]="'Ampliar imagem de ' + product().name" (click)="preview.showModal()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <button
+            class="overlay-action"
+            type="button"
+            title="Ampliar imagem"
+            [attr.aria-label]="'Ampliar imagem de ' + product().name"
+            (click)="preview.showModal()"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
               <path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5" />
             </svg>
           </button>
-          <dialog #preview class="recommendation-preview" [attr.aria-label]="product().name">
-            <button class="overlay-action preview-close" type="button" autofocus aria-label="Fechar imagem" title="Fechar imagem" (click)="preview.close()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+          <dialog
+            #preview
+            class="recommendation-preview"
+            [attr.aria-label]="product().name"
+          >
+            <button
+              class="overlay-action preview-close"
+              type="button"
+              autofocus
+              aria-label="Fechar imagem"
+              title="Fechar imagem"
+              (click)="preview.close()"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                aria-hidden="true"
+              >
+                <path d="m6 6 12 12M18 6 6 18" />
+              </svg>
             </button>
             @if (preview.open) {
               <img [src]="image.url" [alt]="image.alt" />
@@ -29,27 +66,47 @@
           </dialog>
         }
         <ng-template #cartIcon>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
             <path d="M5 8h14l1 13H4L5 8Z M9 10V6a3 3 0 0 1 6 0v4" />
           </svg>
         </ng-template>
         @if (product().variants.length) {
-          <a class="overlay-action" [routerLink]="details()" title="Escolher tamanho" [attr.aria-label]="'Escolher tamanho de ' + product().name">
+          <a
+            class="overlay-action"
+            [routerLink]="details()"
+            title="Escolher tamanho"
+            [attr.aria-label]="'Escolher tamanho de ' + product().name"
+          >
             <ng-container [ngTemplateOutlet]="cartIcon" />
           </a>
         } @else {
-          <button class="overlay-action" type="button" [disabled]="!canAdd()" (click)="add()" title="Adicionar ao carrinho"
-            [attr.aria-label]="'Adicionar ' + product().name + ' ao carrinho'" [attr.aria-busy]="pending()">
+          <button
+            class="overlay-action"
+            type="button"
+            [disabled]="!canAdd()"
+            (click)="add()"
+            title="Adicionar ao carrinho"
+            [attr.aria-label]="'Adicionar ' + product().name + ' ao carrinho'"
+            [attr.aria-busy]="pending()"
+          >
             <ng-container [ngTemplateOutlet]="cartIcon" />
           </button>
         }
       </div>
     } @else {
-    <app-favorite-button
-      class="favorite-action"
-      [productId]="product().id"
-      [productName]="product().name"
-    />
+      <app-favorite-button
+        class="favorite-action"
+        [productId]="product().id"
+        [productName]="product().name"
+      />
     }
     @if (!compact() && !catalogTile()) {
       @if (badge(); as text) {
@@ -57,7 +114,8 @@
       }
       <app-product-price
         class="price-badge"
-        [price]="displayPrice()" [originalPrice]="discounted()?product().price:null"
+        [price]="displayPrice()"
+        [originalPrice]="discounted() ? product().price : null"
         [showInstallments]="false"
       />
     }
@@ -69,16 +127,24 @@
     <h2>
       <a class="product-link" [routerLink]="details()">{{ displayName() }}</a>
     </h2>
-    @if (product().brand_name; as brand) {
-      @if (!displayName().toLocaleLowerCase('pt-BR').includes(brand.toLocaleLowerCase('pt-BR'))) {
+    @if (!homeTile() && product().brand_name; as brand) {
+      @if (
+        !displayName()
+          .toLocaleLowerCase("pt-BR")
+          .includes(brand.toLocaleLowerCase("pt-BR"))
+      ) {
         <span class="product-brand">{{ brand }}</span>
       }
     }
-    @if (catalogTile()) {
+    @if (catalogTile() && !homeTile()) {
       <span class="price-prefix">A partir de</span>
     }
     @if (compact() || catalogTile()) {
-      <app-product-price [price]="displayPrice()" [originalPrice]="discounted()?product().price:null" [showInstallments]="false" />
+      <app-product-price
+        [price]="displayPrice()"
+        [originalPrice]="discounted() ? product().price : null"
+        [showInstallments]="false"
+      />
     }
     @if (!compact()) {
       @if (!catalogTile() && attributes().length) {
@@ -89,7 +155,7 @@
         </ul>
       }
       <div class="card-actions">
-        @if (details(); as link) {
+        @if (!homeTile() && details(); as link) {
           <a
             [routerLink]="link"
             [attr.aria-label]="'Ver detalhes de ' + product().name"
@@ -99,27 +165,27 @@
         @if (product().variants.length && details(); as link) {
           <a [routerLink]="link">Escolher tamanho</a>
         } @else {
-        <button
-          type="button"
-          [class.in-cart]="catalogTile() && inCart()"
-          [disabled]="!canAdd()"
-          (click)="add()"
-        >
-          @if (!catalogTile()) {
-            <mat-icon fontSet="material-icons-outlined" aria-hidden="true"
-              >shopping_bag</mat-icon
-            >
-          }
-          {{
-            pending()
-              ? "Adicionando…"
-              : !available()
-                ? "Indisponível"
-                : catalogTile() && inCart()
-                  ? "Adicionado ao carrinho"
-                  : "Adicionar ao carrinho"
-          }}
-        </button>
+          <button
+            type="button"
+            [class.in-cart]="catalogTile() && inCart()"
+            [disabled]="!canAdd()"
+            (click)="add()"
+          >
+            @if (!catalogTile()) {
+              <mat-icon fontSet="material-icons-outlined" aria-hidden="true"
+                >shopping_bag</mat-icon
+              >
+            }
+            {{
+              pending()
+                ? "Adicionando…"
+                : !available()
+                  ? "Indisponível"
+                  : catalogTile() && inCart()
+                    ? "Adicionado ao carrinho"
+                    : "Adicionar ao carrinho"
+            }}
+          </button>
         }
         @if (cart.feedback()[product().id]; as feedback) {
           @if (!catalogTile() || feedback !== "Adicionado ao carrinho.") {

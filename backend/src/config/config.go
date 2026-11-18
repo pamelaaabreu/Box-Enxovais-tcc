@@ -18,7 +18,6 @@ type Config struct {
 	CORSOrigin        string
 	UploadDir         string
 	JWTSecret         string
-	SendGridAPIKey    string
 	ReadHeaderTimeout time.Duration
 	ReadTimeout       time.Duration
 	WriteTimeout      time.Duration
@@ -35,11 +34,10 @@ func Load(envFiles ...string) (Config, error) {
 	}
 
 	cfg := Config{
-		HTTPAddr:       envOrDefault("HTTP_ADDR", ":8080"),
-		CORSOrigin:     envOrDefault("CORS_ORIGIN", "http://localhost:4200"),
-		UploadDir:      envOrDefault("UPLOAD_DIR", "./uploads"),
-		JWTSecret:      os.Getenv("JWT_SECRET"),
-		SendGridAPIKey: os.Getenv("SENDGRID_API_KEY"),
+		HTTPAddr:   envOrDefault("HTTP_ADDR", ":8080"),
+		CORSOrigin: envOrDefault("CORS_ORIGIN", "http://localhost:4200"),
+		UploadDir:  envOrDefault("UPLOAD_DIR", "./uploads"),
+		JWTSecret:  os.Getenv("JWT_SECRET"),
 		Database: db.Config{
 			Host:     strings.TrimSpace(os.Getenv("DB_HOST")),
 			User:     strings.TrimSpace(os.Getenv("DB_USER")),

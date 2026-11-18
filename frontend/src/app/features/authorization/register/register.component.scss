@@ -755,7 +755,7 @@
 }
 
 .terms-field input:focus-visible {
-  outline: 2px solid var(--accent-dark) !important;
+  outline: 2px solid var(--box-focus-color);
   outline-offset: 3px;
 }
 

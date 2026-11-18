@@ -1,5 +1,5 @@
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
-import { MatSelectModule } from '@angular/material/select';
+import { CatalogToolbarComponent } from '../../components/catalog-toolbar/catalog-toolbar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { NotFoundComponent } from '../../../not-found/not-found.component';
 import {
@@ -9,7 +9,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   BehaviorSubject,
@@ -45,7 +45,7 @@ interface CategoryData {
   selector: 'app-category',
   standalone: true,
   imports: [PaginationComponent,
-    MatSelectModule,
+    CatalogToolbarComponent,
     MatIconModule,
     RouterLink,
     NotFoundComponent,
@@ -59,6 +59,7 @@ interface CategoryData {
 })
 export class CategoryComponent {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router, {optional: true});
   private readonly catalog = inject(CatalogService);
 
   private readonly pageSize = 12;
@@ -75,13 +76,38 @@ export class CategoryComponent {
   });
   readonly criteria = toSignal(this.query, { requireSync: true });
 
+  private updateCriteria(criteria: typeof this.query.value): void {
+    if (!this.router) {
+      this.query.next(criteria);
+      return;
+    }
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParamsHandling: 'merge',
+      queryParams: {
+        q: criteria.search || null,
+        maxPrice: criteria.maxPrice || null,
+        available: criteria.available ? '1' : null,
+        sort: criteria.sort || null,
+        page: criteria.offset ? criteria.offset / this.pageSize + 1 : null,
+        color: criteria.color || null,
+        size: criteria.size || null,
+        pattern: criteria.pattern || null,
+        type: criteria.type || null,
+        material: criteria.material || null,
+        opacity: criteria.opacity || null,
+        collection: criteria.collection || null,
+      },
+    });
+  }
+
   applyFilters(
     search: string,
     maxPrice: string,
     available: boolean,
     sort: string,
   ): void {
-    this.query.next({
+    this.updateCriteria({
       ...this.query.value,
       search: search.trim(),
       maxPrice,
@@ -93,7 +119,7 @@ export class CategoryComponent {
 
   movePage(delta: number): void {
     const current = this.query.value;
-    this.query.next({
+    this.updateCriteria({
       ...current,
       offset: Math.max(0, current.offset + delta * this.pageSize),
     });
@@ -211,7 +237,7 @@ export class CategoryComponent {
     value: string,
   ): void {
     const current = this.query.value;
-    this.query.next({
+    this.updateCriteria({
       ...current,
       [key]: current[key] === value ? '' : value,
       offset: 0,
@@ -219,7 +245,7 @@ export class CategoryComponent {
   }
 
   clearFilters(): void {
-    this.query.next({
+    this.updateCriteria({
       search: '',
       maxPrice: '',
       available: false,
@@ -241,13 +267,16 @@ export class CategoryComponent {
         this.resolvedCategory.set(null);
         this.query.next({
           search: (query.get('q') ?? '').trim().slice(0, 120),
-          maxPrice: '',
-          available: false,
-          sort: '',
-          offset: 0,
-          color: '',
-          size: '',
-          pattern: '', type: '', material: '', opacity: '',
+          maxPrice: /^\d+(?:\.\d{1,2})?$/.test(query.get('maxPrice') ?? '') ? query.get('maxPrice')! : '',
+          available: query.get('available') === '1',
+          sort: ['', 'price_asc', 'price_desc', 'name', 'recent'].includes(query.get('sort') ?? '') ? query.get('sort') ?? '' : '',
+          offset: Math.max(0, Math.min(1000000, Math.floor(Number(query.get('page')) || 1)) - 1) * this.pageSize,
+          color: (query.get('color') ?? '').slice(0,120),
+          size: (query.get('size') ?? '').slice(0,120),
+          pattern: (query.get('pattern') ?? '').slice(0,120),
+          type: (query.get('type') ?? '').slice(0,120),
+          material: (query.get('material') ?? '').slice(0,120),
+          opacity: (query.get('opacity') ?? '').slice(0,120),
           collection: (query.get('collection') ?? '').trim().slice(0, 120),
         });
         return this.catalog.getCategoryBySlug(slug).pipe(

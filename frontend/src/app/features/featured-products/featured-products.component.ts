@@ -1,6 +1,6 @@
-import {HttpClient} from '@angular/common/http';
-import {ProductCardComponent} from '../catalog/components/product-card/product-card.component';
-import {CatalogService} from '../catalog/services/catalog.service';
+import { HttpClient } from '@angular/common/http';
+import { ProductCardComponent } from '../catalog/components/product-card/product-card.component';
+import { CatalogService } from '../catalog/services/catalog.service';
 import { CartService } from '../../core/services/cart.service';
 import { FavoritesService } from '../../core/services/favorites.service';
 import { Router } from '@angular/router';
@@ -17,23 +17,20 @@ import { catchError, map, of, startWith, switchMap } from 'rxjs';
 import { ProductService } from '../../core/services/product.service';
 import { Product } from '../../shared/models';
 
-
 type FeaturedState = { products: Product[]; loading: boolean; error: string };
 
 @Component({
   selector: 'app-featured-products',
   standalone: true,
-  imports: [
-    ProductCardComponent,
-  ],
+  imports: [ProductCardComponent],
   templateUrl: './featured-products.component.html',
-  styleUrl: './featured-products.component.css',
+  styleUrl: './featured-products.component.scss',
 })
 export class FeaturedProductsComponent {
   readonly cart = inject(CartService);
- readonly catalog=inject(CatalogService);
- private readonly http=inject(HttpClient);
- readonly bestSellers=signal(false);
+  readonly catalog = inject(CatalogService);
+  private readonly http = inject(HttpClient);
+  readonly bestSellers = signal(false);
   readonly favorites = inject(FavoritesService);
   private readonly productService = inject(ProductService);
   private readonly router = inject(Router);
@@ -75,7 +72,17 @@ export class FeaturedProductsComponent {
                 limit: 6,
                 filters: { status: 'active' },
               })
-            : this.http.get<{products:Product[];bestSellers:boolean}>('http://localhost:8080/home/highlights').pipe(map(result=>{this.bestSellers.set(result.bestSellers);return {items:result.products}}));
+            : this.http
+                .get<{
+                  products: Product[];
+                  bestSellers: boolean;
+                }>('http://localhost:8080/home/highlights')
+                .pipe(
+                  map((result) => {
+                    this.bestSellers.set(result.bestSellers);
+                    return { items: result.products };
+                  }),
+                );
         return request.pipe(
           map(
             (page): FeaturedState => ({

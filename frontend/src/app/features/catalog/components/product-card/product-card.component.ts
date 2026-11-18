@@ -31,21 +31,36 @@ import { MatIconModule } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCardComponent {
+  readonly homeTile = input(false);
   readonly compact = input(false);
- readonly promotion=input(false);
- readonly discounted=computed(()=>this.promotion()&&Number.isFinite(this.product().promotional_price)&&this.product().promotional_price>=0&&this.product().promotional_price<this.product().price&&!this.product().variants.length);
- readonly displayPrice=computed(()=>this.discounted()?this.product().promotional_price:this.product().price);
+  readonly promotion = input(false);
+  readonly discounted = computed(
+    () =>
+      this.promotion() &&
+      Number.isFinite(this.product().promotional_price) &&
+      this.product().promotional_price >= 0 &&
+      this.product().promotional_price < this.product().price &&
+      !this.product().variants.length,
+  );
+  readonly displayPrice = computed(() =>
+    this.discounted() ? this.product().promotional_price : this.product().price,
+  );
   readonly catalogTile = input(false);
   readonly product = input.required<CatalogProduct>();
   readonly cart = inject(CartService);
   readonly details = computed(() =>
     this.product().active ? ['/produto', this.product().slug] : null,
   );
-  readonly productType = computed(() => this.product().measurements?.['Tipo']?.trim()
-    || this.product().category?.name?.split('/').at(-1)?.trim());
+  readonly productType = computed(
+    () =>
+      this.product().measurements?.['Tipo']?.trim() ||
+      this.product().category?.name?.split('/').at(-1)?.trim(),
+  );
   readonly cardImage = computed(() => {
     const image = this.product().images[0];
-    return image?.cardUrl ? { ...image, url: image.cardUrl, srcset: undefined } : image ?? null;
+    return image?.cardUrl
+      ? { ...image, url: image.cardUrl, srcset: undefined }
+      : (image ?? null);
   });
 
   readonly available = computed(

@@ -193,11 +193,8 @@
 
   input:not([type="radio"]):focus,
   select:focus {
-    // O reset global remove a borda e o destaque de foco com !important.
     border: 1px solid #667255 !important;
-    outline: 2px solid rgba(102, 114, 85, 0.18) !important;
-    outline-offset: 0;
-    box-shadow: 0 0 0 3px rgba(102, 114, 85, 0.08) !important;
+
   }
 
   input:not([type="radio"])[aria-invalid="true"],
@@ -206,8 +203,7 @@
 
     &:focus {
       border-color: #b74a45 !important;
-      outline-color: rgba(183, 74, 69, 0.18) !important;
-      box-shadow: 0 0 0 3px rgba(183, 74, 69, 0.08) !important;
+
     }
   }
 

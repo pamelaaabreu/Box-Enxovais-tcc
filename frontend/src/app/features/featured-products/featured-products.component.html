@@ -1,7 +1,24 @@
 <section class="featured-section" aria-labelledby="featured-heading">
- <h2 id="featured-heading">{{favoritesOnly() ? 'Meus favoritos' : bestSellers() ? 'Mais vendidos' : 'Destaques para você'}}</h2>
- <div class="product-filters" role="group" aria-label="Filtrar destaques"><button type="button" [attr.aria-pressed]="!favoritesOnly()" (click)="selectFilter(false)">Todos</button><button type="button" [attr.aria-pressed]="favoritesOnly()" (click)="selectFilter(true)">Favoritos</button></div>
- @if(state().loading){<p role="status">Carregando produtos…</p>}@else if(state().error){<div role="alert"><p>{{state().error}}</p><button type="button" (click)="retry()">Tentar novamente</button></div>}@else{
- <div class="featured-grid">@for(product of products();track product.id){<app-product-card [product]="catalog.adapt(product)" [catalogTile]="true" />}</div>
- @if(!products().length){<p>Nenhum produto disponível nesta seleção.</p>}}
+  <h2 id="featured-heading">{{ titulo }}</h2>
+  @if (state().loading) {
+    <p role="status">Carregando produtos…</p>
+  } @else if (state().error) {
+    <div role="alert">
+      <p>{{ state().error }}</p>
+      <button type="button" (click)="retry()">Tentar novamente</button>
+    </div>
+  } @else {
+    <div class="featured-grid">
+      @for (product of products(); track product.id) {
+        <app-product-card
+          [product]="catalog.adapt(product)"
+          [catalogTile]="true"
+          [homeTile]="true"
+        />
+      }
+    </div>
+    @if (!products().length) {
+      <p>Nenhum produto disponível nesta seleção.</p>
+    }
+  }
 </section>

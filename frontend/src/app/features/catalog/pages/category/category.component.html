@@ -39,15 +39,6 @@
           }
         </div>
         <div class="catalog-columns">
-          <button
-            class="filter-toggle"
-            type="button"
-            aria-controls="catalog-filters"
-            [attr.aria-expanded]="filtersOpen()"
-            (click)="filtersOpen.set(!filtersOpen())"
-          >
-            Filtros
-          </button>
           <aside
             id="catalog-filters"
             class="filter-panel"
@@ -153,34 +144,7 @@
             </form>
           </aside>
           <div class="catalog-results">
-            <div class="results-bar">
-              <span role="status">{{
-                page() ? page()?.total + " produtos" : ""
-              }}</span>
-              <div class="catalog-sort">
-                <span id="catalog-sort-label">Ordenar por</span>
-                <mat-select
-                  aria-labelledby="catalog-sort-label"
-                  [panelClass]="['box-form-options', 'catalog-sort-options']"
-                  panelWidth="230px"
-                  [value]="criteria().sort"
-                  (selectionChange)="
-                    applyFilters(
-                      criteria().search,
-                      criteria().maxPrice,
-                      criteria().available,
-                      $event.value
-                    )
-                  "
-                >
-                  <mat-option value="">Mais relevantes</mat-option>
-                  <mat-option value="price_asc">Menor preço</mat-option>
-                  <mat-option value="price_desc">Maior preço</mat-option>
-                  <mat-option value="name">Nome</mat-option>
-                  <mat-option value="recent">Mais recentes</mat-option>
-                </mat-select>
-              </div>
-            </div>
+            <app-catalog-toolbar [showFilters]="true" [filtersOpen]="filtersOpen()" (filtersToggle)="filtersOpen.set(!filtersOpen())" [total]="page()?.total || 0" [sort]="criteria().sort" [loading]="state().status === 'loading'" [disabled]="state().status === 'loading'" (sortChange)="applyFilters(criteria().search, criteria().maxPrice, criteria().available, $event)" />
             @if (state().status === "loading") {
               <app-product-grid [loading]="true" />
             } @else if (state().status === "error") {
@@ -205,8 +169,8 @@
                 </button>
               </section>
             }
-            @if (criteria().offset || page()?.hasMore) {
-              <app-pagination [page]="pageNumber()" [total]="page()?.total || 0" [pageSize]="12" (pageChange)="goToPage($event)" />
+            @if (state().status === "loaded" && (page()?.total || 0) > 0) {
+              <app-pagination [page]="pageNumber()" [total]="page()?.total || 0" [pageSize]="12" [disabled]="state().status !== 'loaded'" (pageChange)="goToPage($event)" />
             }
           </div>
         </div>

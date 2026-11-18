@@ -1,4 +1,6 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { revealKeyboardFocus } from './shared/accessibility/focus-visibility';
+import { Component, ViewEncapsulation, HostListener, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -10,5 +12,12 @@ import { RouterOutlet } from '@angular/router';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class AppComponent {
+  private readonly document = inject(DOCUMENT);
+
+  @HostListener('document:focusin', ['$event.target'])
+  onKeyboardFocus(target: EventTarget | null): void {
+    revealKeyboardFocus(target, this.document);
+  }
+
   title = 'frontend';
 }
