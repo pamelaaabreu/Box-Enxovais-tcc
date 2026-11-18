@@ -1,0 +1,67 @@
+{
+  "images": [
+    {
+      "code": "tapete-box-ondas-areia",
+      "filename": "decoracao-tapete-043-ondas-areia-capa.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "3292abb1d6a916d15626bf97c1f44c9e2a3f6651c1ab96e2614e6531a29f38ab",
+      "old_path": "uploads/decoracao-2026-tapete-box-ondas-areia-01.webp",
+      "new_path": "uploads/decoracao-tapete-043-ondas-areia-capa.webp"
+    },
+    {
+      "code": "tapete-box-moldura-oliva",
+      "filename": "decoracao-tapete-043-moldura-oliva-capa.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "edb504f0e0eac1902fbd54904f0db5cd85732f9f51ec5a171e3ca1040070401b",
+      "old_path": "uploads/decoracao-2026-tapete-box-moldura-oliva-01.webp",
+      "new_path": "uploads/decoracao-tapete-043-moldura-oliva-capa.webp"
+    },
+    {
+      "code": "tapete-box-canelado-creme",
+      "filename": "decoracao-tapete-043-canelado-creme-capa.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "2e1db7943a7a6782ba78e85c11c3f5d75237e336b01c819b4e465700e364d8d5",
+      "old_path": "uploads/decoracao-2026-tapete-box-canelado-creme-01.webp",
+      "new_path": "uploads/decoracao-tapete-043-canelado-creme-capa.webp"
+    },
+    {
+      "code": "tapete-box-trelica-azul",
+      "filename": "decoracao-tapete-043-trelica-azul-capa.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "46852a7358621206fd4d2d6dabeb8d3914a56b7e12783b1932bd6f44afa196c6",
+      "old_path": "uploads/decoracao-2026-tapete-box-trelica-azul-01.webp",
+      "new_path": "uploads/decoracao-tapete-043-trelica-azul-capa.webp"
+    },
+    {
+      "code": "tapete-box-losangos-preto",
+      "filename": "decoracao-tapete-043-losangos-preto-capa.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "4fdce771ee79423fa61f217aed836318e7bddb650a564cef87e35e592a0b8ec7",
+      "old_path": "uploads/decoracao-2026-tapete-box-losangos-preto-01.webp",
+      "new_path": "uploads/decoracao-tapete-043-losangos-preto-capa.webp"
+    },
+    {
+      "code": "tapete-box-grafite-preto",
+      "filename": "decoracao-tapete-043-grafite-preto-capa.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "8b71a04938db2c306c6043b7c0930a8568f158f90fd6afbfa30cea13c5d4b88a",
+      "old_path": "uploads/decoracao-2026-tapete-box-grafite-preto-01.webp",
+      "new_path": "uploads/decoracao-tapete-043-grafite-preto-capa.webp"
+    },
+    {
+      "code": "tapete-box-ondas-terracota",
+      "filename": "decoracao-tapete-043-ondas-terracota-capa.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "3157d17f4fa2a2b8af25bd6469f15e778551c72e61535e9c48bbf88fd1b695f0",
+      "old_path": "uploads/decoracao-2026-tapete-box-ondas-terracota-01.webp",
+      "new_path": "uploads/decoracao-tapete-043-ondas-terracota-capa.webp"
+    }
+  ]
+}

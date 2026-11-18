@@ -69,7 +69,7 @@ export class CategoryComponent {
     offset: 0,
     color: '',
     size: '',
-    pattern: '', type: '',
+    pattern: '', type: '', material: '', opacity: '',
     collection: '',
   });
   readonly criteria = toSignal(this.query, { requireSync: true });
@@ -137,7 +137,7 @@ export class CategoryComponent {
 
   private readonly accessoryFacets = toSignal(
     this.route.paramMap.pipe(
-      switchMap(params => ['toalhas', 'almofadas', 'mesa'].includes(params.get('slug') ?? '')
+      switchMap(params => ['toalhas', 'almofadas', 'mesa', 'decoracao'].includes(params.get('slug') ?? '')
         ? this.catalog.getProductsByCategory(params.get('slug')!).pipe(catchError(() => of([])))
         : of([])),
     ),
@@ -149,13 +149,15 @@ export class CategoryComponent {
     const pillows = category?.slug === 'travesseiros';
     const products = pillows
       ? this.pillowFacets()
-      : ['toalhas', 'almofadas', 'mesa'].includes(category?.slug ?? '') ? this.accessoryFacets()
+      : ['toalhas', 'almofadas', 'mesa', 'decoracao'].includes(category?.slug ?? '') ? this.accessoryFacets()
       : (this.cama()?.products ?? []).filter(
           (p) =>
             category?.slug === 'cama' || p.product_type_id === category?.id,
         );
     const fields = pillows
       ? ([['size', 'Tamanho']] as const)
+      : category?.slug === 'decoracao'
+        ? ([['type','Tipo'],['color','Cor'],['size','Tamanho'],['material','Material'],['opacity','Opacidade']] as const)
       : category?.slug === 'almofadas'
         ? ([['color', 'Cor'], ['type', 'Tipo'], ['size', 'Tamanho']] as const)
       : ['toalhas', 'mesa'].includes(category?.slug ?? '')
@@ -179,7 +181,7 @@ export class CategoryComponent {
   });
   readonly collections = computed(() => {
     const category = this.category();
-    const products = ['toalhas', 'almofadas', 'mesa'].includes(category?.slug ?? '') ? this.accessoryFacets() : (this.cama()?.products ?? []).filter(
+    const products = ['toalhas', 'almofadas', 'mesa', 'decoracao'].includes(category?.slug ?? '') ? this.accessoryFacets() : (this.cama()?.products ?? []).filter(
       (p) => category?.slug === 'cama' || p.product_type_id === category?.id,
     );
     const options = new Map<string, string>();
@@ -204,7 +206,7 @@ export class CategoryComponent {
   }
 
   setFacet(
-    key: 'color' | 'size' | 'pattern' | 'collection' | 'type',
+    key: 'color' | 'size' | 'pattern' | 'collection' | 'type' | 'material' | 'opacity',
     value: string,
   ): void {
     const current = this.query.value;
@@ -224,7 +226,7 @@ export class CategoryComponent {
       offset: 0,
       color: '',
       size: '',
-      pattern: '', type: '',
+      pattern: '', type: '', material: '', opacity: '',
       collection: '',
     });
   }
@@ -244,7 +246,7 @@ export class CategoryComponent {
           offset: 0,
           color: '',
           size: '',
-          pattern: '', type: '',
+          pattern: '', type: '', material: '', opacity: '',
           collection: (query.get('collection') ?? '').trim().slice(0, 120),
         });
         return this.catalog.getCategoryBySlug(slug).pipe(
@@ -261,7 +263,7 @@ export class CategoryComponent {
                   color,
                   size,
                   pattern,
-                  type,
+                  type, material, opacity,
                   collection,
                 }) => {
                   if (!category)
@@ -282,6 +284,8 @@ export class CategoryComponent {
                   if (size) filters['size'] = size;
                   if (pattern) filters['pattern'] = pattern;
                   if (type) filters['type'] = type;
+                  if (material) filters['material'] = material;
+                  if (opacity) filters['opacity'] = opacity;
                   if (collection) filters['collection'] = collection;
                   if (sort) filters['sort'] = sort;
                   return this.catalog

@@ -1,0 +1,222 @@
+{
+  "version": 41,
+  "dirty": false,
+  "products_preserved": 75,
+  "products_adjusted": [
+    {
+      "id": 112,
+      "name": "Caminho de Mesa Essência Oliva",
+      "gallery_roles": [
+        "ambientacao",
+        "objetiva",
+        "detalhe"
+      ],
+      "gallery_urls": [
+        "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-essencia-oliva-01.png",
+        "http://localhost:8080/uploads/mesa-galerias-041-caminho-de-mesa-essencia-oliva-objetiva.webp",
+        "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-essencia-oliva-03-trama.png"
+      ],
+      "replaced": "uploads/mesa-2026-caminho-de-mesa-essencia-oliva-02.png",
+      "retained_detail": "uploads/mesa-2026-caminho-de-mesa-essencia-oliva-03-trama.png"
+    },
+    {
+      "id": 113,
+      "name": "Caminho de Mesa Natural Areia",
+      "gallery_roles": [
+        "ambientacao",
+        "objetiva",
+        "detalhe"
+      ],
+      "gallery_urls": [
+        "http://localhost:8080/uploads/mesa-galerias-041-caminho-de-mesa-natural-areia-ambientacao.webp",
+        "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-natural-areia-01.png",
+        "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-natural-areia-03-trama.png"
+      ],
+      "replaced": null,
+      "retained_detail": "uploads/mesa-2026-caminho-de-mesa-natural-areia-03-trama.png"
+    },
+    {
+      "id": 114,
+      "name": "Caminho de Mesa Terracota",
+      "gallery_roles": [
+        "ambientacao",
+        "objetiva",
+        "detalhe"
+      ],
+      "gallery_urls": [
+        "http://localhost:8080/uploads/mesa-galerias-041-caminho-de-mesa-terracota-ambientacao.webp",
+        "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-terracota-01.png",
+        "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-terracota-03-trama.png"
+      ],
+      "replaced": null,
+      "retained_detail": "uploads/mesa-2026-caminho-de-mesa-terracota-03-trama.png"
+    },
+    {
+      "id": 115,
+      "name": "Jogo Americano Essência Oliva 4 Peças",
+      "gallery_roles": [
+        "ambientacao",
+        "objetiva",
+        "detalhe"
+      ],
+      "gallery_urls": [
+        "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-essencia-oliva-4-pecas-ambientacao.webp",
+        "http://localhost:8080/uploads/mesa-2026-jogo-americano-essencia-oliva-4-pecas-01.png",
+        "http://localhost:8080/uploads/mesa-2026-jogo-americano-essencia-oliva-4-pecas-03-trama.png"
+      ],
+      "replaced": null,
+      "retained_detail": "uploads/mesa-2026-jogo-americano-essencia-oliva-4-pecas-03-trama.png"
+    },
+    {
+      "id": 116,
+      "name": "Jogo Americano Natural Areia 6 Peças",
+      "gallery_roles": [
+        "ambientacao",
+        "objetiva",
+        "detalhe"
+      ],
+      "gallery_urls": [
+        "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-natural-areia-6-pecas-ambientacao.webp",
+        "http://localhost:8080/uploads/mesa-2026-jogo-americano-natural-areia-6-pecas-01.png",
+        "http://localhost:8080/uploads/mesa-2026-jogo-americano-natural-areia-6-pecas-03-trama.png"
+      ],
+      "replaced": null,
+      "retained_detail": "uploads/mesa-2026-jogo-americano-natural-areia-6-pecas-03-trama.png"
+    },
+    {
+      "id": 117,
+      "name": "Jogo Americano Terracota 4 Peças",
+      "gallery_roles": [
+        "ambientacao",
+        "objetiva",
+        "detalhe"
+      ],
+      "gallery_urls": [
+        "http://localhost:8080/uploads/mesa-2026-jogo-americano-terracota-4-pecas-01.png",
+        "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-terracota-4-pecas-objetiva.webp",
+        "http://localhost:8080/uploads/mesa-2026-jogo-americano-terracota-4-pecas-03-trama.png"
+      ],
+      "replaced": "uploads/mesa-2026-jogo-americano-terracota-4-pecas-02.png",
+      "retained_detail": "uploads/mesa-2026-jogo-americano-terracota-4-pecas-03-trama.png"
+    },
+    {
+      "id": 118,
+      "name": "Jogo Americano Terracota 6 Peças",
+      "gallery_roles": [
+        "ambientacao",
+        "objetiva",
+        "detalhe"
+      ],
+      "gallery_urls": [
+        "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-terracota-6-pecas-ambientacao.webp",
+        "http://localhost:8080/uploads/mesa-2026-jogo-americano-terracota-6-pecas-01.png",
+        "http://localhost:8080/uploads/mesa-2026-jogo-americano-terracota-6-pecas-03-trama.png"
+      ],
+      "replaced": null,
+      "retained_detail": "uploads/mesa-2026-jogo-americano-terracota-6-pecas-03-trama.png"
+    },
+    {
+      "id": 119,
+      "name": "Toalha de Mesa Essência Oliva",
+      "gallery_roles": [
+        "ambientacao",
+        "objetiva",
+        "detalhe"
+      ],
+      "gallery_urls": [
+        "http://localhost:8080/uploads/mesa-galerias-041-toalha-de-mesa-essencia-oliva-ambientacao.webp",
+        "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-essencia-oliva-01.png",
+        "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-essencia-oliva-03-trama.png"
+      ],
+      "replaced": null,
+      "retained_detail": "uploads/mesa-2026-toalha-de-mesa-essencia-oliva-03-trama.png"
+    },
+    {
+      "id": 120,
+      "name": "Toalha de Mesa Natural Areia",
+      "gallery_roles": [
+        "ambientacao",
+        "objetiva",
+        "detalhe"
+      ],
+      "gallery_urls": [
+        "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-natural-areia-01.png",
+        "http://localhost:8080/uploads/mesa-galerias-041-toalha-de-mesa-natural-areia-objetiva.webp",
+        "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-natural-areia-03-trama.png"
+      ],
+      "replaced": "uploads/mesa-2026-toalha-de-mesa-natural-areia-02.png",
+      "retained_detail": "uploads/mesa-2026-toalha-de-mesa-natural-areia-03-trama.png"
+    },
+    {
+      "id": 121,
+      "name": "Toalha de Mesa Terracota",
+      "gallery_roles": [
+        "ambientacao",
+        "objetiva",
+        "detalhe"
+      ],
+      "gallery_urls": [
+        "http://localhost:8080/uploads/mesa-galerias-041-toalha-de-mesa-terracota-ambientacao.webp",
+        "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-terracota-01.png",
+        "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-terracota-03-trama.png"
+      ],
+      "replaced": null,
+      "retained_detail": "uploads/mesa-2026-toalha-de-mesa-terracota-03-trama.png"
+    }
+  ],
+  "new_images": 10,
+  "retained_images": 20,
+  "removed_files": 0,
+  "new_http": [
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-caminho-de-mesa-essencia-oliva-objetiva.webp",
+      "http": 200,
+      "sha256_match": true
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-caminho-de-mesa-natural-areia-ambientacao.webp",
+      "http": 200,
+      "sha256_match": true
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-caminho-de-mesa-terracota-ambientacao.webp",
+      "http": 200,
+      "sha256_match": true
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-essencia-oliva-4-pecas-ambientacao.webp",
+      "http": 200,
+      "sha256_match": true
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-natural-areia-6-pecas-ambientacao.webp",
+      "http": 200,
+      "sha256_match": true
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-terracota-4-pecas-objetiva.webp",
+      "http": 200,
+      "sha256_match": true
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-terracota-6-pecas-ambientacao.webp",
+      "http": 200,
+      "sha256_match": true
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-toalha-de-mesa-essencia-oliva-ambientacao.webp",
+      "http": 200,
+      "sha256_match": true
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-toalha-de-mesa-natural-areia-objetiva.webp",
+      "http": 200,
+      "sha256_match": true
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-toalha-de-mesa-terracota-ambientacao.webp",
+      "http": 200,
+      "sha256_match": true
+    }
+  ]
+}

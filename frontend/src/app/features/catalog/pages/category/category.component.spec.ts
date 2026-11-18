@@ -12,7 +12,8 @@ describe('CategoryComponent route state', () => {
   it('updates the same instance on a slug change and ignores an older pending response', () => {
     const params = new BehaviorSubject(convertToParamMap({ slug: 'cama' }));
     const pending = new Subject<Page<CatalogProduct>>();
-    const service = jasmine.createSpyObj<CatalogService>('CatalogService', ['getCategoryBySlug', 'getCategoryPage']);
+    const service = jasmine.createSpyObj<CatalogService>('CatalogService', ['getCategoryBySlug', 'getCategoryPage', 'getProductsByCategory']);
+    service.getProductsByCategory.and.returnValue(of([]));
     service.getCategoryBySlug.and.callFake(slug => of({ id: 1, name: slug, slug }));
     service.getCategoryPage.and.callFake(category => category.slug === 'cama' ? pending : of(emptyPage));
     TestBed.configureTestingModule({ providers: [
@@ -61,7 +62,8 @@ describe('CategoryComponent route state', () => {
     expect(fixture.componentInstance.state().status).toBe('error');
   });
 
-  it('shows towel facets and sends color, type and collection filters to the server', () => {
+  for (const category of [{name:'Toalhas',slug:'toalhas'}, {name:'Mesa',slug:'mesa'}]) {
+  it(`shows ${category.slug} facets and sends color, type and collection filters to the server`, () => {
     const products = [
       {id: 1, name: 'Toalha', product_type_id: 7, measurements: {Cor: 'Areia', Tipo: 'Toalha de banho', 'Coleção': 'Essência', collection_slug: 'toalhas-essencia'}},
       {id: 2, name: 'Jogo', product_type_id: 7, measurements: {Cor: 'Terracota', Tipo: 'Jogo de toalhas', 'Coleção': 'Spa', collection_slug: 'toalhas-spa'}},
@@ -72,8 +74,8 @@ describe('CategoryComponent route state', () => {
     })) as CatalogProduct[];
     const getCategoryPage = jasmine.createSpy('getCategoryPage').and.returnValue(of(emptyPage));
     TestBed.configureTestingModule({providers: [
-      {provide: ActivatedRoute, useValue: {queryParamMap: of(convertToParamMap({})), paramMap: of(convertToParamMap({slug:'toalhas'}))}},
-      {provide: CatalogService, useValue: {getCategoryBySlug: () => of({id:7,name:'Toalhas',slug:'toalhas'}), getProductsByCategory: () => of(products), getCategoryPage}},
+      {provide: ActivatedRoute, useValue: {queryParamMap: of(convertToParamMap({})), paramMap: of(convertToParamMap({slug:category.slug}))}},
+      {provide: CatalogService, useValue: {getCategoryBySlug: () => of({id:7,...category}), getProductsByCategory: () => of(products), getCategoryPage}},
     ]});
     TestBed.overrideComponent(CategoryComponent, {set: {template:'',imports:[]}});
     const page = TestBed.createComponent(CategoryComponent).componentInstance;
@@ -86,6 +88,7 @@ describe('CategoryComponent route state', () => {
     page.clearFilters();
     expect(getCategoryPage.calls.mostRecent().args[1].filters).toEqual({});
   });
+  }
   it('loads cushion cover filters from real attributes and combines type, dimension, color and collection', () => {
     const products = [
       {id:101,name:'Capa de Almofada Tricô Losangos Oliva',price:69.9,quantity:8,status:'active',product_type_id:9,
@@ -105,6 +108,20 @@ describe('CategoryComponent route state', () => {
     page.setFacet('type','Tricô');page.setFacet('size','50 × 50 cm');
     page.setFacet('color','Oliva');page.setFacet('collection','almofadas-tricot-losangos');
     expect(getCategoryPage.calls.mostRecent().args[1].filters).toEqual({type:'Tricô',size:'50 × 50 cm',color:'Oliva',collection:'almofadas-tricot-losangos'});
+    page.clearFilters();expect(getCategoryPage.calls.mostRecent().args[1].filters).toEqual({});
+  });
+
+  it('combines decoration type, material and opacity', () => {
+    const getCategoryPage=jasmine.createSpy('getCategoryPage').and.returnValue(of(emptyPage));
+    TestBed.configureTestingModule({providers:[
+      {provide:ActivatedRoute,useValue:{queryParamMap:of(convertToParamMap({})),paramMap:of(convertToParamMap({slug:'decoracao'}))}},
+      {provide:CatalogService,useValue:{getCategoryBySlug:()=>of({id:10,name:'Decoração',slug:'decoracao'}),getProductsByCategory:()=>of([]),getCategoryPage}},
+    ]});
+    TestBed.overrideComponent(CategoryComponent,{set:{template:'',imports:[]}});
+    const page=TestBed.createComponent(CategoryComponent).componentInstance;
+    expect(page.facets().map(f=>f.key)).toEqual(['type','color','size','material','opacity']);
+    page.setFacet('type','Cortinas');page.setFacet('opacity','blackout');page.setFacet('material','Poliéster');
+    expect(getCategoryPage.calls.mostRecent().args[1].filters).toEqual({type:'Cortinas',opacity:'blackout',material:'Poliéster'});
     page.clearFilters();expect(getCategoryPage.calls.mostRecent().args[1].filters).toEqual({});
   });
 

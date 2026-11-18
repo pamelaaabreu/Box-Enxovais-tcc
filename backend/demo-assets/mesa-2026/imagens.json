@@ -18,6 +18,16 @@
     "sha256": "78278ec22f73f562af25bcb4d16d22af470118cbc1a4033134f206b8961690f2"
   },
   {
+    "file": "mesa-2026-toalha-de-mesa-natural-areia-03-trama.png",
+    "origin": "gerada com image_gen a partir da foto do próprio produto",
+    "position": 3,
+    "alt": "Toalha de Mesa Natural Areia — detalhe da trama e acabamento",
+    "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios.",
+    "product": "Toalha de Mesa Natural Areia",
+    "url": "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-natural-areia-03-trama.png",
+    "sha256": "f80d8c3af03652a0f2353fad69b7053df2fd1b149a653becd53460ad00938659"
+  },
+  {
     "file": "mesa-2026-toalha-de-mesa-essencia-oliva-01.png",
     "origin": "gerada com image_gen",
     "position": 1,
@@ -28,6 +38,16 @@
     "sha256": "4ae5a323ce5c7c9017d304f323e40e8bfe232e7823c627652a7293441d120ad0"
   },
   {
+    "file": "mesa-2026-toalha-de-mesa-essencia-oliva-03-trama.png",
+    "origin": "gerada com image_gen a partir da foto do próprio produto",
+    "position": 3,
+    "alt": "Toalha de Mesa Essência Oliva — detalhe da trama e acabamento",
+    "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios.",
+    "product": "Toalha de Mesa Essência Oliva",
+    "url": "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-essencia-oliva-03-trama.png",
+    "sha256": "f8fe1d776dd05192708fd347d384ec14d20c9d382c176d1b8c6b23507d33acc8"
+  },
+  {
     "file": "mesa-2026-toalha-de-mesa-terracota-01.png",
     "origin": "gerada com image_gen",
     "position": 1,
@@ -36,6 +56,16 @@
     "product": "Toalha de Mesa Terracota",
     "url": "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-terracota-01.png",
     "sha256": "83762cda813be6b32fc98b75e3dad03db50d7a144d768aa565ab07143e26546b"
+  },
+  {
+    "file": "mesa-2026-toalha-de-mesa-terracota-03-trama.png",
+    "origin": "gerada com image_gen a partir da foto do próprio produto",
+    "position": 3,
+    "alt": "Toalha de Mesa Terracota — detalhe da trama e acabamento",
+    "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios.",
+    "product": "Toalha de Mesa Terracota",
+    "url": "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-terracota-03-trama.png",
+    "sha256": "254850608525a98190ea026ce5acf414891b384a5641e36074a224196e86974c"
   },
   {
     "file": "mesa-2026-caminho-de-mesa-essencia-oliva-01.png",
@@ -56,6 +86,16 @@
     "sha256": "581339f273be0cf7ac4656b3e636dea0764784084ede4717eeabb807c6288cfe"
   },
   {
+    "file": "mesa-2026-caminho-de-mesa-essencia-oliva-03-trama.png",
+    "origin": "gerada com image_gen a partir da foto do próprio produto",
+    "position": 3,
+    "alt": "Caminho de Mesa Essência Oliva — detalhe da trama e acabamento",
+    "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios.",
+    "product": "Caminho de Mesa Essência Oliva",
+    "url": "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-essencia-oliva-03-trama.png",
+    "sha256": "ecf79946cca0a8fea3cfac173099e59af7c494762727bfb8cac5acc8ac0d1bbc"
+  },
+  {
     "file": "mesa-2026-caminho-de-mesa-natural-areia-01.png",
     "origin": "gerada com image_gen",
     "position": 1,
@@ -66,6 +106,16 @@
     "sha256": "e4cbb3baa67d875740e1a66725960516a8e9e432ac5858d801acb8da52210087"
   },
   {
+    "file": "mesa-2026-caminho-de-mesa-natural-areia-03-trama.png",
+    "origin": "gerada com image_gen a partir da foto do próprio produto",
+    "position": 3,
+    "alt": "Caminho de Mesa Natural Areia — detalhe da trama e acabamento",
+    "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios.",
+    "product": "Caminho de Mesa Natural Areia",
+    "url": "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-natural-areia-03-trama.png",
+    "sha256": "08d87c3477646737641f35edd0ba465f1b0487f30044a0538a983cb883a1d0a0"
+  },
+  {
     "file": "mesa-2026-caminho-de-mesa-terracota-01.png",
     "origin": "gerada com image_gen",
     "position": 1,
@@ -74,6 +124,16 @@
     "product": "Caminho de Mesa Terracota",
     "url": "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-terracota-01.png",
     "sha256": "c0e0ac07ca23cf95f091ebe7f4e004435ff6492dbb385e251091c032332e2925"
+  },
+  {
+    "file": "mesa-2026-caminho-de-mesa-terracota-03-trama.png",
+    "origin": "gerada com image_gen a partir da foto do próprio produto",
+    "position": 3,
+    "alt": "Caminho de Mesa Terracota — detalhe da trama e acabamento",
+    "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios.",
+    "product": "Caminho de Mesa Terracota",
+    "url": "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-terracota-03-trama.png",
+    "sha256": "11c1a6d6c6e0487f010dba26a570c3e4582ca25d5b66d346e7a326a353562455"
   },
   {
     "file": "mesa-2026-jogo-americano-terracota-4-pecas-01.png",
@@ -94,6 +154,16 @@
     "sha256": "8f945c202587d5acd3073dde8155ac6edeee8532d8aaf08d1b4ffdbfcff9686e"
   },
   {
+    "file": "mesa-2026-jogo-americano-terracota-4-pecas-03-trama.png",
+    "origin": "gerada com image_gen a partir da foto do próprio produto",
+    "position": 3,
+    "alt": "Jogo Americano Terracota 4 Peças — detalhe da trama e acabamento",
+    "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios.",
+    "product": "Jogo Americano Terracota 4 Peças",
+    "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-terracota-4-pecas-03-trama.png",
+    "sha256": "2a480de6ffe15793e3e6284d8afd749e089ea4b5318863efdef93630e42f2dbd"
+  },
+  {
     "file": "mesa-2026-jogo-americano-essencia-oliva-4-pecas-01.png",
     "origin": "gerada com image_gen",
     "position": 1,
@@ -102,6 +172,16 @@
     "product": "Jogo Americano Essência Oliva 4 Peças",
     "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-essencia-oliva-4-pecas-01.png",
     "sha256": "01be33fa819012c6e5573798215ee2d5797836e1c58f36e85daa86e45d14420b"
+  },
+  {
+    "file": "mesa-2026-jogo-americano-essencia-oliva-4-pecas-03-trama.png",
+    "origin": "gerada com image_gen a partir da foto do próprio produto",
+    "position": 3,
+    "alt": "Jogo Americano Essência Oliva 4 Peças — detalhe da trama e acabamento",
+    "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios.",
+    "product": "Jogo Americano Essência Oliva 4 Peças",
+    "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-essencia-oliva-4-pecas-03-trama.png",
+    "sha256": "39cab33579532427018fc2787d999b44bcb9c5812736413c80a98870f0904ce6"
   },
   {
     "file": "mesa-2026-jogo-americano-natural-areia-6-pecas-01.png",
@@ -114,6 +194,16 @@
     "sha256": "168b726d02f9dc413d5c3f0c64addbe2980eeb708df5578fabda38820403842e"
   },
   {
+    "file": "mesa-2026-jogo-americano-natural-areia-6-pecas-03-trama.png",
+    "origin": "gerada com image_gen a partir da foto do próprio produto",
+    "position": 3,
+    "alt": "Jogo Americano Natural Areia 6 Peças — detalhe da trama e acabamento",
+    "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios.",
+    "product": "Jogo Americano Natural Areia 6 Peças",
+    "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-natural-areia-6-pecas-03-trama.png",
+    "sha256": "8a529dd6fe924c21f932f7ca3ed54a2356ca8c4a14f564aec5cec9d776d59d4c"
+  },
+  {
     "file": "mesa-2026-jogo-americano-terracota-6-pecas-01.png",
     "origin": "gerada com image_gen",
     "position": 1,
@@ -122,5 +212,15 @@
     "product": "Jogo Americano Terracota 6 Peças",
     "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-terracota-6-pecas-01.png",
     "sha256": "bfe00d084dcb05ae4b65892b011d2365a0648c2f550e7f20c055b07e22e031f9"
+  },
+  {
+    "file": "mesa-2026-jogo-americano-terracota-6-pecas-03-trama.png",
+    "origin": "gerada com image_gen a partir da foto do próprio produto",
+    "position": 3,
+    "alt": "Jogo Americano Terracota 6 Peças — detalhe da trama e acabamento",
+    "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios.",
+    "product": "Jogo Americano Terracota 6 Peças",
+    "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-terracota-6-pecas-03-trama.png",
+    "sha256": "c381c25af394e8f7dbd586026293e54430bc619d0b8bb5cb9cedb594570fabb9"
   }
 ]

@@ -22,8 +22,7 @@
       "Composição têxtil": "55% algodão e 45% linho",
       "Acabamento": "Bainha costurada",
       "Conteúdo": "1 toalha de mesa",
-      "catalog_import_key": "mesa-2026-toalha-de-mesa-natural-areia",
-      "catalog_slug": "toalha-de-mesa-natural-areia"
+      "catalog_import_key": "mesa-2026-toalha-de-mesa-natural-areia"
     },
     "summary": "Trama de algodão e linho em areia, com bainha costurada. 1 toalha de mesa.",
     "description": "Toalha de Mesa Natural Areia traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor areia permite coordenar a peça com outros itens da coleção Natural Areia. Dimensões: 140 × 220 cm. Acompanha 1 toalha de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
@@ -40,6 +39,13 @@
         "origin": "fornecida",
         "position": 2,
         "alt": "Toalha de Mesa Natural Areia — segunda vista"
+      },
+      {
+        "file": "mesa-2026-toalha-de-mesa-natural-areia-03-trama.png",
+        "origin": "gerada com image_gen a partir da foto do próprio produto",
+        "position": 3,
+        "alt": "Toalha de Mesa Natural Areia — detalhe da trama e acabamento",
+        "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios."
       }
     ]
   },
@@ -66,8 +72,7 @@
       "Composição têxtil": "55% algodão e 45% linho",
       "Acabamento": "Bainha costurada",
       "Conteúdo": "1 toalha de mesa",
-      "catalog_import_key": "mesa-2026-toalha-de-mesa-essencia-oliva",
-      "catalog_slug": "toalha-de-mesa-essencia-oliva"
+      "catalog_import_key": "mesa-2026-toalha-de-mesa-essencia-oliva"
     },
     "summary": "Trama de algodão e linho em verde oliva, com bainha costurada. 1 toalha de mesa.",
     "description": "Toalha de Mesa Essência Oliva traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor verde oliva permite coordenar a peça com outros itens da coleção Essência Oliva. Dimensões: 140 × 220 cm. Acompanha 1 toalha de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
@@ -79,6 +84,13 @@
         "position": 1,
         "alt": "Toalha de Mesa Essência Oliva — vista principal",
         "prompt": "Olive rectangular tablecloth 140 x 220 cm; woven cotton/linen, neutral room, no accessories"
+      },
+      {
+        "file": "mesa-2026-toalha-de-mesa-essencia-oliva-03-trama.png",
+        "origin": "gerada com image_gen a partir da foto do próprio produto",
+        "position": 3,
+        "alt": "Toalha de Mesa Essência Oliva — detalhe da trama e acabamento",
+        "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios."
       }
     ]
   },
@@ -105,8 +117,7 @@
       "Composição têxtil": "55% algodão e 45% linho",
       "Acabamento": "Bainha costurada",
       "Conteúdo": "1 toalha de mesa",
-      "catalog_import_key": "mesa-2026-toalha-de-mesa-terracota",
-      "catalog_slug": "toalha-de-mesa-terracota"
+      "catalog_import_key": "mesa-2026-toalha-de-mesa-terracota"
     },
     "summary": "Trama de algodão e linho em terracota, com bainha costurada. 1 toalha de mesa.",
     "description": "Toalha de Mesa Terracota traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor terracota permite coordenar a peça com outros itens da coleção Terracota. Dimensões: 140 × 220 cm. Acompanha 1 toalha de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
@@ -118,6 +129,13 @@
         "position": 1,
         "alt": "Toalha de Mesa Terracota — vista principal",
         "prompt": "one terracotta rectangular tablecloth 140 x 220 cm draped over a rectangular dining table, no other textiles"
+      },
+      {
+        "file": "mesa-2026-toalha-de-mesa-terracota-03-trama.png",
+        "origin": "gerada com image_gen a partir da foto do próprio produto",
+        "position": 3,
+        "alt": "Toalha de Mesa Terracota — detalhe da trama e acabamento",
+        "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios."
       }
     ]
   },
@@ -142,10 +160,9 @@
       "Dimensões": "40 × 180 cm",
       "Material": "Tecido misto de algodão e linho",
       "Composição têxtil": "55% algodão e 45% linho",
-      "Acabamento": "Bainha costurada",
+      "Acabamento": "Bainha costurada com detalhe vazado",
       "Conteúdo": "1 caminho de mesa",
-      "catalog_import_key": "mesa-2026-caminho-de-mesa-essencia-oliva",
-      "catalog_slug": "caminho-de-mesa-essencia-oliva"
+      "catalog_import_key": "mesa-2026-caminho-de-mesa-essencia-oliva"
     },
     "summary": "Trama de algodão e linho em verde oliva, com bainha costurada. 1 caminho de mesa.",
     "description": "Caminho de Mesa Essência Oliva traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor verde oliva permite coordenar a peça com outros itens da coleção Essência Oliva. Dimensões: 40 × 180 cm. Acompanha 1 caminho de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
@@ -162,6 +179,13 @@
         "origin": "fornecida",
         "position": 2,
         "alt": "Caminho de Mesa Essência Oliva — segunda vista"
+      },
+      {
+        "file": "mesa-2026-caminho-de-mesa-essencia-oliva-03-trama.png",
+        "origin": "gerada com image_gen a partir da foto do próprio produto",
+        "position": 3,
+        "alt": "Caminho de Mesa Essência Oliva — detalhe da trama e acabamento",
+        "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios."
       }
     ]
   },
@@ -188,8 +212,7 @@
       "Composição têxtil": "55% algodão e 45% linho",
       "Acabamento": "Bainha costurada",
       "Conteúdo": "1 caminho de mesa",
-      "catalog_import_key": "mesa-2026-caminho-de-mesa-natural-areia",
-      "catalog_slug": "caminho-de-mesa-natural-areia"
+      "catalog_import_key": "mesa-2026-caminho-de-mesa-natural-areia"
     },
     "summary": "Trama de algodão e linho em areia, com bainha costurada. 1 caminho de mesa.",
     "description": "Caminho de Mesa Natural Areia traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor areia permite coordenar a peça com outros itens da coleção Natural Areia. Dimensões: 40 × 180 cm. Acompanha 1 caminho de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
@@ -201,6 +224,13 @@
         "position": 1,
         "alt": "Caminho de Mesa Natural Areia — vista principal",
         "prompt": "one sand beige rectangular table runner 40 x 180 cm laid lengthwise on a bare wooden dining table, narrow runner only, no tablecloth or placemats"
+      },
+      {
+        "file": "mesa-2026-caminho-de-mesa-natural-areia-03-trama.png",
+        "origin": "gerada com image_gen a partir da foto do próprio produto",
+        "position": 3,
+        "alt": "Caminho de Mesa Natural Areia — detalhe da trama e acabamento",
+        "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios."
       }
     ]
   },
@@ -227,8 +257,7 @@
       "Composição têxtil": "55% algodão e 45% linho",
       "Acabamento": "Bainha costurada",
       "Conteúdo": "1 caminho de mesa",
-      "catalog_import_key": "mesa-2026-caminho-de-mesa-terracota",
-      "catalog_slug": "caminho-de-mesa-terracota"
+      "catalog_import_key": "mesa-2026-caminho-de-mesa-terracota"
     },
     "summary": "Trama de algodão e linho em terracota, com bainha costurada. 1 caminho de mesa.",
     "description": "Caminho de Mesa Terracota traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor terracota permite coordenar a peça com outros itens da coleção Terracota. Dimensões: 40 × 180 cm. Acompanha 1 caminho de mesa. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
@@ -240,6 +269,13 @@
         "position": 1,
         "alt": "Caminho de Mesa Terracota — vista principal",
         "prompt": "one terracotta rectangular table runner 40 x 180 cm laid lengthwise on a bare wooden dining table, narrow runner only, no tablecloth or placemats"
+      },
+      {
+        "file": "mesa-2026-caminho-de-mesa-terracota-03-trama.png",
+        "origin": "gerada com image_gen a partir da foto do próprio produto",
+        "position": 3,
+        "alt": "Caminho de Mesa Terracota — detalhe da trama e acabamento",
+        "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios."
       }
     ]
   },
@@ -266,8 +302,7 @@
       "Composição têxtil": "55% algodão e 45% linho",
       "Acabamento": "Bainha costurada",
       "Conteúdo": "4 jogos americanos",
-      "catalog_import_key": "mesa-2026-jogo-americano-terracota-4-pecas",
-      "catalog_slug": "jogo-americano-terracota-4-pecas"
+      "catalog_import_key": "mesa-2026-jogo-americano-terracota-4-pecas"
     },
     "summary": "Trama de algodão e linho em terracota, com bainha costurada. 4 jogos americanos.",
     "description": "Jogo Americano Terracota 4 Peças traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor terracota permite coordenar a peça com outros itens da coleção Terracota. Dimensões: 35 × 45 cm por peça. Acompanha 4 jogos americanos. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
@@ -284,6 +319,13 @@
         "origin": "fornecida",
         "position": 2,
         "alt": "Jogo Americano Terracota 4 Peças — segunda vista"
+      },
+      {
+        "file": "mesa-2026-jogo-americano-terracota-4-pecas-03-trama.png",
+        "origin": "gerada com image_gen a partir da foto do próprio produto",
+        "position": 3,
+        "alt": "Jogo Americano Terracota 4 Peças — detalhe da trama e acabamento",
+        "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios."
       }
     ]
   },
@@ -310,8 +352,7 @@
       "Composição têxtil": "55% algodão e 45% linho",
       "Acabamento": "Bainha costurada",
       "Conteúdo": "4 jogos americanos",
-      "catalog_import_key": "mesa-2026-jogo-americano-essencia-oliva-4-pecas",
-      "catalog_slug": "jogo-americano-essencia-oliva-4-pecas"
+      "catalog_import_key": "mesa-2026-jogo-americano-essencia-oliva-4-pecas"
     },
     "summary": "Trama de algodão e linho em verde oliva, com bainha costurada. 4 jogos americanos.",
     "description": "Jogo Americano Essência Oliva 4 Peças traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor verde oliva permite coordenar a peça com outros itens da coleção Essência Oliva. Dimensões: 35 × 45 cm por peça. Acompanha 4 jogos americanos. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
@@ -323,6 +364,13 @@
         "position": 1,
         "alt": "Jogo Americano Essência Oliva 4 Peças — vista principal",
         "prompt": "exactly four plain olive green rectangular placemats 35 x 45 cm each arranged separately on a bare wooden dining table, all four fully visible, no tablecloth or runner"
+      },
+      {
+        "file": "mesa-2026-jogo-americano-essencia-oliva-4-pecas-03-trama.png",
+        "origin": "gerada com image_gen a partir da foto do próprio produto",
+        "position": 3,
+        "alt": "Jogo Americano Essência Oliva 4 Peças — detalhe da trama e acabamento",
+        "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios."
       }
     ]
   },
@@ -349,8 +397,7 @@
       "Composição têxtil": "55% algodão e 45% linho",
       "Acabamento": "Bainha costurada",
       "Conteúdo": "6 jogos americanos",
-      "catalog_import_key": "mesa-2026-jogo-americano-natural-areia-6-pecas",
-      "catalog_slug": "jogo-americano-natural-areia-6-pecas"
+      "catalog_import_key": "mesa-2026-jogo-americano-natural-areia-6-pecas"
     },
     "summary": "Trama de algodão e linho em areia, com bainha costurada. 6 jogos americanos.",
     "description": "Jogo Americano Natural Areia 6 Peças traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor areia permite coordenar a peça com outros itens da coleção Natural Areia. Dimensões: 35 × 45 cm por peça. Acompanha 6 jogos americanos. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
@@ -362,6 +409,13 @@
         "position": 1,
         "alt": "Jogo Americano Natural Areia 6 Peças — vista principal",
         "prompt": "exactly six sand beige rectangular placemats 35 x 45 cm each arranged separately on a bare wooden dining table, all six fully visible, no tablecloth or runner"
+      },
+      {
+        "file": "mesa-2026-jogo-americano-natural-areia-6-pecas-03-trama.png",
+        "origin": "gerada com image_gen a partir da foto do próprio produto",
+        "position": 3,
+        "alt": "Jogo Americano Natural Areia 6 Peças — detalhe da trama e acabamento",
+        "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios."
       }
     ]
   },
@@ -388,8 +442,7 @@
       "Composição têxtil": "55% algodão e 45% linho",
       "Acabamento": "Bainha costurada",
       "Conteúdo": "6 jogos americanos",
-      "catalog_import_key": "mesa-2026-jogo-americano-terracota-6-pecas",
-      "catalog_slug": "jogo-americano-terracota-6-pecas"
+      "catalog_import_key": "mesa-2026-jogo-americano-terracota-6-pecas"
     },
     "summary": "Trama de algodão e linho em terracota, com bainha costurada. 6 jogos americanos.",
     "description": "Jogo Americano Terracota 6 Peças traz a textura natural do tecido misto de algodão e linho para os encontros à mesa. A cor terracota permite coordenar a peça com outros itens da coleção Terracota. Dimensões: 35 × 45 cm por peça. Acompanha 6 jogos americanos. Pratos, guardanapos, vasos e demais objetos de ambientação não acompanham o produto.",
@@ -401,6 +454,13 @@
         "position": 1,
         "alt": "Jogo Americano Terracota 6 Peças — vista principal",
         "prompt": "exactly six terracotta rectangular placemats 35 x 45 cm each arranged separately on a bare wooden dining table, all six fully visible, no tablecloth or runner"
+      },
+      {
+        "file": "mesa-2026-jogo-americano-terracota-6-pecas-03-trama.png",
+        "origin": "gerada com image_gen a partir da foto do próprio produto",
+        "position": 3,
+        "alt": "Jogo Americano Terracota 6 Peças — detalhe da trama e acabamento",
+        "prompt": "Macro da trama e canto do mesmo produto; preservar cor, tecido e acabamento; sem acessórios."
       }
     ]
   }

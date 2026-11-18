@@ -89,4 +89,12 @@ describe('CatalogService API mapping',()=>{
   expect(item.measurements?.['Contagem de fios']).toBe('200 fios');
   expect(item.measurements?.['Tecido externo']).toContain('100% algodão');
  });
+ it('preserves full decoration products inside image frames', () => {
+  TestBed.configureTestingModule({providers:[{provide:ProductService,useValue:{}}]});
+  const service=TestBed.inject(CatalogService);
+  const p=service.adapt({id:42,name:'Cortina',category_name:'Decoração',image_paths:['uploads/curtain.webp']} as Parameters<CatalogService['adapt']>[0]);
+  expect(p.images[0].fit).toBe('contain');
+  expect(p.images[0].url).toBe('http://localhost:8080/uploads/curtain.webp');
+ });
+
 });

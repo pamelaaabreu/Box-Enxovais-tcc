@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpUrlEncodingCodec } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { EMPTY, Observable, expand, map, reduce } from 'rxjs';
 
@@ -17,7 +17,13 @@ export class PaginationService {
   private readonly http = inject(HttpClient);
 
   getPage<T>(url: string, options: PageOptions = {}): Observable<Page<T>> {
-    let params = new HttpParams().set('offset', options.offset ?? 0).set('limit', options.limit ?? 20);
+    const encoder = new HttpUrlEncodingCodec();
+    let params = new HttpParams({ encoder: {
+      encodeKey: key => encoder.encodeKey(key),
+      encodeValue: value => encoder.encodeValue(value).replace(/;/g, '%3B'),
+      decodeKey: key => encoder.decodeKey(key),
+      decodeValue: value => encoder.decodeValue(value),
+    } }).set('offset', options.offset ?? 0).set('limit', options.limit ?? 20);
     for (const [field, value] of Object.entries(options.filters ?? {})) {
       if (field !== 'offset' && field !== 'limit') params = params.set(field, value);
     }

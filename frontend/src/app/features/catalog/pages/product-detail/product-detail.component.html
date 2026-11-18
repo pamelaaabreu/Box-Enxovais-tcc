@@ -109,7 +109,7 @@
               </div>
             </fieldset>
           }
-          @if (!product.variants.length && !['toalhas', 'almofadas'].includes(product.category.slug) && fixedSize(); as size) {
+          @if (!product.variants.length && !['toalhas', 'almofadas', 'decoracao'].includes(product.category.slug) && fixedSize(); as size) {
             <section aria-labelledby="product-size">
               <h2 id="product-size" class="measurement-title">Tamanho</h2>
               <span class="fixed-size">{{ size }}</span>

@@ -1,5 +1,5 @@
 @if (showImage()) {
-  <img [src]="image()!.url" [alt]="image()!.alt" [attr.srcset]="image()!.srcset ?? null"
+  <img [class.full-product]="image()?.fit === 'contain'" [src]="image()!.url" [alt]="image()!.alt" [attr.srcset]="image()!.srcset ?? null"
     [attr.sizes]="image()!.srcset ? (priority() ? '(max-width: 700px) 100vw, 50vw' : compact() ? '72px' : '(max-width: 600px) 45vw, 320px') : null" [attr.loading]="priority() ? 'eager' : 'lazy'" [attr.fetchpriority]="priority() ? 'high' : null" (error)="onImageError()" />
 } @else {
   <div class="media-placeholder" [class.compact]="compact()" [class.icon-only]="!showCaption()" role="img" [attr.aria-label]="image()?.alt ? 'Imagem indisponível: ' + image()!.alt : 'Imagem indisponível'">

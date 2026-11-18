@@ -15,6 +15,14 @@ describe('PaginationService', () => {
   });
   afterEach(() => http.verify());
 
+  it('encodes semicolons in material filters for the Go query parser', () => {
+    service.getPage('/products', { filters: { material: 'Poliéster; base antiderrapante' } }).subscribe();
+    const req = http.expectOne(r => r.url === '/products');
+    expect(req.request.urlWithParams).toContain('%3B');
+    expect(req.request.params.get('material')).toBe('Poliéster; base antiderrapante');
+    req.flush({ items: [], pagination: { offset: 0, limit: 20, total: 0, hasMore: false } });
+  });
+
   it('sends offset, limit and filters and preserves metadata', () => {
     service.getPage<number>('/products', { offset: 5, limit: 2, filters: { stock__gte: 1, name__contains: 'cama & banho' } })
       .subscribe(page => expect(page.pagination.total).toBe(8));

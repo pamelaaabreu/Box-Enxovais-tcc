@@ -34,6 +34,8 @@ func (service ProductService) ListTypes(ctx context.Context) ([]models.ProductTy
 
 // Filters are mapped to public database fields; internal/sensitive fields are never inferred from requests.
 var productFilterFields = map[string]pagination.FilterField{
+	"material":          {Column: "page.measurements->>'Material'", Kind: "text"},
+	"opacity":           {Column: "page.measurements->>'Opacidade'", Kind: "text"},
 	"id":                {Column: "page.id", Kind: "integer"},
 	"name":              {Column: "page.name", Kind: "text"},
 	"description":       {Column: "page.description", Kind: "text"},

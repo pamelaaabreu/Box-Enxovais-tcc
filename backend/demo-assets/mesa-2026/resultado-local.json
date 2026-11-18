@@ -1,0 +1,82 @@
+[
+  {
+    "id": 112,
+    "name": "Caminho de Mesa Essência Oliva",
+    "price_cents": 7990,
+    "stock": 12,
+    "images": 3,
+    "url": "http://localhost:4200/produto/112"
+  },
+  {
+    "id": 113,
+    "name": "Caminho de Mesa Natural Areia",
+    "price_cents": 7990,
+    "stock": 12,
+    "images": 2,
+    "url": "http://localhost:4200/produto/113"
+  },
+  {
+    "id": 114,
+    "name": "Caminho de Mesa Terracota",
+    "price_cents": 8490,
+    "stock": 10,
+    "images": 2,
+    "url": "http://localhost:4200/produto/114"
+  },
+  {
+    "id": 115,
+    "name": "Jogo Americano Essência Oliva 4 Peças",
+    "price_cents": 9990,
+    "stock": 12,
+    "images": 2,
+    "url": "http://localhost:4200/produto/115"
+  },
+  {
+    "id": 116,
+    "name": "Jogo Americano Natural Areia 6 Peças",
+    "price_cents": 13990,
+    "stock": 10,
+    "images": 2,
+    "url": "http://localhost:4200/produto/116"
+  },
+  {
+    "id": 117,
+    "name": "Jogo Americano Terracota 4 Peças",
+    "price_cents": 9990,
+    "stock": 12,
+    "images": 3,
+    "url": "http://localhost:4200/produto/117"
+  },
+  {
+    "id": 118,
+    "name": "Jogo Americano Terracota 6 Peças",
+    "price_cents": 13990,
+    "stock": 10,
+    "images": 2,
+    "url": "http://localhost:4200/produto/118"
+  },
+  {
+    "id": 119,
+    "name": "Toalha de Mesa Essência Oliva",
+    "price_cents": 15990,
+    "stock": 8,
+    "images": 2,
+    "url": "http://localhost:4200/produto/119"
+  },
+  {
+    "id": 120,
+    "name": "Toalha de Mesa Natural Areia",
+    "price_cents": 14990,
+    "stock": 10,
+    "images": 3,
+    "url": "http://localhost:4200/produto/120"
+  },
+  {
+    "id": 121,
+    "name": "Toalha de Mesa Terracota",
+    "price_cents": 15990,
+    "stock": 8,
+    "images": 2,
+    "url": "http://localhost:4200/produto/121"
+  }
+]

@@ -1,0 +1,162 @@
+[
+  {
+    "width": 1440,
+    "id": 132,
+    "name": "Tapete Bouclé Areia",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 1440,
+    "id": 140,
+    "name": "Tapete Saída de Box Ondas Areia",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 1440,
+    "id": 123,
+    "name": "Cortina Blackout Taupe",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 1440,
+    "id": 129,
+    "name": "Cortina Voil Branco Leve",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 1024,
+    "id": 132,
+    "name": "Tapete Bouclé Areia",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 1024,
+    "id": 140,
+    "name": "Tapete Saída de Box Ondas Areia",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 1024,
+    "id": 123,
+    "name": "Cortina Blackout Taupe",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 1024,
+    "id": 129,
+    "name": "Cortina Voil Branco Leve",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 768,
+    "id": 132,
+    "name": "Tapete Bouclé Areia",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 768,
+    "id": 140,
+    "name": "Tapete Saída de Box Ondas Areia",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 768,
+    "id": 123,
+    "name": "Cortina Blackout Taupe",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 768,
+    "id": 129,
+    "name": "Cortina Voil Branco Leve",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 390,
+    "id": 132,
+    "name": "Tapete Bouclé Areia",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 390,
+    "id": 140,
+    "name": "Tapete Saída de Box Ondas Areia",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 390,
+    "id": 123,
+    "name": "Cortina Blackout Taupe",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  },
+  {
+    "width": 390,
+    "id": 129,
+    "name": "Cortina Voil Branco Leve",
+    "images": 3,
+    "overflow": false,
+    "zoom": true,
+    "cep": true,
+    "uncropped": true
+  }
+]

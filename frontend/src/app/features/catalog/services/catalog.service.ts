@@ -34,6 +34,7 @@ export class CatalogService {
         const optimizedCover = url.endsWith('/cama-detalhe-023-2-capa-1448.jpg');
         return {
           id: index,
+          ...(name === 'Decoração' ? {fit: 'contain' as const} : {}),
           url,
           srcset: optimizedCover ? `${url.replace('-1448.jpg', '-640.jpg')} 640w, ${url} 1448w` : undefined,
           alt: variant ? `${product.name} — ${variant}` : product.name,

@@ -1,6 +1,15 @@
 // Keys match normalized JSONB color labels. Review new labels before assigning a swatch.
 export const CATALOG_SWATCHES: Readonly<Record<string, string>> = {
   areia: '#d6c0a4',
+  'azul sereno': '#758eaa',
+  perola: '#ece6dc',
+  taupe: '#9b8d82',
+  bege: '#d4c3a9',
+  cinza: '#929292',
+  grafite: '#454545',
+  preto: '#242424',
+  'preto e cinza': '#555555',
+  'grafite e preto': '#373737',
   oliva: '#636f40',
   nude: '#d2b5a6',
   'azul serenidade': '#597b98',
