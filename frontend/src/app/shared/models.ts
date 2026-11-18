@@ -34,6 +34,7 @@ export interface AddToPromotionRequest {
 }
 
 export interface CreatePromotionRequest {
+ description?:string;image_path?:string;home_featured?:boolean;
   name: string;
   status: string;
   start_date: string;

@@ -81,7 +81,18 @@ func (h OrderHistoryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if hasMore {
 		orders = orders[:pageSize]
 	}
-	response.Success(w, 200, "", map[string]any{"orders": orders, "hasMore": hasMore})
+	data := map[string]any{"orders": orders, "hasMore": hasMore}
+	if counter, ok := h.Store.(interface {
+		CountOrders(context.Context, int, models.OrderFilters) (int, error)
+	}); ok {
+		total, e := counter.CountOrders(r.Context(), userID, filters)
+		if e != nil {
+			response.Error(w, 500, "Não foi possível contar seus pedidos.")
+			return
+		}
+		data["total"] = total
+	}
+	response.Success(w, 200, "", data)
 }
 
 func (h OrderHistoryHandler) cancel(w http.ResponseWriter, r *http.Request, userID int, id int64) {

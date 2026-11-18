@@ -6,6 +6,7 @@ import (
 	"backend/src/services"
 	"encoding/json"
 	"errors"
+	"io"
 	"log"
 	"net/http"
 )
@@ -14,12 +15,18 @@ type PromotionHandler struct{ Service services.PromotionService }
 
 func (h PromotionHandler) CreatePromotion(w http.ResponseWriter, r *http.Request) {
 	var req models.CreatePromotionRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16384))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&req); err != nil || decoder.Decode(new(any)) != io.EOF {
 		response.Error(w, http.StatusBadRequest, "Requisição inválida")
 		return
 	}
 
 	promotionID, err := h.Service.Create(r.Context(), req)
+	if errors.Is(err, services.ErrPromotionInvalid) {
+		response.Error(w, 400, err.Error())
+		return
+	}
 	if err != nil {
 		log.Printf("Erro ao criar promoção: %v", err)
 		response.Error(w, http.StatusInternalServerError, "Erro ao criar promoção")
@@ -31,7 +38,9 @@ func (h PromotionHandler) CreatePromotion(w http.ResponseWriter, r *http.Request
 
 func (h PromotionHandler) AddProductToPromotion(w http.ResponseWriter, r *http.Request) {
 	var req models.AddToPromotionRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16384))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&req); err != nil || decoder.Decode(new(any)) != io.EOF {
 		response.Error(w, http.StatusBadRequest, "Requisição inválida")
 		return
 	}
@@ -39,6 +48,8 @@ func (h PromotionHandler) AddProductToPromotion(w http.ResponseWriter, r *http.R
 	err := h.Service.AddProduct(r.Context(), req)
 	if err != nil {
 		switch {
+		case errors.Is(err, services.ErrPromotionInvalid):
+			response.Error(w, 400, err.Error())
 		case errors.Is(err, services.ErrPromotionNotFound):
 			response.Error(w, http.StatusNotFound, "Promoção não encontrada ou inativa")
 		case errors.Is(err, services.ErrPromotionLookup):

@@ -1,3 +1,4 @@
+import { CARD_IMAGE_VARIANTS } from '../data/card-image-variants';
 import { PageOptions } from '../../../core/services/pagination.service';
 import { Injectable, inject } from '@angular/core';
 import { Observable, of, map, catchError, throwError } from 'rxjs';
@@ -36,6 +37,9 @@ export class CatalogService {
           id: index,
           ...(name === 'Decoração' ? {fit: 'contain' as const} : {}),
           url,
+          cardUrl: CARD_IMAGE_VARIANTS[url.slice(url.lastIndexOf('/') + 1)]
+            ? 'http://localhost:8080/uploads/' + CARD_IMAGE_VARIANTS[url.slice(url.lastIndexOf('/') + 1)]
+            : undefined,
           srcset: optimizedCover ? `${url.replace('-1448.jpg', '-640.jpg')} 640w, ${url} 1448w` : undefined,
           alt: variant ? `${product.name} — ${variant}` : product.name,
           position: index,

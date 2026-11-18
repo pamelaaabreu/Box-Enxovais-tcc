@@ -17,4 +17,5 @@ export class ProductPriceComponent {
   readonly showInstallments = input(true);
   readonly emphasized = input(false);
   readonly price = input.required<number>();
+ readonly originalPrice=input<number|null>(null);
 }

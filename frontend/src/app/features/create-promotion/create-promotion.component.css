@@ -2,9 +2,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: auto;
   padding: 2rem;
-  background: linear-gradient(135deg, #f2f2f2 0%, #e0e0e0 100%);
+  background: linear-gradient(135deg, #f6f4ee 0%, #dcded2 100%);
   box-sizing: border-box;
 }
 
@@ -18,7 +18,7 @@
   background: #ffffff;
   border-radius: 24px;
   overflow: hidden;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #dcded2;
   box-shadow:
     0 20px 40px rgba(16, 37, 66, 0.08),
     0 8px 16px rgba(16, 37, 66, 0.04);
@@ -29,7 +29,7 @@
     position: absolute;
     inset: 0 0 auto 0;
     height: 6px;
-    background: linear-gradient(90deg, #102542, #8b4513, #b5838d);
+    background: linear-gradient(90deg, #3d4836, #667255, #d9c9a8);
   }
 }
 
@@ -40,7 +40,7 @@
   align-items: center;
   gap: 1.25rem;
   padding: 2rem;
-  background: linear-gradient(135deg, #102542, #091322);
+  background: linear-gradient(135deg, #3d4836, #526047);
 }
 
 .header-icon {
@@ -96,12 +96,12 @@ form {
     align-items: center;
     gap: 0.6rem;
 
-    color: #102542;
+    color: #3d4836;
     font-weight: 600;
     font-size: 0.95rem;
 
     .mat-icon {
-      color: #8b4513;
+      color: #667255;
       font-size: 20px;
       width: 20px;
       height: 20px;
@@ -115,10 +115,10 @@ form {
 
     padding: 0 1rem;
 
-    border: 1px solid #e0e0e0;
+    border: 1px solid #dcded2;
     border-radius: 14px;
 
-    background: #f2f2f2;
+    background: #f6f4ee;
     color: hsl(215, 61%, 16%);
     font-size: 0.95rem;
     font-weight: 500;
@@ -132,7 +132,7 @@ form {
 
     &:focus {
       outline: none;
-      border-color: #8b4513;
+      border-color: #667255;
       background: #ffffff;
 
       box-shadow: 0 0 0 4px rgba(139, 69, 19, 0.12);
@@ -158,7 +158,7 @@ button[type="submit"] {
   border: none;
   border-radius: 14px;
 
-  background: linear-gradient(135deg, #102542, #091322);
+  background: linear-gradient(135deg, #3d4836, #526047);
 
   color: #ffffff;
 
@@ -235,3 +235,5 @@ button[type="submit"] {
  
 
 
+
+.form-group textarea,.form-group mat-select{display:block;box-sizing:border-box;width:100%;padding:12px;border:1px solid #a0a68f;border-radius:12px;background:#fffdf8;color:#3d4836;font:14px Montserrat,sans-serif;min-height:48px}.form-group textarea{min-height:100px;resize:vertical}.form-group textarea:focus-visible,.form-group mat-select:focus-visible{outline:2px solid #667255;outline-offset:2px}.form-group input[type=checkbox]{width:18px;height:18px;margin-right:8px;accent-color:#3d4836}.button-container button:disabled{opacity:.5;cursor:default}

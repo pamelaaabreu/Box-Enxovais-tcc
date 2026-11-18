@@ -110,4 +110,19 @@ describe('ProductCardComponent', () => {
     fixture.detectChanges();
     expect(button.textContent).toContain('Adicionar ao carrinho');
   });
+  it('keeps one compact image proportion for every category and uses a card photograph without changing the gallery', () => {
+    const image={id:1,url:'/original-square.webp',cardUrl:'/landscape-card.webp',alt:'Tapete inteiro',position:0,fit:'contain' as const};
+    const {fixture,host}=setup({...product,images:[image]},true);
+    expect(getComputedStyle(host.querySelector('.media')!).aspectRatio).toBe('4 / 3');
+    expect(fixture.componentInstance.cardImage()?.url).toBe('/landscape-card.webp');
+    expect(fixture.componentInstance.product().images[0].url).toBe('/original-square.webp');
+    expect(host.querySelector('img')?.getAttribute('src')).toBe('/landscape-card.webp');
+    for(const name of ['Cama','Travesseiros','Toalhas','Almofadas','Mesa','Decoração']){
+      fixture.componentRef.setInput('product',{...product,category:{id:1,name,slug:name},images:[]});fixture.detectChanges();
+      expect(getComputedStyle(host.querySelector('.media')!).aspectRatio).toBe('4 / 3');
+    }
+    fixture.componentRef.setInput('compact',true);fixture.detectChanges();
+    expect(getComputedStyle(host.querySelector('.media')!).aspectRatio).toBe('4 / 3');
+  });
+
 });

@@ -32,6 +32,9 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class ProductCardComponent {
   readonly compact = input(false);
+ readonly promotion=input(false);
+ readonly discounted=computed(()=>this.promotion()&&Number.isFinite(this.product().promotional_price)&&this.product().promotional_price>=0&&this.product().promotional_price<this.product().price&&!this.product().variants.length);
+ readonly displayPrice=computed(()=>this.discounted()?this.product().promotional_price:this.product().price);
   readonly catalogTile = input(false);
   readonly product = input.required<CatalogProduct>();
   readonly cart = inject(CartService);
@@ -40,6 +43,10 @@ export class ProductCardComponent {
   );
   readonly productType = computed(() => this.product().measurements?.['Tipo']?.trim()
     || this.product().category?.name?.split('/').at(-1)?.trim());
+  readonly cardImage = computed(() => {
+    const image = this.product().images[0];
+    return image?.cardUrl ? { ...image, url: image.cardUrl, srcset: undefined } : image ?? null;
+  });
 
   readonly available = computed(
     () => this.product().active && this.product().quantity > 0,

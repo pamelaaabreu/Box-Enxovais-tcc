@@ -1,0 +1,11 @@
+{
+  "paginationKeyboard": true,
+  "roundedVisibleFocus": true,
+  "widths": [
+    1440,
+    1024,
+    768,
+    390
+  ],
+  "isolated": true
+}

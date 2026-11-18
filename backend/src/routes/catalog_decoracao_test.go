@@ -109,6 +109,17 @@ func TestCatalogDecoracaoPostgres(t *testing.T) {
 		exec("ROLLBACK")
 		exec(mig("000044_decor_cover_journal_cascade", "down"))
 		exec(mig("000044_decor_cover_journal_cascade", "up"))
+		geometryBefore := read("SELECT jsonb_agg(to_jsonb(i) ORDER BY id)::text FROM product_images i")
+		exec(mig("000046_decor_rug_geometry", "up"))
+		if read("SELECT count(*)::text FROM product_images WHERE image_path LIKE 'uploads/decoracao-tapete-046-%'") != "7" {
+			t.Fatal("geometry covers")
+		}
+		exec(mig("000046_decor_rug_geometry", "down"))
+		if read("SELECT jsonb_agg(to_jsonb(i) ORDER BY id)::text FROM product_images i") != geometryBefore {
+			t.Fatal("geometry rollback")
+		}
+		exec(mig("000046_decor_rug_geometry", "up"))
+		exec(mig("000046_decor_rug_geometry", "down"))
 		exec(coverDown)
 	})
 	InitRoutesProducts(mux, handlers.ProductHandler{Service: services.ProductService{Store: repositories.ProductRepository{DB: d}}}, handlers.ProductImageHandler{})

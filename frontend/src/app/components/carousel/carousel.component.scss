@@ -8,9 +8,26 @@
   background: #f8f5ec;
 }
 
+.carousel-inner {
+  display: grid;
+}
+
+.carousel-item {
+  display: block;
+  grid-area: 1 / 1;
+  margin-right: 0;
+  visibility: hidden;
+}
+
+.carousel-item.active,
+.carousel-item-next,
+.carousel-item-prev {
+  visibility: visible;
+}
+
 .carousel-item>img {
   width: 100%;
-  aspect-ratio: 1896 / 829;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -20,7 +37,7 @@
 }
 
 .hero-artwork {
-  aspect-ratio: 1644 / 665;
+  aspect-ratio: 1896 / 829;
   overflow: hidden;
 }
 
@@ -28,7 +45,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: fill;
+  object-fit: cover;
 }
 
 .hero-copy> :not(.hero-cta),
@@ -73,6 +90,12 @@
   border-radius: 50%;
   background: #3f4937;
   background-clip: content-box;
+}
+
+.carousel-indicators button:focus-visible {
+  outline: 2px solid #3f4937;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #fffdf8;
 }
 
 @media (max-width: 700px) {

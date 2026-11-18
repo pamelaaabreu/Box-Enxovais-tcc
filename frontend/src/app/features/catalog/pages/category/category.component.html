@@ -206,43 +206,7 @@
               </section>
             }
             @if (criteria().offset || page()?.hasMore) {
-              <nav
-                class="catalog-pagination"
-                aria-label="Paginação de produtos"
-              >
-                <button
-                  type="button"
-                  aria-label="Página anterior"
-                  [disabled]="pageNumber() <= 1 || !page()"
-                  (click)="goToPage(pageNumber() - 1)"
-                >
-                  <mat-icon aria-hidden="true">chevron_left</mat-icon>
-                </button>
-                @for (item of paginationItems(); track item) {
-                  @if (typeof item === "number") {
-                    <button
-                      type="button"
-                      [attr.aria-label]="'Página ' + item"
-                      [attr.aria-current]="
-                        pageNumber() === item ? 'page' : null
-                      "
-                      (click)="goToPage(item)"
-                    >
-                      {{ item }}
-                    </button>
-                  } @else {
-                    <span aria-hidden="true">…</span>
-                  }
-                }
-                <button
-                  type="button"
-                  aria-label="Próxima página"
-                  [disabled]="!page()?.hasMore"
-                  (click)="goToPage(pageNumber() + 1)"
-                >
-                  <mat-icon aria-hidden="true">chevron_right</mat-icon>
-                </button>
-              </nav>
+              <app-pagination [page]="pageNumber()" [total]="page()?.total || 0" [pageSize]="12" (pageChange)="goToPage($event)" />
             }
           </div>
         </div>

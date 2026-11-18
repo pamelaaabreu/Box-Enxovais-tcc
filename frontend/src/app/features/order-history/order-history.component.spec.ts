@@ -1,3 +1,4 @@
+import {PurchaseReviewComponent} from '../purchase-review/purchase-review.component';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
 import { CustomAlertService } from '../../core/services/custom-alert.service';
@@ -25,7 +26,7 @@ describe('OrderHistoryComponent', () => {
         { provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap(id ? {id} : {})) } },
       ],
     }).overrideComponent(OrderHistoryComponent, {
-      remove: { imports: [CatalogLayoutComponent] },
+      remove: { imports: [CatalogLayoutComponent,PurchaseReviewComponent] },
       add: { schemas: [CUSTOM_ELEMENTS_SCHEMA] },
     });
     const navigate = spyOn(TestBed.inject(Router), 'navigate').and.resolveTo(true);
@@ -59,7 +60,7 @@ describe('OrderHistoryComponent', () => {
     }, {
       id: 8, createdAt: '2025-01-01T15:00:00Z', total: 30,
       items: ['Manta', 'Lençol', 'Fronha', 'Capa'].map((name, id) => ({ id: id + 4, name, quantity: 1, unitPrice: 7.5, image: '' })),
-    }], hasMore: true } });
+    }], hasMore: true, total:12 } });
     fixture.detectChanges();
     const cards = page.querySelectorAll('.orders-grid .order-preview');
     expect(cards.length).toBe(2);
@@ -72,10 +73,10 @@ describe('OrderHistoryComponent', () => {
     expect(cards[1].textContent).toContain('+ 2 produtos neste pedido');
     expect(page.textContent).not.toContain('Aprovado em simulação');
     expect(page.querySelector('.order a')?.getAttribute('href')).toBe('/meus-pedidos/9');
-    page.querySelector<HTMLButtonElement>('.orders-more button')!.click();
+    page.querySelector<HTMLButtonElement>('app-pagination [aria-label="Próxima página"]')!.click();
     fixture.detectChanges();
-    expect(page.querySelectorAll('.order-preview').length).toBe(2);
-    expect(page.querySelector('.orders-more button[disabled]')).not.toBeNull();
+    expect(page.querySelectorAll('.order-preview').length).toBe(0);
+    expect(page.textContent).toContain('Carregando');
     http.expectOne('http://localhost:8080/orders?page=2').flush({ data: { orders: [], hasMore: false } });
     http.verify();
   });

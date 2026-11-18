@@ -1,0 +1,6 @@
+import {TestBed} from '@angular/core/testing';
+import {Subject} from 'rxjs';
+import {AddToPromotionComponent} from './add-to-promotion.component';
+import {PromoService} from '../../core/services/promo.service';
+import {CustomAlertService} from '../../core/services/custom-alert.service';
+describe('AddToPromotionComponent',()=>{it('accepts a configured zero price, avoids duplicate requests and preserves data after errors',()=>{const result=new Subject<unknown>();const add=jasmine.createSpy().and.returnValue(result);const alerts={success:jasmine.createSpy(),error:jasmine.createSpy()};TestBed.configureTestingModule({providers:[{provide:PromoService,useValue:{addProductToPromotion:add}},{provide:CustomAlertService,useValue:alerts}]});const f=TestBed.createComponent(AddToPromotionComponent);f.componentInstance.promotionData={product_id:132,promotion_name:'Natal',promotional_price:0};f.componentInstance.onSubmit();f.componentInstance.onSubmit();expect(add).toHaveBeenCalledTimes(1);expect(add.calls.mostRecent().args[0].promotional_price).toBe(0);result.error({error:{message:'Confira os dados'}});expect(f.componentInstance.saving).toBeFalse();expect(f.componentInstance.promotionData.product_id).toBe(132);expect(alerts.error).toHaveBeenCalled()})});

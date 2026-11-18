@@ -1,11 +1,11 @@
 <div class="promotion-form">
   <h2>Adicionar Produto à Promoção</h2>
-  <form (ngSubmit)="onSubmit()">
+  <form #promotionForm="ngForm" (ngSubmit)="onSubmit()">
     <div>
       <label for="product_id">ID do Produto:</label>
       <input
         type="number"
-        id="product_id"
+        id="product_id" min="1"
         [(ngModel)]="promotionData.product_id"
         name="product_id"
         required
@@ -27,7 +27,7 @@
       <label for="promo_price">Preço Promocional:</label>
       <input
         type="number"
-        id="promo_price"
+        id="promo_price" min="0"
         [(ngModel)]="promotionData.promotional_price"
         name="promotional_price"
         step="0.01"
@@ -35,6 +35,6 @@
       />
     </div>
 
-    <button type="submit">Adicionar Produto</button>
+    <p>Preços de campanha são aplicáveis a produtos sem opções de tamanho.</p><button type="submit" [disabled]="saving || promotionForm.invalid">{{saving?'Adicionando…':'Adicionar produto'}}</button>
   </form>
 </div>

@@ -23,6 +23,7 @@ const routes: Routes = [
     canActivate: [AdminGuard],
 
     children: [
+ {path:"experience-reviews",loadComponent:()=>import("./experience-reviews.component").then(m=>m.ExperienceReviewsComponent)},
       {
         path: '',
         redirectTo: 'dashboard',

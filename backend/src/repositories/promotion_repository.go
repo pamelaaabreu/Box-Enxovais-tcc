@@ -10,8 +10,8 @@ type PromotionRepository struct{ DB *sql.DB }
 
 func (repo PromotionRepository) Create(ctx context.Context, request models.CreatePromotionRequest) (int, error) {
 	var id int
-	err := repo.DB.QueryRowContext(ctx, `INSERT INTO promotions (name, status, start_date, end_date)
- VALUES ($1, $2, $3, $4) RETURNING id`, request.Name, request.Status, request.StartDate, request.EndDate).Scan(&id)
+	err := repo.DB.QueryRowContext(ctx, `INSERT INTO promotions (name, status, start_date, end_date,description,image_path,home_featured)
+ VALUES ($1, $2, $3, $4,$5,$6,$7) RETURNING id`, request.Name, request.Status, request.StartDate, request.EndDate, request.Description, request.ImagePath, request.HomeFeatured).Scan(&id)
 	return id, err
 }
 

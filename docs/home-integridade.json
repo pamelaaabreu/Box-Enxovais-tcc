@@ -1,0 +1,15 @@
+{
+  "cart_items": 1,
+  "checkout_orders": 0,
+  "dirty": false,
+  "favorites": 1,
+  "invalid_new_constraints": 0,
+  "orphan_images": 0,
+  "product_images": 357,
+  "product_variants": 66,
+  "products": 97,
+  "promotions": 0,
+  "purchase_experience_reviews": 0,
+  "version": 46,
+  "visual_test_schemas": 0
+}

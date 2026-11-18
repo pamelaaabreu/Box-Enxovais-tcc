@@ -1,3 +1,4 @@
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { NotFoundComponent } from '../../../not-found/not-found.component';
@@ -43,7 +44,7 @@ interface CategoryData {
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [
+  imports: [PaginationComponent,
     MatSelectModule,
     MatIconModule,
     RouterLink,
@@ -339,23 +340,6 @@ export class CategoryComponent {
   readonly pageCount = computed(() =>
     Math.ceil((this.page()?.total ?? 0) / this.pageSize),
   );
-  readonly paginationItems = computed(() => {
-    const last = this.pageCount();
-    const current = this.pageNumber();
-    if (last <= 5) return Array.from({ length: last }, (_, index) => index + 1);
-    if (current <= 3) return [1, 2, 3, 4, 'end-gap', last] as const;
-    if (current >= last - 2)
-      return [1, 'start-gap', last - 3, last - 2, last - 1, last] as const;
-    return [
-      1,
-      'start-gap',
-      current - 1,
-      current,
-      current + 1,
-      'end-gap',
-      last,
-    ] as const;
-  });
 
   goToPage(page: number | 'start-gap' | 'end-gap'): void {
     if (

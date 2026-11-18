@@ -1,0 +1,16 @@
+{
+  "campaignCreatedByUI": true,
+  "campaignCartPrice": 149.9,
+  "favoriteRemovedByUI": true,
+  "singular": true,
+  "empty": true,
+  "emptyCTA": true,
+  "keyboardStatus": true,
+  "widths": [
+    1440,
+    1024,
+    768,
+    390
+  ],
+  "isolated": true
+}

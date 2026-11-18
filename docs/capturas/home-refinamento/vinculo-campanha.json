@@ -1,0 +1,12 @@
+{
+  "campaignProductLinkedByUI": true,
+  "configuredPrice": 159.9,
+  "basePriceUnchanged": true,
+  "isolated": true,
+  "widths": [
+    1440,
+    1024,
+    768,
+    390
+  ]
+}

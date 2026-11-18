@@ -79,7 +79,7 @@ func run() error {
 		Store: repositories.ProductImageRepository{DB: database}, Directory: cfg.UploadDir,
 	}}
 	promotions := handlers.PromotionHandler{Service: services.PromotionService{
-		Store: repositories.PromotionRepository{DB: database},
+		Store: repositories.PromotionRepository{DB: database}, UploadDir: cfg.UploadDir,
 	}}
 
 	favorites := handlers.FavoritesHandler{Service: services.FavoritesService{
@@ -125,6 +125,7 @@ func run() error {
 	mux.HandleFunc("GET /checkout/success/{id}", middlewares.AuthMiddleware(checkout.ServeHTTP))
 	routes.InitRoutesFavorites(mux, favorites)
 	routes.InitRoutesProducts(mux, products, images)
+	routes.InitRoutesHome(mux, handlers.HomeHandler{Store: repositories.HomeRepository{DB: database}})
 	routes.InitRoutesShipping(mux, database)
 	routes.InitRoutesNewsletter(mux, newsletter)
 	routes.InitRoutesPromotions(mux, promotions, products)

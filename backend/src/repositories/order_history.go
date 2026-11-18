@@ -117,3 +117,13 @@ func readOrders(ctx context.Context, db orderReader, userID, limit, offset int, 
 	}
 	return orders, nil
 }
+
+func (repo CheckoutRepository) CountOrders(ctx context.Context, userID int, filters models.OrderFilters) (int, error) {
+	term := strings.TrimPrefix(filters.Search, "#")
+	digits := term != "" && strings.Trim(term, "0123456789") == ""
+	id, _ := strconv.ParseInt(term, 10, 64)
+	pattern := "%" + strings.NewReplacer(`\`, `\\`, "%", `\%`, "_", `\_`).Replace(filters.Search) + "%"
+	var total int
+	e := repo.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM checkout_orders orders WHERE user_id=$1 AND ($2::timestamptz IS NULL OR created_at>=$2) AND ($3::timestamptz IS NULL OR created_at<$3) AND (NOT $4::boolean OR status='cancelled') AND ($5::text='' OR ($6 AND orders.id=$7) OR (NOT $6 AND EXISTS(SELECT 1 FROM checkout_order_items i WHERE i.order_id=orders.id AND i.name ILIKE $8 ESCAPE '\')))`, userID, filters.From, filters.Until, filters.CancelledOnly, filters.Search, digits, id, pattern).Scan(&total)
+	return total, e
+}

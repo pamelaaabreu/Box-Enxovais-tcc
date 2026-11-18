@@ -1,0 +1,70 @@
+[
+  {
+    "width": 1440,
+    "localHome": true,
+    "categories": 6,
+    "overflow": false
+  },
+  {
+    "width": 1024,
+    "localHome": true,
+    "categories": 6,
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "localHome": true,
+    "categories": 6,
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "localHome": true,
+    "categories": 6,
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "isolated": true,
+    "review": true,
+    "moderation": true,
+    "campaign": true,
+    "favoritesPagination": true,
+    "ordersPagination": true,
+    "adminPagination": true,
+    "overflow": false
+  },
+  {
+    "width": 1024,
+    "isolated": true,
+    "review": true,
+    "moderation": true,
+    "campaign": true,
+    "favoritesPagination": true,
+    "ordersPagination": true,
+    "adminPagination": true,
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "isolated": true,
+    "review": true,
+    "moderation": true,
+    "campaign": true,
+    "favoritesPagination": true,
+    "ordersPagination": true,
+    "adminPagination": true,
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "isolated": true,
+    "review": true,
+    "moderation": true,
+    "campaign": true,
+    "favoritesPagination": true,
+    "ordersPagination": true,
+    "adminPagination": true,
+    "overflow": false
+  }
+]

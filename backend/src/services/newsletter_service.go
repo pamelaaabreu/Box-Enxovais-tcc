@@ -27,21 +27,7 @@ func (service NewsletterService) Subscribe(ctx context.Context, email string) er
 	if service.Client == nil {
 		return ErrNewsletterConfiguration
 	}
-	from := mail.NewEmail("Pamela Abreu", "vitoria201547@gmail.com")
-	to := mail.NewEmail("", email)
-	subject := "Bem-vindo à Box Enxovais! 🎉"
-	htmlContent := `
-		<div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
-		  <h2>Obrigado por se inscrever!</h2>
-		  <p>Como prometido, aqui está seu cupom de 10% de desconto para sua primeira compra.</p>
-		  <p style="font-size: 24px; font-weight: bold; color: #8b4513; border: 2px dashed #8b4513; padding: 10px; margin: 20px auto; max-width: 200px;">
-			BEMVINDO10
-		  </p>
-		  <p>Aproveite!</p>
-		  <p><strong>Equipe Box Enxovais</strong></p>
-		</div>
-	`
-	message := mail.NewSingleEmail(from, subject, to, "Use o cupom BEMVINDO10", htmlContent)
+	message := newsletterMessage(email)
 
 	response, err := service.Client.SendWithContext(ctx, message)
 	if err != nil {
@@ -56,4 +42,11 @@ func (service NewsletterService) Subscribe(ctx context.Context, email string) er
 		log.Println("Newsletter subscriber persistence failed")
 	}
 	return nil
+}
+
+func newsletterMessage(email string) *mail.SGMailV3 {
+	from := mail.NewEmail("Box Enxovais", "vitoria201547@gmail.com")
+	to := mail.NewEmail("", email)
+	html := `<div style="font-family:Montserrat,Arial,sans-serif;color:#3d4836;padding:24px"><h2>Obrigado por se inscrever!</h2><p>Sua inscrição foi recebida. Acompanhe novidades e campanhas da loja.</p><p>Equipe Box Enxovais</p></div>`
+	return mail.NewSingleEmail(from, "Bem-vindo à Box Enxovais", to, "Sua inscrição foi recebida. Acompanhe novidades e campanhas da loja.", html)
 }

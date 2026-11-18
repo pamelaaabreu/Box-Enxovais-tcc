@@ -10,7 +10,7 @@
     </div>
   </div>
 
-  <form (ngSubmit)="onSubmit()">
+  <form #campaignForm="ngForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="promo-name">
         <mat-icon>local_offer</mat-icon>
@@ -20,7 +20,7 @@
       <input
         type="text"
         id="promo-name"
-        name="name"
+        name="name" maxlength="255"
         placeholder="Ex: Black Friday 2026"
         [(ngModel)]="promotionData.name"
         required
@@ -28,15 +28,15 @@
     </div>
 
     <div class="form-group">
-      <label for="status">
+      <label id="campaign-status-label">
         <mat-icon>toggle_on</mat-icon>
         Status
       </label>
 
-      <select id="status" name="status" [(ngModel)]="promotionData.status">
-        <option value="active">Ativa</option>
-        <option value="inactive">Inativa</option>
-      </select>
+      <mat-select id="status" name="status" [(ngModel)]="promotionData.status" aria-labelledby="campaign-status-label" panelClass="box-form-options">
+        <mat-option value="active">Ativa</mat-option>
+        <mat-option value="inactive">Inativa</mat-option>
+      </mat-select>
     </div>
 
     <div class="form-group">
@@ -68,10 +68,13 @@
         required
       />
     </div>
+    <div class="form-group"><label for="campaign-description">Descrição da campanha</label><textarea id="campaign-description" name="description" maxlength="2000" [(ngModel)]="promotionData.description" [required]="!!promotionData.home_featured"></textarea></div>
+    <div class="form-group"><label for="campaign-image">Imagem cadastrada (caminho uploads/arquivo.webp)</label><input id="campaign-image" name="image_path" [(ngModel)]="promotionData.image_path" [required]="!!promotionData.home_featured" placeholder="uploads/campanha-natal.webp" /></div>
+    <div class="form-group"><label><input type="checkbox" name="home_featured" [(ngModel)]="promotionData.home_featured" /> Apresentar na Home durante a vigência</label></div>
     <div class="button-container">
-      <button type="submit">
+      <button type="submit" [disabled]="saving || campaignForm.invalid">
         <mat-icon>add_circle</mat-icon>
-        Criar Promoção
+        {{saving?'Salvando…':'Criar Promoção'}}
       </button>
     </div>
   </form>

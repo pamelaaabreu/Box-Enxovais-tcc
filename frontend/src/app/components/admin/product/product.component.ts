@@ -1,3 +1,4 @@
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { CurrencyPipe, DecimalPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import {
@@ -29,7 +30,7 @@ registerLocaleData(localePt);
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [
+  imports: [PaginationComponent,
     CurrencyPipe,
     DecimalPipe,
     ReactiveFormsModule,
@@ -123,7 +124,7 @@ export class ProductComponent {
     this.applyFilters();
   }
 
-  changePage(direction: -1 | 1): void {
+  changePage(direction: number): void {
     const meta = this.page()?.pagination;
     if (
       !meta ||

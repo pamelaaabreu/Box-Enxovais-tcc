@@ -1,0 +1,81 @@
+{
+  "images": [
+    {
+      "code": "grafite-preto",
+      "filename": "decoracao-tapete-046-grafite-preto-capa.webp",
+      "sha256": "986b4a5a74051f1a772a3235e18e47edd5cdc338b924e8226011bbf27406a923",
+      "width": 1254,
+      "height": 1254,
+      "dimensions_cm": [
+        45,
+        70
+      ]
+    },
+    {
+      "code": "canelado-creme",
+      "filename": "decoracao-tapete-046-canelado-creme-capa.webp",
+      "sha256": "7d3e7dccee4eb79e170379426dcd0046f09bff9f73cea053e353e3d0b16da774",
+      "width": 1254,
+      "height": 1254,
+      "dimensions_cm": [
+        45,
+        70
+      ]
+    },
+    {
+      "code": "moldura-oliva",
+      "filename": "decoracao-tapete-046-moldura-oliva-capa.webp",
+      "sha256": "0eb27175d5469cf94c059a6537ca1f045622c02dbd8195ec14c97c51621758fb",
+      "width": 1254,
+      "height": 1254,
+      "dimensions_cm": [
+        45,
+        70
+      ]
+    },
+    {
+      "code": "ondas-areia",
+      "filename": "decoracao-tapete-046-ondas-areia-capa.webp",
+      "sha256": "c74e5922a07c4f10412bfadcbc18a70c3a69d1dbfa0dc4f63d556ccdc75c8293",
+      "width": 1254,
+      "height": 1254,
+      "dimensions_cm": [
+        45,
+        70
+      ]
+    },
+    {
+      "code": "trelica-azul",
+      "filename": "decoracao-tapete-046-trelica-azul-capa.webp",
+      "sha256": "ede8e0e5773ed90a42682dff772d89becebe6161add9d5272aeec45db0738242",
+      "width": 1254,
+      "height": 1254,
+      "dimensions_cm": [
+        45,
+        70
+      ]
+    },
+    {
+      "code": "ondas-terracota",
+      "filename": "decoracao-tapete-046-ondas-terracota-capa.webp",
+      "sha256": "c68085b07c324d9b34c188f63ec1711600cf55bba8904e5ff25e8f0ab94ddd17",
+      "width": 1254,
+      "height": 1254,
+      "dimensions_cm": [
+        45,
+        70
+      ]
+    },
+    {
+      "code": "losangos-preto",
+      "filename": "decoracao-tapete-046-losangos-preto-capa.webp",
+      "sha256": "7d0876765fac2ca943a9895863a2d2d2baae192d1d6245bf7b7a2ff1be7b95a9",
+      "width": 1254,
+      "height": 1254,
+      "dimensions_cm": [
+        45,
+        70
+      ]
+    }
+  ]
+}

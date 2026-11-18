@@ -171,6 +171,8 @@
               <a class="action" routerLink="/home">Continuar comprando</a>
             </div>
           </header>
+          @if(order.canCancel && order.status==='simulated_approved'){<app-purchase-review [orderId]="order.id" />}
+
           <div class="detail-grid">
             <section class="order detail-panel detail-products">
               <h2>
@@ -545,26 +547,8 @@
               >
             </div>
           }
-          @if (orders().length && hasMore()) {
-            <div class="orders-more">
-              @if (loadMoreError()) {
-                <p role="alert">
-                  Não foi possível carregar mais pedidos. Tente novamente.
-                </p>
-              }
-              <button
-                type="button"
-                [disabled]="loadingMore()"
-                (click)="movePage(1)"
-              >
-                @if (loadingMore()) {
-                  <span role="status">Carregando pedidos…</span>
-                } @else {
-                  Carregar mais pedidos
-                }
-              </button>
-            </div>
-          }
+          @if(orders().length && totalOrders()>10){<app-pagination [page]="page()" [total]="totalOrders()" [pageSize]="10" [disabled]="state()!=='ready'" (pageChange)="goToOrderPage($event)" />}
+
         }
       }
     }

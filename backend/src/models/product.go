@@ -40,10 +40,13 @@ type Product struct {
 }
 
 type CreatePromotionRequest struct {
-	Name      string `json:"name"`
-	Status    string `json:"status"`
-	StartDate string `json:"start_date"`
-	EndDate   string `json:"end_date"`
+	Description  string `json:"description"`
+	ImagePath    string `json:"image_path"`
+	HomeFeatured bool   `json:"home_featured"`
+	Name         string `json:"name"`
+	Status       string `json:"status"`
+	StartDate    string `json:"start_date"`
+	EndDate      string `json:"end_date"`
 }
 
 type AddToPromotionRequest struct {

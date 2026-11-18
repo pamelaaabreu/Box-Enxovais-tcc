@@ -172,26 +172,7 @@
             </tbody>
           </table>
         </div>
-        <nav class="pagination" aria-label="Paginar produtos">
-          <span>Página {{ currentPage() }} de {{ totalPages() }}</span>
-          <div>
-            <button
-              type="button"
-              class="secondary-button"
-              (click)="changePage(-1)"
-              [disabled]="loading() || result.pagination.offset === 0"
-            >
-              Anterior</button
-            ><button
-              type="button"
-              class="secondary-button"
-              (click)="changePage(1)"
-              [disabled]="loading() || !result.pagination.hasMore"
-            >
-              Próxima
-            </button>
-          </div>
-        </nav>
+        <app-pagination [page]="currentPage()" [total]="result.pagination.total" [pageSize]="result.pagination.limit" [disabled]="loading()" (pageChange)="changePage($event-currentPage())" />
       } @else {
         <div class="state">
           <h2>Nenhum produto encontrado</h2>

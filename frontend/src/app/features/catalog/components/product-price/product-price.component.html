@@ -1,3 +1,4 @@
+@if(originalPrice()!==null){<del>{{originalPrice()|currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</del>}
 <strong>{{ price() | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR" }}</strong>
 @if (showInstallments()) {
   <span

@@ -38,11 +38,11 @@ describe('Favorites page', () => {
    { id: 1, name: 'Sem estoque', price: 10, quantity: 0, status: 'active', measurements: {} },
    { id: 2, name: 'Arquivado', price: 10, quantity: 5, status: 'archived', measurements: {} },
   ] as Product[], pagination: { offset: 0, limit: 20, total: 2, hasMore: false } }); fixture.detectChanges();
-  const purchases: HTMLButtonElement[] = [...fixture.nativeElement.querySelectorAll('.actions button:first-child')];
+  const purchases: HTMLButtonElement[] = [...fixture.nativeElement.querySelectorAll('.card-actions button')];
   expect(purchases.length).toBe(2); expect(purchases.every(button => button.disabled)).toBeTrue();
   const inactiveLink = fixture.nativeElement.querySelectorAll('app-product-card')[1].querySelector('h2 .product-link');
   expect(inactiveLink.getAttribute('href')).toBeNull(); expect(inactiveLink.closest('app-product-card')!.querySelector('button[disabled]')).not.toBeNull();
-  fixture.nativeElement.querySelectorAll('.remove')[1].click(); expect(favorites.remove).toHaveBeenCalledWith(2);
+  fixture.nativeElement.querySelectorAll('app-favorite-button button')[1].click(); expect(favorites.toggle).toHaveBeenCalledWith(2);
   fixture.destroy(); expect(favorites.closePage).toHaveBeenCalled();
  });
 });

@@ -1,3 +1,5 @@
+import {PaginationComponent} from '../../shared/components/pagination/pagination.component';
+import {PurchaseReviewComponent} from '../purchase-review/purchase-review.component';
 import { ConfirmDialogService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
 import {
   CurrencyPipe,
@@ -72,6 +74,7 @@ interface Details extends Order {
 }
 
 interface OrderPage {
+ total?:number;
   orders: Order[];
   hasMore: boolean;
 }
@@ -79,7 +82,7 @@ interface OrderPage {
 @Component({
   selector: 'app-order-history',
   standalone: true,
-  imports: [
+  imports: [PaginationComponent,PurchaseReviewComponent,
     CatalogLayoutComponent,
     RouterLink,
     CurrencyPipe,
@@ -122,6 +125,7 @@ export class OrderHistoryComponent {
   private readonly router = inject(Router);
   private readonly reload = new BehaviorSubject<void>(undefined);
   readonly page = signal(1);
+ readonly totalOrders=signal(0);
   readonly search = signal('');
   readonly searchDraft = signal('');
   private readonly searchInput = new Subject<{value: string; immediate: boolean}>();
@@ -232,6 +236,7 @@ export class OrderHistoryComponent {
           });
           this.loadingMore.set(false);
           this.hasMore.set(data.hasMore);
+ this.totalOrders.set(data.total ?? data.orders.length);
         } else {
           this.state.set('error');
           return;
@@ -319,6 +324,10 @@ export class OrderHistoryComponent {
     if (!this.invalidDates() && this.state() === 'error') this.reload.next();
   }
 
+  goToOrderPage(page:number):void{
+ if(this.state()!=='ready'||!Number.isSafeInteger(page)||page<1||page>Math.ceil(this.totalOrders()/10)||page===this.page())return;
+ this.loadingMore.set(false);this.page.set(page);this.reload.next();
+ }
   movePage(delta: -1 | 1): void {
     if (
       this.loadingMore() ||

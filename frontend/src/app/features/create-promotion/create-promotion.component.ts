@@ -1,3 +1,5 @@
+import {MatSelectModule} from '@angular/material/select';
+import {CustomAlertService} from '../../core/services/custom-alert.service';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CreatePromotionRequest } from '../../shared/models';
@@ -9,9 +11,10 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './create-promotion.component.html',
   styleUrl: './create-promotion.component.css',
   standalone: true,
-  imports: [FormsModule, MatIconModule]
+  imports: [FormsModule, MatIconModule,MatSelectModule]
 })
 export class CreatePromotionComponent {
+ saving=false;
   promotionData: CreatePromotionRequest = {
     name: '',
     status: 'active',
@@ -19,17 +22,19 @@ export class CreatePromotionComponent {
     end_date: new Date().toISOString().slice(0, 16)
   };
 
-  constructor(private promoService: PromoService) { }
+  constructor(private promoService: PromoService,private alerts:CustomAlertService) { }
 
   onSubmit(): void {
+ if(this.saving)return;this.saving=true;
     this.promoService.createPromotion(this.promotionData).subscribe({
       next: (response) => {
-        alert('Promoção criada com sucesso!');
+ this.saving=false;
+        this.alerts.success('Promoção criada','A campanha foi cadastrada.');
         this.resetForm();
       },
       error: (error) => {
-        console.error('Erro ao criar promoção:', error);
-        alert('Erro ao criar promoção. Verifique o console para mais detalhes.');
+ this.saving=false;
+        this.alerts.error('Não foi possível criar a campanha',error.error?.message||'Tente novamente.');
       }
     });
   }

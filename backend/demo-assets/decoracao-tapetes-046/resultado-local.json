@@ -1,0 +1,23 @@
+{
+  "version": 46,
+  "dirty": false,
+  "products_unchanged": 97,
+  "variants_unchanged": 66,
+  "new_primary_images": 7,
+  "http_200": 7,
+  "integrity": {
+    "cart_items": 1,
+    "checkout_orders": 0,
+    "dirty": false,
+    "favorites": 1,
+    "invalid_new_constraints": 0,
+    "orphan_images": 0,
+    "product_images": 357,
+    "product_variants": 66,
+    "products": 97,
+    "promotions": 0,
+    "purchase_experience_reviews": 0,
+    "version": 46,
+    "visual_test_schemas": 0
+  }
+}

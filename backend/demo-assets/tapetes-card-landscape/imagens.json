@@ -1,0 +1,60 @@
+{
+  "images": [
+    {
+      "code": "canelado-creme",
+      "filename": "decoracao-tapete-046-canelado-creme-capa-card.webp",
+      "source": "decoracao-tapete-046-canelado-creme-capa.webp",
+      "sha256": "aa511978b5b767d859a0b587523f52416faf0a2d85abda1b64309e27ef0509e6",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "code": "moldura-oliva",
+      "filename": "decoracao-tapete-046-moldura-oliva-capa-card.webp",
+      "source": "decoracao-tapete-046-moldura-oliva-capa.webp",
+      "sha256": "bd319f09e348a39b39edf766821e1cb4001b5d2c20424cb3a5586f194d5f5e0f",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "code": "losangos-preto",
+      "filename": "decoracao-tapete-046-losangos-preto-capa-card.webp",
+      "source": "decoracao-tapete-046-losangos-preto-capa.webp",
+      "sha256": "085021846846e3a96051b8f06b47d90e7e798eb43b977ed262e5e20686909659",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "code": "ondas-terracota",
+      "filename": "decoracao-tapete-046-ondas-terracota-capa-card.webp",
+      "source": "decoracao-tapete-046-ondas-terracota-capa.webp",
+      "sha256": "800663b3337a513df889b1721a1374d22aa95580bac924e941935b52a87f02d3",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "code": "trelica-azul",
+      "filename": "decoracao-tapete-046-trelica-azul-capa-card.webp",
+      "source": "decoracao-tapete-046-trelica-azul-capa.webp",
+      "sha256": "884dadfca713a827a490155901bfe9199926d7fdc3af32cc9bb138d861e7db44",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "code": "ondas-areia",
+      "filename": "decoracao-tapete-046-ondas-areia-capa-card.webp",
+      "source": "decoracao-tapete-046-ondas-areia-capa.webp",
+      "sha256": "49972a968e3a3fed13d49af72916dabeef0864c876d48dff8c5d56f1363610d3",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "code": "grafite-preto",
+      "filename": "decoracao-tapete-046-grafite-preto-capa-card.webp",
+      "source": "decoracao-tapete-046-grafite-preto-capa.webp",
+      "sha256": "e2e12c07a2d609aace92eaba845881a90cf6e17c82554129b3f320c4a116f0d7",
+      "width": 1448,
+      "height": 1086
+    }
+  ]
+}

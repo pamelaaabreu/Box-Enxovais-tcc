@@ -19,7 +19,7 @@ article {
 }
 .media {
   display: block;
-  aspect-ratio: 1.25;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 16px;
 }
@@ -96,7 +96,7 @@ h2 {
 }
 .card-actions {
   display: grid;
-  gap: 8px;
+  gap: 6px;
   margin-top: auto;
   padding-top: 2px;
 }
@@ -162,15 +162,15 @@ article.compact {
   box-shadow: none;
 }
 .compact .media {
-  aspect-ratio: 1;
-  border-radius: 14px;
+  border-radius: 15px;
 }
 .compact .information {
   gap: 4px;
-  padding: 8px 0 0;
+  padding: 9px 0 0;
 }
 .compact h2 {
   font-size: 14px;
+  min-block-size: 2lh;
 }
 @media (prefers-reduced-motion: reduce) {
   .card-actions button,
@@ -196,8 +196,8 @@ article.compact {
   outline-offset: -3px;
 }
 .catalog-tile .information {
-  padding: 12px 13px 13px;
-  gap: 7px;
+  padding: 10px 12px 12px;
+  gap: 5px;
 }
 .catalog-tile h2 {
   font-size: 14px;
@@ -222,7 +222,7 @@ article.compact {
 }
 .catalog-tile .card-actions {
   grid-template-columns: minmax(0, 1fr);
-  padding-top: 3px;
+  padding-top: 2px;
 }
 .catalog-tile .card-actions button,
 .catalog-tile .card-actions a {
@@ -249,9 +249,6 @@ article.compact {
 
 
 
-.compact .media { aspect-ratio: 5 / 4; border-radius: 15px; }
-.compact .information { padding: 9px 0 0; }
-.compact h2 { min-block-size: 2lh; }
 .compact h2 a { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .compact app-product-price { margin-top: auto; --product-price-size: 16px; --product-price-weight: 700; }
 .recommendation-type {
@@ -308,3 +305,12 @@ article.compact {
 .product-brand { display: block; color: #596655; font-size: 12px; font-weight: 500; line-height: 1.4; overflow-wrap: anywhere; }
 
 .compact .product-brand { color: #414d3b; font-weight: 500; }
+
+@container (min-width: 290px) {
+  .catalog-tile .card-actions {
+    grid-template-columns: minmax(max-content, 1fr) minmax(max-content, 1.2fr);
+  }
+}
+.card-actions > button:first-child {
+  grid-column: 1 / -1;
+}

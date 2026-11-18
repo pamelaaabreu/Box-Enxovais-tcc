@@ -1,3 +1,4 @@
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FavoritesService } from '../../core/services/favorites.service';
@@ -8,7 +9,7 @@ import { ProductCardComponent } from '../catalog/components/product-card/product
 
 @Component({
  selector: 'app-favorites', standalone: true,
- imports: [RouterLink, CatalogLayoutComponent, ProductCardComponent],
+ imports: [PaginationComponent,RouterLink, CatalogLayoutComponent, ProductCardComponent],
  templateUrl: './favorites.component.html', styleUrl: './favorites.component.css',
  changeDetection: ChangeDetectionStrategy.OnPush,
 })

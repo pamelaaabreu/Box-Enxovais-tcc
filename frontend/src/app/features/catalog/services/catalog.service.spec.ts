@@ -97,4 +97,13 @@ describe('CatalogService API mapping',()=>{
   expect(p.images[0].url).toBe('http://localhost:8080/uploads/curtain.webp');
  });
 
+ it('adds an optional wide card rendition while retaining all original gallery URLs',()=>{
+  TestBed.configureTestingModule({providers:[{provide:ProductService,useValue:{}}]});
+  const service=TestBed.inject(CatalogService);
+  const p=service.adapt({id:136,name:'Tapete',category_name:'Decoração',image_paths:['uploads/decoracao-tapete-046-canelado-creme-capa.webp','uploads/ambientacao.webp']} as Parameters<CatalogService['adapt']>[0]);
+  expect(p.images[0].url).toBe('http://localhost:8080/uploads/decoracao-tapete-046-canelado-creme-capa.webp');
+  expect(p.images[0].cardUrl).toBe('http://localhost:8080/uploads/decoracao-tapete-046-canelado-creme-capa-card.webp');
+  expect(p.images[1].cardUrl).toBeUndefined();
+ });
+
 });
