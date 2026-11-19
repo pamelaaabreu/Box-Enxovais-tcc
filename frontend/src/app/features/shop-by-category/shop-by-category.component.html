@@ -1,1 +1,39 @@
-<section class="category-section" aria-labelledby="categories-heading"><h2 id="categories-heading">{{titulo}}</h2><div class="category-grid">@for(category of categories();track category.slug){<a [routerLink]="['/categoria',category.slug]" class="category-card">@if(category.imagePath){<img [src]="'http://localhost:8080/'+category.imagePath" [alt]="category.name" loading="lazy" />}<span>{{category.name}}</span></a>}</div></section>
+<section class="category-section" aria-labelledby="categories-heading">
+  <header class="category-heading">
+    <h2 id="categories-heading">{{ titulo }}</h2>
+    <p>Descubra nossas coleções e transforme cada ambiente da sua casa.</p>
+  </header>
+  <div class="category-grid">
+    @for (category of categories(); track category.slug) {
+      <a
+        [routerLink]="['/categoria', category.slug]"
+        class="category-card"
+        [attr.aria-label]="'Explorar categoria ' + category.name"
+      >
+        @if (category.imagePath) {
+          <img
+            [src]="'http://localhost:8080/' + category.imagePath"
+            alt=""
+            loading="lazy"
+          />
+        }
+        <span class="category-caption">
+          <span class="category-name">{{ category.name }}</span>
+          <svg
+            class="category-arrow"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M7 17 17 7M7 7h10v10" />
+          </svg>
+        </span>
+      </a>
+    }
+  </div>
+</section>

@@ -5,14 +5,18 @@
 <main class="home-content">
   <app-carousel></app-carousel>
 
+  <app-trust-bar></app-trust-bar>
+
   <app-shop-by-category
-    [titulo]="'Compre por categoria'"
+    [titulo]="'Compre por Categoria'"
   ></app-shop-by-category>
+
   <app-featured-products
     id="colecao"
     ngSkipHydration
     [titulo]="'Produtos em destaque'"
   ></app-featured-products>
+
   <section class="collection-grid" aria-label="Explore nossas coleções">
     @for (category of collections(); track category.slug) {
       <a class="collection-banner" [routerLink]="['/categoria', category.slug]">

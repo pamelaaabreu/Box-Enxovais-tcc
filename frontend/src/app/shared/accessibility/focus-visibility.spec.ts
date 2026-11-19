@@ -23,7 +23,7 @@ describe('keyboard focus visibility', () => {
   expect((scroll.calls.mostRecent().args as unknown as [ScrollToOptions])[0]).toEqual({top:-60,behavior:'instant'});
   expect(document.activeElement).toBe(button);
  });
- it('does not scroll mouse focus or controls inside dialogs', () => {
+ it('does not scroll mouse focus', () => {
   const scroll = spyOn(window,'scrollBy');
   spyOn(button,'matches').and.returnValue(false);
   revealKeyboardFocus(button,document);

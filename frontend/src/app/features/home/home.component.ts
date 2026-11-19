@@ -1,3 +1,4 @@
+import { TrustBarComponent } from '../../components/trust-bar/trust-bar.component';
 import {
   Component,
   HostListener,
@@ -31,6 +32,7 @@ import { NewsletterComponent } from '../newsletter/newsletter.component';
     CommonModule,
     MainNavbarComponent,
     CarouselComponent,
+    TrustBarComponent,
     TopWelcomeHeaderComponent,
     TopNavbarComponent,
     FeaturedProductsComponent,

@@ -125,8 +125,8 @@ interface ShippingQuote {
     }
     #quote-cep:focus {
       border-color: #526047;
-      outline: 2px solid #667255;
-      outline-offset: 1px;
+      outline: 2px solid var(--box-focus-color);
+      outline-offset: var(--box-focus-offset);
     }
     #quote-cep:-webkit-autofill {
       -webkit-text-fill-color: #3d4836;
@@ -136,7 +136,7 @@ interface ShippingQuote {
       border-color: #a2402f;
     }
     #quote-cep[aria-invalid='true']:focus-visible {
-      outline-color: #a2402f;
+      outline-color: var(--box-focus-color);
     }
     button {
       background: #3d4836;
@@ -147,7 +147,7 @@ interface ShippingQuote {
       opacity: 0.7;
     }
     :focus-visible {
-      outline: 2px solid #667255;
+      outline: 2px solid var(--box-focus-color);
       outline-offset: 2px;
     }
     p {

@@ -1,22 +1,308 @@
-.registrations { max-width: 1080px; margin: auto; display: grid; gap: 16px; }
-.in-dialog { padding: 20px; max-height: 85dvh; overflow: auto; }
-header, li, .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
-header, li { justify-content: space-between; }
-h2, p { margin: 0; }
-h2 { font-size: 26px; font-weight: 600; }
-label { display: grid; gap: 6px; max-width: 420px; font-size: 14px; font-weight: 500; }
-input { width: 100%; min-height: 46px; padding: 8px 12px; border: 1px solid #d8dccf; border-radius: 12px; background: #fffdf8; color: inherit; font: inherit; }
-input:focus-visible { outline: 2px solid #667255; outline-offset: 1px; }
-ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-li, .editor, .empty { background: #fffdf8; padding: 14px; border-radius: 14px; border: 1px solid #dde1d5; }
-li > div { min-width: 0; overflow-wrap: anywhere; }
-small { display: block; color: #56604e; }
-.editor, .empty { display: grid; justify-items: start; gap: 10px; }
-.editor label { width: 100%; }
-[role=alert] { color: #a2402f; }
-.primary { --mdc-filled-button-container-color: #3d4836; --mdc-filled-button-label-text-color: white; }
-.shipping-fields { border: 0; margin: 0; padding: 0; width: 100%; min-width: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px; }
-.shipping-fields legend { margin-bottom: 10px; font-weight: 600; }
-.shipping-fields .shipping-check { display: flex; align-items: center; }
-.shipping-check input { width: auto; min-height: 20px; accent-color: #3d4836; }
-select { min-height: 46px; border: 1px solid #d8dccf; border-radius: 12px; background: #fffdf8; padding: 8px 12px; font: inherit; color: inherit; }
+:host {
+  display: block;
+  min-width: 0;
+  color: #28352d;
+  font-family: Montserrat, sans-serif;
+}
+
+.registrations {
+  box-sizing: border-box;
+  width: min(100%, 1360px);
+  margin: 0 auto;
+  padding: clamp(20px, 3vw, 44px) clamp(16px, 2.6vw, 36px);
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+.registrations *,
+.registrations *::before,
+.registrations *::after {
+  box-sizing: border-box;
+}
+
+.registrations.in-dialog {
+  width: 100%;
+  padding: 24px;
+  max-height: 85dvh;
+  overflow: auto;
+}
+
+.registrations header,
+.registrations li,
+.registrations .actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.registrations header,
+.registrations li {
+  justify-content: space-between;
+}
+
+.registrations h2,
+.registrations h3,
+.registrations p {
+  margin: 0;
+}
+
+.registrations h2 {
+  font-size: clamp(24px, 2.2vw, 32px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+.registrations h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.registration-heading {
+  min-height: 52px;
+  flex-wrap: wrap;
+}
+.heading-copy {
+  display: grid;
+  gap: 5px;
+}
+.heading-copy p {
+  color: #687266;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.registrations label {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+  max-width: 460px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.registrations input:not([type="checkbox"]),
+.registrations select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 1px solid #d9ded3;
+  border-radius: 12px;
+  background: #fffdf8;
+  color: #28352d;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.registrations input::placeholder {
+  color: #93998e;
+}
+.registrations input:focus-visible,
+.registrations select:focus-visible {
+  border-color: #667255;
+  box-shadow: 0 0 0 3px rgba(102, 114, 85, 0.13);
+}
+
+.registrations input:disabled,
+.registrations select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.registration-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: end;
+}
+.registration-filters .search-field {
+  max-width: 460px;
+}
+.search-input-wrap {
+  display: block;
+}
+
+.registrations ul {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.registrations li,
+.registrations .editor,
+.registrations .empty {
+  min-width: 0;
+  padding: 18px 20px;
+  background: #fffdf8;
+  border: 1px solid #dfe3d8;
+  border-radius: 16px;
+}
+
+.registrations li {
+  min-height: 88px;
+}
+.registrations li > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.registrations strong {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.registrations small {
+  display: block;
+  color: #657061;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.registrations .actions {
+  flex-wrap: wrap;
+}
+.item-actions {
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+.registrations .editor,
+.registrations .empty {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+}
+
+.registrations .editor {
+  padding: 22px;
+}
+.registrations .editor label {
+  max-width: 560px;
+}
+.editor-heading {
+  margin-bottom: 2px;
+}
+.registrations .feedback {
+  color: #657061;
+  font-size: 14px;
+}
+.registrations [role="alert"] {
+  color: #a2402f;
+  font-size: 14px;
+}
+
+.registrations .primary {
+  --mdc-filled-button-container-color: #3d4836;
+  --mdc-filled-button-label-text-color: #fff;
+}
+
+.registrations button[mat-flat-button],
+.registrations button[mat-stroked-button] {
+  min-height: 42px;
+  padding-inline: 20px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.registrations button[mat-stroked-button] {
+  --mdc-outlined-button-outline-color: #c4cbbd;
+  --mdc-outlined-button-label-text-color: #3d4836;
+}
+
+/* Faixas de CEP: mantém os campos e comportamentos existentes. */
+.shipping-fields {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 16px;
+}
+.shipping-fields legend {
+  margin-bottom: 16px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.shipping-fields label {
+  max-width: none;
+}
+.shipping-fields .shipping-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  align-self: end;
+  min-height: 46px;
+}
+.shipping-check input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #3d4836;
+}
+
+@media (max-width: 680px) {
+  .registrations {
+    gap: 18px;
+    padding: 20px 16px;
+  }
+  .registrations.in-dialog {
+    padding: 18px 14px;
+  }
+  .registration-heading {
+    align-items: flex-start;
+  }
+  .heading-actions {
+    width: 100%;
+  }
+  .heading-actions .primary {
+    flex: 1;
+  }
+  .registration-filters .search-field {
+    max-width: none;
+  }
+  .registrations li {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+  }
+  .item-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+  .item-actions button {
+    flex: 1;
+  }
+  .registrations .editor {
+    padding: 18px 16px;
+  }
+  .shipping-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .registrations input,
+  .registrations select {
+    transition: none;
+  }
+}
