@@ -1,31 +1,65 @@
-<section class="newsletter-section">
+<section class="newsletter-section" aria-labelledby="newsletter-title">
   <div class="newsletter-container">
-    <div class="newsletter-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/>
-      </svg>
+    <div class="newsletter-info">
+      <div class="newsletter-icon" aria-hidden="true">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="m3 6 9 7 9-7" />
+        </svg>
+      </div>
+
+      <div class="newsletter-content">
+        <h2 id="newsletter-title">Assine nossa newsletter</h2>
+        <p>
+          Novidades e inspirações para deixar sua casa ainda mais acolhedora.
+        </p>
+      </div>
     </div>
-    <div class="newsletter-content">
-      <h2>Assine nossa newsletter</h2>
-      <p>Cadastre seu e-mail para acompanhar novidades e campanhas da loja.</p>
-    </div>
+
     <div class="newsletter-form">
       <form (ngSubmit)="onSubmit(newsletterForm)" #newsletterForm="ngForm">
         <input
-          aria-label="Seu e-mail para receber novidades"
-          autocomplete="email"
+          id="newsletter-email"
           type="email"
           name="email"
+          autocomplete="email"
+          aria-label="Seu e-mail para receber novidades"
           placeholder="Digite seu e-mail"
           ngModel
           required
           email
           class="wide-email-input"
-        >
-        <button type="submit" [disabled]="!newsletterForm.valid || isLoading">
-          {{ isLoading ? 'Enviando...' : 'Cadastrar' }}
+        />
+
+        <button type="submit" [disabled]="newsletterForm.invalid || isLoading">
+          <span>
+            {{ isLoading ? "Enviando..." : "Inscrever-se" }}
+          </span>
+
+          <svg
+            *ngIf="!isLoading"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14" />
+            <path d="m13 6 6 6-6 6" />
+          </svg>
         </button>
       </form>
-      </div>
+    </div>
   </div>
 </section>

@@ -4,14 +4,9 @@ import {
   HostListener,
   ViewEncapsulation,
   inject,
-  computed,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { RouterLink } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { catchError, of } from 'rxjs';
-import { CatalogService } from '../catalog/services/catalog.service';
-import { Product } from '../../shared/models';
+import { CampaignService } from '../../core/services/campaign.service';
+import { CampaignComponent } from '../campaign/campaign.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { CommonModule } from '@angular/common';
@@ -37,7 +32,7 @@ import { NewsletterComponent } from '../newsletter/newsletter.component';
     TopNavbarComponent,
     FeaturedProductsComponent,
     ShopByCategoryComponent,
-    RouterLink,
+    CampaignComponent,
     NewsletterComponent,
     FooterComponent,
   ],
@@ -45,39 +40,7 @@ import { NewsletterComponent } from '../newsletter/newsletter.component';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class HomeComponent {
-  readonly catalogAdapter = inject(CatalogService);
-  private readonly http = inject(HttpClient);
-  private readonly categories = toSignal(
-    this.http
-      .get<
-        { name: string; slug: string; imagePath: string }[]
-      >('http://localhost:8080/home/categories')
-      .pipe(catchError(() => of([]))),
-    { initialValue: [] },
-  );
-  readonly collections = computed(() =>
-    ['cama', 'toalhas'].flatMap((slug) =>
-      this.categories().filter(
-        (category) => category.slug === slug && category.imagePath,
-      ),
-    ),
-  );
-  private readonly catalog = toSignal(
-    this.http
-      .get<{ items: Product[] }>('http://localhost:8080/products?limit=100')
-      .pipe(catchError(() => of({ items: [] }))),
-    { initialValue: { items: [] } },
-  );
-  readonly qualityProduct = computed(() =>
-    this.catalog().items.find(
-      (product) =>
-        product.status === 'active' &&
-        product.image_paths?.length &&
-        product.measurements?.['Material'] &&
-        product.measurements?.['Composição têxtil'] &&
-        product.measurements?.['Acabamento'],
-    ),
-  );
+  readonly campaigns = inject(CampaignService);
   isScrolled = false;
 
   @HostListener('window:scroll', [])

@@ -9,7 +9,7 @@ import { CustomAlertService } from '../../core/services/custom-alert.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './newsletter.component.html',
-  styleUrl: './newsletter.component.css',
+  styleUrl: './newsletter.component.scss',
 })
 export class NewsletterComponent {
   successMessage: string = '';

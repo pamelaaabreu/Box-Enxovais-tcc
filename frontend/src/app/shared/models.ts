@@ -1,4 +1,5 @@
 export interface Product {
+  sku?: string;
   id?: number;
   name: string;
   description?: string;
@@ -25,6 +26,7 @@ export interface Product {
     simulated?: boolean;
   }>;
   promotional_price: number;
+  promotion_active?: boolean;
 }
 
 export interface AddToPromotionRequest {
@@ -33,7 +35,12 @@ export interface AddToPromotionRequest {
   promotional_price?: number;
 }
 
+export interface PromotionParticipant {product_id:number; promotional_price?:number;}
+export interface PromotionRecord extends CreatePromotionRequest {id:number;}
+export interface HomeCampaign {id:number;name:string;description:string;imagePath:string;startDate:string;endDate:string;products:Product[];}
+
 export interface CreatePromotionRequest {
+ products?:PromotionParticipant[];
  description?:string;image_path?:string;home_featured?:boolean;
   name: string;
   status: string;

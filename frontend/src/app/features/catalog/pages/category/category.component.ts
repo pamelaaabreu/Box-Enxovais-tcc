@@ -307,7 +307,7 @@ export class CategoryComponent {
                       },
                     });
                   const filters: Record<string, string | number> = {};
-                  if (search) filters['name__contains'] = search;
+                  if (search) filters['search__contains'] = search;
                   if (maxPrice) filters['price__lte'] = maxPrice;
                   if (available) filters['stock__gte'] = 1;
                   if (color) filters['color'] = color;

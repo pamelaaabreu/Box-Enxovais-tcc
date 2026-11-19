@@ -12,7 +12,6 @@ import { AdminGuard } from '../../core/guards/admin.guard';
 
 import { ProductManageComponent } from '../../features/product-manage/product-manage.component';
 import { CreatePromotionComponent } from '../../features/create-promotion/create-promotion.component';
-import { AddToPromotionComponent } from '../../features/add-to-promotion/add-to-promotion.component';
 
 import { CatalogRegistrationComponent } from './catalog-registration.component';
 
@@ -57,15 +56,12 @@ const routes: Routes = [
       {
         path: 'promotions',
         children: [
-          {
-            path: 'create',
-            component: CreatePromotionComponent,
-          },
-
-          {
-            path: 'add-product',
-            component: AddToPromotionComponent,
-          },
+          { path: '', pathMatch: 'full', component: CreatePromotionComponent, data: { listing: true } },
+          { path: 'create', pathMatch: 'full', redirectTo: 'new' },
+          { path: 'add-product', pathMatch: 'full', redirectTo: '' },
+          { path: 'new', component: CreatePromotionComponent, canDeactivate: [(page: CreatePromotionComponent) => page.canLeave()] },
+          { path: ':id/edit', component: CreatePromotionComponent, canDeactivate: [(page: CreatePromotionComponent) => page.canLeave()] },
+          { path: ':id', component: CreatePromotionComponent, data: { readonly: true } },
         ],
       },
       {

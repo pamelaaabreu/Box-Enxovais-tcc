@@ -71,6 +71,12 @@ describe('Product stock experience',()=>{
   http.expectOne(r => r.url === 'http://localhost:8080/favorites').flush({items:[],pagination:{offset:0,limit:100,total:0,hasMore:false}});
   fixture.detectChanges();return fixture;
  }
+ it('shows the external product SKU separately from title and variant SKU', () => {
+  product.sku='BX-CAM-042';
+  const fixture=render();
+  expect(fixture.nativeElement.querySelector('.product-sku').textContent).toContain('SKU: BX-CAM-042');
+  expect(fixture.nativeElement.querySelector('h1').textContent).toBe('Produto');
+ });
  [0,1,5,6,40].forEach(stock=>it(`shows availability for ${stock} units`,()=>{
   product.stock=stock;
   const fixture=render();

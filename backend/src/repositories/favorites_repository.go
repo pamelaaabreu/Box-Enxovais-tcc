@@ -14,7 +14,7 @@ var ErrFavoriteProductUnavailable = errors.New("Este produto não está disponí
 type FavoritesRepository struct{ DB *sql.DB }
 
 func (repo FavoritesRepository) List(ctx context.Context, userID int, query pagination.PageQuery) (pagination.Page[models.Product], error) {
-	source := "SELECT " + storeProductColumns + ",0 AS promotional_price" + storeProductSource +
+	source := "SELECT " + storeProductColumns + "," + storePromotionalPrice + storeProductSource +
 		" JOIN favorites f ON f.product_id=p.id WHERE f.user_id=$1"
 	return pagination.ReadPage(ctx, repo.DB, source, []any{userID}, query, "page.id", scanStoreProduct)
 }

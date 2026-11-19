@@ -23,7 +23,8 @@ const storeProductColumns = `p.id,p.name,p.description,p.care_instructions,
  'image_paths',COALESCE((SELECT json_agg(i.image_path ORDER BY i.is_primary DESC NULLS LAST,i.id)
  FROM product_images i WHERE i.variant_id=v.id),'[]')) ORDER BY v.id)
  FROM product_variants v WHERE v.product_id=p.id),'[]') AS variants,
- p.brand_id,COALESCE(b.name,'') AS brand_name,p.purchase_summary,p.created_at,p.updated_at`
+ p.brand_id,COALESCE(b.name,'') AS brand_name,p.purchase_summary,p.created_at,p.updated_at,p.sku`
+const storePromotionalPrice = `(SELECT MIN(pp.promotional_price) FROM promotion_products pp JOIN promotions pr ON pr.id=pp.promotion_id WHERE pp.product_id=p.id AND pr.status='active' AND pr.start_date<=now() AND pr.end_date>=now() AND pp.promotional_price>=0 AND pp.promotional_price<p.price AND NOT EXISTS(SELECT 1 FROM product_variants v WHERE v.product_id=p.id)) AS promotional_price`
 const storeProductSource = ` FROM products p LEFT JOIN product_types t ON t.id=p.product_type_id LEFT JOIN brands b ON b.id=p.brand_id`
 
 func (repo ProductRepository) ListTypes(ctx context.Context) ([]models.ProductType, error) {
@@ -60,8 +61,8 @@ func (repo ProductRepository) Create(ctx context.Context, p models.Product) (int
 
 	query := `
         INSERT INTO products 
-        (name, description, care_instructions, measurements, price, quantity, brand_id, product_type_id, status, purchase_summary)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        (name, description, care_instructions, measurements, price, quantity, brand_id, product_type_id, status, purchase_summary, sku)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING id`
 
 	var productID int
@@ -77,6 +78,7 @@ func (repo ProductRepository) Create(ctx context.Context, p models.Product) (int
 		p.ProductTypeID,
 		p.Status,
 		p.PurchaseSummary,
+		p.SKU,
 	).Scan(&productID)
 
 	return productID, err
@@ -86,9 +88,10 @@ func scanStoreProduct(rows *sql.Rows) (models.Product, error) {
 	var p models.Product
 	var measurements, images, variants []byte
 	var createdAt, updatedAt sql.NullTime
+	var promotional sql.NullFloat64
 	err := rows.Scan(&p.ID, &p.Name, &p.Description, &p.CareInstructions, &measurements,
 		&p.Price, &p.Quantity, &p.Status, &p.ProductTypeID, &p.CategoryName, &images, &variants,
-		&p.BrandID, &p.BrandName, &p.PurchaseSummary, &createdAt, &updatedAt, &p.PromotionalPrice)
+		&p.BrandID, &p.BrandName, &p.PurchaseSummary, &createdAt, &updatedAt, &p.SKU, &promotional)
 	if err != nil {
 		return p, err
 	}
@@ -104,13 +107,15 @@ func scanStoreProduct(rows *sql.Rows) (models.Product, error) {
 	for i, path := range p.ImagePaths {
 		p.ImagePaths[i] = strings.ReplaceAll(path, "\\", "/")
 	}
+	p.PromotionalPrice = promotional.Float64
+	p.PromotionActive = promotional.Valid && promotional.Float64 < p.Price
 	p.CreatedAt, p.UpdatedAt = createdAt.Time, updatedAt.Time
 	p.Stock = p.Quantity
 	return p, nil
 }
 
 func (repo ProductRepository) Get(ctx context.Context, id int64) ([]models.Product, error) {
-	rows, err := repo.DB.QueryContext(ctx, "SELECT "+storeProductColumns+",0 AS promotional_price"+storeProductSource+" WHERE p.id=$1", id)
+	rows, err := repo.DB.QueryContext(ctx, "SELECT "+storeProductColumns+","+storePromotionalPrice+storeProductSource+" WHERE p.id=$1", id)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +142,7 @@ const collectionCoordinatedOrder = `CASE WHEN NULLIF(page.measurements->>'coordi
  page.id`
 
 func (repo ProductRepository) ListRelated(ctx context.Context, id int64) ([]models.Product, error) {
-	source := "SELECT " + storeProductColumns + ",0 AS promotional_price" + storeProductSource + `
+	source := "SELECT " + storeProductColumns + "," + storePromotionalPrice + storeProductSource + `
  JOIN products origin ON origin.id=$1 AND origin.status='active'
  WHERE p.status='active' AND p.id<>origin.id`
 	order := `(SELECT CASE
@@ -196,11 +201,11 @@ func (repo ProductRepository) List(ctx context.Context, page pagination.PageQuer
 	if order == "" {
 		order = "page.id"
 	}
-	return pagination.ReadPage(ctx, repo.DB, "SELECT "+storeProductColumns+",0 AS promotional_price"+storeProductSource+" WHERE p.status='active'", nil, page, order, scanStoreProduct)
+	return pagination.ReadPage(ctx, repo.DB, "SELECT "+storeProductColumns+","+storePromotionalPrice+storeProductSource+" WHERE p.status='active'", nil, page, order, scanStoreProduct)
 }
 
 func (repo ProductRepository) ListAdmin(ctx context.Context, page pagination.PageQuery) (pagination.Page[models.Product], error) {
-	return pagination.ReadPage(ctx, repo.DB, "SELECT "+storeProductColumns+",0 AS promotional_price"+storeProductSource, nil, page, "page.id", scanStoreProduct)
+	return pagination.ReadPage(ctx, repo.DB, "SELECT "+storeProductColumns+","+storePromotionalPrice+storeProductSource, nil, page, "page.id", scanStoreProduct)
 }
 
 func (repo ProductRepository) ListPromotional(ctx context.Context, name string, page pagination.PageQuery) (pagination.Page[models.Product], error) {

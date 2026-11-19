@@ -597,3 +597,15 @@ legend,
   margin: 0;
   padding-inline-start: 18px;
 }
+
+.product-sku {
+  display: block;
+  min-block-size: 1.4em;
+  margin: 0;
+  font: 400 11px/1.4 "Montserrat", sans-serif;
+  color: #68705f;
+  letter-spacing: .025em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

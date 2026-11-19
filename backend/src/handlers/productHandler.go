@@ -32,7 +32,11 @@ func (h ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	productID, err := h.Service.Create(r.Context(), body.Product, body.Quantity)
-	if errors.Is(err, services.ErrProductQuantity) {
+	if errors.Is(err, services.ErrProductSKUConflict) {
+		response.Error(w, 409, err.Error())
+		return
+	}
+	if errors.Is(err, services.ErrProductQuantity) || errors.Is(err, services.ErrProductSKU) {
 		response.Error(w, 400, err.Error())
 		return
 	}

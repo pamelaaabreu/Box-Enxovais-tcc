@@ -24,15 +24,15 @@ type PromotionService struct {
 	UploadDir string
 }
 
-func (service PromotionService) Create(ctx context.Context, request models.CreatePromotionRequest) (int, error) {
+func (service PromotionService) validate(ctx context.Context, request models.CreatePromotionRequest) (models.CreatePromotionRequest, error) {
 	request.Name = strings.TrimSpace(request.Name)
 	request.Description = strings.TrimSpace(request.Description)
 	if request.Name == "" || utf8.RuneCountInString(request.Name) > 255 || (request.Status != "active" && request.Status != "inactive") || utf8.RuneCountInString(request.Description) > 2000 {
-		return 0, ErrPromotionInvalid
+		return request, ErrPromotionInvalid
 	}
 	loc, e := time.LoadLocation("America/Sao_Paulo")
 	if e != nil {
-		return 0, e
+		return request, e
 	}
 	parse := func(s string) (time.Time, error) {
 		v, e := time.Parse(time.RFC3339, s)
@@ -43,25 +43,25 @@ func (service PromotionService) Create(ctx context.Context, request models.Creat
 	}
 	start, e := parse(request.StartDate)
 	if e != nil {
-		return 0, ErrPromotionInvalid
+		return request, ErrPromotionInvalid
 	}
 	end, e := parse(request.EndDate)
 	if e != nil || !end.After(start) {
-		return 0, ErrPromotionInvalid
+		return request, ErrPromotionInvalid
 	}
 	request.StartDate = start.Format(time.RFC3339)
 	request.EndDate = end.Format(time.RFC3339)
 	if request.HomeFeatured && (request.Description == "" || request.ImagePath == "") {
-		return 0, ErrPromotionInvalid
+		return request, ErrPromotionInvalid
 	}
 	if request.ImagePath != "" {
 		if !strings.HasPrefix(request.ImagePath, "uploads/") {
-			return 0, ErrPromotionInvalid
+			return request, ErrPromotionInvalid
 		}
 		name := strings.TrimPrefix(request.ImagePath, "uploads/")
 		ext := strings.ToLower(filepath.Ext(name))
 		if (ext != ".png" && ext != ".jpg" && ext != ".jpeg" && ext != ".webp") || name != filepath.Base(name) || strings.ContainsAny(name, "\\?#") {
-			return 0, ErrPromotionInvalid
+			return request, ErrPromotionInvalid
 		}
 		dir := service.UploadDir
 		if dir == "" {
@@ -69,25 +69,25 @@ func (service PromotionService) Create(ctx context.Context, request models.Creat
 		}
 		info, e := os.Stat(filepath.Join(dir, name))
 		if e != nil || !info.Mode().IsRegular() {
-			return 0, ErrPromotionInvalid
+			return request, ErrPromotionInvalid
 		}
 		f, e := os.Open(filepath.Join(dir, name))
 		if e != nil {
-			return 0, ErrPromotionInvalid
+			return request, ErrPromotionInvalid
 		}
 		header := make([]byte, 512)
 		n, _ := f.Read(header)
 		f.Close()
 		mime := http.DetectContentType(header[:n])
 		if mime != "image/png" && mime != "image/jpeg" && mime != "image/webp" {
-			return 0, ErrPromotionInvalid
+			return request, ErrPromotionInvalid
 		}
 	}
-	return service.Store.Create(ctx, request)
+	return request, nil
 }
 
 func (service PromotionService) AddProduct(ctx context.Context, request models.AddToPromotionRequest) error {
-	if request.ProductID <= 0 || math.IsNaN(request.PromotionalPrice) || math.IsInf(request.PromotionalPrice, 0) || request.PromotionalPrice < 0 {
+	if request.ProductID <= 0 || math.IsNaN(request.PromotionalPrice) || math.IsInf(request.PromotionalPrice, 0) || request.PromotionalPrice < 0 || math.Abs(request.PromotionalPrice*100-math.Round(request.PromotionalPrice*100)) > 0.00001 {
 		return ErrPromotionInvalid
 	}
 	var price float64
@@ -106,4 +106,29 @@ func (service PromotionService) AddProduct(ctx context.Context, request models.A
 		return errors.Join(ErrPromotionLookup, err)
 	}
 	return service.Store.AddProduct(ctx, id, request)
+}
+
+func (service PromotionService) Create(ctx context.Context, request models.CreatePromotionRequest) (int, error) {
+	request, err := service.validate(ctx, request)
+	if err != nil {
+		return 0, err
+	}
+	return service.save(ctx, 0, request)
+}
+func (service PromotionService) Update(ctx context.Context, id int, request models.CreatePromotionRequest) (int, error) {
+	request, err := service.validate(ctx, request)
+	if err != nil {
+		return 0, err
+	}
+	return service.save(ctx, id, request)
+}
+func (service PromotionService) save(ctx context.Context, id int, request models.CreatePromotionRequest) (int, error) {
+	result, err := service.Store.Save(ctx, id, request)
+	if errors.Is(err, repositories.ErrCampaignInvalid) {
+		return 0, ErrPromotionInvalid
+	}
+	if errors.Is(err, sql.ErrNoRows) {
+		return 0, ErrPromotionNotFound
+	}
+	return result, err
 }

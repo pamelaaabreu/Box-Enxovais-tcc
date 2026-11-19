@@ -8,7 +8,7 @@ import { ProductCardComponent } from './product-card.component';
 
 describe('ProductCardComponent', () => {
   const product: CatalogProduct = {
-    id: 12, slug: 'essencia-verde-oliva', name: 'Essência Floral — Verde Oliva',
+    sku: 'BX-CAM-012', id: 12, slug: 'essencia-verde-oliva', name: 'Essência Floral — Verde Oliva',
     status: 'active', promotional_price: 0, price: 239.9, quantity: 8, active: true, featured: false, description: '',
     category: { id: 1, name: 'Cama / Jogos de cama', slug: 'jogos-de-cama' },
     measurements: { Coleção: 'Essência Floral', Cor: 'Verde Oliva', Estampa: 'Floral' },
@@ -39,12 +39,30 @@ describe('ProductCardComponent', () => {
 
   it('shows stored attributes, localized price and the product-specific link', () => {
     const { host } = setup();
+    expect(host.querySelector('.product-sku')?.textContent).toBe('SKU: BX-CAM-012');
     expect(host.querySelector('h2')?.textContent).toBe('Essência Floral Verde Oliva');
     expect(host.querySelector('.info-badge')?.textContent).toBe('Essência Floral');
     expect(host.querySelector('.attributes')?.textContent).toContain('Cor: Verde Oliva');
     expect(host.querySelector('.price-badge')?.textContent?.replace(/\s+/g, ' ')).toBe('R$ 239,90');
     expect(host.querySelector('.card-actions a')?.getAttribute('href')).toBe('/produto/essencia-verde-oliva');
     expect(host.textContent).not.toContain('sem juros');
+  });
+
+  it('keeps SKU below the title in every product-card variation and reserves only one compact line', () => {
+    const { fixture, host } = setup();
+    for (const variation of ['homeTile', 'favoritesTile', 'compact', 'catalogTile']) {
+      fixture.componentRef.setInput(variation, true);
+      fixture.detectChanges();
+      const sku = host.querySelector<HTMLElement>('.product-sku')!;
+      expect(host.querySelector('h2')?.nextElementSibling).toBe(sku);
+      expect(sku.textContent).toBe('SKU: BX-CAM-012');
+      expect(getComputedStyle(sku).whiteSpace).toBe('nowrap');
+      fixture.componentRef.setInput(variation, false);
+    }
+    fixture.componentRef.setInput('product', { ...product, sku: undefined });
+    fixture.detectChanges();
+    expect(host.querySelector('.product-sku')?.textContent).toBe('');
+    expect(host.querySelector('.product-sku')?.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('toggles favorites separately and prevents another add while awaiting the cart', () => {
@@ -123,6 +141,36 @@ describe('ProductCardComponent', () => {
     }
     fixture.componentRef.setInput('compact',true);fixture.detectChanges();
     expect(getComputedStyle(host.querySelector('.media')!).aspectRatio).toBe('4 / 3');
+  });
+
+  it('keeps editorial details and secondary cart actions scoped to Home, including size selection', () => {
+    const {fixture,host,add,toggle}=setup(product,true);
+    fixture.componentRef.setInput('homeTile',true);
+    fixture.detectChanges();
+    expect(host.querySelector('.card-actions a')?.textContent?.trim()).toBe('Ver detalhes');
+    host.querySelector<HTMLButtonElement>('.home-secondary')!.click();
+    expect(add).toHaveBeenCalledOnceWith(12,1);
+    host.querySelector<HTMLButtonElement>('.favorite-action button')!.click();
+    expect(toggle).toHaveBeenCalledOnceWith(12);
+    fixture.componentRef.setInput('product',{...product,variants:[{id:2,size:'Queen',price:259.9,stock:2,images:[]}]});
+    fixture.detectChanges();
+    expect(host.querySelector('.card-actions button')).toBeNull();
+    expect(host.querySelector('.home-secondary')?.textContent?.trim()).toBe('Escolher tamanho');
+    expect(host.querySelector('.home-secondary')?.getAttribute('href')).toBe('/produto/essencia-verde-oliva');
+  });
+
+  it('uses the favorites variation without changing catalog cards or purchasing unavailable variants', () => {
+    const {fixture,host,add}=setup({...product,variants:[{id:1,size:'Queen',price:239.9,stock:0,images:[]}]},true);
+    fixture.componentRef.setInput('favoritesTile',true);
+    fixture.componentRef.setInput('product',{...fixture.componentInstance.product(),quantity:0});
+    fixture.detectChanges();
+    expect(host.querySelector('.card-actions a')).toBeNull();
+    const buy=host.querySelector<HTMLButtonElement>('.card-actions button')!;
+    expect(buy.disabled).toBeTrue();expect(buy.textContent).toContain('Indisponível');
+    buy.click();expect(add).not.toHaveBeenCalled();
+    expect(host.querySelector('.price-prefix')).toBeNull();
+    fixture.componentRef.setInput('favoritesTile',false);fixture.detectChanges();
+    expect(host.querySelector('.card-actions a')?.textContent?.trim()).toBe('Ver detalhes');
   });
 
 });

@@ -1,4 +1,4 @@
-import { Component, afterNextRender, DestroyRef, ElementRef, HostListener, inject } from '@angular/core';
+import { Component, input, afterNextRender, DestroyRef, ElementRef, HostListener, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 type CarouselInstance = { pause():void; cycle():void; dispose():void };
@@ -11,6 +11,7 @@ type BootstrapWindow = Window & {bootstrap?: {Carousel: {getOrCreateInstance(ele
  styleUrl: './carousel.component.scss'
 })
 export class CarouselComponent {
+ readonly natalCampaignId = input<number|null>(null);
  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
  private readonly destroy = inject(DestroyRef);
  private instance?: CarouselInstance;

@@ -55,6 +55,7 @@
             }
           </div>
           <h1 id="product-title">{{ product.name }}</h1>
+          @if (product.sku) { <p class="product-sku">SKU: {{ product.sku }}</p> }
           <app-product-price
             [emphasized]="true"
             [showInstallments]="false"
@@ -109,7 +110,14 @@
               </div>
             </fieldset>
           }
-          @if (!product.variants.length && !['toalhas', 'almofadas', 'decoracao'].includes(product.category.slug) && fixedSize(); as size) {
+          @if (
+            !product.variants.length &&
+              !["toalhas", "almofadas", "decoracao"].includes(
+                product.category.slug
+              ) &&
+              fixedSize();
+            as size
+          ) {
             <section aria-labelledby="product-size">
               <h2 id="product-size" class="measurement-title">Tamanho</h2>
               <span class="fixed-size">{{ size }}</span>
@@ -133,7 +141,11 @@
           @if (dimensionReference(); as dimensions) {
             <p class="product-reference" aria-live="polite">
               @if (!dimensions.includes(":")) {
-                <span>{{ product.measurements?.['Tipo'] === 'Edredom' ? 'Dimensões do edredom:' : 'Dimensões:' }}</span>
+                <span>{{
+                  product.measurements?.["Tipo"] === "Edredom"
+                    ? "Dimensões do edredom:"
+                    : "Dimensões:"
+                }}</span>
               }
               {{ dimensions }}
             </p>
@@ -254,7 +266,10 @@
                       <dd>{{ size }}</dd>
                     </div>
                   } @else if (dimensionReference()) {
-                    <div><dt>Dimensões por peça</dt><dd>{{ dimensionReference() }}</dd></div>
+                    <div>
+                      <dt>Dimensões por peça</dt>
+                      <dd>{{ dimensionReference() }}</dd>
+                    </div>
                   }
                   @for (entry of sizes(); track entry.key) {
                     <div>

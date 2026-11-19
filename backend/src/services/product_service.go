@@ -7,10 +7,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/lib/pq"
 	"net/url"
+	"regexp"
+	"strings"
 )
 
 var ErrProductQuantity = errors.New("Informe uma quantidade em estoque inteira entre 0 e 2147483647")
+
+var ErrProductSKU = errors.New("Informe um SKU de 3 a 32 caracteres, usando letras, números e hífens.")
+var ErrProductSKUConflict = errors.New("Este SKU já está cadastrado. Informe outro código.")
+var productSKUFormat = regexp.MustCompile(`^[A-Z0-9]+(-[A-Z0-9]+)*$`)
 
 type ProductService struct {
 	Store repositories.ProductRepository
@@ -21,7 +28,16 @@ func (service ProductService) Create(ctx context.Context, product models.Product
 		return 0, ErrProductQuantity
 	}
 	product.Quantity = int(*quantity)
-	return service.Store.Create(ctx, product)
+	product.SKU = strings.ToUpper(strings.TrimSpace(product.SKU))
+	if product.SKU != "" && (len(product.SKU) < 3 || len(product.SKU) > 32 || !productSKUFormat.MatchString(product.SKU)) {
+		return 0, ErrProductSKU
+	}
+	id, err := service.Store.Create(ctx, product)
+	var databaseError *pq.Error
+	if errors.As(err, &databaseError) && databaseError.Code == "23505" && databaseError.Constraint == "products_sku_key" {
+		return 0, ErrProductSKUConflict
+	}
+	return id, err
 }
 
 func (service ProductService) Get(ctx context.Context, id int64) ([]models.Product, error) {
@@ -38,6 +54,8 @@ var productFilterFields = map[string]pagination.FilterField{
 	"opacity":           {Column: "page.measurements->>'Opacidade'", Kind: "text"},
 	"id":                {Column: "page.id", Kind: "integer"},
 	"name":              {Column: "page.name", Kind: "text"},
+	"sku":               {Column: "page.sku", Kind: "text"},
+	"search":            {Column: "(page.name || ' ' || page.sku)", Kind: "text"},
 	"description":       {Column: "page.description", Kind: "text"},
 	"care_instructions": {Column: "page.care_instructions", Kind: "text"},
 	"price":             {Column: "page.price", Kind: "decimal"},

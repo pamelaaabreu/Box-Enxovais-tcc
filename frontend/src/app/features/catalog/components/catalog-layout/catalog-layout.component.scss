@@ -85,3 +85,14 @@
 @media (min-width: 1280px) {
   :host(.catalog-store) .catalog-content { padding-inline: 24px; }
 }
+
+:host(.favorites-page) {
+  --catalog-surface: #fffdf8;
+  --category-background: linear-gradient(var(--home-surface) 50%, #e8ece2 50%);
+}
+:host(.favorites-page) app-main-navbar { display: flow-root; }
+:host(.favorites-page) .catalog-content {
+  max-width: none;
+  padding-top: 8px;
+  background: linear-gradient(180deg, #e8ece2 0, #f5f4ed 180px, #fffdf8 440px);
+}

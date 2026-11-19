@@ -3,7 +3,7 @@
 <app-main-navbar [isHidden]="isScrolled"></app-main-navbar>
 
 <main class="home-content">
-  <app-carousel></app-carousel>
+  <app-carousel [natalCampaignId]="campaigns.active()?.id ?? null"></app-carousel>
 
   <app-trust-bar></app-trust-bar>
 
@@ -17,80 +17,9 @@
     [titulo]="'Produtos em destaque'"
   ></app-featured-products>
 
-  <section class="collection-grid" aria-label="Explore nossas coleções">
-    @for (category of collections(); track category.slug) {
-      <a class="collection-banner" [routerLink]="['/categoria', category.slug]">
-        <img
-          [src]="'http://localhost:8080/' + category.imagePath"
-          [alt]="
-            category.name === 'Cama'
-              ? 'Roupa de cama da coleção Box Enxovais'
-              : 'Toalhas da coleção Box Enxovais'
-          "
-          loading="lazy"
-        />
-        <div>
-          <p class="eyebrow">
-            {{
-              category.name === "Cama"
-                ? "Coleção para o quarto"
-                : "Coleção de toalhas"
-            }}
-          </p>
-          <h2>
-            {{
-              category.name === "Cama"
-                ? "Seu quarto, seu refúgio."
-                : "Cuidado em cada toque."
-            }}
-          </h2>
-          <span class="collection-cta"
-            >Ver coleção <span aria-hidden="true">→</span></span
-          >
-        </div>
-      </a>
-    }
-  </section>
-  @if (qualityProduct(); as product) {
-    <section class="quality-section" aria-labelledby="quality-heading">
-      <a [routerLink]="['/produto', catalogAdapter.adapt(product).slug]"
-        ><img
-          [src]="'http://localhost:8080/' + product.image_paths?.[0]"
-          [alt]="product.name"
-          loading="lazy"
-      /></a>
-      <div>
-        <p class="eyebrow">Qualidade nos detalhes</p>
-        <h2 id="quality-heading">Texturas que acolhem.</h2>
-        <p>
-          {{ product.measurements["Material"] }}.
-          {{ product.measurements["Composição têxtil"] }}.
-        </p>
-        <a [routerLink]="['/produto', catalogAdapter.adapt(product).slug]"
-          >Conhecer o produto <span aria-hidden="true">→</span></a
-        >
-      </div>
-      <ul>
-        <li>
-          <svg aria-hidden="true" viewBox="0 0 24 24">
-            <path d="m12 3 9 9-9 9-9-9Z" /></svg
-          >{{ product.measurements["Material"] }}
-        </li>
-        <li>
-          <svg aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M12 20c-7 0-9-11 0-16 9 5 7 16 0 16Z M12 20V10" /></svg
-          >{{ product.measurements["Composição têxtil"] }}
-        </li>
-        <li>
-          <svg aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M4 6h16v12H4Z M8 6v12m8-12v12M4 10h16m-16 4h16" /></svg
-          >{{ product.measurements["Acabamento"] }}
-        </li>
-      </ul>
-    </section>
-  }
-  <app-newsletter></app-newsletter>
+  <app-campaign />
 </main>
+<app-newsletter></app-newsletter>
 
 <app-footer
   companyName="Box Enxovais LTDA"

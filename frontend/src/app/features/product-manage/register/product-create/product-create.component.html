@@ -26,6 +26,13 @@
               >
             }
           </div>
+          <div class="field wide">
+            <label for="product-sku">SKU da loja</label>
+            <input id="product-sku" formControlName="sku" maxlength="32" placeholder="Ex.: BX-CAM-001" [attr.aria-invalid]="fields.sku.touched && fields.sku.invalid" [attr.aria-describedby]="fields.sku.touched && fields.sku.invalid ? 'sku-error' : 'sku-hint'" />
+            @if (fields.sku.touched && fields.sku.invalid) {
+              <span id="sku-error" class="error"><mat-icon aria-hidden="true">error_outline</mat-icon>{{ fields.sku.hasError('duplicate') ? 'Este SKU já está cadastrado.' : 'Use 3 a 32 caracteres: letras, números e hífens entre os grupos.' }}</span>
+            } @else { <small id="sku-hint">Deixe em branco para gerar automaticamente.</small> }
+          </div>
           <div class="field">
             <label id="product-category-label" for="product-category">Categoria *</label>
             <mat-form-field class="product-select" appearance="outline" subscriptSizing="dynamic">

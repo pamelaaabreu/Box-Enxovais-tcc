@@ -50,7 +50,7 @@ func TestCatalogDecoracaoPostgres(t *testing.T) {
 	exec("CREATE SCHEMA " + schema)
 	defer d.Exec("DROP SCHEMA " + schema + " CASCADE")
 	exec("SET search_path TO " + schema)
-	for _, n := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000005_favorites", "000006_checkout", "000007_order_cancellation", "000008_order_cancellation_reason", "000009_account_addresses", "000010_business_phone", "000011_user_cnpj", "000013_product_variants", "000024_catalog_brand_editorial"} {
+	for _, n := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000005_favorites", "000006_checkout", "000007_order_cancellation", "000008_order_cancellation_reason", "000009_account_addresses", "000010_business_phone", "000011_user_cnpj", "000013_product_variants", "000024_catalog_brand_editorial", "000048_product_external_sku"} {
 		exec(mig(n, "up"))
 	}
 	exec("INSERT INTO brands(name) VALUES('Box Enxovais');INSERT INTO products(name,price,quantity,status) VALUES('Legado',10,3,'active'); INSERT INTO users(id,full_name,email,password) VALUES(1,'Teste','decor@example.test','unused')")

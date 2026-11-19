@@ -70,6 +70,10 @@ export const routes: Routes = [
   },
 
   {
+    path: 'campanha/:id',
+    loadComponent: () => import('./features/campaign/campaign.component').then(m=>m.CampaignComponent),
+  },
+  {
     path: 'categoria/:slug',
     loadComponent: () =>
       import('./features/catalog/pages/category/category.component').then(
@@ -146,23 +150,8 @@ export const routes: Routes = [
       ),
   },
 
-  {
-    path: 'promotion-register',
-    canMatch: [AdminGuard],
-    loadComponent: () =>
-      import('./features/create-promotion/create-promotion.component').then(
-        (m) => m.CreatePromotionComponent,
-      ),
-  },
-
-  {
-    path: 'add-to-promotion',
-    canMatch: [AdminGuard],
-    loadComponent: () =>
-      import('./features/add-to-promotion/add-to-promotion.component').then(
-        (m) => m.AddToPromotionComponent,
-      ),
-  },
+  { path: 'promotion-register', pathMatch: 'full', redirectTo: 'admin/promotions/new' },
+  { path: 'add-to-promotion', pathMatch: 'full', redirectTo: 'admin/promotions' },
 
   {
     path: 'admin',

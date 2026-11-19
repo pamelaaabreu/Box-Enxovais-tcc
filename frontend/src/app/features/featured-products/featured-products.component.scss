@@ -1,17 +1,39 @@
 .featured-section {
-  max-width: 1320px;
+  max-width: var(--home-container-width, 1320px);
   margin: 40px auto;
-  padding: 0 24px;
+  padding: 0 var(--home-container-padding, 24px);
   color: #3d4836;
   font-family: Montserrat, sans-serif;
 }
+.featured-heading {
+  margin-bottom: 26px;
+  text-align: center;
+}
 h2 {
-  text-align: left;
-  font-size: 18px;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 0 0 8px;
+  font:
+    500 16px/1.5 Montserrat,
+    sans-serif;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  margin: 0 0 24px;
+  letter-spacing: 0.12em;
+}
+h2::before,
+h2::after {
+  content: "";
+  flex: 0 1 36px;
+  height: 1px;
+  background: #a2ac95;
+}
+.featured-heading p {
+  margin: 0;
+  color: #68705f;
+  font:
+    400 15px/1.65 Montserrat,
+    sans-serif;
 }
 .featured-grid {
   display: grid;
@@ -19,16 +41,23 @@ h2 {
   gap: 24px;
   align-items: stretch;
 }
-.product-filters {
+.all-products {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 24px;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin: 20px auto 0;
+  padding: 8px;
+  color: #3d4836;
+  font-size: 14px;
+  border-radius: 8px;
+  text-decoration: underline;
 }
 button {
   min-height: 44px;
   border: 1px solid #788368;
-  border-radius: 20px;
+  border-radius: 12px;
   padding: 8px 20px;
   background: transparent;
   color: #3d4836;
@@ -36,25 +65,27 @@ button {
     500 13px Montserrat,
     sans-serif;
 }
-button[aria-pressed="true"] {
-  background: #3d4836;
-  color: white;
-}
-button:focus-visible {
-  outline: 2px solid #788368;
-  outline-offset: 3px;
-}
 @media (max-width: 900px) {
   .featured-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (max-width: 520px) {
+@media (max-width: 600px) {
   .featured-section {
-    padding: 0 16px;
+    padding: 0 var(--home-container-padding, 8px);
     margin: 36px auto;
   }
+  h2 {
+    gap: 10px;
+    font-size: 13px;
+  }
+  .featured-heading p {
+    font-size: 12px;
+  }
+}
+@media (max-width: 520px) {
   .featured-grid {
     grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
   }
 }

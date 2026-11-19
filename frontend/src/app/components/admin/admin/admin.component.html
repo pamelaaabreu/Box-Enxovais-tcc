@@ -87,24 +87,7 @@
         ariaCurrentWhenActive="page"
         ><mat-icon aria-hidden="true">description</mat-icon> Relatórios</a
       >
-      <details [open]="section() === 'promotions'">
-        <summary>
-          <mat-icon aria-hidden="true">sell</mat-icon> Promoções
-          <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon>
-        </summary>
-        <a
-          routerLink="/admin/promotions/create"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          >Criar promoção</a
-        >
-        <a
-          routerLink="/admin/promotions/add-product"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          >Adicionar produto</a
-        >
-      </details>
+      <a routerLink="/admin/promotions" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">sell</mat-icon> Promoções</a>
       <details [open]="section() === 'catalog' || isProductCreate()">
         <summary>
           <mat-icon aria-hidden="true">category</mat-icon> Cadastros

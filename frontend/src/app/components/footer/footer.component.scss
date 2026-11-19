@@ -1,5 +1,9 @@
 :host {
   display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .footer {
@@ -7,29 +11,41 @@
   --footer-text: #fffdf8;
   --footer-muted: #dedfd4;
 
+  width: 100%;
+  margin: 0;
+  padding: 28px 24px 16px;
+  box-sizing: border-box;
+
   background: var(--footer-background);
   color: var(--footer-text);
-  padding: 28px 24px 16px;
+
+  font-family: "Montserrat", sans-serif;
   font-weight: 400;
   line-height: 1.6;
 }
 
 .footer-container {
+  width: 100%;
   max-width: 1176px;
   margin: 0 auto;
 }
+
+/* ESTRUTURA PRINCIPAL */
 
 .footer-main-grid {
   display: grid;
   grid-template-columns: 1.1fr 1fr 1fr 1.3fr;
   align-items: start;
   gap: 32px;
+
   padding-bottom: 22px;
 }
 
 .footer-main-grid > div {
   min-width: 0;
 }
+
+/* IDENTIDADE VISUAL */
 
 .footer-brand-info {
   display: flex;
@@ -38,6 +54,7 @@
   justify-content: center;
   align-self: stretch;
   gap: 14px;
+
   text-align: center;
 }
 
@@ -46,6 +63,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
   color: var(--footer-text);
   text-decoration: none;
 }
@@ -54,7 +72,9 @@
   display: block;
   width: 112px;
   height: auto;
+
   object-fit: contain;
+
   filter: brightness(0) invert(96%) sepia(8%) saturate(270%);
 }
 
@@ -63,8 +83,11 @@
   align-items: center;
   justify-content: center;
   gap: 7px;
+
   margin-top: 4px;
+
   color: var(--footer-muted);
+
   font-size: 7px;
   font-weight: 500;
   line-height: 1;
@@ -76,41 +99,58 @@
 .footer-logo-tagline::after {
   content: "";
   display: block;
+
   width: 20px;
   height: 1px;
+
   background: rgba(255, 253, 248, 0.55);
 }
 
-.company-meta {
-  margin: 0;
-  font-size: 13px;
-  color: var(--footer-muted);
-}
+/* TÍTULOS DAS COLUNAS */
 
 .section-title {
-  color: var(--footer-text);
-  font-size: 14px;
-  font-weight: 640;
-  line-height: 1.5;
   margin: 0 0 16px;
+
+  color: var(--footer-text);
+
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
 }
+
+/* LINKS */
 
 .nav-links {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  list-style: none;
-  padding: 0;
+
   margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.nav-links li {
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links a {
   display: inline-block;
+
   color: var(--footer-muted);
+
+  font-family: "Montserrat", sans-serif;
   font-size: 13px;
   font-weight: 500;
+  line-height: 1.6;
   text-decoration: none;
-  transition: color 0.18s;
+
+  transition:
+    color 0.18s ease,
+    text-decoration-color 0.18s ease;
 }
 
 .nav-links a:hover {
@@ -125,8 +165,17 @@
   border-radius: 3px;
 }
 
+/* MÉTODOS DE PAGAMENTO */
+
 .footer-payment-social {
+  min-width: 0;
   text-align: center;
+}
+
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .payment-icons {
@@ -138,20 +187,33 @@
 }
 
 .payment-logo {
+  display: block;
+
   width: 56px;
   height: 32px;
   padding: 5px;
+
+  box-sizing: content-box;
   object-fit: contain;
+
   background: #fffdf8;
   border-radius: 5px;
 }
 
+/* INFORMAÇÕES LEGAIS */
+
 .footer-legal {
-  border-top: 1px solid #fffdf82e;
+  border-top: 1px solid rgba(255, 253, 248, 0.18);
+
   padding-top: 14px;
-  text-align: center;
-  font-size: 13px;
+
   color: var(--footer-muted);
+
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+  text-align: center;
 }
 
 .footer-legal p {
@@ -163,12 +225,34 @@
   margin-top: 4px;
 }
 
+.company-meta {
+  margin: 0;
+  color: var(--footer-muted);
+  font-size: 13px;
+}
+
+/* DESKTOP MENOR E TABLET */
+
 @media (max-width: 1000px) {
+  .footer {
+    padding: 30px 24px 18px;
+  }
+
+  .footer-container {
+    max-width: 100%;
+  }
+
   .footer-main-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 32px;
+    gap: 32px 24px;
+  }
+
+  .footer-brand-info {
+    align-self: center;
   }
 }
+
+/* MOBILE */
 
 @media (max-width: 600px) {
   .footer {
@@ -176,9 +260,15 @@
   }
 
   .footer-main-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 28px;
+
     text-align: center;
+  }
+
+  .footer-brand-info {
+    align-items: center;
+    gap: 12px;
   }
 
   .footer-logo {
@@ -188,6 +278,7 @@
   .footer-logo-tagline {
     gap: 8px;
     margin-top: 5px;
+
     font-size: 7.5px;
     letter-spacing: 0.19em;
   }
@@ -197,7 +288,74 @@
     width: 23px;
   }
 
+  .footer-nav-section {
+    text-align: center;
+  }
+
+  .section-title {
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  .nav-links {
+    align-items: center;
+    gap: 8px;
+  }
+
   .nav-links a {
     padding-block: 4px;
+    font-size: 13px;
+  }
+
+  .footer-payment-social {
+    text-align: center;
+  }
+
+  .payment-icons {
+    gap: 10px;
+  }
+
+  .payment-logo {
+    width: 52px;
+    height: 30px;
+  }
+
+  .footer-legal {
+    padding-top: 16px;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .company-meta {
+    font-size: 12px;
+  }
+}
+
+/* TELAS MUITO PEQUENAS */
+
+@media (max-width: 360px) {
+  .footer {
+    padding: 28px 14px 16px;
+  }
+
+  .footer-main-grid {
+    gap: 24px;
+  }
+
+  .payment-icons {
+    gap: 8px;
+  }
+
+  .payment-logo {
+    width: 48px;
+    height: 28px;
+  }
+}
+
+/* ACESSIBILIDADE */
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-links a {
+    transition: none;
   }
 }

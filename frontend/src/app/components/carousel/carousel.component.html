@@ -9,7 +9,7 @@
               <p class="banner__eyebrow">{{slide.eyebrow}}</p>
               <h2 class="banner__title" [id]="'banner-title-' + i" [attr.aria-label]="slide.title"><span class="banner__headline">{{slide.titleStart}}<br />{{slide.titleLead}}<em>{{slide.titleEmphasis}}</em></span></h2>
               <p class="banner__description">{{slide.description}}</p>
-              <a class="banner__button" [class.banner__button--light]="slide.key !== 'natal'" [routerLink]="slide.link">{{slide.cta}}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M7 7h10v10" /></svg></a>
+              <a class="banner__button" [class.banner__button--light]="slide.key !== 'natal'" [routerLink]="slide.key === 'natal' && natalCampaignId() ? ['/campanha',natalCampaignId()] : slide.link">{{slide.cta}}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M7 7h10v10" /></svg></a>
             </div>
           </section>
         </div>

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { AddToPromotionRequest, CreatePromotionRequest, Product } from '../../shared/models';
+import { AddToPromotionRequest, CreatePromotionRequest, Product, PromotionRecord } from '../../shared/models';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Page, PageOptions, PaginationService } from './pagination.service';
@@ -13,6 +13,9 @@ export class PromoService {
 
   constructor(private http: HttpClient) {}
 
+  listCampaigns(){return this.http.get<PromotionRecord[]>('http://localhost:8080/admin/promotions');}
+  updateCampaign(id:number,request:CreatePromotionRequest){return this.http.put(`${'http://localhost:8080/admin/promotions'}/${id}`,request);}
+  uploadCampaignImage(file:File){const form=new FormData();form.append('image',file);return this.http.post<{image_path:string}>('http://localhost:8080/admin/promotions/image',form);}
   getPromotionalProducts(promoName: string): Observable<Product[]> {
     return this.pagination.getAll<Product>(`${this.apiUrl}/${encodeURIComponent(promoName)}`);
   }

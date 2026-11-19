@@ -33,6 +33,9 @@ export class ProductService {
     return this.pagination.getPage<Product>(this.apiUrl, options);
   }
 
+  getAdminProducts(): Observable<Product[]> {
+    return this.pagination.getAll<Product>('http://localhost:8080/admin/products');
+  }
   getAdminProductsPage(options: PageOptions = {}): Observable<Page<Product>> {
     return this.pagination.getPage<Product>(
       'http://localhost:8080/admin/products',

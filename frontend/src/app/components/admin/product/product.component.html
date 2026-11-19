@@ -21,7 +21,7 @@
         id="product-search"
         type="search"
         formControlName="name"
-        placeholder="Digite o nome do produto"
+        placeholder="Nome ou SKU do produto"
         maxlength="200"
       />
     </div>
@@ -121,7 +121,7 @@
                       </div>
                       <div>
                         <strong>{{ product.name }}</strong
-                        ><span class="product-id">#{{ product.id }}</span>
+                        ><span class="product-id">SKU: {{ product.sku || "Não informado" }}</span>
                       </div>
                     </div>
                   </td>

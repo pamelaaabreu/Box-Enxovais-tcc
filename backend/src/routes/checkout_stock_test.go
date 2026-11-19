@@ -638,3 +638,28 @@ func TestVariantLastUnitPostgres(t *testing.T) {
 	_, _, _ = checkout.CancelOrder(ctx, winner, order.ID, reason)
 	stock(1)
 }
+
+func TestCampaignCheckoutPricesPostgres(t *testing.T) {
+	for _, eligible := range []bool{true, false} {
+		t.Run(fmt.Sprint("eligible=", eligible), func(t *testing.T) {
+			database, exec := checkoutTestDB(t)
+			if eligible {
+				exec(`INSERT INTO promotions(id,status,start_date,end_date) VALUES(1,'active',now()-interval '1 day',now()+interval '1 day'),(2,'active',now()-interval '1 day',now()+interval '1 day');INSERT INTO promotion_products(product_id,promotion_id,promotional_price) VALUES(1,1,8),(1,2,9);`)
+			} else {
+				exec(`INSERT INTO promotions(id,status,start_date,end_date) VALUES(1,'active',now()-interval '2 days',now()-interval '1 day'),(2,'active',now()+interval '1 day',now()+interval '2 days');INSERT INTO promotion_products(product_id,promotion_id,promotional_price) VALUES(1,1,1),(1,2,2);`)
+			}
+			expected := int64(1000)
+			if eligible {
+				expected = 800
+			}
+			order, err := (repositories.CheckoutRepository{DB: database}).Create(context.Background(), 1, models.CheckoutRequest{RequestKey: "campaign-price", PaymentMethod: "pix", ExpectedTotalCents: expected})
+			if err != nil || order.Total != models.Money(expected) {
+				t.Fatal("campaign checkout", order.Total, err)
+			}
+			var price float64
+			if err = database.QueryRow("SELECT price FROM products WHERE id=1").Scan(&price); err != nil || price != 10 {
+				t.Fatal("original price changed", price, err)
+			}
+		})
+	}
+}

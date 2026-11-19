@@ -18,6 +18,7 @@ type ProductVariant struct {
 	Simulated     bool     `json:"simulated,omitempty"`
 }
 type Product struct {
+	SKU              string            `json:"sku"`
 	Variants         []ProductVariant  `json:"variants,omitempty"`
 	Stock            int               `json:"stock"`
 	CategoryName     string            `json:"category_name,omitempty"`
@@ -36,17 +37,29 @@ type Product struct {
 	CreatedAt        time.Time         `json:"created_at"`
 	UpdatedAt        time.Time         `json:"updated_at"`
 	ImagePaths       []string          `json:"image_paths,omitempty"`
-	PromotionalPrice float64           `json:"promotional_price,omitempty"`
+	PromotionalPrice float64           `json:"promotional_price"`
+	PromotionActive  bool              `json:"promotion_active,omitempty"`
+}
+
+type PromotionParticipant struct {
+	ProductID        int      `json:"product_id"`
+	PromotionalPrice *float64 `json:"promotional_price"`
+}
+
+type PromotionRecord struct {
+	ID int `json:"id"`
+	CreatePromotionRequest
 }
 
 type CreatePromotionRequest struct {
-	Description  string `json:"description"`
-	ImagePath    string `json:"image_path"`
-	HomeFeatured bool   `json:"home_featured"`
-	Name         string `json:"name"`
-	Status       string `json:"status"`
-	StartDate    string `json:"start_date"`
-	EndDate      string `json:"end_date"`
+	Products     *[]PromotionParticipant `json:"products,omitempty"`
+	Description  string                  `json:"description"`
+	ImagePath    string                  `json:"image_path"`
+	HomeFeatured bool                    `json:"home_featured"`
+	Name         string                  `json:"name"`
+	Status       string                  `json:"status"`
+	StartDate    string                  `json:"start_date"`
+	EndDate      string                  `json:"end_date"`
 }
 
 type AddToPromotionRequest struct {

@@ -1,30 +1,103 @@
-<app-catalog-layout>
- <section class="favorites" aria-labelledby="favorites-title">
-  <header><span class="eyebrow">Sua seleção</span><h1 id="favorites-title">Meus favoritos</h1><p>Guarde aqui os produtos que combinam com a sua casa.</p></header>
-  @if (favorites.syncError()) {
-   <p role="alert">{{ favorites.syncError() }} <button type="button" (click)="favorites.synchronize()" [disabled]="favorites.loading()">Tentar novamente</button></p>
-  }
-  @if (favorites.pageLoading()) {
-   <p role="status">Carregando favoritos…</p>
-  } @else if (favorites.pageError()) {
-   <div class="state" role="alert"><p>{{ favorites.pageError() }}</p><button type="button" (click)="favorites.loadPage()">Tentar novamente</button></div>
-  } @else {
-   @if (favorites.page(); as page) {
-   @if (page.items.length) {
-    <p role="status">{{ page.pagination.total }} {{ page.pagination.total === 1 ? 'produto nos seus favoritos' : 'produtos nos seus favoritos' }}</p>
-    <div class="grid">
-     @for (product of products(); track product.id) {
-      <div class="item">
-       <app-product-card [product]="product" [catalogTile]="true" />
+<app-catalog-layout class="favorites-page">
+  <section class="favorites" aria-labelledby="favorites-title">
+    <header class="favorites-heading">
+      <h1 id="favorites-title">Meus <em>favoritos</em></h1>
+      <p>Guarde aqui os produtos que combinam com a sua casa.</p>
 
+      @if (favorites.page()) {
+        <span class="saved-count" role="status">
+          {{ savedCount() }}
+          {{ savedCount() === 1 ? "produto salvo" : "produtos salvos" }}
+        </span>
+      }
+    </header>
+
+    @if (favorites.syncError()) {
+      <p role="alert">
+        {{ favorites.syncError() }}
+
+        <button
+          type="button"
+          (click)="favorites.synchronize()"
+          [disabled]="favorites.loading()"
+        >
+          Tentar novamente
+        </button>
+      </p>
+    }
+
+    @if (favorites.pageLoading()) {
+      <p role="status">Carregando favoritos…</p>
+    } @else if (favorites.pageError()) {
+      <div class="state" role="alert">
+        <p>{{ favorites.pageError() }}</p>
+
+        <button type="button" (click)="favorites.loadPage()">
+          Tentar novamente
+        </button>
       </div>
-     }
-    </div>
-    <app-pagination [page]="page.pagination.offset/page.pagination.limit+1" [total]="page.pagination.total" [pageSize]="page.pagination.limit" [disabled]="favorites.pageLoading()" (pageChange)="favorites.loadPage(($event-1)*page.pagination.limit)" />
-   } @else {
-    <div class="state"><h2>Sua lista ainda está vazia</h2><p>Toque no coração dos produtos para encontrá-los aqui.</p><a routerLink="/categoria/cama">Explorar produtos</a></div>
-   }
-  }
-   }
+    } @else {
+      @if (favorites.page(); as page) {
+        @if (page.items.length) {
+          <div class="grid saved-products">
+            @for (product of products(); track product.id) {
+              <app-product-card [product]="product" [catalogTile]="true" [favoritesTile]="true" />
+            }
+          </div>
+
+          @if (page.pagination.total > page.pagination.limit) {
+            <app-pagination
+              [page]="page.pagination.offset / page.pagination.limit + 1"
+              [total]="page.pagination.total"
+              [pageSize]="page.pagination.limit"
+              [disabled]="favorites.pageLoading()"
+              (pageChange)="
+                favorites.loadPage(($event - 1) * page.pagination.limit)
+              "
+            />
+          }
+        } @else {
+          <div class="state empty-state">
+            <span class="empty-symbol" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.4"
+              aria-hidden="true"
+            >
+              <path
+                d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"
+              />
+            </svg>
+            </span>
+
+            <h2>Sua lista de favoritos está esperando por você.</h2>
+
+            <p>
+              Explore nossas coleções e salve os produtos que mais combinam com
+              seu lar.
+            </p>
+
+            <a routerLink="/categoria/todos"> Explorar produtos </a>
+          </div>
+        }
+
+        @if (page.items.length && recommendations().length) {
+          <section
+            class="recommendations"
+            aria-labelledby="recommendations-title"
+          >
+            <h2 id="recommendations-title">Você também pode gostar</h2>
+
+            <div class="grid recommendations-grid">
+              @for (product of recommendations(); track product.id) {
+                <app-product-card [product]="product" [catalogTile]="true" [favoritesTile]="true" />
+              }
+            </div>
+          </section>
+        }
+      }
+    }
  </section>
 </app-catalog-layout>

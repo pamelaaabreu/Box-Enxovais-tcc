@@ -1,0 +1,18 @@
+<ng-template #content>
+ @if (campaign(); as campaign) {
+  <section class="campaign" aria-labelledby="campaign-heading">
+   <header><p class="eyebrow">Coleção especial</p><h2 id="campaign-heading">{{campaign.name}}</h2><p>{{campaign.description}}</p></header>
+   @if (fullPage) {
+    <div class="campaign-controls"><label>Buscar nesta coleção<input type="search" [ngModel]="search()" (ngModelChange)="search.set($event);page.set(1)" /></label>
+    <label id="campaign-sort">Ordenar por<mat-select aria-labelledby="campaign-sort" [ngModel]="sort()" (ngModelChange)="sort.set($event);page.set(1)" panelClass="box-form-options"><mat-option value="name">Nome</mat-option><mat-option value="price">Menor preço</mat-option></mat-select></label></div>
+   }
+   <div class="campaign-grid">@for (product of visibleProducts(); track product.id) {<app-product-card [product]="product" [catalogTile]="true" [homeTile]="true" [promotion]="true" />}</div>
+   @if (fullPage && !products().length) {<p role="status">Nenhum produto corresponde à sua busca.</p>}
+   @if (fullPage && products().length > pageSize) {<app-pagination [page]="page()" [total]="products().length" [pageSize]="pageSize" (pageChange)="page.set($event)" />}
+   @if (!fullPage) {<a class="campaign-link" [routerLink]="['/campanha',campaign.id]">Explorar coleção <span aria-hidden="true">→</span></a>}
+  </section>
+ } @else if (fullPage) {
+  <section class="campaign campaign-state" role="status">@if (loading()) {<p>Carregando coleção…</p>} @else {<h2>Esta campanha não está disponível.</h2><p>Explore as coleções disponíveis no catálogo.</p><a routerLink="/categoria/todos">Explorar produtos</a>}</section>
+ }
+</ng-template>
+@if (fullPage) {<app-catalog-layout><ng-container [ngTemplateOutlet]="content" /></app-catalog-layout>} @else {<ng-container [ngTemplateOutlet]="content" />}

@@ -292,7 +292,7 @@ export class ProductDetailComponent {
       null,
   );
   readonly selectedPrice = computed(
-    () => this.selectedVariant()?.price ?? this.product()?.price ?? 0,
+    () => this.selectedVariant()?.price ?? (this.product()?.promotion_active ? this.product()?.promotional_price : this.product()?.price) ?? 0,
   );
   readonly galleryImages = computed(() => {
     const images = this.selectedVariant()?.images;

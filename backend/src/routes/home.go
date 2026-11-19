@@ -8,8 +8,10 @@ import (
 
 func InitRoutesHome(mux *http.ServeMux, h handlers.HomeHandler) {
 	mux.HandleFunc("GET /home/highlights", h.Highlights)
+	mux.HandleFunc("GET /home/featured", h.Featured)
 	mux.HandleFunc("GET /home/categories", h.Categories)
 	mux.HandleFunc("GET /home/campaign", h.Campaign)
+	mux.HandleFunc("GET /campaigns/{id}", h.CampaignDetail)
 	mux.HandleFunc("GET /home/reviews", h.Reviews)
 	mux.HandleFunc("GET /orders/{id}/review", middlewares.AuthMiddleware(h.Review))
 	mux.HandleFunc("POST /orders/{id}/review", middlewares.AuthMiddleware(h.Review))

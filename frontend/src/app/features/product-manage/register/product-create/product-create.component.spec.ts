@@ -33,6 +33,17 @@ describe('ProductCreateComponent', () => {
     return { fixture, page, http };
   }
 
+  it('accepts automatic SKU and validates external codes without changing other fields', () => {
+    const { page } = setup();
+    expect(page.fields.sku.valid).toBeTrue();
+    for (const sku of ['AB', 'BX--CAM', '-BX-CAM', 'BX CAM', 'A'.repeat(33)]) {
+      page.fields.sku.setValue(sku);
+      expect(page.fields.sku.invalid).withContext(sku).toBeTrue();
+    }
+    page.fields.sku.setValue('bx-cam-001');
+    expect(page.fields.sku.valid).toBeTrue();
+  });
+
   it('starts pending, rejects invalid fields and renders the checklist and name counter', () => {
     const { fixture, page, http } = setup();
     expect(page.progress).toBe(20);

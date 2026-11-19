@@ -21,11 +21,22 @@ type ProductImageService struct {
 }
 
 func (service ProductImageService) Upload(ctx context.Context, productID int, filename string, source io.Reader) (string, error) {
-	if err := os.MkdirAll(service.Directory, os.ModePerm); err != nil {
+	path, err := SaveImageAsset(service.Directory, fmt.Sprint(productID), filename, source)
+	if err != nil {
+		return "", err
+	}
+	if err := service.Store.Create(ctx, productID, path); err != nil {
+		return "", errors.Join(ErrImageRecord, err, os.Remove(path))
+	}
+	return path, nil
+}
+
+func SaveImageAsset(directory, prefix, filename string, source io.Reader) (string, error) {
+	if err := os.MkdirAll(directory, os.ModePerm); err != nil {
 		return "", errors.Join(ErrImageCreate, err)
 	}
-	name := fmt.Sprintf("%d_%d%s", productID, time.Now().UnixNano(), filepath.Ext(filename))
-	path := filepath.Join(service.Directory, name)
+	name := fmt.Sprintf("%s_%d%s", prefix, time.Now().UnixNano(), filepath.Ext(filename))
+	path := filepath.Join(directory, name)
 	destination, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0666)
 	if err != nil {
 		return "", errors.Join(ErrImageCreate, err)
@@ -34,9 +45,6 @@ func (service ProductImageService) Upload(ctx context.Context, productID int, fi
 	closeErr := destination.Close()
 	if err := errors.Join(copyErr, closeErr); err != nil {
 		return "", errors.Join(ErrImageWrite, err, os.Remove(path))
-	}
-	if err := service.Store.Create(ctx, productID, path); err != nil {
-		return "", errors.Join(ErrImageRecord, err, os.Remove(path))
 	}
 	return path, nil
 }

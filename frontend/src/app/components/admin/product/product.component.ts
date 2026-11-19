@@ -112,7 +112,7 @@ export class ProductComponent {
   applyFilters(): void {
     const value = this.filters.getRawValue();
     const filters: Record<string, string | number> = {};
-    if (value.name.trim()) filters['name__contains'] = value.name.trim();
+    if (value.name.trim()) filters['search__contains'] = value.name.trim();
     if (value.status) filters['status'] = value.status;
     if (value.stock === 'available') filters['stock__gte'] = 1;
     if (value.stock === 'empty') filters['stock'] = 0;

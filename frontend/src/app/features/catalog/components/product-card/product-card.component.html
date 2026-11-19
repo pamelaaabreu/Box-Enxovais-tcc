@@ -1,5 +1,6 @@
 <article
   [class.home-tile]="homeTile()"
+  [class.favorites-tile]="favoritesTile()"
   [class.compact]="compact()"
   [class.catalog-tile]="catalogTile()"
 >
@@ -127,7 +128,8 @@
     <h2>
       <a class="product-link" [routerLink]="details()">{{ displayName() }}</a>
     </h2>
-    @if (!homeTile() && product().brand_name; as brand) {
+    <span class="product-sku" [attr.aria-hidden]="!product().sku ? true : null">{{ product().sku ? "SKU: " + product().sku : "" }}</span>
+    @if (!homeTile() && !favoritesTile() && product().brand_name; as brand) {
       @if (
         !displayName()
           .toLocaleLowerCase("pt-BR")
@@ -136,7 +138,7 @@
         <span class="product-brand">{{ brand }}</span>
       }
     }
-    @if (catalogTile() && !homeTile()) {
+    @if (catalogTile() && !homeTile() && (!favoritesTile() || variablePrice())) {
       <span class="price-prefix">A partir de</span>
     }
     @if (compact() || catalogTile()) {
@@ -155,19 +157,20 @@
         </ul>
       }
       <div class="card-actions">
-        @if (!homeTile() && details(); as link) {
+        @if (!favoritesTile() && details(); as link) {
           <a
             [routerLink]="link"
             [attr.aria-label]="'Ver detalhes de ' + product().name"
             >Ver detalhes</a
           >
         }
-        @if (product().variants.length && details(); as link) {
-          <a [routerLink]="link">Escolher tamanho</a>
+        @if (product().variants.length && (!favoritesTile() || available()) && details(); as link) {
+          <a [class.home-secondary]="homeTile()" [routerLink]="link">Escolher tamanho</a>
         } @else {
           <button
             type="button"
             [class.in-cart]="catalogTile() && inCart()"
+            [class.home-secondary]="homeTile()"
             [disabled]="!canAdd()"
             (click)="add()"
           >

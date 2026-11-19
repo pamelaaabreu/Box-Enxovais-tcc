@@ -1,5 +1,8 @@
 <section class="featured-section" aria-labelledby="featured-heading">
-  <h2 id="featured-heading">{{ titulo }}</h2>
+  <header class="featured-heading">
+    <h2 id="featured-heading">{{ titulo }}</h2>
+    <p>Escolhas especiais para trazer mais conforto ao seu lar.</p>
+  </header>
   @if (state().loading) {
     <p role="status">Carregando produtos…</p>
   } @else if (state().error) {
@@ -21,4 +24,7 @@
       <p>Nenhum produto disponível nesta seleção.</p>
     }
   }
+  <a class="all-products" routerLink="/categoria/todos"
+    >Ver todos os produtos <span aria-hidden="true">→</span></a
+  >
 </section>

@@ -32,11 +32,12 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class ProductCardComponent {
   readonly homeTile = input(false);
+  readonly favoritesTile = input(false);
   readonly compact = input(false);
   readonly promotion = input(false);
   readonly discounted = computed(
     () =>
-      this.promotion() &&
+      (this.promotion() || this.product().promotion_active) &&
       Number.isFinite(this.product().promotional_price) &&
       this.product().promotional_price >= 0 &&
       this.product().promotional_price < this.product().price &&
@@ -63,6 +64,7 @@ export class ProductCardComponent {
       : (image ?? null);
   });
 
+  readonly variablePrice = computed(() => new Set(this.product().variants.map(variant => variant.price)).size > 1);
   readonly available = computed(
     () => this.product().active && this.product().quantity > 0,
   );

@@ -3,7 +3,7 @@ import { ProductCardComponent } from '../catalog/components/product-card/product
 import { CatalogService } from '../catalog/services/catalog.service';
 import { CartService } from '../../core/services/cart.service';
 import { FavoritesService } from '../../core/services/favorites.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   Component,
   Input,
@@ -22,7 +22,7 @@ type FeaturedState = { products: Product[]; loading: boolean; error: string };
 @Component({
   selector: 'app-featured-products',
   standalone: true,
-  imports: [ProductCardComponent],
+  imports: [ProductCardComponent, RouterLink],
   templateUrl: './featured-products.component.html',
   styleUrl: './featured-products.component.scss',
 })
@@ -30,7 +30,6 @@ export class FeaturedProductsComponent {
   readonly cart = inject(CartService);
   readonly catalog = inject(CatalogService);
   private readonly http = inject(HttpClient);
-  readonly bestSellers = signal(false);
   readonly favorites = inject(FavoritesService);
   private readonly productService = inject(ProductService);
   private readonly router = inject(Router);
@@ -69,24 +68,22 @@ export class FeaturedProductsComponent {
         const request =
           query.kind === 'favorites'
             ? this.favorites.getProductsPage({
-                limit: 6,
+                limit: 4,
                 filters: { status: 'active' },
               })
             : this.http
                 .get<{
                   products: Product[];
-                  bestSellers: boolean;
-                }>('http://localhost:8080/home/highlights')
+                }>('http://localhost:8080/home/featured')
                 .pipe(
                   map((result) => {
-                    this.bestSellers.set(result.bestSellers);
                     return { items: result.products };
                   }),
                 );
         return request.pipe(
           map(
             (page): FeaturedState => ({
-              products: page.items,
+              products: page.items.slice(0, 4),
               loading: false,
               error: '',
             }),

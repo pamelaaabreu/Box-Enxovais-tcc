@@ -46,7 +46,7 @@ describe('CategoryComponent route state', () => {
     page.applyFilters('  Toalha %  ', '100', true, 'price_asc');
     expect(getCategoryPage.calls.mostRecent().args[1]).toEqual({
       offset: 0, limit: 12,
-      filters: { name__contains: 'Toalha %', price__lte: '100', stock__gte: 1, sort: 'price_asc' },
+      filters: { search__contains: 'Toalha %', price__lte: '100', stock__gte: 1, sort: 'price_asc' },
     });
   });
 
@@ -136,7 +136,7 @@ describe('CategoryComponent route state', () => {
     TestBed.overrideComponent(CategoryComponent,{set:{template:'',imports:[]}});
     const page = TestBed.createComponent(CategoryComponent).componentInstance;
     expect(page.pageNumber()).toBe(2);
-    expect(getCategoryPage.calls.mostRecent().args[1]).toEqual({offset:12,limit:12,filters:{name__contains:'Tapete',price__lte:'100',stock__gte:1,color:'Areia',type:'Tapetes',collection:'natural',sort:'price_desc'}});
+    expect(getCategoryPage.calls.mostRecent().args[1]).toEqual({offset:12,limit:12,filters:{search__contains:'Tapete',price__lte:'100',stock__gte:1,color:'Areia',type:'Tapetes',collection:'natural',sort:'price_desc'}});
     query.next(convertToParamMap({page:'3',sort:'name'}));
     expect(page.pageNumber()).toBe(3);
     expect(page.criteria().color).toBe('');
