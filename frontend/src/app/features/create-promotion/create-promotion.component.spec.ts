@@ -1,6 +1,6 @@
 import {registerLocaleData} from '@angular/common';
 import localePt from '@angular/common/locales/pt';
-import {Router} from '@angular/router';
+import {Router, provideRouter} from '@angular/router';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {ConfirmDialogService} from '../../shared/components/confirm-dialog/confirm-dialog.service';
 import {TestBed} from '@angular/core/testing';
@@ -10,7 +10,7 @@ import {CreatePromotionComponent} from './create-promotion.component';
 import {PromoService} from '../../core/services/promo.service';
 import {CustomAlertService} from '../../core/services/custom-alert.service';
 registerLocaleData(localePt);
-function configureRouter(){TestBed.configureTestingModule({providers:[{provide:Router,useValue:{navigate:()=>Promise.resolve(true),navigateByUrl:()=>Promise.resolve(true)}}]});}
+function configureRouter(){TestBed.configureTestingModule({providers:[provideRouter([{path:'**',component:CreatePromotionComponent}])]});}
 
 describe('CreatePromotionComponent',()=>{
  beforeEach(configureRouter);
@@ -141,6 +141,13 @@ describe('Promotion campaign workspace',()=>{
  });
  it('edits discounts per participant and preserves original prices and unsupported variants',()=>{
   const {page}=setup();page.select(product);page.discountMode='percentage';page.setRowDiscount(1,25);expect(page.finalPrice(1)).toBe(75);expect(page.rowDiscountValue(1)).toBe(25);page.discountMode='amount';expect(page.rowDiscountValue(1)).toBe(25);page.setRowDiscount(1,30);expect(page.finalPrice(1)).toBe(70);expect(page.products[0].price).toBe(100);page.setRowDiscount(1,150);expect(page.invalidPrice(1)).toBeTrue();expect(page.discountSummary).toBe('Revisar descontos');page.setRowDiscount(1,null);expect(page.finalPrice(1)).toBe(100);
+ });
+
+ it('uses the campaign name in the compact header and breadcrumb without changing the form',()=>{
+  const {fixture,page,host}=setup();expect(host.querySelector('app-admin-page-header h1')?.textContent?.trim()).toBe('Nova promoção');expect(host.querySelector('.editing-label')?.textContent?.trim()).toBe('Nova');page.edit(4);fixture.detectChanges();expect(host.querySelector('app-admin-page-header h1')?.textContent?.trim()).toBe('Coleção');expect(host.querySelector('app-admin-page-header [aria-current]')?.textContent?.trim()).toBe('Coleção');expect(host.querySelector('.editing-label')?.textContent?.trim()).toBe('Editando');expect(page.dirty).toBeFalse();expect(host.querySelectorAll('app-admin-page-header header').length).toBe(1);
+ });
+ it('returns to the campaign list through the breadcrumb and previews through the existing Images tab',()=>{
+  const {fixture,page,host}=setup();const preview=host.querySelector<HTMLButtonElement>('.home-preview-action')!;expect(preview.disabled).toBeTrue();page.edit(4);fixture.detectChanges();expect(preview.disabled).toBeFalse();preview.click();fixture.detectChanges();expect(page.activeTab).toBe(2);expect(page.promotionData.products?.[0].promotional_price).toBe(80);expect(host.querySelector<HTMLAnchorElement>('app-admin-page-header nav a')!.getAttribute('href')).toBe('/admin/promotions');
  });
 
 });

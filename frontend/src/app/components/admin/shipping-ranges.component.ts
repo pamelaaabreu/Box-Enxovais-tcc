@@ -1,3 +1,4 @@
+import { AdminPageHeaderComponent } from '../../shared/components/admin-page-header/admin-page-header.component';
 import { CurrencyPipe } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
@@ -22,7 +23,7 @@ interface ShippingRange {
 
 @Component({
   selector: 'app-shipping-ranges',
-  imports: [CurrencyPipe, MatButtonModule, NgxMaskDirective, ReactiveFormsModule],
+  imports: [AdminPageHeaderComponent, CurrencyPipe, MatButtonModule, NgxMaskDirective, ReactiveFormsModule],
   templateUrl: './shipping-ranges.component.html',
   styleUrl: './catalog-registration.component.css',
 })

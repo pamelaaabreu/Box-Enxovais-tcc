@@ -1,3 +1,4 @@
+import { AdminPageHeaderComponent } from '../../../shared/components/admin-page-header/admin-page-header.component';
 import { Component, inject, signal } from '@angular/core';
 import {
   NavigationEnd,
@@ -13,7 +14,7 @@ import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, MatIconModule],
+  imports: [AdminPageHeaderComponent, RouterLink, RouterLinkActive, RouterOutlet, MatIconModule],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
 })
@@ -28,7 +29,6 @@ export class AdminComponent {
   readonly name = this.auth.getUserName();
   readonly email = this.auth.getUserEmail();
   readonly firstName = this.name?.trim().split(/\s+/)[0] || 'Administrador';
-  readonly searchTerm = signal('');
   readonly pendingPages = [
     { label: 'Pedidos', icon: 'receipt_long' },
     { label: 'Métricas analíticas', icon: 'monitoring' },
@@ -59,7 +59,7 @@ export class AdminComponent {
     );
     if (this.isProductCreate()) {
       this.title.set('Cadastrar produto');
-      this.subtitle.set('Cadastros › Produtos');
+      this.subtitle.set('Gerencie as informações e imagens dos produtos da loja.');
       this.menuOpen.set(false);
       return;
     }
@@ -67,7 +67,7 @@ export class AdminComponent {
     const pages: Record<string, [string, string]> = {
       catalog: ['Cadastros', 'Gerencie as categorias e marcas do catálogo.'],
       products: ['Produtos', 'Gerencie o catálogo da loja.'],
-      promotions: ['Promoções', 'Organize as ofertas do catálogo.'],
+      promotions: ['Promoções', 'Gerencie campanhas, produtos e ofertas da sua loja.'],
       reports: ['Relatórios', 'Consulte os relatórios da loja.'],
     };
     const [title, subtitle] = pages[section] ?? [
@@ -76,15 +76,6 @@ export class AdminComponent {
     ];
     this.title.set(title);
     this.subtitle.set(subtitle);
-  }
-
-  search(event: Event): void {
-    event.preventDefault();
-    const term = this.searchTerm().trim();
-    if (term)
-      void this.router.navigate(['/admin/products'], {
-        queryParams: { q: term },
-      });
   }
 
   logout(): void {

@@ -1,3 +1,4 @@
+import { AdminPageHeaderComponent } from '../../shared/components/admin-page-header/admin-page-header.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -29,6 +30,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-create-promotion',
   standalone: true,
   imports: [
+    AdminPageHeaderComponent,
     MatButtonToggleModule,
     MatSlideToggleModule,
     A11yModule,

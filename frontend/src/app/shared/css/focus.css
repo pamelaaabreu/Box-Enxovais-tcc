@@ -92,3 +92,7 @@ html body :is(.mat-mdc-checkbox, .mat-mdc-radio-button):has(input:focus-visible)
 @media (forced-colors: active) {
   :root { --box-focus-color: Highlight; --box-focus-on-dark: Highlight; }
 }
+
+html body .admin-shell .sidebar :is(a, button, summary):focus-visible {
+  border-radius: 10px;
+}

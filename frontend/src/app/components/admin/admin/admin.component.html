@@ -1,40 +1,5 @@
 <div class="admin-shell" (keydown.escape)="menuOpen.set(false)">
-  <header class="admin-header">
-    <button
-      type="button"
-      class="menu-toggle"
-      aria-label="Menu administrativo"
-      aria-controls="admin-sidebar"
-      [attr.aria-expanded]="menuOpen()"
-      (click)="menuOpen.set(!menuOpen())"
-    >
-      <mat-icon aria-hidden="true">menu</mat-icon>
-    </button>
-    <div class="page-title">
-      @if (title() === "Dashboard") {
-        <h1>
-          Bem-vindo de volta, {{ firstName }}!
-          <span aria-hidden="true">👋</span>
-        </h1>
-        <p>Acompanhe o desempenho da Box Enxovais.</p>
-      } @else {
-        <h1>{{ title() }}</h1>
-        <p>{{ subtitle() }}</p>
-      }
-    </div>
-    <form class="admin-search" role="search" (submit)="search($event)">
-      <mat-icon aria-hidden="true">search</mat-icon>
-      <input
-        #searchInput
-        type="search"
-        aria-label="Pesquisar produtos"
-        placeholder="Pesquisar produtos…"
-        maxlength="120"
-        [value]="searchTerm()"
-        (input)="searchTerm.set(searchInput.value)"
-      />
-    </form>
-  </header>
+  <button type="button" class="menu-toggle promotions-menu-toggle" aria-label="Menu administrativo" aria-controls="admin-sidebar" [attr.aria-expanded]="menuOpen()" (click)="menuOpen.set(!menuOpen())"><mat-icon aria-hidden="true">menu</mat-icon></button>
   @if (menuOpen()) {
     <button
       class="drawer-backdrop"
@@ -141,5 +106,10 @@
       </div>
     </div>
   </aside>
-  <main class="content"><router-outlet /></main>
+  <main class="content">
+    @if (section() !== 'promotions' && section() !== 'catalog' && section() !== 'experience-reviews' && (section() !== 'products' || isProductCreate())) {
+      <app-admin-page-header [title]="title()" [description]="subtitle()" [icon]="isProductCreate() ? 'inventory_2' : section() === 'reports' ? 'description' : 'dashboard'" [compact]="isProductCreate()" [breadcrumb]="isProductCreate() ? [{label:'Cadastros',url:'/admin/catalog/categories'},{label:'Produtos',url:'/admin/products'},{label:title()}] : [{label:title()}]" />
+    }
+    <router-outlet />
+  </main>
 </div>

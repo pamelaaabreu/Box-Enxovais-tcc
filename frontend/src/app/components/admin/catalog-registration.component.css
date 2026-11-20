@@ -9,9 +9,9 @@
   box-sizing: border-box;
   width: min(100%, 1360px);
   margin: 0 auto;
-  padding: clamp(20px, 3vw, 44px) clamp(16px, 2.6vw, 36px);
+  padding: 0;
   display: grid;
-  gap: 22px;
+  gap: var(--admin-section-gap, 12px);
   min-width: 0;
 }
 
@@ -261,8 +261,8 @@
 
 @media (max-width: 680px) {
   .registrations {
-    gap: 18px;
-    padding: 20px 16px;
+    gap: var(--admin-section-gap, 12px);
+    padding: 0;
   }
   .registrations.in-dialog {
     padding: 18px 14px;

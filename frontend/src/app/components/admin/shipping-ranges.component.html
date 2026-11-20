@@ -1,8 +1,5 @@
 <section class="registrations">
-  <header>
-    <h2>Faixas de CEP</h2>
-    <button mat-flat-button class="primary" type="button" [disabled]="loading() || failed() || saving()" (click)="start()">Nova faixa</button>
-  </header>
+  <app-admin-page-header title="Faixas de CEP" description="Gerencie regiões, valores e prazos de entrega." icon="local_shipping" [breadcrumb]="[{label:'Cadastros',url:'/admin/products/manage'},{label:'Faixas de CEP'}]" actionLabel="Nova faixa" [actionDisabled]="loading() || failed() || saving()" (action)="start()" />
   @if (editing()) {
     <form class="editor" [formGroup]="form" (ngSubmit)="save()" novalidate>
       <fieldset class="shipping-fields" [disabled]="saving()">

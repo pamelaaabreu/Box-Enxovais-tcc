@@ -3,16 +3,7 @@
   aria-labelledby="products-title"
   [attr.aria-busy]="loading()"
 >
-  <header class="page-header">
-    <div>
-      <span class="eyebrow">Catálogo</span>
-      <h1 id="products-title">Produtos</h1>
-      <p>Consulte os produtos cadastrados, seus status e estoque.</p>
-    </div>
-    <a class="primary-button" routerLink="/admin/products/manage"
-      ><span aria-hidden="true">+</span> Novo produto</a
-    >
-  </header>
+  <app-admin-page-header title="Produtos" titleId="products-title" description="Consulte os produtos cadastrados, seus status e estoque." icon="inventory_2" [breadcrumb]="[{label:'Produtos'}]" actionLabel="+ Novo produto" actionLink="/admin/products/manage" />
 
   <form class="filters" [formGroup]="filters" (ngSubmit)="applyFilters()">
     <div class="search-field">

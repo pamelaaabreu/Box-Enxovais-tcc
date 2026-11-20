@@ -1,55 +1,81 @@
+<app-admin-page-header
+  [title]="
+    view === 'list'
+      ? 'Promoções'
+      : editingId
+        ? promotionData.name || 'Campanha'
+        : 'Nova promoção'
+  "
+  [description]="
+    view === 'list'
+      ? 'Gerencie campanhas, produtos e ofertas da sua loja.'
+      : 'Organize campanhas, participantes e condições em um só lugar.'
+  "
+  icon="campaign"
+  [compact]="view !== 'list'"
+  [breadcrumb]="
+    view === 'list'
+      ? [{ label: 'Promoções' }]
+      : [
+          { label: 'Promoções', url: '/admin/promotions' },
+          {
+            label: editingId
+              ? promotionData.name || 'Campanha'
+              : 'Nova promoção',
+          },
+        ]
+  "
+  [attr.inert]="pickerOpen || libraryOpen ? '' : null"
+  [actionLabel]="
+    view === 'list'
+      ? '+ Nova promoção'
+      : view === 'detail'
+        ? 'Editar promoção'
+        : ''
+  "
+  (action)="
+    navigate(
+      view === 'list'
+        ? '/admin/promotions/new'
+        : '/admin/promotions/' + editingId + '/edit'
+    )
+  "
+  [status]="
+    view === 'list'
+      ? ''
+      : editingId
+        ? promotionData.status === 'active'
+          ? 'Ativa'
+          : 'Pausada'
+        : 'Rascunho'
+  "
+>
+  @if (view === "form") {
+    <span header-label class="editing-label">{{
+      editingId ? "Editando" : "Nova"
+    }}</span>
+  }
+  <div header-actions class="campaign-heading-actions">
+    @if (view !== "list") {
+      <button
+        type="button"
+        class="home-preview-action"
+        aria-controls="campaign-panel-2"
+        [disabled]="
+          !promotionData.image_path ||
+          failedImages.has(promotionData.image_path!)
+        "
+        (click)="chooseTab(2)"
+      >
+        Pré-visualizar na Home
+      </button>
+    }
+  </div>
+</app-admin-page-header>
 <div
   class="promotion-form-container"
   [attr.inert]="pickerOpen || libraryOpen ? '' : null"
 >
-  <header class="form-header">
-    <div>
-      <h2>
-        {{
-          view === "list"
-            ? "Campanhas"
-            : view === "detail"
-              ? "Visualizar promoção"
-              : editingId
-                ? "Editar promoção"
-                : "Nova promoção"
-        }}
-      </h2>
-
-      <p>Organize campanhas, participantes e condições em um só lugar.</p>
-    </div>
-
-    @if (view === "form") {
-      <span class="campaign-state">{{
-        editingId
-          ? promotionData.status === "active"
-            ? "Ativa"
-            : "Pausada"
-          : "Rascunho"
-      }}</span>
-    }
-
-    @if (view === "list") {
-      <button
-        type="button"
-        class="primary-action"
-        (click)="navigate('/admin/promotions/new')"
-      >
-        <mat-icon aria-hidden="true">add</mat-icon> Nova promoção
-      </button>
-    }
-
-    @if (view === "detail" && editingId) {
-      <button
-        type="button"
-        class="primary-action"
-        (click)="navigate('/admin/promotions/' + editingId + '/edit')"
-      >
-        Editar promoção
-      </button>
-    }
-  </header>
-
   @if (campaignsError) {
     <p class="load-error" role="alert">
       {{ campaignsError }}
@@ -63,11 +89,7 @@
       <p class="state" role="status">Carregando campanhas…</p>
     } @else if (!campaignsError) {
       <div class="table-scroll">
-        <table>
-          <caption class="visually-hidden">
-            Campanhas cadastradas
-          </caption>
-
+        <table aria-label="Campanhas cadastradas">
           <thead>
             <tr>
               <th>Campanha</th>
@@ -95,7 +117,7 @@
                   <span class="status-label">{{ statusLabel(campaign) }}</span>
                 </td>
 
-                <td>
+                <td class="campaign-period">
                   {{ campaign.start_date | date: "dd/MM/yyyy HH:mm"
                   }}<br /><span class="hint"
                     >até

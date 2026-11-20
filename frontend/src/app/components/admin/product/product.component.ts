@@ -1,3 +1,4 @@
+import { AdminPageHeaderComponent } from '../../../shared/components/admin-page-header/admin-page-header.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { CurrencyPipe, DecimalPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
@@ -30,7 +31,7 @@ registerLocaleData(localePt);
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [PaginationComponent,
+  imports: [AdminPageHeaderComponent, PaginationComponent,
     CurrencyPipe,
     DecimalPipe,
     ReactiveFormsModule,

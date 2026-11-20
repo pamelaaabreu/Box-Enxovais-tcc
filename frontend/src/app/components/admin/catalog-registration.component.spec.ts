@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 import { CustomAlertService } from '../../core/services/custom-alert.service';
 import { CatalogRegistrationComponent } from './catalog-registration.component';
 
@@ -10,7 +10,7 @@ describe('CatalogRegistrationComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports: [CatalogRegistrationComponent],
     providers: [
-      provideHttpClient(), provideHttpClientTesting(),
+      provideRouter([]), provideHttpClient(), provideHttpClientTesting(),
       { provide: ActivatedRoute, useValue: { snapshot: { data: { kind: 'categories' } } } },
       { provide: CustomAlertService, useValue: { success: jasmine.createSpy() } },
     ],
@@ -39,6 +39,20 @@ describe('CatalogRegistrationComponent', () => {
     expect(page.filtered().length).toBe(1);
     page.query.set('Ausente');
     expect(page.filtered()).toEqual([]);
+    http.verify();
+  });
+  it('uses one shared category header and opens the existing editor from its CTA', () => {
+    const fixture = TestBed.createComponent(CatalogRegistrationComponent);
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne(url).flush([]);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.querySelectorAll('h1').length).toBe(1);
+    expect(host.querySelector('.registration-heading')).toBeNull();
+    host.querySelector<HTMLButtonElement>('app-admin-page-header button.primary-action')!.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.editing()).toBeTrue();
+    expect(host.querySelector('form.editor')).not.toBeNull();
     http.verify();
   });
 });

@@ -1,3 +1,4 @@
+import { AdminPageHeaderComponent } from '../../shared/components/admin-page-header/admin-page-header.component';
 import { Component, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
@@ -19,15 +20,9 @@ interface Review {
 @Component({
   selector: 'app-experience-reviews',
   standalone: true,
-  imports: [DatePipe, MatSelectModule, PaginationComponent],
+  imports: [AdminPageHeaderComponent, DatePipe, MatSelectModule, PaginationComponent],
   template: ` <section class="registrations">
-    <header>
-      <h2>Avaliações de compra</h2>
-      <p>
-        Modere opiniões vinculadas a compras concluídas. A publicação exige
-        consentimento.
-      </p>
-    </header>
+    <app-admin-page-header title="Avaliações de compra" description="Modere opiniões vinculadas a compras concluídas. A publicação exige consentimento." icon="rate_review" [breadcrumb]="[{label:'Avaliações de compra'}]" />
     @if (loading()) {
       <p role="status">Carregando avaliações…</p>
     } @else if (error()) {
@@ -84,9 +79,10 @@ interface Review {
   </section>`,
   styles: [
     `
+      app-admin-page-header { margin-bottom: var(--admin-section-gap, 12px); }
       .registrations {
-        padding: 24px;
-        max-width: 1100px;
+        padding: 0;
+        max-width: 100%;
         font-family: Montserrat, sans-serif;
         color: #3d4836;
       }
@@ -94,7 +90,6 @@ interface Review {
         font-size: 26px;
         font-weight: 600;
       }
-      header > p,
       p {
         font-size: 14px;
         line-height: 1.7;
@@ -149,7 +144,7 @@ interface Review {
       }
       @media (max-width: 520px) {
         .registrations {
-          padding: 16px;
+          padding: 0;
         }
         article {
           padding: 16px;

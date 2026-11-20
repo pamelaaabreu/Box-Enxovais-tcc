@@ -1,3 +1,4 @@
+import { AdminPageHeaderComponent } from '../../shared/components/admin-page-header/admin-page-header.component';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -23,33 +24,15 @@ interface Registration {
 
 @Component({
   selector: 'app-catalog-registration',
-  imports: [FormsModule, MatButtonModule, MatDialogModule],
+  imports: [AdminPageHeaderComponent, FormsModule, MatButtonModule, MatDialogModule],
   template: `
     <section
       class="registrations catalog-registrations"
       [class.in-dialog]="dialogRef"
     >
-      <header class="registration-heading">
-        <div class="heading-copy">
-          <h2>{{ title }}</h2>
-          <p>Gerencie {{ title.toLowerCase() }} do catálogo.</p>
-        </div>
-        <div class="heading-actions">
-          @if (dialogRef) {
-            <button mat-stroked-button type="button" mat-dialog-close>
-              Fechar
-            </button>
-          }
-          <button
-            mat-flat-button
-            class="primary"
-            type="button"
-            (click)="start()"
-          >
-            Nova {{ noun }}
-          </button>
-        </div>
-      </header>
+      <app-admin-page-header [title]="title" [description]="'Gerencie ' + title.toLowerCase() + ' do catálogo.'" [icon]="noun === 'categoria' ? 'category' : 'sell'" [breadcrumb]="dialogRef ? [] : [{label:'Cadastros',url:'/admin/products/manage'},{label:title}]" [compact]="!!dialogRef" [actionLabel]="'Nova ' + noun" (action)="start()">
+        @if (dialogRef) { <button header-actions mat-stroked-button type="button" mat-dialog-close>Fechar</button> }
+      </app-admin-page-header>
 
       @if (editing()) {
         <form

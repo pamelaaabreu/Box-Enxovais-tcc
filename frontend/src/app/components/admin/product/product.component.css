@@ -1,33 +1,10 @@
+app-admin-page-header{margin-bottom:var(--admin-section-gap,12px)}
 :host {
   display: block;
 }
 .products {
   color: #101820;
   width: 100%;
-}
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 28px;
-}
-h1 {
-  margin: 4px 0 8px;
-  font-size: 30px;
-  font-weight: 650;
-}
-.eyebrow {
-  color: #777;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-weight: 600;
-}
-.page-header p {
-  margin: 0;
-  color: #68707a;
-  font-size: 14px;
 }
 .primary-button,
 .secondary-button {
@@ -308,11 +285,6 @@ tbody tr:hover {
   }
 }
 @media (max-width: 600px) {
-  .page-header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 16px;
-  }
   .filters {
     grid-template-columns: minmax(0, 1fr);
     padding: 16px;
@@ -323,9 +295,6 @@ tbody tr:hover {
   }
   .filter-actions > * {
     flex: 1;
-  }
-  h1 {
-    font-size: 26px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
