@@ -157,7 +157,8 @@
             <input
               id="product-price"
               formControlName="price"
-              inputmode="decimal"
+              inputmode="numeric"
+              (input)="maskPrice($event)"
               placeholder="0,00"
               maxlength="16"
               required

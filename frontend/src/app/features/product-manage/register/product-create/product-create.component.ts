@@ -67,7 +67,8 @@ function measurementFields(fb: FormBuilder) {
 
 @Component({
   selector: 'app-product-create',
-  imports: [ProductSkuComponent,
+  imports: [
+    ProductSkuComponent,
     NgTemplateOutlet,
     ReactiveFormsModule,
     RouterLink,
@@ -75,7 +76,6 @@ function measurementFields(fb: FormBuilder) {
     MatFormFieldModule,
     MatSelectModule,
     MatProgressSpinnerModule,
-
   ],
   templateUrl: './product-create.component.html',
 
@@ -97,44 +97,55 @@ export class ProductCreateComponent {
     inactive: 'Inativo',
     archived: 'Arquivado',
   };
-  readonly form = this.fb.group({
-    name: this.fb.nonNullable.control('', [
-      Validators.required,
-      Validators.pattern(/\S/),
-      Validators.maxLength(100),
-    ]),
-    description: this.fb.nonNullable.control(''),
-    category: this.fb.control<number | null>(null, Validators.required),
-    brand: this.fb.control<number | null>(null),
-    status: this.fb.nonNullable.control('active', (c) =>
-      Object.hasOwn(this.labels, c.value) ? null : { status: true },
-    ),
-    price: this.fb.nonNullable.control('', [
-      Validators.required,
-      (c) => (parsePrice(c.value) === null ? { money: true } : null),
-    ]),
-    quantity: this.fb.control<number | null>(null, [
-      Validators.required,
-      (c) =>
-        Number.isInteger(c.value) && c.value >= 0 && c.value <= 2147483647
+  readonly form = this.fb.group(
+    {
+      name: this.fb.nonNullable.control('', [
+        Validators.required,
+        Validators.pattern(/\S/),
+        Validators.maxLength(100),
+      ]),
+      description: this.fb.nonNullable.control(''),
+      category: this.fb.control<number | null>(null, Validators.required),
+      brand: this.fb.control<number | null>(null),
+      status: this.fb.nonNullable.control('active', (c) =>
+        Object.hasOwn(this.labels, c.value) ? null : { status: true },
+      ),
+      price: this.fb.nonNullable.control('', [
+        Validators.required,
+        (c) => (parsePrice(c.value) === null ? { money: true } : null),
+      ]),
+      quantity: this.fb.control<number | null>(null, [
+        Validators.required,
+        (c) =>
+          Number.isInteger(c.value) && c.value >= 0 && c.value <= 2147483647
+            ? null
+            : { stock: true },
+      ]),
+      material: this.fb.nonNullable.control('', Validators.maxLength(120)),
+      size: this.fb.nonNullable.control('', Validators.maxLength(120)),
+      color: this.fb.nonNullable.control('', Validators.maxLength(120)),
+      care: this.fb.nonNullable.control(''),
+      measurements: new FormArray<ReturnType<typeof measurementFields>>([]),
+    },
+    {
+      validators: (control) => {
+        const value = control.getRawValue();
+        const names = [
+          ...(value.material.trim() ? ['Material'] : []),
+          ...(value.size.trim() ? ['Tamanho'] : []),
+          ...(value.color.trim() ? ['Cor'] : []),
+          ...value.measurements.map((entry: { label: string }) => entry.label),
+        ]
+          .map((name) =>
+            name.trim().replace(/\s+/g, ' ').toLocaleLowerCase('pt-BR'),
+          )
+          .filter(Boolean);
+        return new Set(names).size === names.length
           ? null
-          : { stock: true },
-    ]),
-    material: this.fb.nonNullable.control('', Validators.maxLength(120)),
-    size: this.fb.nonNullable.control('', Validators.maxLength(120)),
-    color: this.fb.nonNullable.control('', Validators.maxLength(120)),
-    care: this.fb.nonNullable.control(''),
-    measurements: new FormArray<ReturnType<typeof measurementFields>>([]),
-  }, { validators: control => {
-    const value = control.getRawValue();
-    const names = [
-      ...(value.material.trim() ? ['Material'] : []),
-      ...(value.size.trim() ? ['Tamanho'] : []),
-      ...(value.color.trim() ? ['Cor'] : []),
-      ...value.measurements.map((entry: { label: string }) => entry.label),
-    ].map(name => name.trim().replace(/\s+/g, ' ').toLocaleLowerCase('pt-BR')).filter(Boolean);
-    return new Set(names).size === names.length ? null : { duplicateCharacteristic: true };
-  } });
+          : { duplicateCharacteristic: true };
+      },
+    },
+  );
   readonly fields = this.form.controls;
   readonly checklist = [
     { label: 'Status definido', control: this.fields.status },
@@ -150,11 +161,15 @@ export class ProductCreateComponent {
   loading = false;
   savedId: number | null = null;
   readonly registrationName = this.fb.nonNullable.control('', [
-    Validators.required, Validators.pattern(/\S/), Validators.maxLength(100),
+    Validators.required,
+    Validators.pattern(/\S/),
+    Validators.maxLength(100),
   ]);
   registrationApiError = '';
   registrationKind: 'categories' | 'brands' = 'categories';
-  private readonly registrationContent = viewChild.required<TemplateRef<unknown>>('registrationContent');
+  private readonly registrationContent = viewChild.required<
+    TemplateRef<unknown>
+  >('registrationContent');
 
   constructor() {
     this.loadOptions();
@@ -193,54 +208,84 @@ export class ProductCreateComponent {
     const category = kind === 'categories';
     const noun = category ? 'categoria' : 'marca';
     let created: { id: number; name: string } | undefined;
-    this.confirm.open({
-      title: category ? 'Nova categoria' : 'Nova marca',
-      message: category ? 'Adicione uma categoria para organizar seus produtos.' : 'Cadastre uma marca para associá-la aos produtos.',
-      variant: 'info',
-      icon: category ? 'category' : 'sell',
-      primary: 'Cadastrar ' + noun,
-      secondary: 'Cancelar',
-      disableClose: true,
-      content: this.registrationContent(),
-      execute: () => {
-        this.registrationApiError = '';
-        if (this.registrationName.invalid) {
-          this.registrationName.markAsTouched();
-          return throwError(() => new Error('invalid name'));
-        }
-        const name = this.registrationName.value.trim().replace(/\s+/g, ' ');
-        return this.products.createCatalogRegistration(kind, name).pipe(tap(item => created = item));
-      },
-      errorMessage: error => {
-        if (this.registrationName.invalid) return '';
-        const status = (error as { status?: number })?.status;
-        if (status === 409) {
-          this.registrationApiError = category ? 'Essa categoria já está cadastrada.' : 'Essa marca já está cadastrada.';
-          return '';
-        }
-        if (status === 400) return 'Confira o nome informado e tente novamente.';
-        if (status === 0) return 'Não foi possível conectar ao servidor. Tente novamente.';
-        return 'Não foi possível concluir o cadastro. Tente novamente.';
-      },
-    }, { width: '450px', panelClass: 'box-quick-registration-panel' }).afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(confirmed => {
-      if (confirmed !== true || !created) return;
-      const item = created;
-      if (category) this.categories = [...this.categories.filter(option => option.id !== item.id), item];
-      else this.brands = [...this.brands.filter(option => option.id !== item.id), item];
-      const control = category ? this.fields.category : this.fields.brand;
-      control.setValue(item.id);
-      control.markAsDirty();
-      this.alerts.success(category ? 'Categoria cadastrada.' : 'Marca cadastrada.');
-    });
+    this.confirm
+      .open(
+        {
+          title: category ? 'Nova categoria' : 'Nova marca',
+          message: category
+            ? 'Adicione uma categoria para organizar seus produtos.'
+            : 'Cadastre uma marca para associá-la aos produtos.',
+          variant: 'info',
+          icon: category ? 'category' : 'sell',
+          primary: 'Cadastrar ' + noun,
+          secondary: 'Cancelar',
+          disableClose: true,
+          content: this.registrationContent(),
+          execute: () => {
+            this.registrationApiError = '';
+            if (this.registrationName.invalid) {
+              this.registrationName.markAsTouched();
+              return throwError(() => new Error('invalid name'));
+            }
+            const name = this.registrationName.value
+              .trim()
+              .replace(/\s+/g, ' ');
+            return this.products
+              .createCatalogRegistration(kind, name)
+              .pipe(tap((item) => (created = item)));
+          },
+          errorMessage: (error) => {
+            if (this.registrationName.invalid) return '';
+            const status = (error as { status?: number })?.status;
+            if (status === 409) {
+              this.registrationApiError = category
+                ? 'Essa categoria já está cadastrada.'
+                : 'Essa marca já está cadastrada.';
+              return '';
+            }
+            if (status === 400)
+              return 'Confira o nome informado e tente novamente.';
+            if (status === 0)
+              return 'Não foi possível conectar ao servidor. Tente novamente.';
+            return 'Não foi possível concluir o cadastro. Tente novamente.';
+          },
+        },
+        { width: '450px', panelClass: 'box-quick-registration-panel' },
+      )
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((confirmed) => {
+        if (confirmed !== true || !created) return;
+        const item = created;
+        if (category)
+          this.categories = [
+            ...this.categories.filter((option) => option.id !== item.id),
+            item,
+          ];
+        else
+          this.brands = [
+            ...this.brands.filter((option) => option.id !== item.id),
+            item,
+          ];
+        const control = category ? this.fields.category : this.fields.brand;
+        control.setValue(item.id);
+        control.markAsDirty();
+        this.alerts.success(
+          category ? 'Categoria cadastrada.' : 'Marca cadastrada.',
+        );
+      });
   }
 
   get registrationError(): string {
     if (this.registrationApiError) return this.registrationApiError;
     if (!this.registrationName.touched) return '';
     if (this.registrationName.hasError('required')) {
-      return this.registrationKind === 'categories' ? 'Informe o nome da categoria.' : 'Informe o nome da marca.';
+      return this.registrationKind === 'categories'
+        ? 'Informe o nome da categoria.'
+        : 'Informe o nome da marca.';
     }
-    if (this.registrationName.hasError('maxlength')) return 'O nome deve ter até 100 caracteres.';
+    if (this.registrationName.hasError('maxlength'))
+      return 'O nome deve ter até 100 caracteres.';
     return this.registrationName.invalid ? 'Informe um nome válido.' : '';
   }
 
@@ -257,13 +302,36 @@ export class ProductCreateComponent {
     const brand = this.brands.find(
       (item) => item.id === this.fields.brand.value,
     )?.name;
-    return [category || 'Categoria ainda não selecionada', brand].filter(Boolean).join(' · ');
+    return [category || 'Categoria e marca ainda não selecionada', brand]
+      .filter(Boolean)
+      .join(' · ');
   }
   fieldState(control: AbstractControl): string {
     if (control.valid || (this.savedId && !control.errors)) return 'Completo';
     return control.touched || (control.value !== null && control.value !== '')
       ? 'Inválido'
       : 'Pendente';
+  }
+
+  maskPrice(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const digitsAfterCursor = input.value
+      .slice(input.selectionStart ?? input.value.length)
+      .replace(/\D/g, '').length;
+    const digits = input.value
+      .replace(/\D/g, '')
+      .replace(/^0+(?=\d)/, '')
+      .slice(0, 10);
+    const formatted = digits ? money.format(Number(digits) / 100) : '';
+    this.fields.price.setValue(formatted);
+    input.value = formatted;
+    let cursor = formatted.length;
+    let remaining = digitsAfterCursor;
+    while (cursor > 0 && remaining > 0) {
+      cursor--;
+      if (/\d/.test(formatted[cursor])) remaining--;
+    }
+    input.setSelectionRange(cursor, cursor);
   }
 
   formatPrice(): void {

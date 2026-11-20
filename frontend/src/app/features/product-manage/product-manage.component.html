@@ -3,7 +3,9 @@
   [class.with-summary]="selectedTabIndex === 0"
   aria-label="Cadastrar produto"
 >
-  @if (productId) { <app-product-sku [productId]="productId" /> }
+  @if (productId) {
+    <app-product-sku [productId]="productId" />
+  }
   <mat-tab-group
     [(selectedIndex)]="selectedTabIndex"
     [preserveContent]="true"

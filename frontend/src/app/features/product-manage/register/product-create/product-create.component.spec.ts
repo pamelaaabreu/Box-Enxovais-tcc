@@ -40,6 +40,17 @@ describe('ProductCreateComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('O SKU será gerado automaticamente após salvar o produto.');
   });
 
+  it('masks typed digits as cents and strips letters and pasted formatting', () => {
+    const {fixture,page}=setup();
+    const input: HTMLInputElement=fixture.nativeElement.querySelector('#product-price');
+    const type=(value:string)=>{input.value=value;input.dispatchEvent(new Event('input',{bubbles:true}));fixture.detectChanges();};
+    for(const [raw,formatted] of [['1','0,01'],['0,012','0,12'],['0,123','1,23'],['1,234','12,34'],['R$ 1.234,56','1.234,56'],['12a3','1,23'],['abc',''],['99999999999','99.999.999,99']]) {
+      type(raw);expect(input.value).withContext(raw).toBe(formatted);expect(page.fields.price.value).toBe(formatted);
+    }
+    type('');expect(page.fields.price.invalid).toBeTrue();
+    type('0');expect(input.value).toBe('0,00');expect(page.fields.price.invalid).toBeTrue();
+  });
+
   it('starts pending, rejects invalid fields and renders the checklist and name counter', () => {
     const { fixture, page, http } = setup();
     expect(page.progress).toBe(20);
