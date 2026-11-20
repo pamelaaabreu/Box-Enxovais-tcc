@@ -118,7 +118,7 @@ func (repo PromotionRepository) Save(ctx context.Context, id int, request models
 	return id, nil
 }
 func (repo PromotionRepository) ListCampaigns(ctx context.Context) ([]models.PromotionRecord, error) {
-	rows, err := repo.DB.QueryContext(ctx, `SELECT id,name,status,start_date,end_date,description,image_path,home_featured FROM promotions ORDER BY start_date DESC,id DESC`)
+	rows, err := repo.DB.QueryContext(ctx, `SELECT id,name,status,start_date,end_date,description,image_path,home_featured,created_at,updated_at FROM promotions ORDER BY start_date DESC,id DESC`)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +126,7 @@ func (repo PromotionRepository) ListCampaigns(ctx context.Context) ([]models.Pro
 	for rows.Next() {
 		var p models.PromotionRecord
 		var start, end sql.NullTime
-		if err = rows.Scan(&p.ID, &p.Name, &p.Status, &start, &end, &p.Description, &p.ImagePath, &p.HomeFeatured); err != nil {
+		if err = rows.Scan(&p.ID, &p.Name, &p.Status, &start, &end, &p.Description, &p.ImagePath, &p.HomeFeatured, &p.CreatedAt, &p.UpdatedAt); err != nil {
 			rows.Close()
 			return nil, err
 		}

@@ -1,3 +1,4 @@
+import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { AdminPageHeaderComponent } from '../../shared/components/admin-page-header/admin-page-header.component';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
@@ -24,7 +25,7 @@ interface Registration {
 
 @Component({
   selector: 'app-catalog-registration',
-  imports: [AdminPageHeaderComponent, FormsModule, MatButtonModule, MatDialogModule],
+  imports: [AdminStateComponent, AdminPageHeaderComponent, FormsModule, MatButtonModule, MatDialogModule],
   template: `
     <section
       class="registrations catalog-registrations"
@@ -92,16 +93,9 @@ interface Registration {
       </div>
 
       @if (loading()) {
-        <p class="feedback" role="status">
-          Carregando {{ title.toLowerCase() }}…
-        </p>
+        <app-admin-state kind="loading" [title]="'Carregando ' + title.toLowerCase() + '…'" />
       } @else if (failed()) {
-        <div class="empty" role="alert">
-          <p>Não foi possível carregar os cadastros.</p>
-          <button mat-stroked-button type="button" (click)="load()">
-            Tentar novamente
-          </button>
-        </div>
+        <app-admin-state kind="error" title="Não foi possível carregar os cadastros." actionLabel="Tentar novamente" (action)="load()" />
       } @else if (filtered().length) {
         <ul class="registration-list">
           @for (item of filtered(); track item.id) {
@@ -127,14 +121,9 @@ interface Registration {
           }
         </ul>
       } @else if (!items().length) {
-        <div class="empty">
-          <p>Nenhuma {{ noun }} cadastrada.</p>
-          <button mat-stroked-button type="button" (click)="start()">
-            Cadastrar {{ noun }}
-          </button>
-        </div>
+        <app-admin-state [icon]="noun === 'categoria' ? 'category' : 'sell'" [title]="'Nenhuma ' + noun + ' cadastrada.'" [actionLabel]="'Cadastrar ' + noun" (action)="start()" />
       } @else {
-        <p class="feedback">Nenhum resultado para a busca.</p>
+        <app-admin-state title="Nenhum resultado para a busca." />
       }
     </section>
   `,

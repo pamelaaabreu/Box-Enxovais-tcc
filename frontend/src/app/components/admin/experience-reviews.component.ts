@@ -1,3 +1,4 @@
+import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { AdminPageHeaderComponent } from '../../shared/components/admin-page-header/admin-page-header.component';
 import { Component, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -20,16 +21,13 @@ interface Review {
 @Component({
   selector: 'app-experience-reviews',
   standalone: true,
-  imports: [AdminPageHeaderComponent, DatePipe, MatSelectModule, PaginationComponent],
+  imports: [AdminStateComponent, AdminPageHeaderComponent, DatePipe, MatSelectModule, PaginationComponent],
   template: ` <section class="registrations">
     <app-admin-page-header title="Avaliações de compra" description="Modere opiniões vinculadas a compras concluídas. A publicação exige consentimento." icon="rate_review" [breadcrumb]="[{label:'Avaliações de compra'}]" />
     @if (loading()) {
-      <p role="status">Carregando avaliações…</p>
+      <app-admin-state kind="loading" title="Carregando avaliações…" />
     } @else if (error()) {
-      <div role="alert">
-        <p>{{ error() }}</p>
-        <button type="button" (click)="load()">Tentar novamente</button>
-      </div>
+      <app-admin-state kind="error" [title]="error()" actionLabel="Tentar novamente" (action)="load()" />
     } @else {
       @for (
         review of reviews().slice((page() - 1) * 10, page() * 10);
@@ -65,7 +63,7 @@ interface Review {
           >
         </article>
       } @empty {
-        <p>Nenhuma avaliação recebida.</p>
+        <app-admin-state icon="rate_review" title="Nenhuma avaliação recebida." />
       }
       @if (reviews().length > 10) {
         <app-pagination

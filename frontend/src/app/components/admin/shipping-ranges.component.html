@@ -28,9 +28,9 @@
     </label>
   </div>
   @if (loading()) {
-    <p role="status">Carregando faixas…</p>
+    <app-admin-state kind="loading" title="Carregando faixas…" />
   } @else if (failed()) {
-    <div role="alert"><p>Não foi possível carregar as faixas.</p><button mat-stroked-button type="button" (click)="load()">Tentar novamente</button></div>
+    <app-admin-state kind="error" title="Não foi possível carregar as faixas." actionLabel="Tentar novamente" (action)="load()" />
   } @else if (filtered().length) {
     <ul>
       @for (item of filtered(); track item.id) {
@@ -49,7 +49,7 @@
       }
     </ul>
   } @else {
-    <div class="empty"><p>{{ items().length ? 'Nenhuma faixa encontrada para os filtros.' : 'Nenhuma faixa de CEP cadastrada.' }}</p></div>
+    <app-admin-state icon="local_shipping" [title]="items().length ? 'Nenhuma faixa encontrada para os filtros.' : 'Nenhuma faixa de CEP cadastrada.'" />
   }
 </section>
 

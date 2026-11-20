@@ -1,3 +1,4 @@
+import { ProductSkuComponent } from '../../shared/components/product-sku/product-sku.component';
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, viewChild } from '@angular/core';
 
@@ -11,7 +12,7 @@ import { ProductImageUploadComponent } from './images/product-image-upload/produ
 @Component({
   selector: 'app-product-manage',
   standalone: true,
-  imports: [
+  imports: [ProductSkuComponent,
     NgTemplateOutlet,
     MatTabsModule,
     MatIconModule,

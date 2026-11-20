@@ -69,7 +69,7 @@ describe('CreatePromotionComponent',()=>{
   const create=jasmine.createSpy().and.returnValue(of({id:9}));
   TestBed.configureTestingModule({providers:[{provide:ProductService,useValue:{getAdminProducts:()=>of([])}},{provide:PromoService,useValue:{createPromotion:create,listCampaigns:()=>of([])}},{provide:CustomAlertService,useValue:{success:jasmine.createSpy(),error:jasmine.createSpy()}}]});
   const fixture=TestBed.createComponent(CreatePromotionComponent);fixture.detectChanges();
-  expect(fixture.nativeElement.textContent).toContain('Esta campanha ainda não possui produtos');
+  expect(fixture.nativeElement.textContent).toContain('Nenhum produto nesta campanha');
   expect(fixture.nativeElement.querySelector('input[name="product_id"]')).toBeNull();
   fixture.componentInstance.promotionData={name:'Campanha vazia',status:'active',start_date:'2026-11-01T00:00',end_date:'2026-12-31T23:59',products:[]};
   fixture.componentInstance.onSubmit();expect(create.calls.mostRecent().args[0].products).toEqual([]);
@@ -117,27 +117,27 @@ describe('Promotion campaign workspace',()=>{
   const {page}=setup();page.edit(4);expect(page.dirty).toBeFalse();expect(page.promotionData.products?.[0].promotional_price).toBe(80);expect(page.promotionData.image_path).toBe('uploads/campanha.webp');page.promotionData.name='Alterada';expect(page.dirty).toBeTrue();await page.cancel();expect(page.promotionData.name).toBe('Alterada');confirm.and.returnValue({afterClosed:()=>of(true)});await page.cancel();expect(page.promotionData.name).toBe('');expect(page.dirty).toBeFalse();
  });
  it('shows validation on the matching tab and never invents empty discount rows',()=>{
-  const {fixture,page,host}=setup();page.chooseTab(3);fixture.detectChanges();expect(host.querySelector('#campaign-panel-3 tbody')).toBeNull();expect(host.querySelector('#campaign-panel-3')?.textContent).toContain('Selecione participantes');page.onSubmit();expect(page.activeTab).toBe(0);expect(create).not.toHaveBeenCalled();
+  const {fixture,page,host}=setup();page.chooseTab(3);fixture.detectChanges();expect(host.querySelector('#campaign-panel-3 tbody')).toBeNull();expect(host.querySelector('#campaign-panel-3')?.textContent).toContain('Selecione os produtos');page.onSubmit();expect(page.activeTab).toBe(0);expect(create).not.toHaveBeenCalled();
   page.promotionData={name:'Campanha',status:'active',description:'Texto',start_date:'2026-11-01T00:00',end_date:'2026-12-01T00:00',home_featured:true,products:[]};page.onSubmit();expect(page.activeTab).toBe(2);expect(create).not.toHaveBeenCalled();
  });
  it('calculates actual final prices without accumulating discounts or changing original prices',()=>{
   const {page}=setup();page.select(product);page.discountMode='percentage';page.discountValue=20;page.applyDiscount();page.applyDiscount();expect(page.finalPrice(1)).toBe(80);expect(page.discountPercent(1)).toBe(20);expect(page.products[0].price).toBe(100);page.discountValue=101;page.applyDiscount();expect(page.finalPrice(1)).toBe(80);page.discountMode='amount';page.discountValue=150;page.applyDiscount();expect(page.finalPrice(1)).toBe(80);
  });
  it('does not publish an empty campaign in the readiness summary',()=>{
-  const {page}=setup();page.edit(4);page.promotionData.home_featured=true;page.promotionData.products=[];expect(page.homeSummary).toContain('Aguardando participantes');
+  const {page}=setup();page.edit(4);page.promotionData.home_featured=true;page.promotionData.products=[];expect(page.homeSummary).toContain('Adicione produtos');
  });
  it('moves between tabs with arrow keys and retains the active focus target',()=>{
   const {fixture,page,host}=setup();const tabs=host.querySelectorAll<HTMLButtonElement>('[role=tab]');tabs[0].dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));fixture.detectChanges();expect(page.activeTab).toBe(1);expect(document.activeElement).toBe(tabs[1]);
  });
- it('keeps the action bar in document flow and avoids a scroll container that would break sticky positioning',()=>{
-  const {host}=setup();expect(getComputedStyle(host.querySelector('.promotion-form-container')!).overflowX).toBe('clip');expect(getComputedStyle(host.querySelector('.action-bar')!).position).toBe('sticky');
+ it('keeps the action bar in document flow and keeps its established static positioning',()=>{
+  const {host}=setup();expect(getComputedStyle(host.querySelector('.promotion-form-container')!).overflowX).toBe('clip');expect(getComputedStyle(host.querySelector('.action-bar')!).position).toBe('static');
  });
  it('keeps unsaved fields after an API failure and allows retry without duplicating an in-flight save',()=>{
   const response=new Subject<unknown>();create.and.returnValue(response);const {page}=setup();page.promotionData={name:'Preservada',status:'active',start_date:'2026-11-01T00:00',end_date:'2027-01-01T00:00',products:[]};page.onSubmit();page.onSubmit();expect(create).toHaveBeenCalledTimes(1);response.error({error:{message:'Falha temporária'}});expect(page.saving).toBeFalse();expect(page.promotionData.name).toBe('Preservada');expect(page.dirty).toBeTrue();
  });
 
  it('keeps the reference summary and tab badges tied to real participants and discounts',()=>{
-  const {fixture,page,host}=setup();expect(host.querySelector('.campaign-summary')?.textContent).toContain('0 produtos vinculados');page.select(product);page.discountMode='percentage';page.discountValue=20;page.applyDiscount();fixture.detectChanges();expect(host.querySelector('.campaign-summary')?.textContent).toContain('1 produtos vinculados');expect(page.discountSummary).toBe('20%');expect(host.querySelector('#campaign-tab-3 .tab-indicator')?.textContent).toBe('20%');
+  const {fixture,page,host}=setup();expect(host.querySelector('.campaign-summary')?.textContent).toContain('0 produtos vinculados');page.select(product);page.discountMode='percentage';page.discountValue=20;page.applyDiscount();fixture.detectChanges();expect(host.querySelector('.campaign-summary')?.textContent).toContain('1 produto vinculado');expect(page.discountSummary).toBe('20%');expect(host.querySelector('#campaign-tab-1')?.textContent).toContain('1');
  });
  it('edits discounts per participant and preserves original prices and unsupported variants',()=>{
   const {page}=setup();page.select(product);page.discountMode='percentage';page.setRowDiscount(1,25);expect(page.finalPrice(1)).toBe(75);expect(page.rowDiscountValue(1)).toBe(25);page.discountMode='amount';expect(page.rowDiscountValue(1)).toBe(25);page.setRowDiscount(1,30);expect(page.finalPrice(1)).toBe(70);expect(page.products[0].price).toBe(100);page.setRowDiscount(1,150);expect(page.invalidPrice(1)).toBeTrue();expect(page.discountSummary).toBe('Revisar descontos');page.setRowDiscount(1,null);expect(page.finalPrice(1)).toBe(100);
@@ -148,6 +148,13 @@ describe('Promotion campaign workspace',()=>{
  });
  it('returns to the campaign list through the breadcrumb and previews through the existing Images tab',()=>{
   const {fixture,page,host}=setup();const preview=host.querySelector<HTMLButtonElement>('.home-preview-action')!;expect(preview.disabled).toBeTrue();page.edit(4);fixture.detectChanges();expect(preview.disabled).toBeFalse();preview.click();fixture.detectChanges();expect(page.activeTab).toBe(2);expect(page.promotionData.products?.[0].promotional_price).toBe(80);expect(host.querySelector<HTMLAnchorElement>('app-admin-page-header nav a')!.getAttribute('href')).toBe('/admin/promotions');
+ });
+
+ it('shows status near preview and uses the real update timestamp',()=>{
+  const {fixture,page,host}=setup();page.edit(4);page.campaigns[0].updated_at='2026-11-12T12:00:00Z';fixture.detectChanges();expect(page.campaignMeta).toContain('Atualizado em 12/11');expect(host.querySelector('.campaign-heading-actions .campaign-status')?.textContent).toContain('Ativa');expect(host.querySelector('.section-heading')?.textContent).not.toContain('0 produtos vinculados');
+ });
+ it('filters campaigns without modifying their data',()=>{
+  const {page}=setup();page.campaignSearch='inexistente';expect(page.visibleCampaigns.length).toBe(0);page.campaignSearch='';page.campaignFilter='Todas';expect(page.visibleCampaigns.length).toBe(page.campaigns.length);expect(page.campaignCount('Todas')).toBe(page.campaigns.length);
  });
 
 });

@@ -1,6 +1,9 @@
 <div class="create-grid" [class.with-summary]="!externalSummary">
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="product-form">
-    <fieldset [disabled]="loading || !!savedId" [attr.inert]="loading || savedId ? '' : null">
+    <fieldset
+      [disabled]="loading || !!savedId"
+      [attr.inert]="loading || savedId ? '' : null"
+    >
       <section class="form-section" aria-labelledby="basic-title">
         <h2 id="basic-title">Informações básicas</h2>
         <div class="fields">
@@ -22,29 +25,49 @@
             />
             @if (fields.name.touched && fields.name.invalid) {
               <span id="name-error" class="error"
-                ><mat-icon aria-hidden="true">error_outline</mat-icon> Informe o nome do produto.</span
+                ><mat-icon aria-hidden="true">error_outline</mat-icon> Informe o
+                nome do produto.</span
               >
             }
           </div>
           <div class="field wide">
-            <label for="product-sku">SKU da loja</label>
-            <input id="product-sku" formControlName="sku" maxlength="32" placeholder="Ex.: BX-CAM-001" [attr.aria-invalid]="fields.sku.touched && fields.sku.invalid" [attr.aria-describedby]="fields.sku.touched && fields.sku.invalid ? 'sku-error' : 'sku-hint'" />
-            @if (fields.sku.touched && fields.sku.invalid) {
-              <span id="sku-error" class="error"><mat-icon aria-hidden="true">error_outline</mat-icon>{{ fields.sku.hasError('duplicate') ? 'Este SKU já está cadastrado.' : 'Use 3 a 32 caracteres: letras, números e hífens entre os grupos.' }}</span>
-            } @else { <small id="sku-hint">Deixe em branco para gerar automaticamente.</small> }
+            <small class="sku-hint"
+              >O SKU será gerado automaticamente após salvar o produto.</small
+            >
           </div>
           <div class="field">
-            <label id="product-category-label" for="product-category">Categoria *</label>
-            <mat-form-field class="product-select" appearance="outline" subscriptSizing="dynamic">
-              <mat-select panelClass="box-form-options" id="product-category" formControlName="category" aria-labelledby="product-category-label" required
-                placeholder="Selecione uma categoria">
-                @if (!categories.length) { <mat-option disabled>Nenhuma categoria cadastrada</mat-option> }
+            <label id="product-category-label" for="product-category"
+              >Categoria *</label
+            >
+            <mat-form-field
+              class="product-select"
+              appearance="outline"
+              subscriptSizing="dynamic"
+            >
+              <mat-select
+                panelClass="box-form-options"
+                id="product-category"
+                formControlName="category"
+                aria-labelledby="product-category-label"
+                required
+                placeholder="Selecione uma categoria"
+              >
+                @if (!categories.length) {
+                  <mat-option disabled>Nenhuma categoria cadastrada</mat-option>
+                }
                 @for (category of categories; track category.id) {
-                  <mat-option [value]="category.id">{{ category.name }}</mat-option>
+                  <mat-option [value]="category.id">{{
+                    category.name
+                  }}</mat-option>
                 }
               </mat-select>
               @if (fields.category.touched && fields.category.invalid) {
-                <mat-error id="category-error"><span class="error"><mat-icon aria-hidden="true">error_outline</mat-icon>Selecione uma categoria para continuar.</span></mat-error>
+                <mat-error id="category-error"
+                  ><span class="error"
+                    ><mat-icon aria-hidden="true">error_outline</mat-icon
+                    >Selecione uma categoria para continuar.</span
+                  ></mat-error
+                >
               }
             </mat-form-field>
             <button
@@ -57,10 +80,23 @@
           </div>
           <div class="field">
             <label id="product-brand-label" for="product-brand">Marca</label>
-            <mat-form-field class="product-select" appearance="outline" subscriptSizing="dynamic">
-              <mat-select panelClass="box-form-options" id="product-brand" formControlName="brand" aria-labelledby="product-brand-label"
-                placeholder="Selecione uma marca">
-                @if (brands.length) { <mat-option [value]="null">Sem marca</mat-option> } @else { <mat-option disabled>Nenhuma marca cadastrada</mat-option> }
+            <mat-form-field
+              class="product-select"
+              appearance="outline"
+              subscriptSizing="dynamic"
+            >
+              <mat-select
+                panelClass="box-form-options"
+                id="product-brand"
+                formControlName="brand"
+                aria-labelledby="product-brand-label"
+                placeholder="Selecione uma marca"
+              >
+                @if (brands.length) {
+                  <mat-option [value]="null">Sem marca</mat-option>
+                } @else {
+                  <mat-option disabled>Nenhuma marca cadastrada</mat-option>
+                }
                 @for (brand of brands; track brand.id) {
                   <mat-option [value]="brand.id">{{ brand.name }}</mat-option>
                 }
@@ -76,8 +112,17 @@
           </div>
           <div class="field">
             <label id="product-status-label" for="product-status">Status</label>
-            <mat-form-field class="product-select" appearance="outline" subscriptSizing="dynamic">
-              <mat-select panelClass="box-form-options" id="product-status" formControlName="status" aria-labelledby="product-status-label">
+            <mat-form-field
+              class="product-select"
+              appearance="outline"
+              subscriptSizing="dynamic"
+            >
+              <mat-select
+                panelClass="box-form-options"
+                id="product-status"
+                formControlName="status"
+                aria-labelledby="product-status-label"
+              >
                 <mat-option value="active">Ativo</mat-option>
                 <mat-option value="inactive">Inativo</mat-option>
                 <mat-option value="archived">Arquivado</mat-option>
@@ -126,7 +171,8 @@
             />
             @if (fields.price.touched && fields.price.invalid) {
               <span id="price-error" class="error"
-                ><mat-icon aria-hidden="true">error_outline</mat-icon> Informe um preço válido maior que zero.</span
+                ><mat-icon aria-hidden="true">error_outline</mat-icon> Informe
+                um preço válido maior que zero.</span
               >
             }
           </div>
@@ -152,7 +198,8 @@
             />
             @if (fields.quantity.touched && fields.quantity.invalid) {
               <span id="quantity-error" class="error"
-                ><mat-icon aria-hidden="true">error_outline</mat-icon> Informe uma quantidade válida.</span
+                ><mat-icon aria-hidden="true">error_outline</mat-icon> Informe
+                uma quantidade válida.</span
               >
             }
           </div>
@@ -170,20 +217,41 @@
         <div class="fields standard-characteristics">
           <div class="field">
             <label for="product-material">Material</label>
-            <input id="product-material" formControlName="material" maxlength="120" placeholder="Ex.: 100% algodão" />
+            <input
+              id="product-material"
+              formControlName="material"
+              maxlength="120"
+              placeholder="Ex.: 100% algodão"
+            />
           </div>
           <div class="field">
             <label for="product-size">Tamanho</label>
-            <input id="product-size" formControlName="size" maxlength="120" placeholder="Ex.: 70 × 140 cm" />
+            <input
+              id="product-size"
+              formControlName="size"
+              maxlength="120"
+              placeholder="Ex.: 70 × 140 cm"
+            />
           </div>
           <div class="field">
             <label for="product-color">Cor</label>
-            <input id="product-color" formControlName="color" maxlength="120" placeholder="Ex.: Areia" />
+            <input
+              id="product-color"
+              formControlName="color"
+              maxlength="120"
+              placeholder="Ex.: Areia"
+            />
           </div>
         </div>
         <div formArrayName="measurements">
-          @if (form.hasError('duplicateCharacteristic') && (form.dirty || form.touched)) {
-            <p id="duplicate-characteristic" class="error"><mat-icon aria-hidden="true">error_outline</mat-icon>Essa característica já foi informada.</p>
+          @if (
+            form.hasError("duplicateCharacteristic") &&
+            (form.dirty || form.touched)
+          ) {
+            <p id="duplicate-characteristic" class="error">
+              <mat-icon aria-hidden="true">error_outline</mat-icon>Essa
+              característica já foi informada.
+            </p>
           }
           @for (
             row of fields.measurements.controls;
@@ -195,7 +263,12 @@
                 <label [for]="'measure-name-' + i">Nome da característica</label
                 ><input
                   [id]="'measure-name-' + i"
-                  formControlName="label" [attr.aria-describedby]="form.hasError('duplicateCharacteristic') ? 'duplicate-characteristic' : null"
+                  formControlName="label"
+                  [attr.aria-describedby]="
+                    form.hasError('duplicateCharacteristic')
+                      ? 'duplicate-characteristic'
+                      : null
+                  "
                   maxlength="100"
                   placeholder="Ex.: Material"
                 />
@@ -271,6 +344,9 @@
         </button>
       </div>
     </footer>
+    @if (savedId && !externalSummary) {
+      <app-product-sku [productId]="savedId" />
+    }
   </form>
   @if (!externalSummary) {
     <ng-container [ngTemplateOutlet]="summary" />
@@ -320,8 +396,10 @@
         }
       </div>
       <div class="preview-heading">
-        <strong>{{ fields.name.value.trim() || 'Nome do produto' }}</strong>
-        <span class="preview-status" [attr.data-status]="fields.status.value">{{ labels[fields.status.value] }}</span>
+        <strong>{{ fields.name.value.trim() || "Nome do produto" }}</strong>
+        <span class="preview-status" [attr.data-status]="fields.status.value">{{
+          labels[fields.status.value]
+        }}</span>
       </div>
       <p>{{ previewContext }}</p>
       <strong class="preview-price">{{ pricePreview }}</strong>
@@ -331,12 +409,29 @@
 
 <ng-template #registrationContent>
   <div class="field quick-registration">
-    <label for="quick-registration-name">{{ registrationKind === 'categories' ? 'Nome da categoria' : 'Nome da marca' }} *</label>
-    <input id="quick-registration-name" [formControl]="registrationName" required (input)="registrationApiError = ''"
+    <label for="quick-registration-name"
+      >{{
+        registrationKind === "categories"
+          ? "Nome da categoria"
+          : "Nome da marca"
+      }}
+      *</label
+    >
+    <input
+      id="quick-registration-name"
+      [formControl]="registrationName"
+      required
+      (input)="registrationApiError = ''"
       [attr.aria-invalid]="!!registrationError"
-      [attr.aria-describedby]="registrationError ? 'quick-registration-error' : null" />
+      [attr.aria-describedby]="
+        registrationError ? 'quick-registration-error' : null
+      "
+    />
     @if (registrationError) {
-      <span id="quick-registration-error" class="error"><mat-icon aria-hidden="true">error_outline</mat-icon>{{ registrationError }}</span>
+      <span id="quick-registration-error" class="error"
+        ><mat-icon aria-hidden="true">error_outline</mat-icon
+        >{{ registrationError }}</span
+      >
     }
   </div>
 </ng-template>

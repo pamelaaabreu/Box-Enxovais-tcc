@@ -1,3 +1,4 @@
+import { ProductSkuComponent } from '../../../../shared/components/product-sku/product-sku.component';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
@@ -66,7 +67,7 @@ function measurementFields(fb: FormBuilder) {
 
 @Component({
   selector: 'app-product-create',
-  imports: [
+  imports: [ProductSkuComponent,
     NgTemplateOutlet,
     ReactiveFormsModule,
     RouterLink,
@@ -102,7 +103,6 @@ export class ProductCreateComponent {
       Validators.pattern(/\S/),
       Validators.maxLength(100),
     ]),
-    sku: this.fb.nonNullable.control('', [Validators.maxLength(32), Validators.pattern(/^(?=.{3,32}$)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/)]),
     description: this.fb.nonNullable.control(''),
     category: this.fb.control<number | null>(null, Validators.required),
     brand: this.fb.control<number | null>(null),
@@ -322,7 +322,6 @@ export class ProductCreateComponent {
     this.products
       .createProduct({
         name: value.name.trim(),
-        sku: value.sku.trim().toUpperCase(),
         description: value.description,
         product_type_id: value.category!,
         brand_id: value.brand ?? undefined,
@@ -349,10 +348,6 @@ export class ProductCreateComponent {
         },
         error: (error) => {
           this.loading = false;
-          if (error.status === 409) {
-            this.fields.sku.setErrors({ duplicate: true });
-            this.fields.sku.markAsTouched();
-          }
           this.alerts.error(
             'Não foi possível cadastrar o produto. Tente novamente.',
           );

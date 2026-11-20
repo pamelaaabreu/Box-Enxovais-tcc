@@ -9,7 +9,7 @@
   [description]="
     view === 'list'
       ? 'Gerencie campanhas, produtos e ofertas da sua loja.'
-      : 'Organize campanhas, participantes e condições em um só lugar.'
+      : campaignMeta
   "
   icon="campaign"
   [compact]="view !== 'list'"
@@ -18,6 +18,7 @@
       ? [{ label: 'Promoções' }]
       : [
           { label: 'Promoções', url: '/admin/promotions' },
+
           {
             label: editingId
               ? promotionData.name || 'Campanha'
@@ -40,23 +41,17 @@
         : '/admin/promotions/' + editingId + '/edit'
     )
   "
-  [status]="
-    view === 'list'
-      ? ''
-      : editingId
-        ? promotionData.status === 'active'
-          ? 'Ativa'
-          : 'Pausada'
-        : 'Rascunho'
-  "
+  [status]="''"
 >
   @if (view === "form") {
     <span header-label class="editing-label">{{
       editingId ? "Editando" : "Nova"
     }}</span>
   }
+
   <div header-actions class="campaign-heading-actions">
     @if (view !== "list") {
+      <span class="campaign-status" [class.paused]="promotionData.status !== 'active'">{{ promotionData.status === 'active' ? 'Ativa' : 'Pausada' }}</span>
       <button
         type="button"
         class="home-preview-action"
@@ -72,23 +67,28 @@
     }
   </div>
 </app-admin-page-header>
+
 <div
   class="promotion-form-container"
   [attr.inert]="pickerOpen || libraryOpen ? '' : null"
 >
   @if (campaignsError) {
-    <p class="load-error" role="alert">
-      {{ campaignsError }}
-
-      <button type="button" (click)="refresh()">Tentar novamente</button>
-    </p>
+    <app-admin-state kind="error" title="Não foi possível carregar as campanhas" [description]="campaignsError" actionLabel="Tentar novamente" (action)="refresh()" />
   }
 
   @if (view === "list") {
     @if (campaignsLoading) {
-      <p class="state" role="status">Carregando campanhas…</p>
+      <app-admin-state kind="loading" title="Carregando campanhas…" />
     } @else if (!campaignsError) {
-      <div class="table-scroll">
+      <div class="campaign-list-tools">
+        <div class="campaign-filters" aria-label="Filtrar campanhas">
+          @for (filter of campaignFilters; track filter) {
+            <button type="button" [class.active]="campaignFilter === filter" [attr.aria-pressed]="campaignFilter === filter" (click)="campaignFilter = filter">{{ filter }} <span>{{ campaignCount(filter) }}</span></button>
+          }
+        </div>
+        <input type="search" aria-label="Buscar campanha" placeholder="Buscar campanha" [(ngModel)]="campaignSearch" />
+      </div>
+      <div class="table-scroll campaign-table">
         <table aria-label="Campanhas cadastradas">
           <thead>
             <tr>
@@ -107,10 +107,11 @@
           </thead>
 
           <tbody>
-            @for (campaign of campaigns; track campaign.id) {
+            @for (campaign of visibleCampaigns; track campaign.id) {
               <tr>
                 <td>
                   <strong>{{ campaign.name }}</strong>
+                  @if (campaign.created_at) { <small class="table-meta">Criada em {{ campaign.created_at | date:'dd/MM' }}</small> }
                 </td>
 
                 <td>
@@ -118,17 +119,12 @@
                 </td>
 
                 <td class="campaign-period">
-                  {{ campaign.start_date | date: "dd/MM/yyyy HH:mm"
-                  }}<br /><span class="hint"
-                    >até
-
-                    {{ campaign.end_date | date: "dd/MM/yyyy HH:mm" }}</span
-                  >
+                  {{ campaign.start_date | date:'dd/MM' }} a {{ campaign.end_date | date:'dd/MM/yyyy' }}
                 </td>
 
                 <td>{{ campaign.products?.length || 0 }}</td>
 
-                <td>{{ homeLabel(campaign) }}</td>
+                <td><span class="home-state">{{ homeLabel(campaign) }}</span>@if (!campaign.products?.length) { <small class="table-meta">Sem produtos vinculados</small> }</td>
 
                 <td>
                   <div class="row-actions">
@@ -151,7 +147,7 @@
             } @empty {
               <tr>
                 <td colspan="6" class="state">
-                  Nenhuma campanha cadastrada. Crie sua primeira promoção.
+                  <app-admin-state icon="campaign" [title]="campaigns.length ? 'Nenhuma campanha encontrada.' : 'Nenhuma campanha cadastrada.'" [description]="campaigns.length ? 'Revise a busca e os filtros.' : 'Crie sua primeira promoção.'" />
                 </td>
               </tr>
             }
@@ -176,34 +172,10 @@
           >
             {{ tab }}
 
-            @if (index === 0 && !generalError) {
-              <span class="tab-indicator"
-                ><mat-icon aria-label="Dados gerais preenchidos"
-                  >check</mat-icon
-                ></span
-              >
-            }
-
             @if (index === 1) {
-              <span class="tab-indicator">{{
-                promotionData.products?.length || 0
-              }}</span>
-            }
-
-            @if (
-              index === 2 &&
-              promotionData.image_path &&
-              !failedImages.has(promotionData.image_path)
-            ) {
-              <span class="tab-indicator"
-                ><mat-icon aria-label="Imagem definida">check</mat-icon></span
+              <span class="tab-count"
+                >({{ promotionData.products?.length || 0 }})</span
               >
-            }
-
-            @if (
-              index === 3 && discountSummary !== "Sem desconto configurado"
-            ) {
-              <span class="tab-indicator">{{ discountSummary }}</span>
             }
 
             @if (submitted && tabError(index)) {
@@ -346,26 +318,27 @@
 
             <p class="hint">Duração: {{ duration }}</p>
 
-            <label class="home-visibility-control">
-              <input
-                type="checkbox"
-                class="home-visibility-input"
-                name="home_featured"
-                [(ngModel)]="promotionData.home_featured"
-                [disabled]="view === 'detail' || saving || uploading"
-              />
-              <span class="home-visibility-switch" aria-hidden="true">
-                <span class="home-visibility-knob"></span>
-              </span>
-              <span class="home-visibility-text"
-                >Apresentar na Home durante a vigência</span
-              >
-            </label>
-
-            <p class="hint">
-              A vitrine só aparece quando a campanha está ativa, vigente e
-              possui produtos disponíveis.
-            </p>
+            <div class="home-feature-card">
+              <label class="home-visibility-control">
+                <input
+                  type="checkbox"
+                  class="home-visibility-input"
+                  name="home_featured"
+                  [(ngModel)]="promotionData.home_featured"
+                  [disabled]="view === 'detail' || saving || uploading"
+                />
+                <span class="home-visibility-switch" aria-hidden="true">
+                  <span class="home-visibility-knob"></span>
+                </span>
+                <span class="home-visibility-copy">
+                  <strong>Apresentar na Home durante a vigência</strong>
+                  <span
+                    >A vitrine só aparece com a campanha ativa, vigente e com
+                    produtos disponíveis.</span
+                  >
+                </span>
+              </label>
+            </div>
 
             <p class="home-summary" role="status">{{ homeSummary }}</p>
           </section>
@@ -379,11 +352,7 @@
           >
             <div class="section-heading">
               <div>
-                <h3>Produtos participantes</h3>
-
-                <p>
-                  {{ promotionData.products?.length || 0 }} produtos vinculados
-                </p>
+                <h3>Produtos participantes</h3><p>Escolha o que entra nesta campanha.</p>
               </div>
 
               @if (view !== "detail") {
@@ -400,27 +369,15 @@
             </div>
 
             @if (loading) {
-              <p role="status">Carregando produtos…</p>
+              <app-admin-state kind="loading" title="Carregando produtos…" />
             }
 
             @if (productsError) {
-              <p class="load-error" role="alert">
-                {{ productsError }}
-
-                <button type="button" (click)="loadProducts()">
-                  Tentar novamente
-                </button>
-              </p>
+              <app-admin-state kind="error" title="Não foi possível carregar os produtos" [description]="productsError" actionLabel="Tentar novamente" (action)="loadProducts()" />
             }
 
-            @if (!promotionData.products?.length) {
-              <div class="empty-participants">
-                <mat-icon aria-hidden="true">shopping_bag</mat-icon>
-
-                <h4>Esta campanha ainda não possui produtos.</h4>
-
-                <p>Selecione os produtos que deseja incluir nesta promoção.</p>
-              </div>
+            @if (!loading && !productsError && !promotionData.products?.length) {
+              <app-admin-state icon="add" title="Nenhum produto nesta campanha" description="Sem produtos, a vitrine não aparece na Home. Adicione os produtos que deseja incluir." [actionLabel]="view !== 'detail' ? '+ Adicionar produtos' : ''" (action)="openPicker()" />
             } @else {
               <div class="selected-products">
                 @for (item of promotionData.products; track item.product_id) {
@@ -504,56 +461,9 @@
             [hidden]="activeTab !== 2"
             class="form-section"
           >
-            <div
-              class="image-upload"
-              (dragover)="$event.preventDefault()"
-              (drop)="dropImage($event)"
-            >
-              <div class="upload-guidance">
-                <strong>Arraste uma imagem ou clique para enviar</strong>
+            <div class="image-section-heading"><div><h3>Imagem de destaque</h3><p class="hint">É o banner da campanha na Home. JPEG, PNG ou WebP, até 10 MB.</p></div><div class="preview-devices" aria-label="Formato da prévia"><button type="button" [class.active]="previewDevice === 'desktop'" [attr.aria-pressed]="previewDevice === 'desktop'" (click)="previewDevice = 'desktop'">Computador</button><button type="button" [class.active]="previewDevice === 'mobile'" [attr.aria-pressed]="previewDevice === 'mobile'" (click)="previewDevice = 'mobile'">Celular</button></div></div>
 
-                <p class="hint">
-                  JPEG, PNG ou WebP de até 10 MB. Recomendado: 1600 × 600 px.
-                </p>
-              </div>
-
-              @if (view !== "detail") {
-                <div class="image-actions">
-                  <label for="campaign-upload" class="file-action"
-                    >{{
-                      promotionData.image_path
-                        ? "Trocar imagem"
-                        : "Enviar imagem"
-                    }}<input
-                      id="campaign-upload"
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp"
-                      (change)="upload($event)"
-                      [disabled]="uploading" /></label
-                  ><button
-                    type="button"
-                    (click)="
-                      librarySearch = ''; libraryPage = 1; libraryOpen = true
-                    "
-                  >
-                    Escolher da biblioteca
-                  </button>
-
-                  @if (promotionData.image_path) {
-                    <button
-                      type="button"
-                      (click)="promotionData.image_path = undefined"
-                    >
-                      Remover
-                    </button>
-                  }
-                </div>
-              }
-            </div>
-
-            <h3 class="preview-label">Prévia na Home</h3>
-
-            <div class="campaign-banner-preview">
+            <div class="campaign-banner-preview" [class.mobile-preview]="previewDevice === 'mobile'">
               @if (
                 promotionData.image_path &&
                 !failedImages.has(promotionData.image_path)
@@ -589,6 +499,47 @@
               }
             </div>
 
+            <div
+              class="image-upload"
+              (dragover)="$event.preventDefault()"
+              (drop)="dropImage($event)"
+            >
+
+              @if (view !== "detail") {
+                <div class="image-actions">
+                  <label for="campaign-upload" class="file-action"
+                    >{{
+                      promotionData.image_path
+                        ? "Trocar imagem"
+                        : "Enviar imagem"
+                    }}<input
+                      id="campaign-upload"
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      (change)="upload($event)"
+                      [disabled]="uploading" /></label
+                  ><button
+                    type="button"
+                    (click)="
+                      librarySearch = ''; libraryPage = 1; libraryOpen = true
+                    "
+                  >
+                    Escolher da biblioteca
+                  </button>
+
+                  @if (promotionData.image_path) {
+                    <button
+                      type="button"
+                      (click)="promotionData.image_path = undefined"
+                    >
+                      Remover
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+
+<p class="image-guidance">O título e a descrição vêm da aba Geral. Prefira uma foto com o assunto à direita; o texto aparece à esquerda com um degradê escuro suave para manter a leitura.</p>
             @if (uploading) {
               <p role="status">Enviando imagem…</p>
             }
@@ -611,19 +562,10 @@
             [hidden]="activeTab !== 3"
             class="form-section"
           >
-            <h3>Condições comerciais</h3>
+            <h3>Desconto da campanha</h3><p class="hint">Defina um valor para todos ou ajuste produto a produto.</p>
 
             @if (!promotionData.products?.length) {
-              <div class="empty-participants">
-                <p>
-                  Selecione participantes na aba Produtos para visualizar e
-                  configurar os descontos.
-                </p>
-
-                <button type="button" (click)="chooseTab(1)">
-                  Selecionar produtos
-                </button>
-              </div>
+              <app-admin-state icon="sell" title="Selecione os produtos" description="Adicione produtos na aba Produtos para visualizar e configurar os descontos." actionLabel="Selecionar produtos" (action)="chooseTab(1)" />
             } @else {
               <div class="discount-fields">
                 <div class="field">
@@ -643,7 +585,7 @@
 
                 <div class="field">
                   <label for="discount-value">Valor</label
-                  ><input
+                  ><div class="discount-input"><input
                     id="discount-value"
                     name="discount-value"
                     type="number"
@@ -651,11 +593,11 @@
                     [max]="discountMode === 'percentage' ? 100 : null"
                     step="0.01"
                     [(ngModel)]="discountValue"
-                  />
+                  /><span aria-hidden="true">{{ discountMode === 'percentage' ? '%' : 'R$' }}</span></div>
                 </div>
 
                 <button type="button" (click)="applyDiscount()">
-                  Aplicar a todos
+                  Aplicar a todos os produtos
                 </button>
               </div>
 
@@ -725,7 +667,7 @@
                             class="visually-hidden"
                             [for]="'discount-' + item.product_id"
                             >Desconto de {{ participant?.name }}</label
-                          ><input
+                          ><div class="discount-input"><input
                             [id]="'discount-' + item.product_id"
                             [name]="'discount-' + item.product_id"
                             type="number"
@@ -742,7 +684,7 @@
                             "
                             [disabled]="!!participant?.variants?.length"
                             [attr.aria-invalid]="invalidPrice(item.product_id)"
-                          />
+                          /><span aria-hidden="true">{{ discountMode === 'percentage' ? '%' : 'R$' }}</span></div>
 
                           @if (participant?.variants?.length) {
                             <small class="hint"
@@ -774,83 +716,7 @@
           </section>
         </fieldset>
 
-        <aside class="campaign-summary" aria-label="Resumo da promoção">
-          <h3>Resumo</h3>
-
-          <h4>{{ promotionData.name || "Nova promoção" }}</h4>
-
-          <span class="summary-status">{{ homeSummary }}</span>
-
-          <ul>
-            <li [class.complete]="promotionData.status === 'active'">
-              <mat-icon aria-hidden="true">{{
-                promotionData.status === "active" ? "check" : "remove"
-              }}</mat-icon
-              >Status
-
-              {{ promotionData.status === "active" ? "ativa" : "pausada" }}
-            </li>
-
-            <li [class.complete]="validPeriod">
-              <mat-icon aria-hidden="true">{{
-                validPeriod ? "check" : "remove"
-              }}</mat-icon>
-
-              @if (validPeriod) {
-                Vigência: {{ promotionData.start_date | date: "dd/MM" }} a
-
-                {{ promotionData.end_date | date: "dd/MM" }}
-              } @else {
-                Defina a vigência
-              }
-            </li>
-
-            <li [class.complete]="!!promotionData.products?.length">
-              <mat-icon aria-hidden="true">{{
-                promotionData.products?.length ? "check" : "remove"
-              }}</mat-icon
-              >{{ promotionData.products?.length || 0 }} produtos vinculados
-            </li>
-
-            <li
-              [class.complete]="
-                !!promotionData.image_path &&
-                !failedImages.has(promotionData.image_path!)
-              "
-            >
-              <mat-icon aria-hidden="true">{{
-                promotionData.image_path &&
-                !failedImages.has(promotionData.image_path)
-                  ? "check"
-                  : "remove"
-              }}</mat-icon
-              >{{
-                promotionData.image_path &&
-                !failedImages.has(promotionData.image_path)
-                  ? "Imagem definida"
-                  : "Imagem pendente"
-              }}
-            </li>
-
-            <li
-              [class.complete]="
-                discountSummary !== 'Sem desconto configurado' &&
-                discountSummary !== 'Revisar descontos'
-              "
-            >
-              <mat-icon aria-hidden="true">{{
-                discountSummary !== "Sem desconto configurado"
-                  ? "check"
-                  : "remove"
-              }}</mat-icon
-              >{{
-                discountSummary === "Sem desconto configurado"
-                  ? discountSummary
-                  : "Desconto: " + discountSummary
-              }}
-            </li>
-          </ul>
-        </aside>
+        <app-campaign-summary [promotionData]="promotionData" [readyForHome]="readyForHome" [homeSummary]="homeSummary" [hasAvailableParticipants]="hasAvailableParticipants" [hasValidImage]="hasValidImage" [generalError]="generalError" [validPeriod]="validPeriod" [hasConfiguredDiscount]="hasConfiguredDiscount" [discountSummary]="discountSummary" [discountedProductCount]="discountedProductCount" [dirty]="dirty" (tabChange)="chooseTab($event)" />
       </div>
 
       <footer class="action-bar">
@@ -951,16 +817,11 @@
       </div>
 
       @if (loading) {
-        <p role="status">Carregando produtos…</p>
+        <app-admin-state kind="loading" title="Carregando produtos…" />
       }
 
       @if (productsError) {
-        <p role="alert" class="load-error">
-          {{ productsError
-          }}<button type="button" (click)="loadProducts()">
-            Tentar novamente
-          </button>
-        </p>
+        <app-admin-state kind="error" title="Não foi possível carregar os produtos" [description]="productsError" actionLabel="Tentar novamente" (action)="loadProducts()" />
       }
 
       <div class="picker-results">
@@ -1016,7 +877,7 @@
           >
         } @empty {
           @if (!loading && !productsError) {
-            <p role="status">Nenhum produto encontrado nesta seleção.</p>
+            <app-admin-state title="Nenhum produto encontrado nesta seleção." />
           }
         }
       </div>
@@ -1089,7 +950,7 @@
             /><small>{{ path.replace("uploads/", "") }}</small>
           </button>
         } @empty {
-          <p>Nenhuma imagem disponível nesta busca.</p>
+          <app-admin-state icon="image_search" title="Nenhuma imagem disponível nesta busca." />
         }
       </div>
 

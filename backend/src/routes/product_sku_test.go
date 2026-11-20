@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 )
@@ -114,6 +115,12 @@ func TestProductSKUPostgres(t *testing.T) {
 			t.Fatalf("search %s: %v %v", term, page, err)
 		}
 	}
+	if _, err = conn.Exec("UPDATE products SET name='Nome editado',product_type_id=13,price=249.90,quantity=7,description='Descrição editada' WHERE id=405"); err != nil {
+		t.Fatal(err)
+	}
+	if err = conn.QueryRow("SELECT sku FROM products WHERE id=405").Scan(&sku); err != nil || sku != "BX-EDR-001" {
+		t.Fatal("SKU changed when editing commercial fields")
+	}
 	if _, err = conn.Exec("UPDATE products SET name='Novo nome',product_type_id=13,sku='' WHERE id=405"); err != nil {
 		t.Fatal(err)
 	}
@@ -127,4 +134,63 @@ func TestProductSKUPostgres(t *testing.T) {
 	if err = conn.QueryRow("SELECT sku FROM products WHERE id=$1", id).Scan(&sku); err != nil || sku == "" {
 		t.Fatal("automatic generation failed")
 	}
+	response = httptest.NewRecorder()
+	handler.CreateProduct(response, httptest.NewRequest("POST", "/products", strings.NewReader(`{"name":"Sem SKU manual","price":20,"quantity":3,"status":"active","product_type_id":13}`)))
+	if response.Code != 201 {
+		t.Fatalf("automatic HTTP creation failed: %d", response.Code)
+	}
+
+	parallelDB, err := openTestDatabase(t)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer parallelDB.Close()
+	parallelDB.SetMaxOpenConns(8)
+	const workers = 24
+	results := make(chan string, workers)
+	failures := make(chan error, workers)
+	var wg sync.WaitGroup
+	for i := 0; i < workers; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			tx, err := parallelDB.BeginTx(ctx, nil)
+			if err != nil {
+				failures <- err
+				return
+			}
+			defer tx.Rollback()
+			if _, err = tx.Exec("SET LOCAL search_path TO " + schema); err != nil {
+				failures <- err
+				return
+			}
+			var generated string
+			if err = tx.QueryRow("INSERT INTO products(name,price,quantity,product_type_id) VALUES($1,20,3,13) RETURNING sku", fmt.Sprintf("Simultâneo %d", i)).Scan(&generated); err != nil {
+				failures <- err
+				return
+			}
+			if err = tx.Commit(); err != nil {
+				failures <- err
+				return
+			}
+			results <- generated
+		}(i)
+	}
+	wg.Wait()
+	close(results)
+	close(failures)
+	for err := range failures {
+		t.Error(err)
+	}
+	seen := map[string]bool{}
+	for generated := range results {
+		if !strings.HasPrefix(generated, "BX-TOA-") || seen[generated] {
+			t.Errorf("invalid or duplicated automatic SKU: %s", generated)
+		}
+		seen[generated] = true
+	}
+	if len(seen) != workers {
+		t.Fatalf("expected %d unique concurrent SKUs, got %d", workers, len(seen))
+	}
+
 }

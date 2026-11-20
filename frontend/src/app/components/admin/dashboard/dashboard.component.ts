@@ -1,3 +1,4 @@
+import { AdminStateComponent } from '../../../shared/components/admin-state/admin-state.component';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { HttpClient } from '@angular/common/http';
@@ -19,7 +20,7 @@ interface Dashboard {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CurrencyPipe, MatIconModule, RouterLink],
+  imports: [AdminStateComponent, CurrencyPipe, MatIconModule, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })

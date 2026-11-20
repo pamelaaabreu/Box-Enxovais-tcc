@@ -1,3 +1,4 @@
+import { AdminStateComponent } from '../../../shared/components/admin-state/admin-state.component';
 import { AdminPageHeaderComponent } from '../../../shared/components/admin-page-header/admin-page-header.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { CurrencyPipe, DecimalPipe, registerLocaleData } from '@angular/common';
@@ -31,7 +32,7 @@ registerLocaleData(localePt);
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [AdminPageHeaderComponent, PaginationComponent,
+  imports: [AdminStateComponent, AdminPageHeaderComponent, PaginationComponent,
     CurrencyPipe,
     DecimalPipe,
     ReactiveFormsModule,

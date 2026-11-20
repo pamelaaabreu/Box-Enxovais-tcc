@@ -62,19 +62,9 @@
   </div>
 
   @if (loading()) {
-    <div class="state" role="status">
-      <span class="loading-dot" aria-hidden="true"></span>
-      <h2>Carregando produtos…</h2>
-      <p>Aguarde enquanto buscamos o catálogo.</p>
-    </div>
+    <app-admin-state kind="loading" title="Carregando produtos…" description="Aguarde enquanto buscamos o catálogo." />
   } @else if (error()) {
-    <div class="state error" role="alert">
-      <h2>Não foi possível carregar a listagem</h2>
-      <p>{{ error() }}</p>
-      <button type="button" class="secondary-button" (click)="retry()">
-        Tentar novamente
-      </button>
-    </div>
+    <app-admin-state kind="error" title="Não foi possível carregar a listagem" [description]="error()" actionLabel="Tentar novamente" (action)="retry()" />
   } @else {
     @if (page(); as result) {
       @if (result.items.length) {
@@ -165,17 +155,7 @@
         </div>
         <app-pagination [page]="currentPage()" [total]="result.pagination.total" [pageSize]="result.pagination.limit" [disabled]="loading()" (pageChange)="changePage($event-currentPage())" />
       } @else {
-        <div class="state">
-          <h2>Nenhum produto encontrado</h2>
-          <p>Revise os filtros ou cadastre um novo produto.</p>
-          <button
-            type="button"
-            class="secondary-button"
-            (click)="clearFilters()"
-          >
-            Limpar filtros
-          </button>
-        </div>
+        <app-admin-state title="Nenhum produto encontrado" description="Revise os filtros ou cadastre um novo produto." actionLabel="Limpar filtros" (action)="clearFilters()" />
       }
     }
   }

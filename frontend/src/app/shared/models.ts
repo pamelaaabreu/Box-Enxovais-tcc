@@ -36,7 +36,7 @@ export interface AddToPromotionRequest {
 }
 
 export interface PromotionParticipant {product_id:number; promotional_price?:number;}
-export interface PromotionRecord extends CreatePromotionRequest {id:number;}
+export interface PromotionRecord extends CreatePromotionRequest {id:number; updated_at?:string; created_at?:string;}
 export interface HomeCampaign {id:number;name:string;description:string;imagePath:string;startDate:string;endDate:string;products:Product[];}
 
 export interface CreatePromotionRequest {

@@ -4,22 +4,14 @@
   [attr.aria-busy]="status() === 'loading'"
 >
   @if (status() === "loading") {
-    <p role="status">Carregando indicadores e gráficos…</p>
+    <app-admin-state kind="loading" title="Carregando indicadores e gráficos…" />
     <div class="metrics" aria-hidden="true">
       @for (placeholder of [1, 2, 3, 4]; track placeholder) {
         <div class="panel skeleton"></div>
       }
     </div>
   } @else if (status() === "error") {
-    <div class="empty dashboard-error" role="alert">
-      <span class="dashboard-error-icon" aria-hidden="true"
-        ><mat-icon>cloud_off</mat-icon></span
-      >
-      <h2>Não foi possível carregar a dashboard</h2>
-      <button type="button" class="action" (click)="load()">
-        Tentar novamente
-      </button>
-    </div>
+    <app-admin-state kind="error" title="Não foi possível carregar a dashboard" actionLabel="Tentar novamente" (action)="load()" />
   } @else {
     @if (data(); as summary) {
       <div class="metrics">
@@ -85,11 +77,7 @@
               }
             </ul>
           } @else {
-            <div class="empty">
-              <mat-icon aria-hidden="true">show_chart</mat-icon>
-              <h3>Nenhum pedido registrado</h3>
-              <p>Os pedidos realizados na loja aparecerão aqui.</p>
-            </div>
+            <app-admin-state icon="show_chart" title="Nenhum pedido registrado" description="Os pedidos realizados na loja aparecerão aqui." />
           }
         </section>
         <section class="panel" aria-labelledby="categories-chart">
@@ -110,23 +98,12 @@
               }
             </ul>
           } @else {
-            <div class="empty">
-              <mat-icon aria-hidden="true">category</mat-icon>
-              <h3>Nenhuma venda por categoria</h3>
-              <p>As unidades de pedidos aprovados aparecerão aqui.</p>
-            </div>
+            <app-admin-state icon="category" title="Nenhuma venda por categoria" description="As unidades de pedidos aprovados aparecerão aqui." />
           }
         </section>
       </div>
       @if (!summary.products) {
-        <div class="panel empty">
-          <mat-icon aria-hidden="true">inventory_2</mat-icon>
-          <h2>Nenhum produto cadastrado</h2>
-          <p>Cadastre os primeiros produtos da Box Enxovais.</p>
-          <a class="action" routerLink="/admin/products/manage"
-            >Cadastrar produto</a
-          >
-        </div>
+        <app-admin-state icon="inventory_2" title="Nenhum produto cadastrado" description="Cadastre os primeiros produtos da Box Enxovais." actionLabel="Cadastrar produto" actionLink="/admin/products/manage" />
       }
     }
   }

@@ -33,15 +33,11 @@ describe('ProductCreateComponent', () => {
     return { fixture, page, http };
   }
 
-  it('accepts automatic SKU and validates external codes without changing other fields', () => {
-    const { page } = setup();
-    expect(page.fields.sku.valid).toBeTrue();
-    for (const sku of ['AB', 'BX--CAM', '-BX-CAM', 'BX CAM', 'A'.repeat(33)]) {
-      page.fields.sku.setValue(sku);
-      expect(page.fields.sku.invalid).withContext(sku).toBeTrue();
-    }
-    page.fields.sku.setValue('bx-cam-001');
-    expect(page.fields.sku.valid).toBeTrue();
+  it('explains automatic SKU and has no editable SKU field', () => {
+    const { fixture, page } = setup();
+    expect(page.form.get('sku')).toBeNull();
+    expect(fixture.nativeElement.querySelector('#product-sku')).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('O SKU será gerado automaticamente após salvar o produto.');
   });
 
   it('starts pending, rejects invalid fields and renders the checklist and name counter', () => {
@@ -93,6 +89,7 @@ describe('ProductCreateComponent', () => {
       name: 'Toalha', price: 1234.5, quantity: 0, status: 'archived', product_type_id: 9, brand_id: 8,
       care_instructions: 'Secar à sombra', measurements: { Largura: '70 cm' },
     }));
+    expect(request.request.body.sku).toBeUndefined();
     request.flush({ id: 21 });
     expect(created).toHaveBeenCalledOnceWith(21);
     page.onSubmit();

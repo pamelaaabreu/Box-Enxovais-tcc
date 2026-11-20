@@ -21,5 +21,5 @@
         <li><img [src]="imageUrl(image)" [alt]="'Imagem do produto ' + (i + 1)" />{{ first ? 'Capa atual' : 'Imagem ' + (i + 1) }}</li>
       }
     </ul>
-  } @else { <p>Nenhuma imagem cadastrada.</p> }
+  } @else { <app-admin-state icon="image" title="Nenhuma imagem cadastrada." /> }
 </section>

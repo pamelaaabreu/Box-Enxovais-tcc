@@ -1,3 +1,4 @@
+import { AdminStateComponent } from '../../../../shared/components/admin-state/admin-state.component';
 import { Component, DestroyRef, EventEmitter, Input, Output, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +10,7 @@ import { CustomAlertService } from '../../../../core/services/custom-alert.servi
 
 @Component({
   selector: 'app-product-image-upload',
-  imports: [MatButtonModule, MatProgressSpinnerModule],
+  imports: [AdminStateComponent, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './product-image-upload.component.html',
   styleUrl: './product-image-upload.component.css',
 })
