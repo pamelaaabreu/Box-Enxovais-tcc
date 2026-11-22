@@ -1,0 +1,44 @@
+ <nav [attr.aria-label]="label()" class="pager">
+    <div class="controls">
+      <button
+        type="button"
+        aria-label="Página anterior"
+        [disabled]="disabled() || current() <= 1"
+        title="Página anterior"
+        (click)="select(current() - 1)"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m14 6-6 6 6 6" />
+        </svg>
+      </button>
+      @for (item of items(); track $index) {
+        @if (item === '…') {
+          <span aria-hidden="true">…</span>
+        } @else {
+          <button
+            type="button"
+            [attr.aria-label]="'Página ' + item"
+            [attr.aria-current]="current() === item ? 'page' : null"
+            [disabled]="disabled()"
+            (click)="select(+item)"
+          >
+            {{ item }}
+          </button>
+        }
+      }
+      <button
+        type="button"
+        aria-label="Próxima página"
+        [disabled]="disabled() || current() >= pages()"
+        title="Próxima página"
+        (click)="select(current() + 1)"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m10 6 6 6-6 6" />
+        </svg>
+      </button>
+    </div>
+    <span class="summary" role="status"
+      >Página {{ current() }} de {{ pages() }}</span
+    >
+  </nav>

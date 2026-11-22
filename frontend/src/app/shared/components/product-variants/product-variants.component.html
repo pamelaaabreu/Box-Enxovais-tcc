@@ -1,0 +1,102 @@
+<section aria-label="Variações do produto">
+  <div class="variant-heading">
+    <div>
+      <h2>Variações do produto</h2>
+    </div>
+    <button type="button" (click)="add()" [disabled]="variants.length >= 50">
+      <mat-icon aria-hidden="true">add</mat-icon>Adicionar variação
+    </button>
+  </div>
+  @for (row of variants.controls; track row; let index = $index) {
+    <div
+      class="variant-card"
+      [formGroup]="row"
+      role="group"
+      [attr.aria-label]="
+        row.controls.size.value.trim() || 'Variação ' + (index + 1)
+      "
+    >
+      <button
+        type="button"
+        class="remove"
+        (click)="remove(index)"
+        [attr.aria-label]="
+          'Remover variação ' + (row.controls.size.value || index + 1)
+        "
+        [title]="'Remover variação ' + (row.controls.size.value || index + 1)"
+      >
+        <mat-icon aria-hidden="true">delete_outline</mat-icon>
+      </button>
+      <div class="variant-row">
+        <label
+          >Nome / tamanho *<input
+            formControlName="size"
+            maxlength="60"
+            placeholder="Ex.: Casal"
+            [attr.aria-invalid]="
+              row.controls.size.touched && row.controls.size.invalid
+            "
+        /></label>
+        <label
+          >Dimensões *<input
+            formControlName="dimensions"
+            maxlength="500"
+            placeholder="Ex.: 220 × 240 cm"
+            [attr.aria-invalid]="
+              row.controls.dimensions.touched && row.controls.dimensions.invalid
+            "
+        /></label>
+        <label
+          >Preço (R$) *<input
+            formControlName="price"
+            inputmode="numeric"
+            maxlength="16"
+            placeholder="0,00"
+            (input)="mask($event, row)"
+            [attr.aria-invalid]="
+              row.controls.price.touched && row.controls.price.invalid
+            "
+        /></label>
+        <label
+          >Estoque *<input
+            formControlName="stock"
+            type="number"
+            inputmode="numeric"
+            min="0"
+            max="2147483647"
+            step="1"
+            [attr.aria-invalid]="
+              row.controls.stock.touched && row.controls.stock.invalid
+            "
+        /></label>
+      </div>
+      @if (row.invalid && row.touched) {
+        <p class="error" role="alert">
+          <mat-icon aria-hidden="true">error_outline</mat-icon>Informe nome,
+          dimensões, preço maior que zero e estoque inteiro não negativo.
+        </p>
+      }
+    </div>
+  }
+  @if (showSummary && variants.length) {
+    <p class="variant-summary" role="status">
+      {{ variants.length }}
+      {{ variants.length === 1 ? "variação" : "variações" }} · {{ totalStock }}
+      {{ totalStock === 1 ? "unidade em estoque" : "unidades em estoque" }}
+      @if (startingPrice) {
+        · A partir de {{ startingPrice }}
+      }
+    </p>
+  }
+  @if (variants.hasError("duplicateSizes")) {
+    <p class="error" role="alert">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>Os nomes das
+      variações não podem se repetir.
+    </p>
+  }
+  @if (variants.hasError("totalStock")) {
+    <p class="error" role="alert">
+      O estoque total ultrapassa o limite permitido.
+    </p>
+  }
+</section>

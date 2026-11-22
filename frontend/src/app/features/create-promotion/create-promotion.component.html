@@ -115,7 +115,7 @@
                 </td>
 
                 <td>
-                  <span class="status-label">{{ statusLabel(campaign) }}</span>
+                  <span class="status-label" [class.status-active]="statusLabel(campaign) === 'Ativa'" [class.status-ended]="statusLabel(campaign) === 'Encerrada'">{{ statusLabel(campaign) }}</span>
                 </td>
 
                 <td class="campaign-period">
@@ -129,12 +129,12 @@
                 <td>
                   <div class="row-actions">
                     <button
-                      type="button"
+                      type="button" class="box-button" data-variant="outline" data-size="sm"
                       (click)="navigate('/admin/promotions/' + campaign.id)"
                     >
                       Visualizar</button
                     ><button
-                      type="button"
+                      type="button" class="box-button" data-variant="outline" data-size="sm"
                       (click)="
                         navigate('/admin/promotions/' + campaign.id + '/edit')
                       "
@@ -264,7 +264,7 @@
 
             <div class="fields-row">
               <div class="field">
-                <label id="campaign-status-label">Status</label
+                <span class="field-label" id="campaign-status-label">Status</span
                 ><mat-button-toggle-group
                   name="status"
                   [(ngModel)]="promotionData.status"
@@ -569,7 +569,7 @@
             } @else {
               <div class="discount-fields">
                 <div class="field">
-                  <label id="discount-mode-label">Tipo de desconto</label
+                  <span class="field-label" id="discount-mode-label">Tipo de desconto</span
                   ><mat-button-toggle-group
                     name="discount-mode"
                     [(ngModel)]="discountMode"
@@ -799,14 +799,14 @@
         </div>
 
         <div class="field">
-          <label id="participant-category-label">Categoria</label
+          <span class="field-label" id="participant-category-label">Categoria</span
           ><mat-select
             placeholder="Todas as categorias"
             name="participant-category"
             [(ngModel)]="categoryId"
             (ngModelChange)="pickerPage = 1"
             aria-labelledby="participant-category-label"
-            panelClass="box-form-options"
+            panelClass="box-form-options box-admin-options"
             ><mat-option [value]="null">Todas as categorias</mat-option>
 
             @for (category of categories; track category.id) {

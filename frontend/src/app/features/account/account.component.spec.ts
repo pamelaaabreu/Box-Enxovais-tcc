@@ -7,6 +7,17 @@ import { AuthService } from '../../core/services/auth.service';
 import { AccountComponent, ageOnDate, birthDateISO } from './account.component';
 
 describe('AccountComponent', () => {
+  it('keeps the address failure visible during retry and clears it only after recovery',()=>{
+    const response=new Subject<never[]>();
+    const addresses=jasmine.createSpy('addresses').and.returnValues(throwError(()=>new Error('network')),response);
+    TestBed.configureTestingModule({imports:[AccountComponent],providers:[provideRouter([]),{provide:AccountService,useValue:{profile:()=>of({name:'Pessoa Teste',email:'test@example.com',phone:'',nationalId:'',birthDate:''}),addresses}},{provide:AuthService,useValue:{userChanged:NEVER,updateSavedName:()=>{}}},{provide:CustomAlertService,useValue:{success:()=>{}}}]}).overrideComponent(AccountComponent,{set:{template:''}});
+    const component=TestBed.createComponent(AccountComponent).componentInstance;
+    expect(component.addressesError()).toBe('Não foi possível carregar seus endereços.');
+    component.loadAddresses();
+    expect(component.addressesError()).toBe('Não foi possível carregar seus endereços.');
+    response.next([]);response.complete();
+    expect(component.addressesError()).toBe('');expect(component.addressesLoaded()).toBeTrue();
+  });
   it('validates calendar dates and counts birthdays without requiring adulthood', () => {
     expect(birthDateISO('29/02/2024', new Date(2025, 2, 1))).toBe('2024-02-29');
     expect(birthDateISO('29/02/2025', new Date(2025, 2, 1))).toBe('');

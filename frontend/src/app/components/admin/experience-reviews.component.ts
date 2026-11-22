@@ -1,157 +1,29 @@
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
 import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { AdminPageHeaderComponent } from '../../shared/components/admin-page-header/admin-page-header.component';
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import { MatSelectModule } from '@angular/material/select';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { CustomAlertService } from '../../core/services/custom-alert.service';
-interface Review {
-  id: number;
-  orderId: number;
-  overall: number;
-  navigation: number;
-  service: number;
-  experience: number;
-  comment: string;
-  publicationConsent: boolean;
-  status: string;
-  createdAt: string;
-}
+import type { ExperienceReview as Review } from '../../shared/types/experience-review.types';
+
 @Component({
   selector: 'app-experience-reviews',
   standalone: true,
-  imports: [AdminStateComponent, AdminPageHeaderComponent, DatePipe, MatSelectModule, PaginationComponent],
-  template: ` <section class="registrations">
-    <app-admin-page-header title="Avaliações de compra" description="Modere opiniões vinculadas a compras concluídas. A publicação exige consentimento." icon="rate_review" [breadcrumb]="[{label:'Avaliações de compra'}]" />
-    @if (loading()) {
-      <app-admin-state kind="loading" title="Carregando avaliações…" />
-    } @else if (error()) {
-      <app-admin-state kind="error" [title]="error()" actionLabel="Tentar novamente" (action)="load()" />
-    } @else {
-      @for (
-        review of reviews().slice((page() - 1) * 10, page() * 10);
-        track review.id
-      ) {
-        <article>
-          <div class="review-heading">
-            <h3>Pedido #{{ review.orderId }} · {{ review.overall }}/5</h3>
-            <span>{{ review.createdAt | date: 'dd/MM/yyyy' }}</span>
-          </div>
-          <p>
-            Navegação {{ review.navigation }}/5 · Atendimento
-            {{ review.service }}/5 · Experiência {{ review.experience }}/5
-          </p>
-          <blockquote>{{ review.comment || 'Sem comentário.' }}</blockquote>
-          <p>
-            {{
-              review.publicationConsent
-                ? 'Publicação autorizada pelo cliente'
-                : 'Sem autorização de publicação'
-            }}
-          </p>
-          <label [id]="'moderation-' + review.id">Moderação</label
-          ><mat-select
-            [attr.aria-labelledby]="'moderation-' + review.id"
-            [value]="review.status"
-            [disabled]="pending() !== 0"
-            (selectionChange)="moderate(review, $event.value)"
-            panelClass="box-form-options"
-            ><mat-option value="pending">Pendente</mat-option
-            ><mat-option value="approved">Aprovado</mat-option
-            ><mat-option value="rejected">Rejeitado</mat-option></mat-select
-          >
-        </article>
-      } @empty {
-        <app-admin-state icon="rate_review" title="Nenhuma avaliação recebida." />
-      }
-      @if (reviews().length > 10) {
-        <app-pagination
-          [page]="page()"
-          [total]="reviews().length"
-          [pageSize]="10"
-          (pageChange)="page.set($event)"
-        />
-      }
-    }
-  </section>`,
-  styles: [
-    `
-      app-admin-page-header { margin-bottom: var(--admin-section-gap, 12px); }
-      .registrations {
-        padding: 0;
-        max-width: 100%;
-        font-family: Montserrat, sans-serif;
-        color: #3d4836;
-      }
-      h2 {
-        font-size: 26px;
-        font-weight: 600;
-      }
-      p {
-        font-size: 14px;
-        line-height: 1.7;
-      }
-      article {
-        margin-top: 20px;
-        padding: 20px;
-        border: 1px solid #dcded2;
-        border-radius: 16px;
-        background: #fffdf8;
-        min-width: 0;
-      }
-      .review-heading {
-        display: flex;
-        gap: 16px;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-      }
-      h3 {
-        font-size: 17px;
-        margin: 0;
-      }
-      blockquote {
-        margin: 16px 0;
-        overflow-wrap: anywhere;
-        font-size: 14px;
-      }
-      label {
-        display: block;
-        font-size: 13px;
-        margin: 12px 0 6px;
-      }
-      mat-select {
-        box-sizing: border-box;
-        max-width: 240px;
-        padding: 12px;
-        border: 1px solid #929c85;
-        border-radius: 12px;
-      }
-      button {
-        padding: 10px 18px;
-        min-height: 44px;
-        border-radius: 12px;
-        border: 1px solid #3d4836;
-        background: #3d4836;
-        color: white;
-      }
-      button:focus-visible {
-        outline: 2px solid #657550;
-        outline-offset: 3px;
-      }
-      @media (max-width: 520px) {
-        .registrations {
-          padding: 0;
-        }
-        article {
-          padding: 16px;
-        }
-      }
-    `,
+  imports: [
+    AdminStateComponent,
+    AdminPageHeaderComponent,
+    DatePipe,
+    PaginationComponent,
   ],
+  templateUrl: './experience-reviews.component.html',
+  styleUrl: './experience-reviews.component.scss',
 })
 export class ExperienceReviewsComponent {
+  private readonly destroyRef = inject(DestroyRef);
+  private readRequest?: Subscription;
   private readonly http = inject(HttpClient);
   private readonly alerts = inject(CustomAlertService);
   readonly reviews = signal<Review[]>([]);
@@ -159,14 +31,18 @@ export class ExperienceReviewsComponent {
   readonly error = signal('');
   readonly pending = signal(0);
   readonly page = signal(1);
+
   constructor() {
     this.load();
   }
+
   load() {
+    this.readRequest?.unsubscribe();
     this.loading.set(true);
     this.error.set('');
-    this.http
+    this.readRequest = this.http
       .get<Review[]>('http://localhost:8080/admin/experience-reviews')
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (v) => {
           this.reviews.set(v);
@@ -178,12 +54,15 @@ export class ExperienceReviewsComponent {
         },
       });
   }
-  moderate(review: Review, status: string) {
+
+  moderate(review: Review, status: Review['status']) {
+    if (this.pending()) return;
     this.pending.set(review.id);
     this.http
       .patch('http://localhost:8080/admin/experience-reviews/' + review.id, {
         status,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.reviews.update((v) =>

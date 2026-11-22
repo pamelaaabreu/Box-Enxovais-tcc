@@ -1,0 +1,51 @@
+[
+  {
+    "suite": "audit.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  },
+  {
+    "suite": "product-crud.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  },
+  {
+    "suite": "admin-orders.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  },
+  {
+    "suite": "admin-orders-states.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  },
+  {
+    "suite": "admin-customers.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  },
+  {
+    "suite": "dashboard.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  },
+  {
+    "suite": "reports.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  }
+]

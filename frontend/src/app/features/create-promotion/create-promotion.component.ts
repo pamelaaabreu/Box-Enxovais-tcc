@@ -74,7 +74,7 @@ import { MatIconModule } from '@angular/material/icon';
 
   templateUrl: './create-promotion.component.html',
 
-  styleUrl: './create-promotion.component.css',
+  styleUrl: './create-promotion.component.scss',
 })
 export class CreatePromotionComponent implements OnInit {
   readonly pickerTrigger =
@@ -576,9 +576,13 @@ export class CreatePromotionComponent implements OnInit {
 
     this.saving = true;
 
-    const request = {
-      ...this.promotionData,
-
+    const request: CreatePromotionRequest = {
+      name: this.promotionData.name,
+      status: this.promotionData.status,
+      description: this.promotionData.description,
+      image_path: this.promotionData.image_path,
+      home_featured: this.promotionData.home_featured,
+      products: this.promotionData.products,
       start_date: new Date(this.promotionData.start_date).toISOString(),
 
       end_date: new Date(this.promotionData.end_date).toISOString(),

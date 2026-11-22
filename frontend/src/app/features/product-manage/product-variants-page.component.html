@@ -1,0 +1,81 @@
+<section class="registrations">
+    <app-admin-page-header
+      title="Variações do produto"
+      [description]="
+        product?.name || 'Gerencie tamanhos, dimensões, preços e estoques.'
+      "
+      icon="straighten"
+      [breadcrumb]="[
+        { label: 'Produtos', url: '/admin/products' },
+        { label: 'Variações' },
+      ]"
+    />
+    @if (loading) {
+      <app-admin-state kind="loading" title="Carregando variações…" />
+    } @else if (!product) {
+      <app-admin-state
+        kind="error"
+        title="Não foi possível carregar o produto."
+        [description]="error"
+        actionLabel="Tentar novamente"
+        (action)="load()"
+      />
+    } @else {
+      <app-product-sku [productId]="id" />
+      <form class="editor" [formGroup]="form" (ngSubmit)="save()">
+        <fieldset [disabled]="saving" [attr.inert]="saving ? '' : null">
+          @if (variants.length) {
+            <app-product-commerce-summary [variants]="variants" />
+          } @else {
+            <section class="simple-commerce" aria-label="Preço e estoque">
+              <h2>Preço e estoque</h2>
+              <div class="commerce-fields">
+                <label
+                  >Preço (R$) *<input
+                    formControlName="price"
+                    inputmode="numeric"
+                    maxlength="16"
+                    placeholder="0,00"
+                    (input)="mask($event)" /></label
+                ><label
+                  >Quantidade em estoque *<input
+                    formControlName="quantity"
+                    type="number"
+                    inputmode="numeric"
+                    min="0"
+                    max="2147483647"
+                    step="1"
+                /></label>
+              </div>
+              @if (
+                (form.controls.price.touched && form.controls.price.invalid) ||
+                (form.controls.quantity.touched &&
+                  form.controls.quantity.invalid)
+              ) {
+                <p class="error" role="alert">
+                  Informe um preço válido maior que zero e uma quantidade
+                  inteira não negativa.
+                </p>
+              }
+            </section>
+          }
+          <app-product-variants [variants]="variants" [showSummary]="false" />
+        </fieldset>
+        @if (error) {
+          <p class="error" role="alert">{{ error }}</p>
+          <button type="button" (click)="reload()" [disabled]="saving">
+            Recarregar dados
+          </button>
+        }
+        <div class="actions">
+          <button
+            type="submit"
+            class="primary"
+            [disabled]="saving || form.invalid || !form.dirty"
+          >
+            {{ saving ? 'Salvando…' : 'Salvar variações' }}</button
+          ><a routerLink="/admin/products">Voltar para produtos</a>
+        </div>
+      </form>
+    }
+  </section>

@@ -1,0 +1,117 @@
+{
+  "results": [
+    {
+      "name": "Login real e sidebar de Pedidos",
+      "passed": true
+    },
+    {
+      "name": "API protegida contra clientes e visitantes",
+      "passed": true
+    },
+    {
+      "name": "Paginação e ordenação reais, com URL persistida",
+      "passed": true
+    },
+    {
+      "name": "Pesquisa por número e cliente, status e período",
+      "passed": true
+    },
+    {
+      "name": "Lista responsiva 1440",
+      "passed": true
+    },
+    {
+      "name": "Detalhe histórico e variante 1440",
+      "passed": true
+    },
+    {
+      "name": "Modal acessível e desistência 1440",
+      "passed": true
+    },
+    {
+      "name": "Estado vazio e recuperação 1440",
+      "passed": true
+    },
+    {
+      "name": "Lista responsiva 1024",
+      "passed": true
+    },
+    {
+      "name": "Detalhe histórico e variante 1024",
+      "passed": true
+    },
+    {
+      "name": "Modal acessível e desistência 1024",
+      "passed": true
+    },
+    {
+      "name": "Estado vazio e recuperação 1024",
+      "passed": true
+    },
+    {
+      "name": "Lista responsiva 768",
+      "passed": true
+    },
+    {
+      "name": "Detalhe histórico e variante 768",
+      "passed": true
+    },
+    {
+      "name": "Modal acessível e desistência 768",
+      "passed": true
+    },
+    {
+      "name": "Estado vazio e recuperação 768",
+      "passed": true
+    },
+    {
+      "name": "Lista responsiva 390",
+      "passed": true
+    },
+    {
+      "name": "Detalhe histórico e variante 390",
+      "passed": true
+    },
+    {
+      "name": "Modal acessível e desistência 390",
+      "passed": true
+    },
+    {
+      "name": "Estado vazio e recuperação 390",
+      "passed": true
+    },
+    {
+      "name": "Preços históricos de produto simples após alteração do catálogo",
+      "passed": true
+    },
+    {
+      "name": "Pedido inexistente e retorno à listagem",
+      "passed": true
+    },
+    {
+      "name": "Erro de comunicação e tentativa de recarregar",
+      "passed": true
+    },
+    {
+      "name": "Cancelamento real de variante e atualização do histórico",
+      "passed": true
+    },
+    {
+      "name": "Cancelamento duplicado não repõe estoque novamente",
+      "passed": true
+    },
+    {
+      "name": "Pedido legado sem débito não permite cancelamento",
+      "passed": true
+    },
+    {
+      "name": "Cancelamento simples e dashboard consistente",
+      "passed": true
+    },
+    {
+      "name": "Foco de teclado real e ausência de erros Angular",
+      "passed": true
+    }
+  ],
+  "pageErrors": []
+}

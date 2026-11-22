@@ -34,6 +34,6 @@ describe('AdminStateComponent', () => {
     fixture.componentRef.setInput('actionLink', '/admin/products/manage');
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('a').getAttribute('href')).toBe('/admin/products/manage');
-    expect(fixture.nativeElement.querySelector('mat-icon').textContent).toContain('search_off');
+    expect(fixture.nativeElement.querySelector('lucide-icon svg')).toBeTruthy();
   });
 });

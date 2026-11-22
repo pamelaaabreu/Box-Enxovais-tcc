@@ -33,10 +33,10 @@
       }
     </div>
     @if (error()) {
-      <p role="alert">{{ error() }}</p>
+      <app-inline-notice>{{ error() }}</app-inline-notice>
     }
     @if (notice()) {
-      <p role="status">{{ notice() }}</p>
+      <app-inline-notice kind="success">{{ notice() }}</app-inline-notice>
     }
     <section id="dados" role="tabpanel" aria-labelledby="tab-dados" [hidden]="activeTab() !== 'dados'">
       <div class="profile-heading">
@@ -247,7 +247,13 @@
         }
       </h2>
       <div class="section-body">
-        @if (addressesLoaded() && !editing()) {
+        @if (addressesError()) {
+          <app-admin-state class="address-empty" layout="compact" kind="error"
+            [title]="addressesError()" description="Tente novamente para consultar os endereços salvos na sua conta."
+            actionLabel="Tentar novamente" (action)="loadAddresses()" />
+        }
+
+        @if (addressesLoaded() && !editing() && !addressesError()) {
           @if (addresses().length) {
             <p class="address-list-intro">Usamos esses endereços nas suas compras. O endereço padrão é selecionado automaticamente.</p>
             <div class="address-list-grid">
@@ -299,14 +305,9 @@
               </button>
             </div>
           } @else {
-            <div class="address-empty">
-              <span class="section-icon"><mat-icon aria-hidden="true">location_on</mat-icon></span>
-              <h3>Você ainda não tem endereços cadastrados</h3>
-              <p>Cadastre um endereço para agilizar suas compras. Você poderá escolher qual será o padrão.</p>
-              <button mat-flat-button type="button" [disabled]="busy()" (click)="editAddress()">
-                <mat-icon aria-hidden="true">add</mat-icon>Adicionar endereço
-              </button>
-            </div>
+            <app-admin-state class="address-empty" layout="compact" title="Você ainda não tem endereços cadastrados"
+              description="Cadastre um endereço para agilizar suas compras. Você poderá escolher qual será o padrão."
+              actionLabel="Adicionar endereço" (action)="editAddress()" />
           }
         }
         @if (editing()) {
@@ -433,6 +434,13 @@
                         >lock_outline</mat-icon
                       >
                     }
+                    @if (field.key === 'state' && !lockedPostalFields().includes('state')) {
+                      <mat-select formControlName="state" aria-label="Estado" panelClass="box-form-options" required>
+                        @for (uf of ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']; track uf) {
+                          <mat-option [value]="uf">{{uf}}</mat-option>
+                        }
+                      </mat-select>
+                    } @else {
                     <input
                       matInput
                       [required]="field.key !== 'complement'"
@@ -449,6 +457,7 @@
                             : 200
                       "
                     />
+                    }
                     @if (field.key === "zipCode" && zipStatus()) {
                       <mat-hint class="zip-hint" role="status">
                         @if (zipFound()) {

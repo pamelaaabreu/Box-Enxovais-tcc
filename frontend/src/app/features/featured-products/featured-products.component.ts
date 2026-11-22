@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, map, of, startWith, switchMap } from 'rxjs';
-import { ProductService } from '../../core/services/product.service';
 import { Product } from '../../shared/models';
 
 type FeaturedState = { products: Product[]; loading: boolean; error: string };
@@ -31,7 +30,6 @@ export class FeaturedProductsComponent {
   readonly catalog = inject(CatalogService);
   private readonly http = inject(HttpClient);
   readonly favorites = inject(FavoritesService);
-  private readonly productService = inject(ProductService);
   private readonly router = inject(Router);
   @Input() titulo: string = 'Título Padrão';
   readonly backendUrl = 'http://localhost:8080';

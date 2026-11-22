@@ -22,11 +22,11 @@ export class PromoService {
   getPromotionalProductsPage(promoName: string, options: PageOptions = {}): Observable<Page<Product>> {
     return this.pagination.getPage<Product>(`${this.apiUrl}/${encodeURIComponent(promoName)}`, options);
   }
-  addProductToPromotion(request: AddToPromotionRequest): Observable<any> {
+  addProductToPromotion(request: AddToPromotionRequest): Observable<unknown> {
     const url = `${this.apiUrl}/add`;
     return this.http.post(url, request);
   }
-  createPromotion(request: CreatePromotionRequest): Observable<any> {
+  createPromotion(request: CreatePromotionRequest): Observable<unknown> {
     return this.http.post(`${this.apiUrl}/create`, request);
   }
 }

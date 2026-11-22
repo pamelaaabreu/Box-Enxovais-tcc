@@ -1,0 +1,198 @@
+<section class="registrations">
+  <app-admin-page-header
+    title="Avaliações de compra"
+    description="Modere opiniões vinculadas a compras concluídas."
+    icon="rate_review"
+    [breadcrumb]="[{ label: 'Avaliações de compra' }]"
+  />
+
+  @if (loading()) {
+    <app-admin-state kind="loading" title="Carregando avaliações…" />
+  } @else if (error()) {
+    <app-admin-state
+      kind="error"
+      [title]="error()"
+      actionLabel="Tentar novamente"
+      (action)="load()"
+    />
+  } @else {
+    <div class="reviews-list">
+      @for (
+        review of reviews().slice((page() - 1) * 10, page() * 10);
+        track review.id
+      ) {
+        <article
+          class="review-card"
+          [attr.aria-labelledby]="'review-title-' + review.id"
+        >
+          <div class="review-main">
+            <header class="review-heading">
+              <div class="review-identity-text">
+                <h3 [id]="'review-title-' + review.id">
+                  Pedido #{{ review.orderId }}
+                </h3>
+                <span class="review-date"
+                  >Avaliado em {{ review.createdAt | date: "dd/MM/yyyy" }}</span
+                >
+              </div>
+
+              <div class="review-heading-meta">
+                <span
+                  class="rating"
+                  role="img"
+                  [attr.aria-label]="'Nota geral: ' + review.overall + ' de 5'"
+                >
+                  <span class="rating-stars" aria-hidden="true">
+                    @for (star of [1, 2, 3, 4, 5]; track star) {
+                      <span [class.filled]="star <= review.overall">{{
+                        star <= review.overall ? "★" : "☆"
+                      }}</span>
+                    }
+                  </span>
+                  <span class="rating-number" aria-hidden="true"
+                    >{{ review.overall }}/5</span
+                  >
+                </span>
+
+                <span
+                  class="status-badge"
+                  [class.status-badge--pending]="review.status === 'pending'"
+                  [class.status-badge--approved]="review.status === 'approved'"
+                  [class.status-badge--rejected]="review.status === 'rejected'"
+                >
+                  @switch (review.status) {
+                    @case ("approved") {
+                      Aprovada
+                    }
+                    @case ("rejected") {
+                      Rejeitada
+                    }
+                    @default {
+                      Aguardando aprovação
+                    }
+                  }
+                </span>
+              </div>
+            </header>
+
+            <div class="review-content">
+              <blockquote [class.review-comment--empty]="!review.comment">
+                {{ review.comment || "Sem comentário." }}
+              </blockquote>
+
+              @if (
+                review.navigation !== null ||
+                review.service !== null ||
+                review.experience !== null
+              ) {
+                <div class="review-criteria" aria-label="Notas complementares">
+                  @if (review.navigation !== null) {
+                    <span class="criterion"
+                      >Navegação
+                      <strong>{{ review.navigation }}/5</strong></span
+                    >
+                  }
+                  @if (review.service !== null) {
+                    <span class="criterion"
+                      >Atendimento <strong>{{ review.service }}/5</strong></span
+                    >
+                  }
+                  @if (review.experience !== null) {
+                    <span class="criterion"
+                      >Experiência
+                      <strong>{{ review.experience }}/5</strong></span
+                    >
+                  }
+                </div>
+              }
+
+              <p
+                class="consent-note"
+                [class.consent-note--missing]="!review.publicationConsent"
+              >
+                {{
+                  review.publicationConsent
+                    ? "Publicação autorizada pelo cliente"
+                    : "Sem autorização de publicação"
+                }}
+              </p>
+            </div>
+          </div>
+
+          <footer class="review-moderation">
+            <div class="review-moderation-copy">
+              <span class="moderation-title">Moderação</span>
+              <span class="moderation-description"
+                >Escolha uma ação para esta avaliação.</span
+              >
+            </div>
+
+            <div
+              class="review-actions"
+              role="group"
+              [attr.aria-label]="'Moderação do pedido ' + review.orderId"
+            >
+              @if (review.status !== "pending") {
+                <button
+                  type="button"
+                  class="review-button review-button--outline"
+                  [disabled]="pending() !== 0"
+                  (click)="moderate(review, 'pending')"
+                >
+                  {{
+                    review.status === "approved"
+                      ? "Reabrir moderação"
+                      : "Reavaliar"
+                  }}
+                </button>
+              }
+
+              @if (review.status !== "rejected") {
+                <button
+                  type="button"
+                  class="review-button review-button--outline"
+                  [disabled]="pending() !== 0"
+                  (click)="moderate(review, 'rejected')"
+                >
+                  Rejeitar
+                </button>
+              }
+
+              @if (review.status !== "approved") {
+                <button
+                  type="button"
+                  class="review-button review-button--primary"
+                  [disabled]="pending() !== 0 || !review.publicationConsent"
+                  [attr.title]="
+                    !review.publicationConsent
+                      ? 'O cliente não autorizou a publicação.'
+                      : null
+                  "
+                  (click)="moderate(review, 'approved')"
+                >
+                  {{
+                    pending() === review.id ? "Salvando…" : "Aprovar e publicar"
+                  }}
+                </button>
+              }
+            </div>
+          </footer>
+        </article>
+      } @empty {
+        <app-admin-state
+          icon="rate_review"
+          title="Nenhuma avaliação recebida."
+        />
+      }
+    </div>
+
+    @if (reviews().length > 10) {
+      <app-pagination
+        [page]="page()"
+        [total]="reviews().length"
+        [pageSize]="10"
+        (pageChange)="page.set($event)"
+      />
+    }
+  }
+</section>

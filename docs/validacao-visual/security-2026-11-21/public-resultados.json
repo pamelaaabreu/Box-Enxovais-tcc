@@ -1,0 +1,162 @@
+[
+  {
+    "slug": "cama",
+    "width": 1440,
+    "passed": true
+  },
+  {
+    "slug": "travesseiros",
+    "width": 1440,
+    "passed": true
+  },
+  {
+    "slug": "toalhas",
+    "width": 1440,
+    "passed": true
+  },
+  {
+    "slug": "almofadas",
+    "width": 1440,
+    "passed": true
+  },
+  {
+    "slug": "mesa",
+    "width": 1440,
+    "passed": true
+  },
+  {
+    "slug": "decoracao",
+    "width": 1440,
+    "passed": true
+  },
+  {
+    "slug": "produto-1-galeria",
+    "width": 1440,
+    "passed": true
+  },
+  {
+    "slug": "foco-teclado",
+    "width": 1440,
+    "passed": true
+  },
+  {
+    "slug": "cama",
+    "width": 1024,
+    "passed": true
+  },
+  {
+    "slug": "travesseiros",
+    "width": 1024,
+    "passed": true
+  },
+  {
+    "slug": "toalhas",
+    "width": 1024,
+    "passed": true
+  },
+  {
+    "slug": "almofadas",
+    "width": 1024,
+    "passed": true
+  },
+  {
+    "slug": "mesa",
+    "width": 1024,
+    "passed": true
+  },
+  {
+    "slug": "decoracao",
+    "width": 1024,
+    "passed": true
+  },
+  {
+    "slug": "produto-1-galeria",
+    "width": 1024,
+    "passed": true
+  },
+  {
+    "slug": "foco-teclado",
+    "width": 1024,
+    "passed": true
+  },
+  {
+    "slug": "cama",
+    "width": 768,
+    "passed": true
+  },
+  {
+    "slug": "travesseiros",
+    "width": 768,
+    "passed": true
+  },
+  {
+    "slug": "toalhas",
+    "width": 768,
+    "passed": true
+  },
+  {
+    "slug": "almofadas",
+    "width": 768,
+    "passed": true
+  },
+  {
+    "slug": "mesa",
+    "width": 768,
+    "passed": true
+  },
+  {
+    "slug": "decoracao",
+    "width": 768,
+    "passed": true
+  },
+  {
+    "slug": "produto-1-galeria",
+    "width": 768,
+    "passed": true
+  },
+  {
+    "slug": "foco-teclado",
+    "width": 768,
+    "passed": true
+  },
+  {
+    "slug": "cama",
+    "width": 390,
+    "passed": true
+  },
+  {
+    "slug": "travesseiros",
+    "width": 390,
+    "passed": true
+  },
+  {
+    "slug": "toalhas",
+    "width": 390,
+    "passed": true
+  },
+  {
+    "slug": "almofadas",
+    "width": 390,
+    "passed": true
+  },
+  {
+    "slug": "mesa",
+    "width": 390,
+    "passed": true
+  },
+  {
+    "slug": "decoracao",
+    "width": 390,
+    "passed": true
+  },
+  {
+    "slug": "produto-1-galeria",
+    "width": 390,
+    "passed": true
+  },
+  {
+    "slug": "foco-teclado",
+    "width": 390,
+    "passed": true
+  }
+]

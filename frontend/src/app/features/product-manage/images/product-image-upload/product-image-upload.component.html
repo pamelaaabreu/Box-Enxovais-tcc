@@ -1,6 +1,14 @@
 <section class="image-panel">
   <h2>Imagens do produto</h2>
   <p>Produto #{{ productId }}. Envie imagens JPEG, PNG ou WebP de até 10 MB.</p>
+  @if (variants.length) {
+    <label class="gallery-scope" for="gallery-variant">Galeria
+      <select id="gallery-variant" [value]="variantId || 0" [disabled]="loading || !!selectedFile" (change)="selectVariant($event)">
+        <option [value]="0">Imagens gerais do produto</option>
+        @for (variant of variants; track variant.id) { <option [value]="variant.id">{{ variant.size }}</option> }
+      </select>
+    </label>
+  }
   <label class="upload-area">Selecionar imagem
     <input type="file" accept="image/jpeg,image/png,image/webp" [disabled]="loading || !productId" (change)="onFileSelected(fileInput)" #fileInput />
   </label>
@@ -17,9 +25,22 @@
   <h3>Imagens cadastradas</h3>
   @if (images.length) {
     <ul class="image-list">
-      @for (image of images; track image; let first = $first; let i = $index) {
-        <li><img [src]="imageUrl(image)" [alt]="'Imagem do produto ' + (i + 1)" />{{ first ? 'Capa atual' : 'Imagem ' + (i + 1) }}</li>
+      @for (image of visibleImages; track image.id; let first = $first; let last = $last; let i = $index) {
+        <li><img [src]="imageUrl(image.path)" [alt]="'Imagem do produto ' + (i + 1)" /><span>{{ first ? 'Capa atual' : 'Imagem ' + (i + 1) }}</span>
+          <div class="image-actions">
+            <button type="button" mat-icon-button [disabled]="loading || first" (click)="moveImage(i,-1)" [attr.aria-label]="'Mover imagem ' + (i+1) + ' para antes'" title="Mover para antes"><mat-icon>arrow_back</mat-icon></button>
+            <button type="button" mat-icon-button [disabled]="loading || last" (click)="moveImage(i,1)" [attr.aria-label]="'Mover imagem ' + (i+1) + ' para depois'" title="Mover para depois"><mat-icon>arrow_forward</mat-icon></button>
+            <button type="button" mat-icon-button [disabled]="loading || first" (click)="setCover(image)" [attr.aria-label]="'Definir imagem ' + (i+1) + ' como principal'" title="Definir como principal"><mat-icon>star_outline</mat-icon></button>
+            <button type="button" mat-icon-button [disabled]="loading" (click)="removeImage(image)" [attr.aria-label]="'Remover imagem ' + (i+1)" title="Remover imagem"><mat-icon>delete_outline</mat-icon></button>
+          </div>
+        </li>
       }
     </ul>
   } @else { <app-admin-state icon="image" title="Nenhuma imagem cadastrada." /> }
+  @if (showComplete) {
+    <div class="completion-actions">
+      <button type="button" mat-flat-button class="upload-button" [disabled]="loading || !!selectedFile || (!editing && !images.length)" (click)="complete()">{{ editing ? 'Concluir alterações' : 'Concluir cadastro' }}</button>
+      <p>Envie todas as imagens desejadas antes de concluir e voltar à listagem.</p>
+    </div>
+  }
 </section>

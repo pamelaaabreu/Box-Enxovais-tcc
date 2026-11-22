@@ -57,7 +57,7 @@ func checkoutTestDB(t *testing.T) (*sql.DB, func(string)) {
  CREATE TABLE promotion_products(product_id INTEGER,promotion_id INTEGER,promotional_price NUMERIC);
  CREATE TABLE product_images(id INTEGER PRIMARY KEY,product_id INTEGER,image_path TEXT,is_primary BOOLEAN);
  INSERT INTO users VALUES(1),(2);`)
-	for _, name := range []string{"000003_cart.up.sql", "000006_checkout.up.sql", "000007_order_cancellation.up.sql", "000008_order_cancellation_reason.up.sql", "000009_account_addresses.up.sql", "000010_business_phone.up.sql", "000011_user_cnpj.up.sql", "000013_product_variants.up.sql"} {
+	for _, name := range []string{"000003_cart.up.sql", "000006_checkout.up.sql", "000051_order_shipping.up.sql", "000053_checkout_installments.up.sql", "000007_order_cancellation.up.sql", "000008_order_cancellation_reason.up.sql", "000009_account_addresses.up.sql", "000010_business_phone.up.sql", "000011_user_cnpj.up.sql", "000012_shipping_ranges.up.sql", "000013_product_variants.up.sql"} {
 		if name == "000010_business_phone.up.sql" {
 			exec("UPDATE users SET phone = '+55 (11) 2345-6789' WHERE id = 2")
 		}
@@ -70,6 +70,7 @@ func checkoutTestDB(t *testing.T) (*sql.DB, func(string)) {
 	exec(`INSERT INTO products VALUES(1,'Produto',10,1,'active',now());
  INSERT INTO carts(user_id) VALUES(1),(2);
  INSERT INTO cart_items(cart_id,product_id,quantity) SELECT id,1,1 FROM carts;`)
+	ensureCheckoutCoverage(t, db)
 	return db, exec
 }
 
@@ -101,7 +102,7 @@ func TestCheckoutStockPostgres(t *testing.T) {
 			db, exec := checkoutTestDB(t)
 			repo := repositories.CheckoutRepository{DB: db}
 			buy := func(user int, key string) error {
-				_, err := repo.Create(context.Background(), user, models.CheckoutRequest{RequestKey: key, PaymentMethod: "pix", ExpectedTotalCents: 1000})
+				_, err := repo.Create(context.Background(), user, models.CheckoutRequest{Address: coveredCheckoutAddress(), RequestKey: key, PaymentMethod: "pix", ExpectedTotalCents: 1000})
 				return err
 			}
 			switch scenario {
@@ -142,7 +143,7 @@ func TestOrderCancellationPostgres(t *testing.T) {
 			repo := repositories.CheckoutRepository{DB: db}
 			exec(`INSERT INTO products VALUES(2,'Outro',20,1,'active',now());
      INSERT INTO cart_items(cart_id,product_id,quantity) SELECT id,2,1 FROM carts WHERE user_id=1;`)
-			order, err := repo.Create(ctx, 1, models.CheckoutRequest{RequestKey: "test-cancel", PaymentMethod: "pix", ExpectedTotalCents: 3000})
+			order, err := repo.Create(ctx, 1, models.CheckoutRequest{Address: coveredCheckoutAddress(), RequestKey: "test-cancel", PaymentMethod: "pix", ExpectedTotalCents: 3000})
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -228,7 +229,7 @@ func TestOrderCancellationPostgres(t *testing.T) {
 func TestOrderCancellationNotificationPostgres(t *testing.T) {
 	db, _ := checkoutTestDB(t)
 	repo := repositories.CheckoutRepository{DB: db}
-	order, err := repo.Create(context.Background(), 1, models.CheckoutRequest{RequestKey: "test-notify", PaymentMethod: "pix", ExpectedTotalCents: 1000})
+	order, err := repo.Create(context.Background(), 1, models.CheckoutRequest{Address: coveredCheckoutAddress(), RequestKey: "test-notify", PaymentMethod: "pix", ExpectedTotalCents: 1000})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -284,7 +285,7 @@ func TestReorderPostgres(t *testing.T) {
 	cart := repositories.CartRepository{DB: db}
 	exec(`INSERT INTO products VALUES(2,'Outro',20,2,'active',now());
  INSERT INTO cart_items(cart_id,product_id,quantity) SELECT id,2,1 FROM carts WHERE user_id=1;`)
-	order, err := checkout.Create(ctx, 1, models.CheckoutRequest{RequestKey: "reorder", PaymentMethod: "pix", ExpectedTotalCents: 3000})
+	order, err := checkout.Create(ctx, 1, models.CheckoutRequest{Address: coveredCheckoutAddress(), RequestKey: "reorder", PaymentMethod: "pix", ExpectedTotalCents: 3000})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -322,7 +323,7 @@ func TestOrderCancellationAtAnyAgePostgres(t *testing.T) {
 			db, exec := checkoutTestDB(t)
 			ctx := context.Background()
 			repo := repositories.CheckoutRepository{DB: db}
-			order, err := repo.Create(ctx, 1, models.CheckoutRequest{RequestKey: "deadline", PaymentMethod: "pix", ExpectedTotalCents: 1000})
+			order, err := repo.Create(ctx, 1, models.CheckoutRequest{Address: coveredCheckoutAddress(), RequestKey: "deadline", PaymentMethod: "pix", ExpectedTotalCents: 1000})
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -409,7 +410,7 @@ func TestAccountAddressesAndCheckoutPostgres(t *testing.T) {
 	if len(addresses) != 2 || addresses[0].ID != second.ID || !addresses[0].IsDefault || addresses[1].IsDefault {
 		t.Fatal("default address did not persist after reloading")
 	}
-	input := models.CheckoutRequest{
+	input := models.CheckoutRequest{Address: coveredCheckoutAddress(),
 		RequestKey: "checkout-address", AddressID: first.ID, PaymentMethod: "pix",
 		ExpectedTotalCents: 1000, ContactPhone: "11987654321",
 	}
@@ -549,7 +550,7 @@ func TestVariantCheckoutPostgres(t *testing.T) {
 		t.Fatalf("stock: %v", err)
 	}
 	repo := repositories.CheckoutRepository{DB: db}
-	order, err := repo.Create(ctx, 1, models.CheckoutRequest{RequestKey: "variant-test", PaymentMethod: "pix", ExpectedTotalCents: 2780})
+	order, err := repo.Create(ctx, 1, models.CheckoutRequest{Address: coveredCheckoutAddress(), RequestKey: "variant-test", PaymentMethod: "pix", ExpectedTotalCents: 2780})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -609,7 +610,7 @@ func TestVariantLastUnitPostgres(t *testing.T) {
 		}
 	}
 	stock(1)
-	input := models.CheckoutRequest{RequestKey: "last-variant", PaymentMethod: "pix", ExpectedTotalCents: 1290}
+	input := models.CheckoutRequest{Address: coveredCheckoutAddress(), RequestKey: "last-variant", PaymentMethod: "pix", ExpectedTotalCents: 1290}
 	results := make([]models.CheckoutOrder, 2)
 	buy := func(user int) error {
 		order, err := checkout.Create(ctx, user, input)
@@ -652,13 +653,141 @@ func TestCampaignCheckoutPricesPostgres(t *testing.T) {
 			if eligible {
 				expected = 800
 			}
-			order, err := (repositories.CheckoutRepository{DB: database}).Create(context.Background(), 1, models.CheckoutRequest{RequestKey: "campaign-price", PaymentMethod: "pix", ExpectedTotalCents: expected})
+			order, err := (repositories.CheckoutRepository{DB: database}).Create(context.Background(), 1, models.CheckoutRequest{Address: coveredCheckoutAddress(), RequestKey: "campaign-price", PaymentMethod: "pix", ExpectedTotalCents: expected})
 			if err != nil || order.Total != models.Money(expected) {
 				t.Fatal("campaign checkout", order.Total, err)
 			}
 			var price float64
 			if err = database.QueryRow("SELECT price FROM products WHERE id=1").Scan(&price); err != nil || price != 10 {
 				t.Fatal("original price changed", price, err)
+			}
+		})
+	}
+}
+
+func coveredCheckoutAddress() models.ShippingAddress {
+	return models.ShippingAddress{Recipient: "Pessoa Teste", ZipCode: "01001-000", Street: "Rua Teste", Number: "1", Neighborhood: "Centro", City: "São Paulo", State: "SP"}
+}
+
+func ensureCheckoutCoverage(t *testing.T, db *sql.DB) {
+	t.Helper()
+	var exists bool
+	if err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema=current_schema() AND table_name='shipping_ranges')").Scan(&exists); err != nil {
+		t.Fatal(err)
+	}
+	if !exists {
+		migration, err := os.ReadFile("../../migrations/000012_shipping_ranges.up.sql")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err := db.Exec(string(migration)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := db.Exec("INSERT INTO shipping_ranges(name,start_cep,end_cep,price_cents,min_days,max_days,active) SELECT 'Cobertura de teste isolado',1000000,1999999,0,2,4,true WHERE NOT EXISTS(SELECT 1 FROM shipping_ranges)"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestCheckoutDeliveryCoverageAndSavingPostgres(t *testing.T) {
+	for _, mode := range []string{"saved", "new", "outside", "inactive", "invalid", "foreign", "save", "no-save", "retry", "duplicate"} {
+		t.Run(mode, func(t *testing.T) {
+			db, exec := checkoutTestDB(t)
+			ctx := context.Background()
+			repo := repositories.CheckoutRepository{DB: db}
+			account := repositories.AccountRepository{DB: db}
+			first, err := account.SaveAddress(ctx, 1, 0, models.UserAddress{Label: "Casa", ShippingAddress: coveredCheckoutAddress()})
+			if err != nil {
+				t.Fatal(err)
+			}
+			secondAddress := coveredCheckoutAddress()
+			secondAddress.Number = "42"
+			second, err := account.SaveAddress(ctx, 1, 0, models.UserAddress{Label: "Trabalho", ShippingAddress: secondAddress})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := account.SetDefaultAddress(ctx, 1, first.ID); err != nil {
+				t.Fatal(err)
+			}
+			input := models.CheckoutRequest{RequestKey: "delivery-coverage-test", AddressID: second.ID, PaymentMethod: "pix", ExpectedTotalCents: 1000}
+			user := 1
+			switch mode {
+			case "new", "save", "no-save", "retry", "duplicate":
+				input.AddressID = 0
+				input.Address = secondAddress
+				input.Address.Number = "88"
+				input.SaveAddress = mode == "save" || mode == "retry" || mode == "duplicate"
+				if mode == "duplicate" {
+					input.Address = secondAddress
+				}
+			case "outside":
+				exec("UPDATE user_addresses SET zip_code='99999-999' WHERE id=" + fmt.Sprint(second.ID))
+			case "inactive":
+				exec("UPDATE shipping_ranges SET active=false")
+			case "invalid":
+				exec("UPDATE user_addresses SET zip_code='123' WHERE id=" + fmt.Sprint(second.ID))
+			case "foreign":
+				user = 2
+			}
+			order, err := repo.Create(ctx, user, input)
+			if mode == "outside" || mode == "inactive" || mode == "invalid" || mode == "foreign" {
+				want := repositories.ErrCheckoutDeliveryUnavailable
+				if mode == "invalid" {
+					want = repositories.ErrCheckoutPostalCode
+				}
+				if mode == "foreign" {
+					want = repositories.ErrCheckoutAddress
+				}
+				if !errors.Is(err, want) {
+					t.Fatalf("wanted %v, got %v", want, err)
+				}
+				assertCheckoutState(t, db, 1, 0, 2)
+				return
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			details, err := repo.GetOrderDetails(ctx, user, order.ID)
+			if err != nil {
+				t.Fatal(err)
+			}
+			want := "42"
+			if input.AddressID == 0 {
+				want = input.Address.Number
+			}
+			if details.Address.Number != want {
+				t.Fatalf("wrong snapshot: %s", details.Address.Number)
+			}
+			addresses, err := account.Addresses(ctx, 1)
+			if err != nil {
+				t.Fatal(err)
+			}
+			count := 2
+			if input.SaveAddress && mode != "duplicate" {
+				count = 3
+			}
+			if len(addresses) != count || addresses[0].ID != first.ID || !addresses[0].IsDefault {
+				t.Fatal("saving changed default or duplicated address")
+			}
+			if mode == "retry" {
+				again, err := repo.Create(ctx, user, input)
+				if err != nil || again.ID != order.ID {
+					t.Fatalf("retry: %v", err)
+				}
+				addresses, _ = account.Addresses(ctx, 1)
+				if len(addresses) != 3 {
+					t.Fatal("retry duplicated address")
+				}
+			}
+			if mode == "saved" {
+				secondAddress.Number = "900"
+				if _, err := account.SaveAddress(ctx, 1, second.ID, models.UserAddress{Label: "Trabalho", ShippingAddress: secondAddress}); err != nil {
+					t.Fatal(err)
+				}
+				snapshot, err := repo.GetOrderDetails(ctx, 1, order.ID)
+				if err != nil || snapshot.Address.Number != "42" {
+					t.Fatal("historical address changed")
+				}
 			}
 		})
 	}

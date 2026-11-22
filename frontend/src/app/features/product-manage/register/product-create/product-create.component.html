@@ -1,8 +1,10 @@
+@if (loadingProduct) { <app-admin-state kind="loading" title="Carregando produto…" /> }
+@if (productError) { <app-admin-state kind="error" [title]="productError" actionLabel="Tentar novamente" (action)="loadProduct()" /> }
 <div class="create-grid" [class.with-summary]="!externalSummary">
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="product-form">
     <fieldset
-      [disabled]="loading || !!savedId"
-      [attr.inert]="loading || savedId ? '' : null"
+      [disabled]="loading || loadingProduct || !!productError || !!savedId"
+      [attr.inert]="loading || loadingProduct || productError || savedId ? '' : null"
     >
       <section class="form-section" aria-labelledby="basic-title">
         <h2 id="basic-title">Informações básicas</h2>
@@ -31,9 +33,11 @@
             }
           </div>
           <div class="field wide">
+            @if (editId) { <app-product-sku [productId]="editId" /> } @else {
             <small class="sku-hint"
               >O SKU será gerado automaticamente após salvar o produto.</small
-            >
+            > }
+
           </div>
           <div class="field">
             <label id="product-category-label" for="product-category"
@@ -45,7 +49,7 @@
               subscriptSizing="dynamic"
             >
               <mat-select
-                panelClass="box-form-options"
+                panelClass="box-form-options box-admin-options"
                 id="product-category"
                 formControlName="category"
                 aria-labelledby="product-category-label"
@@ -75,7 +79,7 @@
               class="inline-link category-registration"
               (click)="openRegistration('categories')"
             >
-              + Nova categoria
+              <mat-icon aria-hidden="true">add</mat-icon> Nova categoria
             </button>
           </div>
           <div class="field">
@@ -86,7 +90,7 @@
               subscriptSizing="dynamic"
             >
               <mat-select
-                panelClass="box-form-options"
+                panelClass="box-form-options box-admin-options"
                 id="product-brand"
                 formControlName="brand"
                 aria-labelledby="product-brand-label"
@@ -107,7 +111,7 @@
               class="inline-link"
               (click)="openRegistration('brands')"
             >
-              + Nova marca
+              <mat-icon aria-hidden="true">add</mat-icon> Nova marca
             </button>
           </div>
           <div class="field">
@@ -118,7 +122,7 @@
               subscriptSizing="dynamic"
             >
               <mat-select
-                panelClass="box-form-options"
+                panelClass="box-form-options box-admin-options"
                 id="product-status"
                 formControlName="status"
                 aria-labelledby="product-status-label"
@@ -149,7 +153,9 @@
           </div>
         </div>
       </section>
-      <section class="form-section" aria-labelledby="stock-title">
+      <section class="form-section" [class.commerce-summary-section]="fields.variants.length > 0" aria-label="Preço e estoque">
+        @if(fields.variants.length){<app-product-commerce-summary [framed]="false" [variants]="fields.variants" />}
+        @else {
         <h2 id="stock-title">Preço e estoque</h2>
         <div class="fields commerce">
           <div class="field">
@@ -205,6 +211,7 @@
             }
           </div>
         </div>
+        }
         <p class="promotion-hint">
           Para definir preço promocional, use
           <a class="inline-link" routerLink="/admin/promotions/add-product"
@@ -212,6 +219,10 @@
           >
           após cadastrar o produto.
         </p>
+      </section>
+      <section class="form-section">
+        <app-product-variants [variants]="fields.variants" [showSummary]="false" />
+
       </section>
       <section class="form-section" aria-labelledby="details-title">
         <h2 id="details-title">Características <small>(opcional)</small></h2>
@@ -221,17 +232,8 @@
             <input
               id="product-material"
               formControlName="material"
-              maxlength="120"
+              [maxlength]="editId ? 20000 : 120"
               placeholder="Ex.: 100% algodão"
-            />
-          </div>
-          <div class="field">
-            <label for="product-size">Tamanho</label>
-            <input
-              id="product-size"
-              formControlName="size"
-              maxlength="120"
-              placeholder="Ex.: 70 × 140 cm"
             />
           </div>
           <div class="field">
@@ -239,10 +241,24 @@
             <input
               id="product-color"
               formControlName="color"
-              maxlength="120"
+              [maxlength]="editId ? 20000 : 120"
               placeholder="Ex.: Areia"
             />
           </div>
+        <button type="button" class="action add-characteristic" (click)="addMeasurement()">
+          <mat-icon aria-hidden="true">add</mat-icon> Adicionar característica
+        </button>
+          @if (!fields.variants.length) {
+            <div class="field">
+              <label for="product-size">Tamanho</label>
+              <input
+                id="product-size"
+                formControlName="size"
+                [maxlength]="editId ? 20000 : 120"
+                placeholder="Ex.: 70 × 140 cm"
+              />
+            </div>
+          }
         </div>
         <div formArrayName="measurements">
           @if (
@@ -279,7 +295,7 @@
                 ><input
                   [id]="'measure-value-' + i"
                   formControlName="value"
-                  maxlength="120"
+                  [maxlength]="editId ? 20000 : 120"
                   placeholder="Ex.: 100% algodão"
                 />
               </div>
@@ -294,9 +310,7 @@
             </div>
           }
         </div>
-        <button type="button" class="action" (click)="addMeasurement()">
-          <mat-icon aria-hidden="true">add</mat-icon> Adicionar característica
-        </button>
+
         <div class="field care">
           <label for="product-care">Instruções de cuidado</label
           ><textarea
@@ -316,18 +330,18 @@
         >Cancelar</a
       >
       <div class="save-actions">
-        <button
+@if (!editId) {        <button
           type="button"
           class="action"
-          [disabled]="form.invalid || loading || loadingOptions || !!savedId"
+          [disabled]="form.invalid || loading || loadingOptions || loadingProduct || !!productError || !!savedId"
           (click)="onSubmit(true)"
         >
           Salvar rascunho
-        </button>
+        </button>}
         <button
           type="submit"
           class="action primary btn-save"
-          [disabled]="form.invalid || loading || loadingOptions || !!savedId"
+          [disabled]="form.invalid || loading || loadingOptions || loadingProduct || !!productError || !!savedId"
         >
           @if (loading) {
             <mat-spinner diameter="18" aria-label="Salvando"></mat-spinner>
@@ -337,7 +351,7 @@
               ? "Produto cadastrado"
               : loading
                 ? "Salvando…"
-                : "Salvar e adicionar imagens"
+                : editId ? "Salvar alterações" : "Salvar e adicionar imagens"
           }}
           @if (!loading && !savedId) {
             <mat-icon aria-hidden="true">arrow_forward</mat-icon>
@@ -393,7 +407,7 @@
         @if (previewImage) {
           <img [src]="previewImage" alt="Imagem do produto" />
         } @else {
-          Imagem após salvar
+          {{ editId ? "Nenhuma imagem cadastrada" : "Imagem após salvar" }}
         }
       </div>
       <div class="preview-heading">

@@ -1,3 +1,5 @@
+import { ConfirmDialogService } from '../../../shared/components/confirm-dialog/confirm-dialog.service';
+import { CustomAlertService } from '../../../core/services/custom-alert.service';
 import { AdminStateComponent } from '../../../shared/components/admin-state/admin-state.component';
 import { AdminPageHeaderComponent } from '../../../shared/components/admin-page-header/admin-page-header.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
@@ -5,6 +7,7 @@ import { CurrencyPipe, DecimalPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import {
   ChangeDetectionStrategy,
+  DestroyRef,
   Component,
   computed,
   inject,
@@ -40,11 +43,28 @@ registerLocaleData(localePt);
     ProductMediaComponent,
   ],
   templateUrl: './product.component.html',
-  styleUrl: './product.component.css',
+  styleUrl: './product.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductComponent {
   private readonly products = inject(ProductService);
+  private readonly confirm = inject(ConfirmDialogService);
+  private readonly alerts = inject(CustomAlertService);
+  private readonly destroyRef = inject(DestroyRef);
+  removing=false;
+  remove(product:Product):void {
+    if(!product.id||this.removing)return;
+    let action:'deleted'|'archived'='deleted';
+    this.confirm.open({title:'Excluir produto?',message:product.name,details:['Produtos com pedidos, carrinhos, promoções, favoritos ou outros vínculos serão arquivados para preservar os registros.','Produtos sem vínculos serão excluídos. As imagens físicas serão preservadas.'],variant:'danger',primary:'Excluir ou arquivar',secondary:'Cancelar',disableClose:true,
+      execute:()=>{this.removing=true;return this.products.removeProduct(product.id!).pipe(tap(result=>action=result.action),finalize(()=>this.removing=false));},
+      errorMessage:error=>{const value=error as {error?:{message?:string}};return value.error?.message||'Não foi possível excluir o produto. Tente novamente.';},
+    }).afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(confirmed=>{
+      if(!confirmed)return;
+      this.alerts.success(action==='archived'?'Produto arquivado. Os vínculos foram preservados.':'Produto excluído com sucesso.');
+      const offset=this.page()?.items.length===1?Math.max(0,(this.options.offset||0)-(this.options.limit||20)):this.options.offset;
+      this.load({...this.options,offset});
+    });
+  }
   readonly filters = inject(FormBuilder).nonNullable.group({
     name: '',
     status: '',
@@ -54,6 +74,7 @@ export class ProductComponent {
   readonly page = signal<Page<Product> | null>(null);
   readonly loading = signal(false);
   readonly error = signal('');
+  readonly createdId = signal(0);
   readonly total = computed(() => this.page()?.pagination.total ?? 0);
   readonly currentPage = computed(() => {
     const meta = this.page()?.pagination;
@@ -103,6 +124,7 @@ export class ProductComponent {
       )
       .subscribe();
     route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+      this.createdId.set(Number(params.get('created')) || 0);
       const term = params.get('q')?.trim().slice(0, 120) ?? '';
       if (this.filters.controls.name.value !== term) {
         this.filters.controls.name.setValue(term);

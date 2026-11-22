@@ -9,7 +9,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { CustomAlertService } from '../../../core/services/custom-alert.service';
 
 describe('Authentication presentation', () => {
-  const pending = new Subject<any>();
+  const pending = new Subject<unknown>();
   beforeEach(() => TestBed.configureTestingModule({
     imports: [AuthComponent],
     providers: [provideRouter([]), provideNoopAnimations(),
@@ -134,7 +134,7 @@ describe('Registration validation', () => {
   });
  }
  it('enables valid registration and blocks duplicate requests while pending',()=>{
-  const {fixture,c}=setup();const request=new Subject<any>();auth.register.and.returnValue(request);
+  const {fixture,c}=setup();const request=new Subject<unknown>();auth.register.and.returnValue(request);
   expect(fixture.nativeElement.querySelector('.submit-button').disabled).toBeFalse();
   c.submitRegister();c.submitRegister();fixture.detectChanges();
   expect(auth.register).toHaveBeenCalledTimes(1);expect(fixture.nativeElement.querySelector('.submit-button').disabled).toBeTrue();

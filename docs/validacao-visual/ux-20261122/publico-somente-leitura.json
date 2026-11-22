@@ -1,0 +1,926 @@
+[
+  {
+    "route": "/categoria/cama",
+    "width": 320,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/cama",
+    "width": 360,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/cama",
+    "width": 390,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/cama",
+    "width": 430,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/cama",
+    "width": 768,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/cama",
+    "width": 1024,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/cama",
+    "width": 1440,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/cama",
+    "width": 1920,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/travesseiros",
+    "width": 320,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/travesseiros",
+    "width": 360,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/travesseiros",
+    "width": 390,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/travesseiros",
+    "width": 430,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/travesseiros",
+    "width": 768,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/travesseiros",
+    "width": 1024,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/travesseiros",
+    "width": 1440,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/travesseiros",
+    "width": 1920,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/toalhas",
+    "width": 320,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/toalhas",
+    "width": 360,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/toalhas",
+    "width": 390,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/toalhas",
+    "width": 430,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/toalhas",
+    "width": 768,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/toalhas",
+    "width": 1024,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/toalhas",
+    "width": 1440,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/toalhas",
+    "width": 1920,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/almofadas",
+    "width": 320,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/almofadas",
+    "width": 360,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/almofadas",
+    "width": 390,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/almofadas",
+    "width": 430,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/almofadas",
+    "width": 768,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/almofadas",
+    "width": 1024,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/almofadas",
+    "width": 1440,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/almofadas",
+    "width": 1920,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/mesa",
+    "width": 320,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/mesa",
+    "width": 360,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/mesa",
+    "width": 390,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/mesa",
+    "width": 430,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/mesa",
+    "width": 768,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/mesa",
+    "width": 1024,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/mesa",
+    "width": 1440,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/mesa",
+    "width": 1920,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/decoracao",
+    "width": 320,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/decoracao",
+    "width": 360,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/decoracao",
+    "width": 390,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/decoracao",
+    "width": 430,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/decoracao",
+    "width": 768,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/decoracao",
+    "width": 1024,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/decoracao",
+    "width": 1440,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/categoria/decoracao",
+    "width": 1920,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/produto/2",
+    "width": 320,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/produto/2",
+    "width": 360,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/produto/2",
+    "width": 390,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/produto/2",
+    "width": 430,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/produto/2",
+    "width": 768,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/produto/2",
+    "width": 1024,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/produto/2",
+    "width": 1440,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "route": "/produto/2",
+    "width": 1920,
+    "overflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "src": "/logotipo-branca.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/mastercard.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/paypal.svg"
+      },
+      {
+        "loaded": true,
+        "src": "/payment/pix.svg?v=2"
+      }
+    ],
+    "passed": true
+  }
+]

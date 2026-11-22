@@ -27,8 +27,9 @@ var ErrUserNotFound = errors.New("user not found")
 var ErrRecoveryLookup = errors.New("recovery user lookup failed")
 
 type AuthService struct {
-	Store     repositories.UserRepository
-	JWTSecret string
+	Store         repositories.UserRepository
+	JWTSecret     string
+	RecoveryEmail func(email, code string) error
 }
 
 func (service AuthService) Login(ctx context.Context, credentials models.Credentials) (models.LoginResponse, error) {
@@ -98,6 +99,9 @@ func (service AuthService) SendRecoveryCode(ctx context.Context, email string) e
 		return ErrUserNotFound
 	}
 	return SendPasswordResetCode(email, func(code string) error {
+		if service.RecoveryEmail != nil {
+			return service.RecoveryEmail(email, code)
+		}
 		return SendEmailWithTemplate(email, "Código de Verificação para Redefinição de Senha", code)
 	})
 }

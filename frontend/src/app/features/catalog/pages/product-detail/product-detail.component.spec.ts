@@ -49,7 +49,7 @@ describe('ProductDetail variant selection', () => {
 });
 
 @Component({selector:'app-catalog-layout',standalone:true,template:'<ng-content />'})
-class TestProductLayout {}
+class TestProductLayoutComponent {}
 
 describe('Product stock experience',()=>{
  let http: HttpTestingController;
@@ -60,7 +60,7 @@ describe('Product stock experience',()=>{
    {provide:AuthService,useValue:{getToken:()=> 'test',userChanged:new Subject<void>()}},
    {provide:CatalogService,useValue:{getProductBySlug:()=>of(product),getRecommendations:()=>of([])}},
   ]});
-  TestBed.overrideComponent(ProductDetailComponent,{remove:{imports:[CatalogLayoutComponent]},add:{imports:[TestProductLayout]}});
+  TestBed.overrideComponent(ProductDetailComponent,{remove:{imports:[CatalogLayoutComponent]},add:{imports:[TestProductLayoutComponent]}});
   http=TestBed.inject(HttpTestingController);
  });
  afterEach(()=>http.verify());

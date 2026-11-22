@@ -21,6 +21,7 @@ type PasswordRequirement =
   | 'symbol';
 
 @Component({
+  host: {class: 'box-auth-surface'},
   selector: 'app-reset-password',
   standalone: true,
   imports: [
@@ -35,7 +36,7 @@ type PasswordRequirement =
   styleUrls: [
     '../../features/authorization/register/register.component.scss',
     '../forgot-password/forgot-password.component.scss',
-    './reset-password.component.css',
+    './reset-password.component.scss',
   ],
 })
 export class ResetPasswordComponent implements OnInit {

@@ -2,3 +2,9 @@
 /db/
 .gocache
 /backend/uploads/
+
+/.artifacts/
+/tmp/
+/backend/tmp/
+/backend/audit-browser.stop
+/backend/audit-browser.otp

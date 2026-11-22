@@ -1,3 +1,6 @@
+import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
+import { InlineNoticeComponent } from '../../shared/components/inline-notice/inline-notice.component';
+import { MatSelectModule } from '@angular/material/select';
 import { Component, DestroyRef, ElementRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,7 +20,7 @@ import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/cat
 
 @Component({
   standalone: true,
-  imports: [CatalogLayoutComponent, RouterLink, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatProgressSpinnerModule, NgxMaskDirective, NgxMaskPipe],
+  imports: [AdminStateComponent, InlineNoticeComponent, MatSelectModule, CatalogLayoutComponent, RouterLink, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatProgressSpinnerModule, NgxMaskDirective, NgxMaskPipe],
   providers: [provideNgxMask({ validation: false })],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss',
@@ -110,6 +113,7 @@ export class AccountComponent {
   readonly busy = signal(false);
   readonly loaded = signal(false);
   readonly addressesLoaded = signal(false);
+  readonly addressesError = signal('');
   readonly editing = signal(false);
   readonly lookingUp = signal(false);
   readonly zipStatus = signal('');
@@ -462,13 +466,14 @@ export class AccountComponent {
     ), () => this.alerts.success('Endereço padrão atualizado!'), true);
   }
 
-  private loadAddresses(): void {
+  loadAddresses(): void {
     this.account.addresses().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: addresses => {
+        this.addressesError.set('');
         this.addresses.set(addresses);
         this.addressesLoaded.set(true);
       },
-      error: () => this.error.set('Não foi possível carregar seus endereços.'),
+      error: () => this.addressesError.set('Não foi possível carregar seus endereços.'),
     });
   }
 

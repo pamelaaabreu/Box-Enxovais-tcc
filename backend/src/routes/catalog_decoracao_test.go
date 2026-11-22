@@ -50,7 +50,7 @@ func TestCatalogDecoracaoPostgres(t *testing.T) {
 	exec("CREATE SCHEMA " + schema)
 	defer d.Exec("DROP SCHEMA " + schema + " CASCADE")
 	exec("SET search_path TO " + schema)
-	for _, n := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000005_favorites", "000006_checkout", "000007_order_cancellation", "000008_order_cancellation_reason", "000009_account_addresses", "000010_business_phone", "000011_user_cnpj", "000013_product_variants", "000024_catalog_brand_editorial", "000048_product_external_sku"} {
+	for _, n := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000005_favorites", "000006_checkout", "000051_order_shipping", "000053_checkout_installments", "000007_order_cancellation", "000008_order_cancellation_reason", "000009_account_addresses", "000010_business_phone", "000011_user_cnpj", "000013_product_variants", "000024_catalog_brand_editorial", "000048_product_external_sku"} {
 		exec(mig(n, "up"))
 	}
 	exec("INSERT INTO brands(name) VALUES('Box Enxovais');INSERT INTO products(name,price,quantity,status) VALUES('Legado',10,3,'active'); INSERT INTO users(id,full_name,email,password) VALUES(1,'Teste','decor@example.test','unused')")
@@ -226,8 +226,9 @@ func TestCatalogDecoracaoPostgres(t *testing.T) {
 	if read(fmt.Sprintf("SELECT quantity::text FROM products WHERE id=%d", p.ID)) != fmt.Sprint(p.Quantity) {
 		t.Fatal("cart stock")
 	}
+	ensureCheckoutCoverage(t, d)
 	checkout := repositories.CheckoutRepository{DB: d}
-	order, e := checkout.Create(context.Background(), 1, models.CheckoutRequest{RequestKey: "decor-test", PaymentMethod: "pix", ExpectedTotalCents: int64(p.Price * 100)})
+	order, e := checkout.Create(context.Background(), 1, models.CheckoutRequest{Address: coveredCheckoutAddress(), RequestKey: "decor-test", PaymentMethod: "pix", ExpectedTotalCents: int64(p.Price * 100)})
 	if e != nil {
 		t.Fatal(e)
 	}

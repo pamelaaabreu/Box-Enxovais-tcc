@@ -23,7 +23,7 @@ import { AuthService } from '../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, MatIconModule],
   templateUrl: './top-navbar.component.html',
-  styleUrls: ['./top-navbar.component.css'],
+  styleUrls: ['./top-navbar.component.scss'],
 })
 export class TopNavbarComponent implements OnInit {
   @Input() isScrolled = false;

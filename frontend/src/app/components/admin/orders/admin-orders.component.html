@@ -1,0 +1,19 @@
+<app-admin-page-header title="Pedidos" description="Acompanhe as compras e o andamento dos pedidos da loja." icon="receipt_long" [breadcrumb]="[{label:'Pedidos'}]" />
+<section aria-label="Gerenciamento de pedidos">
+ <div class="metrics" aria-live="polite"><div><span>Total de pedidos</span><strong>{{data().total}}</strong></div><div><span>Aprovados</span><strong>{{data().approved}}</strong></div><div><span>Cancelados</span><strong>{{data().cancelled}}</strong></div></div>
+ <form class="filters" [formGroup]="filters" (ngSubmit)="apply()">
+ <label>Buscar pedido ou cliente<input formControlName="search" placeholder="Número ou nome do cliente" maxlength="200" /></label>
+ <label>Status<select aria-label="Status" formControlName="status"><option value="">Todos</option><option value="simulated_approved">Aprovados</option><option value="cancelled">Cancelados</option></select></label>
+ <label>De<input type="date" formControlName="dateFrom" /></label><label>Até<input type="date" formControlName="dateTo" /></label>
+ <button class="primary" type="submit">Filtrar</button><button type="button" (click)="clear()">Limpar</button>
+ </form>
+ @if(loading()){<app-admin-state kind="loading" title="Carregando pedidos" />}
+ @else if(error()){<app-admin-state kind="error" title="Não foi possível carregar os pedidos" [description]="error()" actionLabel="Tentar novamente" (action)="load()" />}
+ @else if(!data().orders.length){<app-admin-state title="Nenhum pedido encontrado" description="Os pedidos serão exibidos aqui quando estiverem disponíveis. Revise os filtros selecionados." actionLabel="Limpar filtros" (action)="clear()" />}
+ @else{
+ <div class="table-wrap"><table><thead><tr><th>Pedido</th><th>Cliente</th><th>Data</th><th>Total</th><th>Pagamento</th><th>Status</th><th>Ações</th></tr></thead><tbody>
+ @for(order of data().orders;track order.id){<tr><td data-label="Pedido"><strong>#{{order.id}}</strong></td><td data-label="Cliente">{{order.customer}}</td><td data-label="Data">{{order.createdAt|date:'dd/MM/yyyy HH:mm':'-0300'}}</td><td data-label="Total">{{order.total|currency:'BRL'}}</td><td data-label="Pagamento">{{paymentLabel(order.paymentMethod)}}</td><td data-label="Status"><span class="status" [class.cancelled]="order.status==='cancelled'">{{statusLabel(order.status)}}</span></td><td><a class="action" [routerLink]="['/admin/orders',order.id]" [attr.aria-label]="'Visualizar pedido '+order.id">Visualizar</a></td></tr>}
+ </tbody></table></div>
+ <app-pagination [page]="page()" [total]="data().total" [pageSize]="10" (pageChange)="apply($event)" label="Paginação de pedidos" />
+ }
+</section>

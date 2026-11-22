@@ -34,7 +34,7 @@ func TestCatalogCushionCoversPostgres(t *testing.T) {
 	execute("CREATE SCHEMA " + schema)
 	defer database.Exec("DROP SCHEMA " + schema + " CASCADE")
 	execute("SET search_path TO " + schema)
-	for _, name := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000005_favorites", "000006_checkout", "000007_order_cancellation", "000008_order_cancellation_reason", "000009_account_addresses", "000010_business_phone", "000011_user_cnpj", "000013_product_variants", "000024_catalog_brand_editorial", "000048_product_external_sku"} {
+	for _, name := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000005_favorites", "000006_checkout", "000051_order_shipping", "000053_checkout_installments", "000007_order_cancellation", "000008_order_cancellation_reason", "000009_account_addresses", "000010_business_phone", "000011_user_cnpj", "000013_product_variants", "000024_catalog_brand_editorial", "000048_product_external_sku"} {
 		content, err := os.ReadFile("../../migrations/" + name + ".up.sql")
 		if err != nil {
 			t.Fatal(err)
@@ -183,8 +183,9 @@ func TestCatalogCushionCoversPostgres(t *testing.T) {
 		t.Fatal("unsafe rollback accepted")
 	}
 	execute("ROLLBACK")
+	ensureCheckoutCoverage(t, database)
 	checkout := repositories.CheckoutRepository{DB: database}
-	order, err := checkout.Create(context.Background(), 1, models.CheckoutRequest{RequestKey: "cushion-cover-checkout", PaymentMethod: "pix", ExpectedTotalCents: 6990})
+	order, err := checkout.Create(context.Background(), 1, models.CheckoutRequest{Address: coveredCheckoutAddress(), RequestKey: "cushion-cover-checkout", PaymentMethod: "pix", ExpectedTotalCents: 6990})
 	if err != nil {
 		t.Fatal(err)
 	}

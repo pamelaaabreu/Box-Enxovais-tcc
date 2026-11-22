@@ -1,0 +1,11 @@
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const {spawnSync}=require('node:child_process');
+const {createArtifacts}=require('./artifacts.cjs');
+const root=path.resolve(__dirname,'../..');
+test('temporary run cleans only its own directory',()=>{const run=createArtifacts('cleanup-test','docs/validacao-visual/test-artifacts');fs.writeFileSync(run.file('resultados.json'),'{}');const sibling=createArtifacts('cleanup-sibling','docs/validacao-visual/test-artifacts');run.finish();assert.equal(fs.existsSync(run.directory),false);assert.equal(fs.existsSync(sibling.directory),true);sibling.finish();});
+test('rejects traversal and external retention paths',()=>{assert.throws(()=>createArtifacts('../bad','docs/validacao-visual/test'));assert.throws(()=>createArtifacts('cleanup-test','../external'));const run=createArtifacts('cleanup-test','docs/validacao-visual/test-artifacts');assert.throws(()=>run.file('../external.json'));run.finish();});
+test('normal process exit cleans run automatically',()=>{const child=spawnSync(process.execPath,['-e',`const run=require(${JSON.stringify(path.join(__dirname,'artifacts.cjs'))}).createArtifacts('exit-test','docs/validacao-visual/test-artifacts');console.log(run.directory);`],{encoding:'utf8',env:{...process.env,BOX_E2E_KEEP_EVIDENCE:'0'}});assert.equal(child.status,0);assert.equal(fs.existsSync(child.stdout.trim()),false);});
+test('explicit retention keeps only whitelisted final files',()=>{const destination='docs/validacao-visual/cleanup-test-'+process.pid;const previous=process.env.BOX_E2E_KEEP_EVIDENCE;process.env.BOX_E2E_KEEP_EVIDENCE='1';const run=createArtifacts('retention-test',destination,['final.json']);try{fs.writeFileSync(run.file('final.json'),'{}');fs.writeFileSync(run.file('intermediate.txt'),'temporary');run.finish();assert.deepEqual(fs.readdirSync(path.join(root,destination)),['final.json']);assert.equal(fs.existsSync(run.directory),false);}finally{if(previous===undefined)delete process.env.BOX_E2E_KEEP_EVIDENCE;else process.env.BOX_E2E_KEEP_EVIDENCE=previous;fs.rmSync(path.join(root,destination),{recursive:true,force:true});}});

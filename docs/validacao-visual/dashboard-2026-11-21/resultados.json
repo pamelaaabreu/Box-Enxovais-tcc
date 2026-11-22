@@ -1,0 +1,66 @@
+{
+  "results": [
+    {
+      "name": "Login administrativo e seis indicadores reais",
+      "passed": true
+    },
+    {
+      "name": "Receita histórica, ticket, cancelados, clientes e variantes",
+      "passed": true
+    },
+    {
+      "name": "Permissões e validação de filtros no backend",
+      "passed": true
+    },
+    {
+      "name": "Dashboard visual e gráficos acessíveis 1440",
+      "passed": true
+    },
+    {
+      "name": "Dashboard visual e gráficos acessíveis 1024",
+      "passed": true
+    },
+    {
+      "name": "Dashboard visual e gráficos acessíveis 768",
+      "passed": true
+    },
+    {
+      "name": "Dashboard visual e gráficos acessíveis 390",
+      "passed": true
+    },
+    {
+      "name": "Todos os períodos compartilham cards e gráficos",
+      "passed": true
+    },
+    {
+      "name": "Período vazio sem esconder a situação atual",
+      "passed": true
+    },
+    {
+      "name": "Filtro personalizado e agrupamento persistem na URL",
+      "passed": true
+    },
+    {
+      "name": "Datas inválidas exibem erro sem perder o formulário",
+      "passed": true
+    },
+    {
+      "name": "Carregamento e recuperação de falha de API",
+      "passed": true
+    },
+    {
+      "name": "Resposta antiga não substitui o período atual",
+      "passed": true
+    },
+    {
+      "name": "Alternativa textual, teclado e acesso aos módulos",
+      "passed": true
+    },
+    {
+      "name": "Menu Métricas reutiliza o componente sem segundo cabeçalho",
+      "passed": true
+    }
+  ],
+  "pageErrors": [],
+  "networkFaults": "HTTP 503 injetado para recuperação. Demais dados, consultas e navegação usam API real e PostgreSQL isolado."
+}

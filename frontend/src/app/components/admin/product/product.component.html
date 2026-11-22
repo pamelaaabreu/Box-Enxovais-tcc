@@ -69,7 +69,7 @@
     @if (page(); as result) {
       @if (result.items.length) {
         <div
-          class="table-wrap"
+          class="table-wrap admin-adaptive-table"
           role="region"
           aria-label="Lista de produtos"
           tabindex="0"
@@ -90,8 +90,8 @@
             </thead>
             <tbody>
               @for (product of result.items; track product.id) {
-                <tr>
-                  <td>
+                <tr [class.new-product]="product.id === createdId()">
+                  <td class="product-cell" data-label="Produto">
                     <div class="product-identity">
                       <div class="thumbnail">
                         <app-product-media
@@ -101,21 +101,22 @@
                         />
                       </div>
                       <div>
+                        @if (product.id === createdId()) { <span class="status status-active">Recém-cadastrado</span> }
                         <strong>{{ product.name }}</strong
                         ><span class="product-id">SKU: {{ product.sku || "Não informado" }}</span>
                       </div>
                     </div>
                   </td>
-                  <td class="category">
+                  <td class="category" data-label="Categoria">
                     {{ product.category_name || "Sem categoria" }}
                   </td>
-                  <td class="numeric price">
+                  <td class="numeric price" data-label="Preço">
                     {{
                       product.price
                         | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
                     }}
                   </td>
-                  <td class="numeric">
+                  <td class="numeric" data-label="Estoque">
                     <span [class.stock-empty]="product.quantity === 0">{{
                       product.quantity | number: "1.0-0" : "pt-BR"
                     }}</span>
@@ -123,7 +124,7 @@
                       <span class="stock-hint">Sem estoque</span>
                     }
                   </td>
-                  <td>
+                  <td data-label="Status">
                     <span
                       class="status"
                       [class.status-active]="product.status === 'active'"
@@ -132,10 +133,14 @@
                       >{{ statusLabel(product.status) }}</span
                     >
                   </td>
-                  <td>
+                  <td data-label="Ações">
+                    <div class="product-actions">
+                    <a class="store-link box-button" data-variant="outline" data-size="sm" [routerLink]="['/admin/products',product.id,'edit']">Editar</a>
+                    <a class="store-link box-button" data-variant="outline" data-size="sm" [routerLink]="['/admin/products',product.id,'images']">Imagens</a>
+                    <a class="store-link box-button" data-variant="outline" data-size="sm" [routerLink]="['/admin/products',product.id,'variants']">Variações</a>
                     @if (product.status === "active") {
                       <a
-                        class="store-link"
+                        class="store-link box-button" data-variant="outline" data-size="sm"
                         [routerLink]="['/produto', product.id]"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -147,6 +152,8 @@
                     } @else {
                       <span class="unpublished">Não publicado</span>
                     }
+                    <button type="button" class="store-link remove-product box-button" data-variant="danger" data-size="sm" [disabled]="removing" [attr.aria-label]="'Excluir ' + product.name" (click)="remove(product)">Excluir</button>
+                    </div>
                   </td>
                 </tr>
               }

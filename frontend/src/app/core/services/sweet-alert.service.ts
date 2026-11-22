@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
-import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
+import Swal from 'sweetalert2/dist/sweetalert2.esm.js';
+import type { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
 import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SweetAlertService {
-  constructor() {}
+  private escapeHtml(value: string): string {
+    return value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char] ?? char));
+  }
 
   private baseOptions: SweetAlertOptions = {
     confirmButtonColor: '#92402d',
@@ -63,7 +66,7 @@ export class SweetAlertService {
       title: 'E-mail já cadastrado',
       icon: 'error',
       html: `
-        <p>O e-mail <strong>${email}</strong> já está cadastrado.</p>
+        <p>O e-mail <strong>${this.escapeHtml(email)}</strong> já está cadastrado.</p>
         <p style="font-size: 0.9rem;">Por favor, utilize outro e-mail ou <a href="/login" style="color: #92402d; font-weight: 600;">faça login</a>.</p>
       `,
     });
@@ -75,7 +78,7 @@ export class SweetAlertService {
       title: 'CPF já cadastrado',
       icon: 'error',
       html: `
-        <p>O CPF <strong>${cpf}</strong> já está cadastrado.</p>
+        <p>O CPF <strong>${this.escapeHtml(cpf)}</strong> já está cadastrado.</p>
         <p style="font-size: 0.9rem;">Verifique os dados ou entre em contato com o suporte.</p>
       `,
     });
@@ -106,7 +109,7 @@ export class SweetAlertService {
         ...this.baseOptions, // Reutiliza a configuração base
         title: 'Campos pendentes ou inválidos',
         icon: 'warning',
-        html: `Por favor, verifique os seguintes campos: <strong>${fieldsList}</strong>`,
+        html: `Por favor, verifique os seguintes campos: <strong>${this.escapeHtml(fieldsList)}</strong>`,
       });
     }
   }

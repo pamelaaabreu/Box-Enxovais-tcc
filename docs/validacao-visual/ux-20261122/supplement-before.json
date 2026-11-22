@@ -1,0 +1,655 @@
+{
+  "phase": "supplement-before",
+  "browser": "158.0.8127.36",
+  "widths": [
+    320,
+    360,
+    390,
+    430,
+    768,
+    1024,
+    1440,
+    1920
+  ],
+  "inventory": [
+    {
+      "pattern": "/account",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/meus-pedidos",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/meus-pedidos/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/checkout/success/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/checkout",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/favorites",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/cart",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/",
+      "kind": "redirect",
+      "redirect": "'home'",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/home",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/campanha/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/categoria/:slug",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/produto/:slug",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/login",
+      "kind": "matcher",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/register",
+      "kind": "matcher",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/forgot-password",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/verify-code",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/reset-password",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/image-upload/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/product-register",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/promotion-register",
+      "kind": "redirect",
+      "redirect": "'admin/promotions/new'",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/add-to-promotion",
+      "kind": "redirect",
+      "redirect": "'admin/promotions'",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/admin",
+      "kind": "lazy-module",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/404",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/**",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/admin",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/customers",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/customers/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/orders",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/orders/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/experience-reviews",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin",
+      "kind": "redirect",
+      "redirect": "'dashboard'",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/dashboard",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/metrics",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/:id/edit",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/:id/images",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/:id/variants",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/manage",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/create",
+      "kind": "redirect",
+      "redirect": "'new'",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/add-product",
+      "kind": "redirect",
+      "redirect": "''",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/new",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/:id/edit",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog/categories",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog/brands",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog/shipping-ranges",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/reports",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    }
+  ],
+  "screens": [
+    {
+      "name": "nova-senha",
+      "role": "anon",
+      "route": "/reset-password",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [
+            {
+              "id": "target-size",
+              "impact": "serious",
+              "help": "All touch targets must be 24px large, or leave sufficient space",
+              "url": "https://dequeuniversity.com/rules/axe/4.14/target-size?application=axeAPI",
+              "nodes": [
+                {
+                  "target": [
+                    "#mat-input-2"
+                  ],
+                  "html": "<input _ngcontent-ng-c61383...=\"\" matinput=\"\" formcontrolname=\"confirmPassword\" autocomplete=\"new-password\" class=\"mat-mdc-input-elemen...\" type=\"password\" id=\"mat-input-2\" required=\"\" aria-required=\"true\">",
+                  "failure": "Fix any of the following:\n  Target has insufficient size (190px by 18px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 18.8px instead of at least 24px.",
+                  "related": [
+                    {
+                      "minSize": 24,
+                      "width": 190,
+                      "height": 18
+                    },
+                    {
+                      "closestOffset": 18.8,
+                      "minOffset": 24
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "help": "Elements must meet minimum color contrast ratio thresholds",
+              "url": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+              "nodes": [
+                {
+                  "target": [
+                    "li:nth-child(1)"
+                  ],
+                  "html": "<li _ngcontent-ng-c613831233=\"\"><span _ngcontent-ng-c613831233=\"\" aria-hidden=\"true\">✓</span>8 caracteres </li>",
+                  "failure": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #706e67, background color: #eee5d4, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+                  "related": [
+                    {
+                      "fgColor": "#706e67",
+                      "bgColor": "#eee5d4",
+                      "contrastRatio": 4.08,
+                      "fontSize": "9.8pt (13px)",
+                      "fontWeight": "normal",
+                      "messageKey": null,
+                      "expectedContrastRatio": "4.5:1"
+                    }
+                  ]
+                },
+                {
+                  "target": [
+                    "li:nth-child(2)"
+                  ],
+                  "html": "<li _ngcontent-ng-c613831233=\"\"><span _ngcontent-ng-c613831233=\"\" aria-hidden=\"true\">✓</span>Letra maiúscula </li>",
+                  "failure": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #706e67, background color: #eee5d4, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+                  "related": [
+                    {
+                      "fgColor": "#706e67",
+                      "bgColor": "#eee5d4",
+                      "contrastRatio": 4.08,
+                      "fontSize": "9.8pt (13px)",
+                      "fontWeight": "normal",
+                      "messageKey": null,
+                      "expectedContrastRatio": "4.5:1"
+                    }
+                  ]
+                },
+                {
+                  "target": [
+                    "li:nth-child(3)"
+                  ],
+                  "html": "<li _ngcontent-ng-c613831233=\"\"><span _ngcontent-ng-c613831233=\"\" aria-hidden=\"true\">✓</span>Letra minúscula </li>",
+                  "failure": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #706e67, background color: #eee5d4, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+                  "related": [
+                    {
+                      "fgColor": "#706e67",
+                      "bgColor": "#eee5d4",
+                      "contrastRatio": 4.08,
+                      "fontSize": "9.8pt (13px)",
+                      "fontWeight": "normal",
+                      "messageKey": null,
+                      "expectedContrastRatio": "4.5:1"
+                    }
+                  ]
+                },
+                {
+                  "target": [
+                    "li:nth-child(4)"
+                  ],
+                  "html": "<li _ngcontent-ng-c613831233=\"\"><span _ngcontent-ng-c613831233=\"\" aria-hidden=\"true\">✓</span>Número </li>",
+                  "failure": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #706e67, background color: #eee5d4, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+                  "related": [
+                    {
+                      "fgColor": "#706e67",
+                      "bgColor": "#eee5d4",
+                      "contrastRatio": 4.08,
+                      "fontSize": "9.8pt (13px)",
+                      "fontWeight": "normal",
+                      "messageKey": null,
+                      "expectedContrastRatio": "4.5:1"
+                    }
+                  ]
+                },
+                {
+                  "target": [
+                    "li:nth-child(5)"
+                  ],
+                  "html": "<li _ngcontent-ng-c613831233=\"\"><span _ngcontent-ng-c613831233=\"\" aria-hidden=\"true\">✓</span>Símbolo (?@#$%&amp;) </li>",
+                  "failure": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #706e67, background color: #eee5d4, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1",
+                  "related": [
+                    {
+                      "fgColor": "#706e67",
+                      "bgColor": "#eee5d4",
+                      "contrastRatio": 4.08,
+                      "fontSize": "9.8pt (13px)",
+                      "fontWeight": "normal",
+                      "messageKey": null,
+                      "expectedContrastRatio": "4.5:1"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 8
+            }
+          ]
+        }
+      ],
+      "actualPath": "/reset-password"
+    },
+    {
+      "name": "imagens-admin",
+      "role": "admin",
+      "route": "/admin/products/2/images",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "help": "Elements must meet minimum color contrast ratio thresholds",
+              "url": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+              "nodes": [
+                {
+                  "target": [
+                    ".completion-actions > .upload-button.mdc-button.mdc-button--unelevated > .mdc-button__label"
+                  ],
+                  "html": "<span class=\"mdc-button__label\">Concluir alterações</span>",
+                  "failure": "Fix any of the following:\n  Element has insufficient color contrast of 1.23 (foreground color: #2f3a31, background color: #3d4836, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1",
+                  "related": [
+                    {
+                      "fgColor": "#2f3a31",
+                      "bgColor": "#3d4836",
+                      "contrastRatio": 1.23,
+                      "fontSize": "12.0pt (16px)",
+                      "fontWeight": "normal",
+                      "messageKey": null,
+                      "expectedContrastRatio": "4.5:1"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "help": "Elements must meet minimum color contrast ratio thresholds",
+              "url": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+              "nodes": [
+                {
+                  "target": [
+                    ".completion-actions > .upload-button.mdc-button.mdc-button--unelevated > .mdc-button__label"
+                  ],
+                  "html": "<span class=\"mdc-button__label\">Concluir alterações</span>",
+                  "failure": "Fix any of the following:\n  Element has insufficient color contrast of 1.23 (foreground color: #2f3a31, background color: #3d4836, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1",
+                  "related": [
+                    {
+                      "fgColor": "#2f3a31",
+                      "bgColor": "#3d4836",
+                      "contrastRatio": 1.23,
+                      "fontSize": "12.0pt (16px)",
+                      "fontWeight": "normal",
+                      "messageKey": null,
+                      "expectedContrastRatio": "4.5:1"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "incomplete": []
+        }
+      ],
+      "actualPath": "/admin/products/2/images"
+    }
+  ],
+  "functional": [],
+  "errors": []
+}

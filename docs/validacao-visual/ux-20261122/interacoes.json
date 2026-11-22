@@ -1,0 +1,91 @@
+[
+  {
+    "name": "Menu de categorias e sidebar por teclado 320",
+    "passed": true
+  },
+  {
+    "name": "Menu de categorias e sidebar por teclado 360",
+    "passed": true
+  },
+  {
+    "name": "Menu de categorias e sidebar por teclado 390",
+    "passed": true
+  },
+  {
+    "name": "Menu de categorias e sidebar por teclado 430",
+    "passed": true
+  },
+  {
+    "name": "Menu de categorias e sidebar por teclado 768",
+    "passed": true
+  },
+  {
+    "name": "Menu de categorias e sidebar por teclado 1024",
+    "passed": true
+  },
+  {
+    "name": "Menu de categorias e sidebar por teclado 1440",
+    "passed": true
+  },
+  {
+    "name": "Menu de categorias e sidebar por teclado 1920",
+    "passed": true
+  },
+  {
+    "name": "Foco visível, Tab/Shift+Tab e Enter na busca",
+    "passed": true
+  },
+  {
+    "name": "Dropdown e descarte: Escape, foco e duas ações 320",
+    "passed": true
+  },
+  {
+    "name": "Dropdown e descarte: Escape, foco e duas ações 768",
+    "passed": true
+  },
+  {
+    "name": "Dropdown e descarte: Escape, foco e duas ações 1440",
+    "passed": true
+  },
+  {
+    "name": "Quantidade e variante no catálogo/sacola",
+    "passed": true
+  },
+  {
+    "name": "Abas de produto e conta por setas e seleção ARIA",
+    "passed": false,
+    "error": "Expected values to be strictly equal:\n\n'false' !== 'true'\n"
+  },
+  {
+    "name": "Loading real, erro HTTP controlado e recuperação",
+    "passed": true
+  },
+  {
+    "name": "Filtros sem resultados, limpeza e ordenação persistida",
+    "passed": true
+  },
+  {
+    "name": "Formulário inválido tem erro associado ao campo",
+    "passed": true
+  },
+  {
+    "name": "Galeria, zoom e Escape",
+    "passed": true
+  },
+  {
+    "name": "Texto 200% e reflow 320 home",
+    "passed": true
+  },
+  {
+    "name": "Texto 200% e reflow 320 checkout",
+    "passed": true
+  },
+  {
+    "name": "Texto 200% e reflow 320 formulario",
+    "passed": true
+  },
+  {
+    "name": "Texto 200% e reflow 320 relatorio",
+    "passed": true
+  }
+]

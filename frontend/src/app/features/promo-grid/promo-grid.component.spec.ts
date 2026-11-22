@@ -2,7 +2,7 @@ import {TestBed} from '@angular/core/testing';
 import {provideHttpClient} from '@angular/common/http';
 import {provideHttpClientTesting,HttpTestingController} from '@angular/common/http/testing';
 import {provideRouter} from '@angular/router';
-import {signal} from '@angular/core';
+
 import {PromoGridComponent} from './promo-grid.component';
 import {CartService} from '../../core/services/cart.service';
 import {FavoritesService} from '../../core/services/favorites.service';

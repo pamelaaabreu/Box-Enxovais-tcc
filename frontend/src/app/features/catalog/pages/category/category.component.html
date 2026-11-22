@@ -148,26 +148,11 @@
             @if (state().status === "loading") {
               <app-product-grid [loading]="true" />
             } @else if (state().status === "error") {
-              <section class="state" role="alert">
-                <p>Não foi possível carregar o catálogo.</p>
-                <button type="button" (click)="movePage(0)">
-                  Tentar novamente
-                </button>
-              </section>
+              <app-admin-state kind="error" title="Não foi possível carregar o catálogo." actionLabel="Tentar novamente" (action)="movePage(0)" />
             } @else if (products().length) {
               <app-product-grid [products]="products()" />
             } @else {
-              <section
-                class="empty-results"
-                aria-labelledby="empty-results-title"
-              >
-                <mat-icon aria-hidden="true">search_off</mat-icon>
-                <h2 id="empty-results-title">Nenhum produto encontrado</h2>
-                <p>Não encontramos produtos com os filtros selecionados.</p>
-                <button type="button" (click)="clearFilters()">
-                  Limpar filtros
-                </button>
-              </section>
+              <app-admin-state title="Nenhum produto encontrado" description="Não encontramos produtos com os filtros selecionados." actionLabel="Limpar filtros" (action)="clearFilters()" />
             }
             @if (state().status === "loaded" && (page()?.total || 0) > 0) {
               <app-pagination [page]="pageNumber()" [total]="page()?.total || 0" [pageSize]="12" [disabled]="state().status !== 'loaded'" (pageChange)="goToPage($event)" />

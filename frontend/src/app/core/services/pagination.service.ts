@@ -2,15 +2,8 @@ import { HttpClient, HttpParams, HttpUrlEncodingCodec } from '@angular/common/ht
 import { Injectable, inject } from '@angular/core';
 import { EMPTY, Observable, expand, map, reduce } from 'rxjs';
 
-export interface Page<T> {
-  items: T[];
-  pagination: { offset: number; limit: number; total: number; hasMore: boolean };
-}
-export interface PageOptions {
-  offset?: number;
-  limit?: number;
-  filters?: Record<string, string | number>;
-}
+import type { Page, PageOptions } from '../../shared/types/api/pagination';
+export type { Page, PageOptions } from '../../shared/types/api/pagination';
 
 @Injectable({ providedIn: 'root' })
 export class PaginationService {

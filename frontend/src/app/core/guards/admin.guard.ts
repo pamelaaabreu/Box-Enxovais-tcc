@@ -21,13 +21,13 @@ export class AdminGuard implements CanActivate, CanMatch {
   private router = inject(Router);
 
   canActivate(
-    route: ActivatedRouteSnapshot,
+    _route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
   ): boolean | UrlTree {
     return this.checkAdmin(state.url);
   }
 
-  canMatch(route: Route, segments: UrlSegment[]): boolean | UrlTree {
+  canMatch(_route: Route, segments: UrlSegment[]): boolean | UrlTree {
     const navigation = this.router.getCurrentNavigation();
     const destination = navigation ? this.router.serializeUrl(navigation.extractedUrl) : '/' + segments.map(segment => segment.toString()).join('/');
     return this.checkAdmin(destination);

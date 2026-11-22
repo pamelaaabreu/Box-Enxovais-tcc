@@ -2,6 +2,7 @@ package services
 
 import (
 	"backend/src/models"
+	"backend/src/repositories"
 	"bytes"
 	"context"
 	"database/sql"
@@ -31,14 +32,13 @@ func SendOrderCancellation(database *sql.DB, userID int, details models.OrderDet
 func sendOrderEmail(database *sql.DB, userID int, order models.CheckoutOrder, cancelled bool) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	var name, email string
-	err := database.QueryRowContext(ctx, "SELECT full_name, email FROM users WHERE id=$1", userID).Scan(&name, &email)
+	recipient, err := (repositories.UserRepository{DB: database}).GetEmailRecipient(ctx, userID)
 	if err != nil {
 		log.Printf("[CHECKOUT EMAIL] pedido %d: destinatário indisponível", order.ID)
 		return
 	}
 
-	if err := sendOrderMessage(email, name, order, cancelled); err != nil {
+	if err := sendOrderMessage(recipient.Email, recipient.Name, order, cancelled); err != nil {
 		log.Printf("[CHECKOUT EMAIL] pedido %d: falha na etapa %s", order.ID, err)
 	}
 }
@@ -72,6 +72,12 @@ func sendOrderMessage(email, name string, order models.CheckoutOrder, cancelled 
 		fmt.Fprintf(&plain, "%d × %s — %s por unidade\n", item.Quantity, item.Name, money(item.UnitPrice))
 	}
 	fmt.Fprintf(&plain, "Total: %s\nPagamento simulado. Nenhuma cobrança foi realizada.", money(order.Total))
+	if order.Installments != nil {
+		fmt.Fprintf(&plain, "\nParcelamento: %d parcela(s), sem juros.\n", *order.Installments)
+		for _, amount := range order.InstallmentAmounts {
+			fmt.Fprintf(&plain, "%s ", money(amount))
+		}
+	}
 	msg := gomail.NewMessage()
 	msg.SetHeader("From", from)
 	msg.SetHeader("To", email)

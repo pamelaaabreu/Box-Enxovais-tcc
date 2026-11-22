@@ -1,0 +1,152 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  font-family: Montserrat, sans-serif;
+  color: #394735;
+}
+.variant-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.variant-heading > div {
+  min-width: 0;
+}
+.variant-heading > button {
+  flex-shrink: 0;
+}
+h2 {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0 0 4px;
+}
+p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #68705f;
+  margin: 0;
+}
+.variant-card {
+  position: relative;
+  padding: 16px 54px 16px 16px;
+  border: 1px solid #d9ded2;
+  border-radius: 14px;
+  background: #faf9f4;
+  margin-top: 10px;
+  min-width: 0;
+}
+.variant-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(
+      0,
+      0.9fr
+    ) minmax(0, 0.7fr);
+  gap: 10px;
+  align-items: start;
+}
+label {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  font-size: 12.7px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+input {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  border: 1px solid #c9cdbf;
+  border-radius: 10px;
+  background: #fffdf8;
+  padding: 9px 10px;
+  color: #354331;
+  font:
+    400 13px/1.5 Montserrat,
+    sans-serif;
+  box-sizing: border-box;
+}
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  border: 1px solid #a4af98;
+  border-radius: 999px;
+  background: transparent;
+  color: #394735;
+  padding: 9px 12px;
+  font:
+    500 13px/1.4 Montserrat,
+    sans-serif;
+  cursor: pointer;
+}
+button:hover:not(:disabled) {
+  background: #eef1e9;
+}
+button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.remove {
+  position: absolute;
+  top: 8px;
+  right: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  color: #955536;
+}
+mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.error {
+  display: flex;
+  gap: 5px;
+  color: #9c493c;
+  font-size: 12px;
+  line-height: 16px;
+  margin-top: 8px;
+}
+.variant-summary {
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #657550;
+  outline-offset: 3px;
+}
+@media (max-width: 1190px) {
+  .variant-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .variant-card {
+    padding-top: 48px;
+    padding-right: 14px;
+  }
+}
+@media (max-width: 520px) {
+  .variant-heading {
+    align-items: flex-start;
+  }
+  .variant-heading > button {
+    font-size: 12px;
+    padding-inline: 8px;
+    max-width: 150px;
+  }
+  .variant-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

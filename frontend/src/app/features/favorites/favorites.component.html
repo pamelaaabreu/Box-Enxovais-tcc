@@ -27,15 +27,9 @@
     }
 
     @if (favorites.pageLoading()) {
-      <p role="status">Carregando favoritos…</p>
+      <app-admin-state kind="loading" title="Carregando favoritos…" />
     } @else if (favorites.pageError()) {
-      <div class="state" role="alert">
-        <p>{{ favorites.pageError() }}</p>
-
-        <button type="button" (click)="favorites.loadPage()">
-          Tentar novamente
-        </button>
-      </div>
+      <app-admin-state kind="error" [title]="favorites.pageError()" actionLabel="Tentar novamente" (action)="favorites.loadPage()" />
     } @else {
       @if (favorites.page(); as page) {
         @if (page.items.length) {
@@ -57,30 +51,9 @@
             />
           }
         } @else {
-          <div class="state empty-state">
-            <span class="empty-symbol" aria-hidden="true">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.4"
-              aria-hidden="true"
-            >
-              <path
-                d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"
-              />
-            </svg>
-            </span>
-
-            <h2>Sua lista de favoritos está esperando por você.</h2>
-
-            <p>
-              Explore nossas coleções e salve os produtos que mais combinam com
-              seu lar.
-            </p>
-
-            <a routerLink="/categoria/todos"> Explorar produtos </a>
-          </div>
+          <app-admin-state class="empty-state" icon="favorite" title="Sua lista de favoritos está esperando por você."
+            description="Explore nossas coleções e salve os produtos que mais combinam com seu lar."
+            actionLabel="Explorar produtos" actionLink="/categoria/todos" />
         }
 
         @if (page.items.length && recommendations().length) {

@@ -15,19 +15,9 @@
       </div>
     </div>
   } @else if (state().status === "error") {
-    <section class="state" role="alert">
-      <h1>Não foi possível carregar o produto.</h1>
-      <p>Tente novamente em instantes.</p>
-      <button type="button" class="purchase-button" (click)="retry()">
-        Tentar novamente
-      </button>
-    </section>
+    <app-admin-state kind="error" title="Não foi possível carregar o produto." description="Tente novamente em instantes." actionLabel="Tentar novamente" (action)="retry()" />
   } @else if (!product()) {
-    <section class="state">
-      <h1>Produto não encontrado</h1>
-      <p>Este produto não está disponível ou não existe mais.</p>
-      <a routerLink="/categoria/todos">Voltar aos produtos</a>
-    </section>
+    <app-admin-state title="Produto não encontrado" description="Este produto não está disponível ou não existe mais." actionLabel="Voltar aos produtos" actionLink="/categoria/todos" />
   } @else {
     @if (product(); as product) {
       <div class="product-layout">
@@ -142,7 +132,7 @@
             <p class="product-reference" aria-live="polite">
               @if (!dimensions.includes(":")) {
                 <span>{{
-                  product.measurements?.["Tipo"] === "Edredom"
+                  product.measurements["Tipo"] === "Edredom"
                     ? "Dimensões do edredom:"
                     : "Dimensões:"
                 }}</span>

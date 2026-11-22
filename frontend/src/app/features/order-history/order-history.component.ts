@@ -1,3 +1,7 @@
+import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
+import { InlineNoticeComponent } from '../../shared/components/inline-notice/inline-notice.component';
+import { PaymentPlan } from '../../shared/types/checkout/checkout';
+import { installmentSummary } from '../../shared/utils/installments';
 import {PaginationComponent} from '../../shared/components/pagination/pagination.component';
 import {PurchaseReviewComponent} from '../purchase-review/purchase-review.component';
 import { ConfirmDialogService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
@@ -41,7 +45,8 @@ import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/cat
 
 registerLocaleData(localePt);
 
-interface Order {
+interface Order extends PaymentPlan {
+  shipping?:number|null;shippingMinDays?:number|null;shippingMaxDays?:number|null;shippingMethod?:string|null;productsSubtotal?:number|null;discount?:number|null;
   id: number;
   createdAt: string;
   total: number;
@@ -82,7 +87,7 @@ interface OrderPage {
 @Component({
   selector: 'app-order-history',
   standalone: true,
-  imports: [PaginationComponent,PurchaseReviewComponent,
+  imports: [AdminStateComponent, InlineNoticeComponent,PaginationComponent,PurchaseReviewComponent,
     CatalogLayoutComponent,
     RouterLink,
     CurrencyPipe,
@@ -402,6 +407,8 @@ export class OrderHistoryComponent {
   units(order: Order): number {
     return order.items.reduce((total, item) => total + item.quantity, 0);
   }
+
+  planLabel(order:Order):string{return installmentSummary(Math.round(order.total*100),order.installments)}
 
   subtotal(order: Order): number {
     return (

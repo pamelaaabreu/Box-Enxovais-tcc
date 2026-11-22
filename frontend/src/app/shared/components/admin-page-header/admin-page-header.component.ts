@@ -2,39 +2,17 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 
-export interface AdminBreadcrumb { label: string; url?: string; }
+export interface AdminBreadcrumb {
+  label: string;
+  url?: string;
+}
 
 @Component({
   selector: 'app-admin-page-header',
   standalone: true,
   imports: [RouterLink, MatIconModule],
-  template: `
-    @if (breadcrumb.length > 1) {
-      <nav aria-label="Breadcrumb">
-        @for (item of breadcrumb; track $index; let last = $last) {
-          @if (item.url && !last) { <a [routerLink]="item.url">{{ item.label }}</a> }
-          @else { <span [attr.aria-current]="last ? 'page' : null">{{ item.label }}</span> }
-          @if (!last) { <span aria-hidden="true">/</span> }
-        }
-      </nav>
-    }
-    <header [class.compact]="compact">
-      <div class="heading">
-        @if (icon) { <span class="icon"><mat-icon fontSet="material-icons" aria-hidden="true">{{ icon }}</mat-icon></span> }
-        <div class="copy">
-          <div class="title"><h1 [id]="titleId">{{ title }}</h1><ng-content select="[header-label]" /></div>
-          @if (description) { <p>{{ description }}</p> }
-        </div>
-      </div>
-      <div class="actions">
-        @if (actionLabel) {
-          @if (actionLink) { <a class="primary-action" [routerLink]="actionLink">{{ actionLabel }}</a> }
-          @else { <button class="primary-action" type="button" [disabled]="actionDisabled" (click)="action.emit()">{{ actionLabel }}</button> }
-        }
-        <ng-content select="[header-actions]" />@if (status) { <span class="status">{{ status }}</span> }</div>
-    </header>
-  `,
-  styleUrl: './admin-page-header.component.css',
+  templateUrl: './admin-page-header.component.html',
+  styleUrl: './admin-page-header.component.scss',
 })
 export class AdminPageHeaderComponent {
   @Input({ required: true }) title = '';
@@ -47,5 +25,15 @@ export class AdminPageHeaderComponent {
   @Input() actionLabel = '';
   @Input() actionLink = '';
   @Input() actionDisabled = false;
+  get creationAction(): boolean {
+    return /^(?:\+\s*)?(?:Nov[oa]\b|Cadastrar\b|Adicionar\b)/i.test(
+      this.actionLabel,
+    );
+  }
+  get actionText(): string {
+    return this.creationAction
+      ? this.actionLabel.replace(/^\+\s*/, '')
+      : this.actionLabel;
+  }
   @Output() action = new EventEmitter<void>();
 }

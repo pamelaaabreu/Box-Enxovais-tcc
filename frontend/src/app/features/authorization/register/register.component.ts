@@ -36,6 +36,7 @@ type PasswordRequirement =
   | 'symbol';
 
 @Component({
+  host: {class: 'box-auth-surface'},
   selector: 'app-auth',
   standalone: true,
   imports: [
@@ -260,7 +261,7 @@ export class AuthComponent {
       if (
         !destination.startsWith('/') ||
         decoded.startsWith('//') ||
-        /[\\\u0000-\u001f\u007f]/.test(decoded)
+        Array.from(decoded).some(char => char === '\\' || char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127)
       )
         return '/home';
       const tree = this.router.parseUrl(destination);

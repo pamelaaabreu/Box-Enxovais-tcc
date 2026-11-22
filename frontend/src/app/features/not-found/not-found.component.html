@@ -11,58 +11,9 @@
 
   <div class="mobile-divider" aria-hidden="true"></div>
 
-  <main class="not-found-layout">
-    <div class="image-aside">
-      <svg
-        class="organic-shape"
-        viewBox="0 0 800 600"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          d="M62 372C-13 263 32 153 171 144C293 147 317 99 446 47C589-13 690 13 704 109C722 205 643 247 716 310C829 397 806 463 690 505C552 569 421 616 293 559C187 516 119 464 62 372Z"
-        />
-      </svg>
-
-      <img
-        class="error-illustration"
-        src="/error-404.png"
-        alt="Ilustração de uma tomada desconectada"
-        width="2944"
-        height="1664"
-        decoding="async"
-      />
-    </div>
-
-    <section class="text-content" aria-labelledby="not-found-title">
-      <p class="eyebrow">Ops...</p>
-
-      <h1 id="not-found-title">
-        <span class="error-code">404</span>
-        <span class="not-found-subtitle">Página não encontrada</span>
-      </h1>
-
-      <p class="description">
-        Parece que este caminho não está mais disponível.<br
-          class="desktop-break"
-        />
-        Volte para a loja e continue explorando nossos produtos.
-      </p>
-
-      <div class="action-links">
-        <a class="go-home-button" routerLink="/home">
-          Voltar para Home
-
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M3 12h17m-6-6 6 6-6 6" />
-          </svg>
-        </a>
-
-        <a class="continue-link" routerLink="/home">
-          Continuar comprando
-        </a>
-      </div>
-    </section>
+  <main>
+    <h1 class="visually-hidden">404 — Página não encontrada</h1>
+    <app-admin-state title="Página não encontrada" description="Parece que este caminho não está mais disponível. Volte para a loja e continue explorando nossos produtos." actionLabel="Voltar para Home" actionLink="/home" />
   </main>
 
   <footer class="reassurance" aria-label="Box Enxovais">

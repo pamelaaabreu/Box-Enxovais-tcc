@@ -1,0 +1,421 @@
+{
+  "phase": "table-before",
+  "browser": "158.0.8127.36",
+  "widths": [
+    320,
+    360,
+    390,
+    430,
+    768,
+    1024,
+    1440,
+    1920
+  ],
+  "inventory": [
+    {
+      "pattern": "/account",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/meus-pedidos",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/meus-pedidos/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/checkout/success/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/checkout",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/favorites",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/cart",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/",
+      "kind": "redirect",
+      "redirect": "'home'",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/home",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/campanha/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/categoria/:slug",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/produto/:slug",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/login",
+      "kind": "matcher",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/register",
+      "kind": "matcher",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/forgot-password",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/verify-code",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/reset-password",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/image-upload/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/product-register",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/promotion-register",
+      "kind": "redirect",
+      "redirect": "'admin/promotions/new'",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/add-to-promotion",
+      "kind": "redirect",
+      "redirect": "'admin/promotions'",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/admin",
+      "kind": "lazy-module",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/404",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/**",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/admin",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/customers",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/customers/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/orders",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/orders/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/experience-reviews",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin",
+      "kind": "redirect",
+      "redirect": "'dashboard'",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/dashboard",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/metrics",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/:id/edit",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/:id/images",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/:id/variants",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/manage",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/create",
+      "kind": "redirect",
+      "redirect": "'new'",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/add-product",
+      "kind": "redirect",
+      "redirect": "''",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/new",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/:id/edit",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog/categories",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog/brands",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog/shipping-ranges",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/reports",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    }
+  ],
+  "screens": [
+    {
+      "name": "relatorio-sales",
+      "role": "admin",
+      "route": "/admin/reports?type=sales",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 735,
+              "rows": 3,
+              "visibleActions": 2
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 735,
+              "rows": 3,
+              "visibleActions": 2
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 735,
+              "rows": 3,
+              "visibleActions": 2
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 735,
+              "rows": 3,
+              "visibleActions": 2
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 791,
+              "rows": 3,
+              "visibleActions": 2
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 791,
+              "rows": 3,
+              "visibleActions": 2
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 1074,
+              "rows": 3,
+              "visibleActions": 2
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 1554,
+              "rows": 3,
+              "visibleActions": 2
+            }
+          ],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": []
+        }
+      ],
+      "actualPath": "/admin/reports"
+    }
+  ],
+  "functional": [],
+  "errors": []
+}

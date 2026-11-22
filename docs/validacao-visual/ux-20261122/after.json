@@ -1,0 +1,4975 @@
+{
+  "phase": "after",
+  "browser": "158.0.8127.36",
+  "widths": [
+    320,
+    360,
+    390,
+    430,
+    768,
+    1024,
+    1440,
+    1920
+  ],
+  "inventory": [
+    {
+      "pattern": "/account",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/meus-pedidos",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/meus-pedidos/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/checkout/success/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/checkout",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/favorites",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/cart",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/",
+      "kind": "redirect",
+      "redirect": "'home'",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/home",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/campanha/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/categoria/:slug",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/produto/:slug",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/login",
+      "kind": "matcher",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/register",
+      "kind": "matcher",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/forgot-password",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/verify-code",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/reset-password",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/image-upload/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/product-register",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/promotion-register",
+      "kind": "redirect",
+      "redirect": "'admin/promotions/new'",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/add-to-promotion",
+      "kind": "redirect",
+      "redirect": "'admin/promotions'",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/admin",
+      "kind": "lazy-module",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/404",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/**",
+      "kind": "screen",
+      "file": "frontend/src/app/app.routes.ts"
+    },
+    {
+      "pattern": "/admin",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/customers",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/customers/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/orders",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/orders/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/experience-reviews",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin",
+      "kind": "redirect",
+      "redirect": "'dashboard'",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/dashboard",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/metrics",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/:id/edit",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/:id/images",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/:id/variants",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/products/manage",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/create",
+      "kind": "redirect",
+      "redirect": "'new'",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/add-product",
+      "kind": "redirect",
+      "redirect": "''",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/new",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/:id/edit",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/promotions/:id",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog",
+      "kind": "layout",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog/categories",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog/brands",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/catalog/shipping-ranges",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    },
+    {
+      "pattern": "/admin/reports",
+      "kind": "screen",
+      "file": "frontend/src/app/components/admin/admin-routing.module.ts"
+    }
+  ],
+  "screens": [
+    {
+      "name": "home",
+      "role": "anon",
+      "route": "/home",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 13
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 13
+            }
+          ]
+        }
+      ],
+      "actualPath": "/home"
+    },
+    {
+      "name": "categoria-cama",
+      "role": "anon",
+      "route": "/categoria/cama",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "actualPath": "/categoria/cama"
+    },
+    {
+      "name": "categoria-travesseiros",
+      "role": "anon",
+      "route": "/categoria/travesseiros",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "actualPath": "/categoria/travesseiros"
+    },
+    {
+      "name": "categoria-toalhas",
+      "role": "anon",
+      "route": "/categoria/toalhas",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "actualPath": "/categoria/toalhas"
+    },
+    {
+      "name": "categoria-almofadas",
+      "role": "anon",
+      "route": "/categoria/almofadas",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "actualPath": "/categoria/almofadas"
+    },
+    {
+      "name": "categoria-mesa",
+      "role": "anon",
+      "route": "/categoria/mesa",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "actualPath": "/categoria/mesa"
+    },
+    {
+      "name": "produto-simples",
+      "role": "anon",
+      "route": "/produto/1",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 35
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 35
+            }
+          ]
+        }
+      ],
+      "actualPath": "/produto/1"
+    },
+    {
+      "name": "produto-variantes",
+      "role": "anon",
+      "route": "/produto/2",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 46
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 46
+            }
+          ]
+        }
+      ],
+      "actualPath": "/produto/2"
+    },
+    {
+      "name": "produto-indisponivel",
+      "role": "anon",
+      "route": "/produto/7",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 32
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 32
+            }
+          ]
+        }
+      ],
+      "actualPath": "/produto/7"
+    },
+    {
+      "name": "produto-inexistente",
+      "role": "anon",
+      "route": "/produto/999999",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 5
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 5
+            }
+          ]
+        }
+      ],
+      "actualPath": "/produto/999999"
+    },
+    {
+      "name": "campanha",
+      "role": "anon",
+      "route": "/campanha/1",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": []
+        }
+      ],
+      "actualPath": "/campanha/1"
+    },
+    {
+      "name": "campanha-inexistente",
+      "role": "anon",
+      "route": "/campanha/999999",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": []
+        }
+      ],
+      "actualPath": "/campanha/999999"
+    },
+    {
+      "name": "login",
+      "role": "anon",
+      "route": "/login",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        }
+      ],
+      "actualPath": "/login"
+    },
+    {
+      "name": "cadastro",
+      "role": "anon",
+      "route": "/register",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 7
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 9
+            }
+          ]
+        }
+      ],
+      "actualPath": "/register"
+    },
+    {
+      "name": "recuperacao",
+      "role": "anon",
+      "route": "/forgot-password",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        }
+      ],
+      "actualPath": "/forgot-password"
+    },
+    {
+      "name": "otp",
+      "role": "anon",
+      "route": "/verify-code",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        }
+      ],
+      "actualPath": "/verify-code"
+    },
+    {
+      "name": "nova-senha",
+      "role": "anon",
+      "route": "/reset-password",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [
+            {
+              "id": "target-size",
+              "impact": "serious",
+              "help": "All touch targets must be 24px large, or leave sufficient space",
+              "url": "https://dequeuniversity.com/rules/axe/4.14/target-size?application=axeAPI",
+              "nodes": [
+                {
+                  "target": [
+                    "#mat-input-2"
+                  ],
+                  "html": "<input _ngcontent-ng-c61383...=\"\" matinput=\"\" formcontrolname=\"confirmPassword\" autocomplete=\"new-password\" class=\"mat-mdc-input-elemen...\" type=\"password\" id=\"mat-input-2\" required=\"\" aria-required=\"true\">",
+                  "failure": "Fix any of the following:\n  Target has insufficient size (190px by 18px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 18.8px instead of at least 24px.",
+                  "related": [
+                    {
+                      "minSize": 24,
+                      "width": 190,
+                      "height": 18
+                    },
+                    {
+                      "closestOffset": 18.8,
+                      "minOffset": 24
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 8
+            }
+          ]
+        }
+      ],
+      "actualPath": "/reset-password"
+    },
+    {
+      "name": "nova-senha-token-ausente",
+      "role": "anon",
+      "route": "/reset-password",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        }
+      ],
+      "actualPath": "/reset-password"
+    },
+    {
+      "name": "404",
+      "role": "anon",
+      "route": "/404",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 12
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 13
+            }
+          ]
+        }
+      ],
+      "actualPath": "/404"
+    },
+    {
+      "name": "rota-desconhecida",
+      "role": "anon",
+      "route": "/nao-existe-ux",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 12
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 13
+            }
+          ]
+        }
+      ],
+      "actualPath": "/nao-existe-ux"
+    },
+    {
+      "name": "favoritos",
+      "role": "client",
+      "route": "/favorites",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 4
+            }
+          ]
+        }
+      ],
+      "actualPath": "/favorites"
+    },
+    {
+      "name": "sacola",
+      "role": "client",
+      "route": "/cart",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 2
+            }
+          ]
+        }
+      ],
+      "actualPath": "/cart"
+    },
+    {
+      "name": "conta-enderecos",
+      "role": "client",
+      "route": "/account",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": []
+        }
+      ],
+      "actualPath": "/account"
+    },
+    {
+      "name": "pedidos",
+      "role": "client",
+      "route": "/meus-pedidos",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 5
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 5
+            }
+          ]
+        }
+      ],
+      "actualPath": "/meus-pedidos"
+    },
+    {
+      "name": "pedido-detalhe",
+      "role": "client",
+      "route": "/meus-pedidos/1",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 4
+            }
+          ]
+        }
+      ],
+      "actualPath": "/meus-pedidos/1"
+    },
+    {
+      "name": "pedido-inexistente",
+      "role": "client",
+      "route": "/meus-pedidos/999999",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 6
+            }
+          ]
+        }
+      ],
+      "actualPath": "/meus-pedidos/999999"
+    },
+    {
+      "name": "confirmacao-avaliacao",
+      "role": "client",
+      "route": "/checkout/success/1",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "actualPath": "/checkout/success/1"
+    },
+    {
+      "name": "confirmacao-inexistente",
+      "role": "client",
+      "route": "/checkout/success/999999",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "actualPath": "/checkout/success/999999"
+    },
+    {
+      "name": "checkout-entrega",
+      "role": "client",
+      "route": "/checkout",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "aria-valid-attr-value",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "aria-valid-attr-value",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        }
+      ],
+      "actualPath": "/checkout"
+    },
+    {
+      "name": "checkout-pagamento",
+      "role": "client",
+      "route": "/checkout",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "aria-valid-attr-value",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "aria-valid-attr-value",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        }
+      ],
+      "actualPath": "/checkout"
+    },
+    {
+      "name": "checkout-revisao",
+      "role": "client",
+      "route": "/checkout",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-valid-attr-value",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-valid-attr-value",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 4
+            }
+          ]
+        }
+      ],
+      "actualPath": "/checkout"
+    },
+    {
+      "name": "produtos-admin",
+      "role": "admin",
+      "route": "/admin/products",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 829,
+              "rows": 8,
+              "visibleActions": 35
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 829,
+              "rows": 8,
+              "visibleActions": 35
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 829,
+              "rows": 8,
+              "visibleActions": 35
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 829,
+              "rows": 8,
+              "visibleActions": 35
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 829,
+              "rows": 8,
+              "visibleActions": 35
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 829,
+              "rows": 8,
+              "visibleActions": 35
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 1074,
+              "rows": 8,
+              "visibleActions": 35
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 1554,
+              "rows": 8,
+              "visibleActions": 35
+            }
+          ],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": []
+        }
+      ],
+      "actualPath": "/admin/products"
+    },
+    {
+      "name": "imagens-admin",
+      "role": "admin",
+      "route": "/admin/products/2/images",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": []
+        }
+      ],
+      "actualPath": "/admin/products/2/images"
+    },
+    {
+      "name": "promocao-aba-produtos",
+      "role": "admin",
+      "route": "/admin/promotions/1/edit",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": []
+        }
+      ],
+      "actualPath": "/admin/promotions/1/edit"
+    },
+    {
+      "name": "promocao-aba-imagens",
+      "role": "admin",
+      "route": "/admin/promotions/1/edit",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        }
+      ],
+      "actualPath": "/admin/promotions/1/edit"
+    },
+    {
+      "name": "promocao-aba-descontos",
+      "role": "admin",
+      "route": "/admin/promotions/1/edit",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 357,
+              "rows": 2,
+              "visibleActions": 0
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 357,
+              "rows": 2,
+              "visibleActions": 0
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 357,
+              "rows": 2,
+              "visibleActions": 0
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 364,
+              "rows": 2,
+              "visibleActions": 0
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 680,
+              "rows": 2,
+              "visibleActions": 0
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 623,
+              "rows": 2,
+              "visibleActions": 0
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 709,
+              "rows": 2,
+              "visibleActions": 0
+            }
+          ],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [
+            {
+              "width": 798,
+              "rows": 2,
+              "visibleActions": 0
+            }
+          ],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 2
+            }
+          ]
+        }
+      ],
+      "actualPath": "/admin/promotions/1/edit"
+    },
+    {
+      "name": "enderecos",
+      "role": "client",
+      "route": "/account",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": []
+        }
+      ],
+      "actualPath": "/account"
+    },
+    {
+      "name": "seguranca-conta",
+      "role": "client",
+      "route": "/account",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": []
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": []
+        }
+      ],
+      "actualPath": "/account"
+    },
+    {
+      "name": "endereco-formulario",
+      "role": "client",
+      "route": "/account",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 8
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 8
+            }
+          ]
+        }
+      ],
+      "actualPath": "/account"
+    },
+    {
+      "name": "produto-aba-caracteristicas",
+      "role": "anon",
+      "route": "/produto/2",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 43
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 43
+            }
+          ]
+        }
+      ],
+      "actualPath": "/produto/2"
+    },
+    {
+      "name": "produto-aba-cuidados",
+      "role": "anon",
+      "route": "/produto/2",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            },
+            {
+              "id": "color-contrast",
+              "count": 36
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 36
+            }
+          ]
+        }
+      ],
+      "actualPath": "/produto/2"
+    },
+    {
+      "name": "catalogo-vazio",
+      "role": "anon",
+      "route": "/categoria/cama?q=NAO-EXISTE-UX",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "actualPath": "/categoria/cama"
+    },
+    {
+      "name": "subcategoria-jogos-cama",
+      "role": "anon",
+      "route": "/categoria/cama-jogos-de-cama--1",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "actualPath": "/categoria/cama-jogos-de-cama--1"
+    },
+    {
+      "name": "subcategoria-edredons",
+      "role": "anon",
+      "route": "/categoria/cama-edredons--2",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "actualPath": "/categoria/cama-edredons--2"
+    },
+    {
+      "name": "cadastro-multivariantes",
+      "role": "admin",
+      "route": "/admin/products/manage",
+      "measurements": [
+        {
+          "width": 320,
+          "viewport": 320,
+          "documentWidth": 320,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 360,
+          "viewport": 360,
+          "documentWidth": 360,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 390,
+          "viewport": 390,
+          "documentWidth": 390,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 430,
+          "viewport": 430,
+          "documentWidth": 430,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 768,
+          "viewport": 768,
+          "documentWidth": 768,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1024,
+          "viewport": 1024,
+          "documentWidth": 1024,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1440,
+          "viewport": 1440,
+          "documentWidth": 1440,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        },
+        {
+          "width": 1920,
+          "viewport": 1920,
+          "documentWidth": 1920,
+          "overflow": false,
+          "bad": [],
+          "tableScrollers": [],
+          "brokenImages": []
+        }
+      ],
+      "axe": [
+        {
+          "width": 320,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "width": 1440,
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "color-contrast",
+              "count": 3
+            }
+          ]
+        }
+      ],
+      "actualPath": "/admin/products/manage"
+    }
+  ],
+  "functional": [],
+  "errors": []
+}

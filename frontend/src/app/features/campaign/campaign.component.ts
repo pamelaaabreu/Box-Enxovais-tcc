@@ -12,7 +12,8 @@ import {
 } from 'rxjs';
 import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
+import { CatalogToolbarComponent } from '../catalog/components/catalog-toolbar/catalog-toolbar.component';
+import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { CampaignService } from '../../core/services/campaign.service';
 import { CatalogService } from '../catalog/services/catalog.service';
 import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/catalog-layout.component';
@@ -26,7 +27,8 @@ import { HomeCampaign } from '../../shared/models';
     NgTemplateOutlet,
     RouterLink,
     FormsModule,
-    MatSelectModule,
+    CatalogToolbarComponent,
+    AdminStateComponent,
     CatalogLayoutComponent,
     ProductCardComponent,
     PaginationComponent,
@@ -41,6 +43,7 @@ export class CampaignComponent {
   readonly fullPage = !!this.route.snapshot.paramMap.get('id');
   readonly search = signal('');
   readonly sort = signal('name');
+  readonly sortOptions = [{value:'name',label:'Nome'},{value:'price_asc',label:'Menor preço'},{value:'price_desc',label:'Maior preço'}];
   readonly page = signal(1);
   readonly pageSize = 12;
   private readonly state = toSignal(
@@ -77,7 +80,7 @@ export class CampaignComponent {
           seen.has(p.id) ||
           p.status !== 'active' ||
           p.quantity <= 0 ||
-          !p.name.toLocaleLowerCase('pt-BR').includes(query)
+          !`${p.name} ${p.sku ?? ''}`.toLocaleLowerCase('pt-BR').includes(query)
         )
           return false;
         seen.add(p.id);
@@ -88,9 +91,15 @@ export class CampaignComponent {
     const price = (p: (typeof products)[number]) =>
       p.promotion_active ? p.promotional_price : p.price;
     return products.sort((a, b) =>
-      this.sort() === 'price'
+      (this.sort() === 'price' || this.sort() === 'price_asc')
         ? price(a) - price(b)
-        : a.name.localeCompare(b.name, 'pt-BR'),
+        : this.sort() === 'price_desc'
+          ? price(b) - price(a)
+          : this.sort() === 'recent'
+            ? b.id - a.id
+            : this.sort() === ''
+              ? 0
+              : a.name.localeCompare(b.name, 'pt-BR'),
     );
   });
   readonly visibleProducts = computed(() =>

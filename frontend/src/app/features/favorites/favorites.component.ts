@@ -1,3 +1,4 @@
+import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import {
   ChangeDetectionStrategy,
@@ -8,7 +9,6 @@ import {
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
-import { RouterLink } from '@angular/router';
 import { FavoritesService } from '../../core/services/favorites.service';
 import { CartService } from '../../core/services/cart.service';
 import { CatalogService } from '../catalog/services/catalog.service';
@@ -18,9 +18,8 @@ import { ProductCardComponent } from '../catalog/components/product-card/product
 @Component({
   selector: 'app-favorites',
   standalone: true,
-  imports: [
+  imports: [AdminStateComponent,
     PaginationComponent,
-    RouterLink,
     CatalogLayoutComponent,
     ProductCardComponent,
   ],

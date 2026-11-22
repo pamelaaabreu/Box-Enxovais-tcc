@@ -23,6 +23,12 @@ fieldset {
   border-radius: 16px;
   background: #fffdf8;
 }
+.form-section.commerce-summary-section {
+  padding: 12px 18px;
+}
+.commerce-summary-section .promotion-hint {
+  margin-top: 6px;
+}
 h2 {
   margin: 4px 0 4px;
   font-size: 18px;
@@ -36,13 +42,13 @@ h2 small {
 
 .promotion-hint,
 .hint {
-  margin: 0 0 10px;
-  color: #5b6858;
-  font-size: 13px;
+  color: #2f3a31;
+  font-size: 12px;
 }
 .hint {
   font-size: 12px;
   margin: 0;
+  color: #2f3a31;
 }
 .promotion-hint {
   margin: 10px 0 0;
@@ -114,6 +120,17 @@ textarea {
 
 .standard-characteristics {
   margin-bottom: 12px;
+  align-items: end;
+}
+.add-characteristic { justify-self: end; max-width: 100%; }
+.inline-link { display: inline-flex; align-items: center; gap: 4px; }
+.inline-link mat-icon { font-size: 16px; width: 16px; height: 16px; }
+@media (max-width: 900px) {
+  .standard-characteristics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .add-characteristic { justify-self: start; }
+}
+@media (max-width: 530px) {
+  .fields.standard-characteristics { grid-template-columns: minmax(0, 1fr); }
 }
 [aria-invalid="true"],
 input.ng-touched.ng-invalid {
@@ -288,13 +305,16 @@ progress::-moz-progress-bar {
   flex: 1;
   min-width: 0;
   line-height: 1.5;
+  padding-bottom: 2px;
 }
 .preview-status {
   flex: none;
-  padding: 3px 8px;
+  padding: 4px 8px;
   border-radius: 999px;
   background: #eee8de;
-  font-size: 12px;
+  font-size: 11.5px;
+  font-weight: 510;
+  color: #4c4c4c;
 }
 .preview-status[data-status="active"] {
   background: #e4ebdf;
@@ -308,6 +328,7 @@ progress::-moz-progress-bar {
   color: #3d4836;
   font-size: 20px;
   font-weight: 700;
+  padding-top: 5px;
 }
 @media (max-width: 1190px) {
   .create-grid.with-summary {

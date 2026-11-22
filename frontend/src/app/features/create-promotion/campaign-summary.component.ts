@@ -7,7 +7,7 @@ import { CreatePromotionRequest } from '../../shared/models';
   standalone: true,
   imports: [DatePipe, MatIconModule],
   templateUrl: './campaign-summary.component.html',
-  styleUrl: './campaign-summary.component.css',
+  styleUrl: './campaign-summary.component.scss',
 })
 export class CampaignSummaryComponent {
   @Input({required: true}) promotionData!: CreatePromotionRequest;

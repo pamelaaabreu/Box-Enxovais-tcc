@@ -1,6 +1,6 @@
 import {registerLocaleData} from '@angular/common';
 import localePt from '@angular/common/locales/pt';
-import {Router, provideRouter} from '@angular/router';
+import {provideRouter} from '@angular/router';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {ConfirmDialogService} from '../../shared/components/confirm-dialog/confirm-dialog.service';
 import {TestBed} from '@angular/core/testing';
@@ -14,7 +14,7 @@ function configureRouter(){TestBed.configureTestingModule({providers:[provideRou
 
 describe('CreatePromotionComponent',()=>{
  beforeEach(configureRouter);
- it('sends configured metadata once and resets after server confirmation',()=>{const result=new Subject<unknown>();const create=jasmine.createSpy().and.returnValue(result);const success=jasmine.createSpy();TestBed.configureTestingModule({providers:[{provide:ProductService,useValue:{getAdminProducts:()=>of([])}},{provide:PromoService,useValue:{createPromotion:create,listCampaigns:()=>of([])}},{provide:CustomAlertService,useValue:{success,error:jasmine.createSpy()}}]});const f=TestBed.createComponent(CreatePromotionComponent);f.componentInstance.promotionData={name:'Natal',description:'Campanha',image_path:'uploads/natal.webp',home_featured:true,status:'active',start_date:'2026-11-01T00:00',end_date:'2026-12-31T23:59'};f.componentInstance.onSubmit();f.componentInstance.onSubmit();expect(create).toHaveBeenCalledTimes(1);expect(create.calls.mostRecent().args[0].home_featured).toBeTrue();expect(f.componentInstance.saving).toBeTrue();result.next({id:1});expect(f.componentInstance.saving).toBeFalse();expect(success).toHaveBeenCalled();expect(f.componentInstance.promotionData.name).toBe('')});
+ it('sends configured metadata once and resets after server confirmation',()=>{const result=new Subject<unknown>();const create=jasmine.createSpy().and.returnValue(result);const success=jasmine.createSpy();TestBed.configureTestingModule({providers:[{provide:ProductService,useValue:{getAdminProducts:()=>of([])}},{provide:PromoService,useValue:{createPromotion:create,listCampaigns:()=>of([])}},{provide:CustomAlertService,useValue:{success,error:jasmine.createSpy()}}]});const f=TestBed.createComponent(CreatePromotionComponent);f.componentInstance.promotionData={name:'Natal',description:'Campanha',image_path:'uploads/natal.webp',home_featured:true,status:'active',start_date:'2026-11-01T00:00',end_date:'2026-12-31T23:59'};Object.assign(f.componentInstance.promotionData,{created_at:'2026-11-01T03:00:00Z',updated_at:'2026-11-12T03:00:00Z'});f.componentInstance.onSubmit();f.componentInstance.onSubmit();expect(create).toHaveBeenCalledTimes(1);expect(create.calls.mostRecent().args[0].home_featured).toBeTrue();expect(create.calls.mostRecent().args[0].created_at).toBeUndefined();expect(create.calls.mostRecent().args[0].updated_at).toBeUndefined();expect(f.componentInstance.saving).toBeTrue();result.next({id:1});expect(f.componentInstance.saving).toBeFalse();expect(success).toHaveBeenCalled();expect(f.componentInstance.promotionData.name).toBe('')});
 
  it('keeps unique participants and restores a saved campaign for editing without leaking its id into the request',()=>{
   const update=jasmine.createSpy().and.returnValue(of({id:4}));
@@ -25,10 +25,12 @@ describe('CreatePromotionComponent',()=>{
   component.products=[product];component.select(product);component.select(product);
   expect(component.promotionData.products?.length).toBe(1);
   component.remove(7);expect(component.promotionData.products?.length).toBe(0);
-  component.campaigns=[{id:4,name:'Natal',status:'active',start_date:'2026-11-01T03:00:00Z',end_date:'2027-01-01T02:59:59Z',products:[{product_id:7,promotional_price:80}]}];
+  component.campaigns=[{id:4,name:'Natal',created_at:'2026-11-01T03:00:00Z',updated_at:'2026-11-12T03:00:00Z',status:'active',start_date:'2026-11-01T03:00:00Z',end_date:'2027-01-01T02:59:59Z',products:[{product_id:7,promotional_price:80}]}];
   component.edit(4);expect(component.promotionData.products?.[0].promotional_price).toBe(80);
   component.onSubmit();expect(update).toHaveBeenCalled();
   expect(update.calls.mostRecent().args[1].id).toBeUndefined();
+  expect(update.calls.mostRecent().args[1].created_at).toBeUndefined();
+  expect(update.calls.mostRecent().args[1].updated_at).toBeUndefined();
  });
  it('rejects an invalid date range before sending a request',()=>{
   const create=jasmine.createSpy(),error=jasmine.createSpy();

@@ -1,4 +1,5 @@
 :host {
+  --cart-muted: #626e5a;
   display: block;
   color: #292d26;
 }
@@ -92,7 +93,7 @@
 .table-header {
   padding: 0 4px 16px;
   border-bottom: 1px solid #dedfd6;
-  color: #787d73;
+  color: var(--cart-muted);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.045em;
@@ -323,7 +324,7 @@
   font-size: 0.88rem;
 }
 .summary__row span:first-child {
-  color: #727e6c;
+  color: var(--cart-muted);
 }
 .summary__row span:last-child {
   color: #3d4836;
@@ -450,67 +451,7 @@
   font-size: clamp(1.9rem, 2.7vw, 2.5rem);
 }
 
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  padding: 14px 16px 20px;
-  text-align: center;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.empty__icon {
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  place-items: center;
-  width: 108px;
-  height: 104px;
-  margin-bottom: 22px;
-  color: #4c6043;
-}
-
-.empty__icon::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 3px 7px 5px 3px;
-  background: #e8ede3;
-  border-radius: 38% 62% 48% 52% / 54% 39% 61% 46%;
-  transform: rotate(-13deg);
-}
-
-.empty__icon svg {
-  width: 47px;
-  height: 47px;
-}
-
-.empty h2 {
-  margin: 0 0 12px;
-  color: #303a2e;
-  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
-  font-weight: 700;
-}
-
-.empty p {
-  max-width: 410px;
-  margin: 0;
-  color: #77796f;
-  font-size: 0.95rem;
-  line-height: 1.65;
-}
-
-.empty__button {
-  width: max-content;
-  max-width: 100%;
-  margin: 26px auto 0;
-  padding-inline: 28px;
-}
+.empty { display: block; min-width: 0; }
 .mobile-label {
   display: none;
 }
@@ -656,7 +597,7 @@ button:focus-visible {
   .mobile-label {
     display: block;
     margin-bottom: 6px;
-    color: #92958a;
+    color: var(--cart-muted);
     font-size: 0.73rem;
     font-weight: 400;
   }
@@ -679,15 +620,8 @@ button:focus-visible {
   .cart-page--empty .cart-heading {
     margin-bottom: 0;
   }
-  .cart-page--empty .empty {
-    padding-top: 0;
-    padding-bottom: 22px;
-  }
-  .cart-page--empty .empty__icon {
+.cart-page--empty .empty__icon {
     margin-bottom: 18px;
-  }
-  .cart-page--empty .empty__button {
-    margin-top: 24px;
   }
 }
 

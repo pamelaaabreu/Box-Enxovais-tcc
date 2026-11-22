@@ -3,107 +3,486 @@
   aria-label="Indicadores da loja"
   [attr.aria-busy]="status() === 'loading'"
 >
+  <div class="dashboard__top">
+    <app-period-filter [form]="filter" (applied)="apply()" />
+
+    @if (status() === "loaded") {
+      @if (data(); as s) {
+        <p class="period-note" aria-label="Período aplicado aos indicadores">
+          <mat-icon aria-hidden="true">event</mat-icon>
+          <span>
+            De {{ s.period.from.slice(0, 10) | date: "dd/MM/yyyy" }} até
+            {{ s.period.until.slice(0, 10) | date: "dd/MM/yyyy" }}
+            · agrupamento {{ s.period.group === "day" ? "diário" : "mensal" }}.
+          </span>
+        </p>
+      }
+    }
+  </div>
+
   @if (status() === "loading") {
-    <app-admin-state kind="loading" title="Carregando indicadores e gráficos…" />
+    <app-admin-state
+      kind="loading"
+      title="Carregando indicadores e gráficos…"
+    />
+
     <div class="metrics" aria-hidden="true">
-      @for (placeholder of [1, 2, 3, 4]; track placeholder) {
+      @for (item of [1, 2, 3, 4, 5, 6]; track item) {
         <div class="panel skeleton"></div>
       }
     </div>
   } @else if (status() === "error") {
-    <app-admin-state kind="error" title="Não foi possível carregar a dashboard" actionLabel="Tentar novamente" (action)="load()" />
+    <app-admin-state
+      kind="error"
+      title="Não foi possível carregar os indicadores"
+      [description]="error()"
+      actionLabel="Tentar novamente"
+      (action)="load()"
+    />
   } @else {
-    @if (data(); as summary) {
-      <div class="metrics">
-        <article class="panel metric">
-          <mat-icon aria-hidden="true">shopping_bag</mat-icon>
-          <h2>Total de pedidos</h2>
-          <strong>{{ summary.orders }}</strong>
-          <p>Todos os pedidos registrados</p>
+    @if (data(); as s) {
+      <div class="metrics" aria-label="Resumo dos indicadores">
+        <article class="panel metric metric--featured">
+          <div class="metric__main">
+            <span class="metric__icon">
+              <mat-icon aria-hidden="true">payments</mat-icon>
+            </span>
+            <div class="metric__content">
+              <h2>Faturamento simulado</h2>
+              <strong class="metric__value">
+                {{
+                  s.revenueCents / 100
+                    | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                }}
+              </strong>
+            </div>
+          </div>
+          <p class="metric__description">
+            Aprovados no período, com frete e sem cancelamentos
+          </p>
         </article>
-        <article class="panel metric">
-          <mat-icon aria-hidden="true">payments</mat-icon>
-          <h2>Faturamento simulado</h2>
-          <strong>{{
-            summary.revenueCents / 100
-              | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-          }}</strong>
-          <p>Pedidos aprovados em simulação</p>
+
+        <article class="panel metric metric--orders">
+          <div class="metric__main">
+            <span class="metric__icon">
+              <mat-icon aria-hidden="true">shopping_bag</mat-icon>
+            </span>
+            <div class="metric__content">
+              <h2>Pedidos realizados</h2>
+              <strong class="metric__value">{{ s.orders }}</strong>
+            </div>
+          </div>
+          <p class="metric__description">
+            {{ s.approvedOrders }} aprovados ·
+            {{ s.cancelledOrders }} cancelados no período
+          </p>
         </article>
-        <article class="panel metric">
-          <mat-icon aria-hidden="true">inventory_2</mat-icon>
-          <h2>Produtos cadastrados</h2>
-          <strong>{{ summary.products }}</strong>
-          <p>Total de produtos no catálogo</p>
+
+        <article class="panel metric metric--ticket">
+          <div class="metric__main">
+            <span class="metric__icon">
+              <mat-icon aria-hidden="true">receipt_long</mat-icon>
+            </span>
+            <div class="metric__content">
+              <h2>Ticket médio</h2>
+              <strong class="metric__value">
+                {{
+                  s.averageTicketCents / 100
+                    | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                }}
+              </strong>
+            </div>
+          </div>
+          <p class="metric__description">
+            Média dos pedidos aprovados no período
+          </p>
         </article>
-        <article class="panel metric">
-          <mat-icon aria-hidden="true">warning_amber</mat-icon>
-          <h2>Estoque baixo</h2>
-          <strong>{{ summary.lowStock }}</strong>
-          <p>Produtos ativos com até 5 unidades</p>
+
+        <article class="panel metric metric--customers">
+          <div class="metric__main">
+            <span class="metric__icon">
+              <mat-icon aria-hidden="true">groups</mat-icon>
+            </span>
+            <div class="metric__content">
+              <h2>Clientes cadastrados</h2>
+              <strong class="metric__value">{{ s.customers }}</strong>
+            </div>
+          </div>
+          <p class="metric__description">
+            Total atual · {{ s.newCustomers }}
+            {{ s.newCustomers === 1 ? "novo" : "novos" }} no período
+          </p>
+        </article>
+
+        <article class="panel metric metric--products">
+          <div class="metric__main">
+            <span class="metric__icon">
+              <mat-icon aria-hidden="true">inventory_2</mat-icon>
+            </span>
+            <div class="metric__content">
+              <h2>Produtos ativos</h2>
+              <strong class="metric__value">{{ s.activeProducts }}</strong>
+            </div>
+          </div>
+          <p class="metric__description">
+            Situação atual · {{ s.products }} cadastrados no total
+          </p>
+        </article>
+
+        <article class="panel metric metric--stock">
+          <div class="metric__main">
+            <span class="metric__icon">
+              <mat-icon aria-hidden="true">warning_amber</mat-icon>
+            </span>
+            <div class="metric__content">
+              <h2>Estoque baixo</h2>
+              <strong class="metric__value">{{ s.lowStock }}</strong>
+            </div>
+          </div>
+          <p class="metric__description">
+            Atual: total de 1 a 5 unidades · {{ s.outOfStock }}
+            {{ s.outOfStock === 1 ? "indisponível" : "indisponíveis" }}
+          </p>
         </article>
       </div>
-      <div class="charts">
-        <section class="panel" aria-labelledby="orders-chart">
-          <h2 id="orders-chart">Evolução dos pedidos</h2>
-          @if (summary.months.length) {
-            <ul class="bars">
-              @for (month of summary.months; track month.month) {
-                <li
-                  [title]="
-                    month.month +
-                    ': ' +
-                    month.total +
-                    ' pedidos, ' +
-                    month.cancelled +
-                    ' cancelados'
+
+      <div class="analytics-grid" aria-label="Análises principais">
+        <section class="panel chart-panel analytics-grid__revenue">
+          <div class="panel__heading">
+            <span class="panel__icon" aria-hidden="true">
+              <mat-icon>bar_chart</mat-icon>
+            </span>
+            <h2>Faturamento por período</h2>
+            <span class="panel__tag">
+              {{ s.period.group === "day" ? "Diário" : "Mensal" }}
+            </span>
+          </div>
+
+          @if (s.series.length) {
+            <app-dashboard-trend
+              title="Faturamento"
+              [series]="s.series"
+              field="revenueCents"
+            />
+          } @else {
+            <app-admin-state
+              icon="show_chart"
+              title="Sem faturamento aprovado"
+              description="Não há valores aprovados no período selecionado."
+            />
+          }
+        </section>
+
+        <section class="panel chart-panel analytics-grid__status">
+          <div class="panel__heading">
+            <span class="panel__icon" aria-hidden="true">
+              <mat-icon>donut_large</mat-icon>
+            </span>
+            <h2>Pedidos por status</h2>
+          </div>
+
+          @if (s.orders) {
+            <p class="chart-panel__summary">
+              {{ s.orders }} {{ s.orders === 1 ? "pedido" : "pedidos" }} no
+              período
+              <span aria-hidden="true">·</span>
+              {{ s.approvedOrders }}
+              {{ s.approvedOrders === 1 ? "aprovado" : "aprovados" }}
+            </p>
+
+            <div class="status-chart status-chart--stacked">
+              <div
+                class="status-chart__visual"
+                role="img"
+                [attr.aria-label]="statusChartDescription()"
+                [style.background]="statusDonutBackground()"
+              >
+                <div class="status-chart__center" aria-hidden="true">
+                  <strong>{{ s.orders }}</strong>
+                  <span>{{ s.orders === 1 ? "pedido" : "pedidos" }}</span>
+                </div>
+              </div>
+
+              <ul class="status-chart__legend" aria-label="Totais por status">
+                @for (item of statusSegments(); track item.name) {
+                  <li>
+                    <span class="status-chart__label">
+                      <span
+                        class="status-chart__dot"
+                        [style.backgroundColor]="item.color"
+                      ></span>
+                      {{ item.name }}
+                    </span>
+                    <strong>{{ item.value }}</strong>
+                    <span class="status-chart__percentage"
+                      >{{ item.percent }}%</span
+                    >
+                  </li>
+                }
+              </ul>
+            </div>
+          } @else {
+            <app-admin-state
+              title="Nenhum pedido registrado"
+              description="Não há pedidos no período selecionado."
+            />
+          }
+        </section>
+
+        <section class="panel chart-panel analytics-grid__evolution">
+          <div class="panel__heading">
+            <span class="panel__icon" aria-hidden="true">
+              <mat-icon>show_chart</mat-icon>
+            </span>
+            <h2>Evolução dos pedidos</h2>
+          </div>
+
+          @if (s.series.length) {
+            <app-dashboard-trend
+              title="Pedidos"
+              [series]="s.series"
+              field="orders"
+            />
+          } @else {
+            <app-admin-state
+              icon="show_chart"
+              title="Sem evolução no período"
+            />
+          }
+        </section>
+      </div>
+
+      <div class="support-grid" aria-label="Informações complementares">
+        <section class="panel chart-panel support-grid__products">
+          <div class="panel__heading">
+            <span class="panel__icon" aria-hidden="true">
+              <mat-icon>workspace_premium</mat-icon>
+            </span>
+            <h2>Produtos mais vendidos</h2>
+          </div>
+          <p class="chart-panel__summary">
+            {{ productChartItems().length }} grupos ·
+            {{ totalTopProductUnits() }} unidades
+          </p>
+
+          @if (productChartItems().length) {
+            <div
+              class="vertical-bars"
+              role="img"
+              aria-label="Produtos mais vendidos em gráfico de barras verticais"
+            >
+              @for (product of productChartItems(); track product.productId) {
+                <div
+                  class="vertical-bars__item"
+                  [attr.title]="
+                    product.fullName + ': ' + product.units + ' unidades'
                   "
                 >
-                  <span>{{ month.month }}</span
-                  ><strong
-                    >{{ month.total }} ·
-                    {{ month.cancelled }} cancelados</strong
-                  >
-                  <span class="track" aria-hidden="true"
-                    ><span
-                      class="bar"
-                      [style.width.%]="(month.total / maxOrders()) * 100"
-                      ><span
-                        class="cancelled"
-                        [style.width.%]="(month.cancelled / month.total) * 100"
-                      ></span></span
-                  ></span>
-                </li>
+                  <div class="vertical-bars__column">
+                    <div
+                      class="vertical-bars__bar"
+                      [style.height.%]="product.percent"
+                    ></div>
+                  </div>
+                  <strong class="vertical-bars__value">{{
+                    product.units
+                  }}</strong>
+                  <span class="vertical-bars__label">{{
+                    product.shortName
+                  }}</span>
+                </div>
               }
-            </ul>
+            </div>
           } @else {
-            <app-admin-state icon="show_chart" title="Nenhum pedido registrado" description="Os pedidos realizados na loja aparecerão aqui." />
+            <app-admin-state
+              icon="inventory_2"
+              title="Nenhum produto vendido no período"
+            />
           }
         </section>
-        <section class="panel" aria-labelledby="categories-chart">
-          <h2 id="categories-chart">Categorias mais vendidas</h2>
-          @if (summary.categories.length) {
-            <ul class="bars">
-              @for (category of summary.categories; track category.name) {
+
+        <section class="panel chart-panel support-grid__orders">
+          <div class="panel__heading">
+            <span class="panel__icon" aria-hidden="true">
+              <mat-icon>receipt_long</mat-icon>
+            </span>
+            <h2>Pedidos recentes</h2>
+          </div>
+
+          @if (s.recentOrders.length) {
+            <ul class="compact-list recent-orders">
+              @for (order of s.recentOrders; track order.id) {
                 <li>
-                  <span>{{ category.name }}</span
-                  ><strong>{{ category.units }} un.</strong>
-                  <span class="track" aria-hidden="true"
-                    ><span
-                      class="bar"
-                      [style.width.%]="(category.units / maxUnits()) * 100"
-                    ></span
-                  ></span>
+                  <div class="compact-list__primary">
+                    <a [routerLink]="['/admin/orders', order.id]"
+                      >Pedido #{{ order.id }}</a
+                    >
+                    <strong>
+                      {{
+                        order.totalCents / 100
+                          | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                      }}
+                    </strong>
+                  </div>
+                  <span>
+                    {{ order.customer }} ·
+                    {{ order.createdAt | date: "dd/MM/yyyy HH:mm" : "-0300" }}
+                  </span>
+                  <span
+                    class="order-status"
+                    [class.order-status--cancelled]="
+                      order.status === 'cancelled'
+                    "
+                  >
+                    {{
+                      order.status === "cancelled"
+                        ? "Cancelado"
+                        : "Aprovado em simulação"
+                    }}
+                  </span>
                 </li>
               }
             </ul>
           } @else {
-            <app-admin-state icon="category" title="Nenhuma venda por categoria" description="As unidades de pedidos aprovados aparecerão aqui." />
+            <app-admin-state title="Nenhum pedido recente neste período" />
+          }
+        </section>
+
+        <section class="panel chart-panel support-grid__categories">
+          <div class="panel__heading">
+            <span class="panel__icon" aria-hidden="true">
+              <mat-icon>category</mat-icon>
+            </span>
+            <h2>Categorias mais vendidas</h2>
+          </div>
+          <p class="chart-panel__summary">
+            {{ categoryChartItems().length }} grupos ·
+            {{ totalCategoryUnits() }} unidades
+          </p>
+
+          @if (categoryChartItems().length) {
+            <div
+              class="mini-bars"
+              role="img"
+              aria-label="Categorias mais vendidas em gráfico de barras"
+            >
+              @for (category of categoryChartItems(); track category.name) {
+                <div
+                  class="mini-bars__row"
+                  [attr.title]="
+                    category.fullName + ': ' + category.units + ' unidades'
+                  "
+                >
+                  <div class="mini-bars__topline">
+                    <span class="mini-bars__label">{{
+                      category.shortName
+                    }}</span>
+                    <strong>{{ category.units }}</strong>
+                  </div>
+                  <div class="mini-bars__track">
+                    <div
+                      class="mini-bars__bar"
+                      [style.width.%]="category.percent"
+                    ></div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <app-admin-state
+              icon="category"
+              title="Nenhuma venda por categoria"
+            />
           }
         </section>
       </div>
-      @if (!summary.products) {
-        <app-admin-state icon="inventory_2" title="Nenhum produto cadastrado" description="Cadastre os primeiros produtos da Box Enxovais." actionLabel="Cadastrar produto" actionLink="/admin/products/manage" />
+
+      <section
+        class="panel chart-panel chart-panel--table"
+        aria-label="Tabela de estoque atual"
+      >
+        <div class="panel__heading">
+          <span class="panel__icon panel__icon--warning" aria-hidden="true">
+            <mat-icon>inventory</mat-icon>
+          </span>
+          <h2>Estoque atual</h2>
+        </div>
+        <p class="panel__description">
+          Produtos ativos e variações com até 5 unidades. O total do produto é a
+          soma das variações.
+        </p>
+
+        @if (s.stock.length) {
+          <div
+            class="stock-table"
+            tabindex="0"
+            role="region"
+            aria-label="Tabela de estoque atual"
+          >
+            <table>
+              <caption class="visually-hidden">
+                Estoque atual
+              </caption>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Tamanho</th>
+                  <th>Quantidade</th>
+                  <th>Total do produto</th>
+                  <th>Situação</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (
+                  product of s.stock;
+                  track product.productId + "-" + product.variantId
+                ) {
+                  <tr>
+                    <td>
+                      <a
+                        [routerLink]="[
+                          '/admin/products',
+                          product.productId,
+                          'edit',
+                        ]"
+                      >
+                        {{ product.name }}
+                      </a>
+                    </td>
+                    <td>{{ product.size || "—" }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.totalQuantity }}</td>
+                    <td>
+                      <span
+                        class="table-status"
+                        [class.table-status--critical]="product.quantity === 0"
+                      >
+                        {{
+                          product.quantity === 0
+                            ? "Indisponível"
+                            : product.quantity === 1
+                              ? "Última unidade"
+                              : "Baixo estoque"
+                        }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <app-admin-state title="Nenhum alerta de estoque" />
+        }
+      </section>
+
+      @if (!s.products) {
+        <app-admin-state
+          icon="inventory_2"
+          title="Nenhum produto cadastrado"
+          actionLabel="Cadastrar produto"
+          actionLink="/admin/products/manage"
+        />
       }
     }
   }

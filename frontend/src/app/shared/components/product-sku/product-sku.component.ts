@@ -9,14 +9,8 @@ import { CustomAlertService } from '../../../core/services/custom-alert.service'
   selector: 'app-product-sku',
   standalone: true,
   imports: [MatIconModule],
-  template: `
-    <div class="sku-field">
-      <label>SKU da loja<input readonly [value]="sku" [placeholder]="loading ? 'Consultando SKU…' : 'SKU indisponível'" /></label>
-      @if (sku) { <button type="button" (click)="copy()" aria-label="Copiar SKU" title="Copiar SKU"><mat-icon aria-hidden="true">content_copy</mat-icon>Copiar</button> }
-      @if (failed) { <p role="status">Não foi possível consultar o SKU. <button type="button" (click)="load()">Tentar novamente</button></p> }
-    </div>
-  `,
-  styleUrl: './product-sku.component.css',
+  templateUrl: './product-sku.component.html',
+  styleUrl: './product-sku.component.scss',
 })
 export class ProductSkuComponent implements OnChanges {
   @Input({ required: true }) productId!: number;

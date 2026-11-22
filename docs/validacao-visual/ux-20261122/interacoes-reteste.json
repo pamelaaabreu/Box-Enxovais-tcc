@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Abas de produto e conta por setas e seleção ARIA",
+    "passed": true
+  },
+  {
+    "name": "Formulário inválido tem erro associado ao campo",
+    "passed": true
+  },
+  {
+    "name": "Texto 200% e reflow 320 home",
+    "passed": true
+  },
+  {
+    "name": "Texto 200% e reflow 320 checkout",
+    "passed": true
+  },
+  {
+    "name": "Texto 200% e reflow 320 formulario",
+    "passed": true
+  },
+  {
+    "name": "Texto 200% e reflow 320 relatorio",
+    "passed": true
+  },
+  {
+    "name": "Compra completa com parcelas, confirmação, avaliação e cancelamento",
+    "passed": true
+  },
+  {
+    "name": "Estados vazios reais de sacola e favoritos",
+    "passed": false,
+    "error": "locator.waitFor: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('heading', { name: /sacola.*vazia/i }) to be visible\u001b[22m\n"
+  }
+]

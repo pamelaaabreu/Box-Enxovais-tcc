@@ -10,7 +10,7 @@ import { FavoritesService } from '../../core/services/favorites.service';
   selector: 'app-favorite-button',
   standalone: true,
   templateUrl: './favorite-button.component.html',
-  styleUrl: './favorite-button.component.css',
+  styleUrl: './favorite-button.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FavoriteButtonComponent {

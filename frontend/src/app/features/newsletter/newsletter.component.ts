@@ -37,7 +37,7 @@ export class NewsletterComponent {
       .post<{ message: string }>(this.backendUrl, { email: email })
       .subscribe({
         // Callback para sucesso
-        next: (response) => {
+        next: () => {
            this.alerts.success(
           'Inscrição confirmada!', 
           'Obrigado por acompanhar as novidades e campanhas da loja.'
@@ -46,7 +46,7 @@ export class NewsletterComponent {
           form.reset();
         },
         // Callback para erro
-        error: (error) => {
+        error: () => {
           this.alerts.error(
           'Ops, algo deu errado...', 
           'Não foi possível realizar sua inscrição. Por favor, tente novamente mais tarde.' 

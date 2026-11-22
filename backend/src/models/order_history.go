@@ -3,6 +3,7 @@ package models
 import "time"
 
 type OrderFilters struct {
+	CustomerID    int
 	Search        string
 	CancelledOnly bool
 	Oldest        bool
@@ -21,6 +22,7 @@ type CancellationReason struct {
 }
 
 type OrderDetails struct {
+	OwnerID      int                 `json:"-"`
 	Cancellation *CancellationReason `json:"cancellation,omitempty"`
 	OrderHistoryEntry
 	Address       ShippingAddress `json:"address"`

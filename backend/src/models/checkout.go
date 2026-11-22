@@ -18,10 +18,22 @@ type CheckoutRequest struct {
 	RequestKey         string          `json:"requestKey"`
 	Address            ShippingAddress `json:"address"`
 	PaymentMethod      string          `json:"paymentMethod"`
+	Installments       *int            `json:"installments"`
 	ExpectedTotalCents int64           `json:"expectedTotalCents"`
 }
 
+type OrderCharges struct {
+	Shipping         *Money  `json:"shipping"`
+	ShippingMinDays  *int    `json:"shippingMinDays"`
+	ShippingMaxDays  *int    `json:"shippingMaxDays"`
+	ShippingMethod   *string `json:"shippingMethod"`
+	ProductsSubtotal *Money  `json:"productsSubtotal"`
+	Discount         *Money  `json:"discount"`
+}
+
 type CheckoutOrder struct {
+	PaymentPlan
+	OrderCharges
 	ReceiptItems []CartItem `json:"-"`
 	ID           int64      `json:"id"`
 	Total        Money      `json:"total"`

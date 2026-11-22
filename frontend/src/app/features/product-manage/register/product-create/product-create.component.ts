@@ -1,7 +1,12 @@
+import { AdminStateComponent } from '../../../../shared/components/admin-state/admin-state.component';
+import { ProductCommerceSummaryComponent } from '../../../../shared/components/product-commerce-summary/product-commerce-summary.component';
+import { ProductVariantsComponent, variantsArray, variantPayload, variantForm } from '../../../../shared/components/product-variants/product-variants.component';
+import { money, parsePrice, maskPriceInput } from '../../../../shared/forms/price-input';
 import { ProductSkuComponent } from '../../../../shared/components/product-sku/product-sku.component';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
+  OnInit,
   DestroyRef,
   EventEmitter,
   Input,
@@ -24,27 +29,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin, map, tap, throwError } from 'rxjs';
+import { Product } from '../../../../shared/models';
 import { ProductService } from '../../../../core/services/product.service';
 import { CustomAlertService } from '../../../../core/services/custom-alert.service';
 import { ConfirmDialogService } from '../../../../shared/components/confirm-dialog/confirm-dialog.service';
 
-const money = new Intl.NumberFormat('pt-BR', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
 const currency = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
   currency: 'BRL',
 });
 
-function parsePrice(text: string): number | null {
-  const value = text.trim().replace(/^R\$\s*/, '');
-  if (!/^(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d{1,2})?$/.test(value)) return null;
-  const amount = Number(value.replace(/\./g, '').replace(',', '.'));
-  return amount > 0 && amount <= 99999999.99 ? amount : null;
-}
-
-function measurementFields(fb: FormBuilder) {
+function measurementFields(fb: FormBuilder, maxLength = 120) {
   return fb.nonNullable.group({
     label: [
       '',
@@ -59,7 +54,7 @@ function measurementFields(fb: FormBuilder) {
       [
         Validators.required,
         Validators.pattern(/\S/),
-        Validators.maxLength(120),
+        Validators.maxLength(maxLength),
       ],
     ],
   });
@@ -67,7 +62,7 @@ function measurementFields(fb: FormBuilder) {
 
 @Component({
   selector: 'app-product-create',
-  imports: [
+  imports: [AdminStateComponent,ProductCommerceSummaryComponent,ProductVariantsComponent,
     ProductSkuComponent,
     NgTemplateOutlet,
     ReactiveFormsModule,
@@ -81,7 +76,14 @@ function measurementFields(fb: FormBuilder) {
 
   styleUrl: './product-create.component.scss',
 })
-export class ProductCreateComponent {
+export class ProductCreateComponent implements OnInit {
+  @Input() editId:number|null = null;
+  @Output() productUpdated = new EventEmitter<number>();
+  @Output() productLoaded = new EventEmitter<Product>();
+  loadedProduct:Product|null=null;
+  loadingProduct=false;
+  productError='';
+  private retainedMeasurements:Record<string,string>={};
   @Input() previewImage = '';
   @Input() externalSummary = false;
   readonly summary = viewChild<TemplateRef<unknown>>('summary');
@@ -125,14 +127,15 @@ export class ProductCreateComponent {
       size: this.fb.nonNullable.control('', Validators.maxLength(120)),
       color: this.fb.nonNullable.control('', Validators.maxLength(120)),
       care: this.fb.nonNullable.control(''),
-      measurements: new FormArray<ReturnType<typeof measurementFields>>([]),
+      variants: variantsArray(),
+    measurements: new FormArray<ReturnType<typeof measurementFields>>([]),
     },
     {
       validators: (control) => {
         const value = control.getRawValue();
         const names = [
           ...(value.material.trim() ? ['Material'] : []),
-          ...(value.size.trim() ? ['Tamanho'] : []),
+          ...(!value.variants.length && value.size.trim() ? ['Tamanho'] : []),
           ...(value.color.trim() ? ['Cor'] : []),
           ...value.measurements.map((entry: { label: string }) => entry.label),
         ]
@@ -173,6 +176,37 @@ export class ProductCreateComponent {
 
   constructor() {
     this.loadOptions();
+    this.fields.variants.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(()=>{
+      if(this.fields.variants.length){
+        this.fields.price.disable({emitEvent:false});
+        this.fields.quantity.disable({emitEvent:false});
+      } else {
+        this.fields.price.enable({emitEvent:false});
+        this.fields.quantity.enable({emitEvent:false});
+      }
+    });
+  }
+
+  ngOnInit():void {if(this.editId)this.loadProduct();}
+
+  loadProduct():void {
+    if(!this.editId||this.loadingProduct)return;
+    this.loadingProduct=true;this.productError='';
+    this.products.getAdminProduct(this.editId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({next:product=>{
+      this.loadedProduct=product;
+      this.retainedMeasurements={...product.measurements};
+      for(const field of [this.fields.material,this.fields.size,this.fields.color])field.setValidators(Validators.maxLength(20000));
+      this.fields.measurements.clear();
+      for(const [label,value] of Object.entries(product.measurements||{})){
+        if(['Material','Tamanho','Cor'].includes(label)||label==='collection_slug'||label.startsWith('coordinated_'))continue;
+        const field=measurementFields(this.fb,20000);
+        field.setValue({label,value});this.fields.measurements.push(field);
+        delete this.retainedMeasurements[label];
+      }
+      this.form.patchValue({name:product.name,description:product.description||'',category:product.product_type_id||null,brand:product.brand_id||null,status:product.status,price:money.format(product.price),quantity:product.quantity,material:product.measurements?.['Material']||'',size:product.measurements?.['Tamanho']||'',color:product.measurements?.['Cor']||'',care:product.care_instructions||''});
+      this.fields.variants.clear();for(const variant of product.variants||[])this.fields.variants.push(variantForm(variant));
+      this.form.markAsPristine();this.loadingProduct=false;this.productLoaded.emit(product);
+    },error:()=>{this.loadingProduct=false;this.productError='Não foi possível carregar o produto. Tente novamente.';}});
   }
 
   loadOptions(): void {
@@ -290,10 +324,11 @@ export class ProductCreateComponent {
   }
 
   get progress(): number {
-    return this.checklist.filter((item) => item.control.valid).length * 20;
+    return this.checklist.filter((item) => item.control.disabled ? this.fields.variants.valid : item.control.valid).length * 20;
   }
   get pricePreview(): string {
-    return currency.format(parsePrice(this.fields.price.value) ?? 0);
+    const prices = this.fields.variants.controls.map(row=>parsePrice(row.controls.price.value)).filter((v):v is number=>v!==null);
+    return currency.format(this.fields.variants.length ? (prices.length ? Math.min(...prices) : 0) : parsePrice(this.fields.price.value) ?? 0);
   }
   get previewContext(): string {
     const category = this.categories.find(
@@ -307,32 +342,14 @@ export class ProductCreateComponent {
       .join(' · ');
   }
   fieldState(control: AbstractControl): string {
+    if(control.disabled)return this.fields.variants.valid ? 'Completo' : 'Pendente';
     if (control.valid || (this.savedId && !control.errors)) return 'Completo';
     return control.touched || (control.value !== null && control.value !== '')
       ? 'Inválido'
       : 'Pendente';
   }
 
-  maskPrice(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const digitsAfterCursor = input.value
-      .slice(input.selectionStart ?? input.value.length)
-      .replace(/\D/g, '').length;
-    const digits = input.value
-      .replace(/\D/g, '')
-      .replace(/^0+(?=\d)/, '')
-      .slice(0, 10);
-    const formatted = digits ? money.format(Number(digits) / 100) : '';
-    this.fields.price.setValue(formatted);
-    input.value = formatted;
-    let cursor = formatted.length;
-    let remaining = digitsAfterCursor;
-    while (cursor > 0 && remaining > 0) {
-      cursor--;
-      if (/\d/.test(formatted[cursor])) remaining--;
-    }
-    input.setSelectionRange(cursor, cursor);
-  }
+  maskPrice(event: Event): void { maskPriceInput(event,this.fields.price); }
 
   formatPrice(): void {
     const amount = parsePrice(this.fields.price.value);
@@ -340,7 +357,7 @@ export class ProductCreateComponent {
   }
 
   addMeasurement(): void {
-    this.fields.measurements.push(measurementFields(this.fb));
+    this.fields.measurements.push(measurementFields(this.fb,this.editId?20000:120));
     this.form.markAsDirty();
   }
 
@@ -350,7 +367,7 @@ export class ProductCreateComponent {
   }
 
   canLeave() {
-    if (this.loading) return false;
+    if (this.loading || this.loadingProduct) return false;
     if (this.savedId || !this.form.dirty) return true;
     return this.confirm
       .open({
@@ -366,27 +383,40 @@ export class ProductCreateComponent {
   }
 
   onSubmit(draft = false): void {
-    if (this.loading || this.savedId || this.loadingOptions) return;
+    if (this.loading || this.savedId || this.loadingOptions || this.loadingProduct || (this.editId && !this.loadedProduct)) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     const value = this.form.getRawValue();
-    const measurements = Object.fromEntries(
+    const measurements = {...this.retainedMeasurements,...Object.fromEntries(
       value.measurements.map((entry) => [
         entry.label.trim(),
         entry.value.trim(),
       ]),
-    );
+    )};
+    for (const key of ['Material','Cor'])delete measurements[key];
+    if(!value.variants.length)delete measurements['Tamanho'];
     for (const [label, text] of Object.entries({
       Material: value.material,
-      Tamanho: value.size,
+      Tamanho: value.variants.length ? '' : value.size,
       Cor: value.color,
     })) {
       const content = text.trim();
       if (content) measurements[label] = content;
     }
+    const variants = variantPayload(this.fields.variants);
     this.loading = true;
+    if(this.editId && this.loadedProduct){
+      const original=this.loadedProduct;
+      this.products.updateProduct(this.editId,{
+        name:value.name.trim(),description:value.description,product_type_id:value.category!,brand_id:value.brand,status:value.status,measurements,variants,expected_variants:original.variants||[],expected_updated_at:original.updated_at!,care_instructions:value.care,
+        ...(variants.length ? {} : {commerce:{price:parsePrice(value.price)!,quantity:value.quantity!,expected_price:original.price,expected_quantity:original.quantity}}),
+      }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({next:product=>{
+        this.loadedProduct=product;this.form.markAsPristine();this.loading=false;this.alerts.success('Produto atualizado com sucesso.');this.productUpdated.emit(this.editId!);
+      },error:error=>{this.loading=false;this.alerts.error('Não foi possível atualizar o produto.',error.error?.message||'Tente novamente.');}});
+      return;
+    }
     this.products
       .createProduct({
         name: value.name.trim(),
@@ -394,9 +424,10 @@ export class ProductCreateComponent {
         product_type_id: value.category!,
         brand_id: value.brand ?? undefined,
         status: draft ? 'inactive' : value.status,
-        price: parsePrice(value.price)!,
-        quantity: value.quantity!,
+        price: variants.length ? Math.min(...variants.map(v=>v.price)) : parsePrice(value.price)!,
+        quantity: variants.length ? variants.reduce((sum,v)=>sum+v.stock,0) : value.quantity!,
         measurements,
+        variants,
         care_instructions: value.care,
         promotional_price: 0,
       })
@@ -414,7 +445,7 @@ export class ProductCreateComponent {
           if (draft) void this.router.navigate(['/admin/products']);
           else this.productCreated.emit(id);
         },
-        error: (error) => {
+        error: () => {
           this.loading = false;
           this.alerts.error(
             'Não foi possível cadastrar o produto. Tente novamente.',

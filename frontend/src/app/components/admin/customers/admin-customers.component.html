@@ -1,0 +1,11 @@
+<app-admin-page-header title="Clientes" description="Consulte os clientes cadastrados e acompanhe seus históricos de compras." icon="groups" [breadcrumb]="[{label:'Clientes'}]" />
+<section aria-label="Consulta de clientes" [attr.aria-busy]="loading()">
+ <div class="metrics" aria-live="polite"><div><span>Total de clientes</span><strong>{{data().total}}</strong></div><div><span>Com pedidos</span><strong>{{data().withOrders}}</strong></div><div><span>Sem pedidos</span><strong>{{data().withoutOrders}}</strong></div></div>
+ <form class="filters" (submit)="$event.preventDefault(); apply()"><label>Buscar cliente<input [formControl]="search" placeholder="Nome ou e-mail" maxlength="200" /></label><button type="submit" class="primary">Pesquisar</button><button type="button" (click)="clear()">Limpar</button></form>
+ @if(loading()){<app-admin-state kind="loading" title="Carregando clientes" />}
+ @else if(error()){<app-admin-state kind="error" title="Falha ao carregar clientes" [description]="error()" actionLabel="Tentar novamente" (action)="load()" />}
+ @else if(!data().customers.length){<app-admin-state title="Nenhum cliente encontrado" description="Não há clientes para os critérios informados." actionLabel="Limpar pesquisa" (action)="clear()" />}
+ @else{<div class="table-wrap admin-adaptive-table"><table class="customers-table"><thead><tr><th>Cliente</th><th>E-mail</th><th>Telefone</th><th>Cadastro</th><th>Pedidos</th><th>Total gasto</th><th>Ações</th></tr></thead><tbody>
+ @for(c of data().customers;track c.id){<tr><td data-label="Cliente"><strong>{{c.name}}</strong></td><td data-label="E-mail">{{c.email}}</td><td data-label="Telefone">{{c.phone||'Não informado'}}</td><td data-label="Cadastro">{{c.createdAt ? (c.createdAt|date:'dd/MM/yyyy':'-0300') : 'Não registrada'}}</td><td data-label="Pedidos">{{c.orders}}</td><td data-label="Total gasto">{{c.totalSpent|currency:'BRL'}}</td><td><a class="action" [routerLink]="['/admin/customers',c.id]" [attr.aria-label]="'Visualizar cliente '+c.name">Visualizar</a></td></tr>}
+ </tbody></table></div><app-pagination [page]="page()" [pageSize]="10" [total]="data().total" (pageChange)="apply($event)" label="Paginação de clientes" />}
+</section>

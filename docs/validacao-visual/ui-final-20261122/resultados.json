@@ -1,0 +1,257 @@
+{
+  "results": [
+    {
+      "name": "promocoes 320",
+      "passed": true
+    },
+    {
+      "name": "favoritos-vazio 320",
+      "passed": true
+    },
+    {
+      "name": "catalogo-vazio 320",
+      "passed": true
+    },
+    {
+      "name": "404 320",
+      "passed": true
+    },
+    {
+      "name": "promocoes 390",
+      "passed": true
+    },
+    {
+      "name": "favoritos-vazio 390",
+      "passed": true
+    },
+    {
+      "name": "catalogo-vazio 390",
+      "passed": true
+    },
+    {
+      "name": "404 390",
+      "passed": true
+    },
+    {
+      "name": "promocoes 768",
+      "passed": true
+    },
+    {
+      "name": "favoritos-vazio 768",
+      "passed": true
+    },
+    {
+      "name": "catalogo-vazio 768",
+      "passed": true
+    },
+    {
+      "name": "404 768",
+      "passed": true
+    },
+    {
+      "name": "promocoes 1024",
+      "passed": true
+    },
+    {
+      "name": "favoritos-vazio 1024",
+      "passed": true
+    },
+    {
+      "name": "catalogo-vazio 1024",
+      "passed": true
+    },
+    {
+      "name": "404 1024",
+      "passed": true
+    },
+    {
+      "name": "promocoes 1440",
+      "passed": true
+    },
+    {
+      "name": "favoritos-vazio 1440",
+      "passed": true
+    },
+    {
+      "name": "catalogo-vazio 1440",
+      "passed": true
+    },
+    {
+      "name": "404 1440",
+      "passed": true
+    },
+    {
+      "name": "Dashboard erro e recuperação",
+      "passed": true
+    },
+    {
+      "name": "dashboard 320",
+      "passed": true
+    },
+    {
+      "name": "metricas 320",
+      "passed": true
+    },
+    {
+      "name": "carrinho-vazio 320",
+      "passed": true
+    },
+    {
+      "name": "dashboard 390",
+      "passed": true
+    },
+    {
+      "name": "metricas 390",
+      "passed": true
+    },
+    {
+      "name": "carrinho-vazio 390",
+      "passed": true
+    },
+    {
+      "name": "dashboard 768",
+      "passed": true
+    },
+    {
+      "name": "metricas 768",
+      "passed": true
+    },
+    {
+      "name": "carrinho-vazio 768",
+      "passed": true
+    },
+    {
+      "name": "dashboard 1024",
+      "passed": true
+    },
+    {
+      "name": "metricas 1024",
+      "passed": true
+    },
+    {
+      "name": "carrinho-vazio 1024",
+      "passed": true
+    },
+    {
+      "name": "dashboard 1440",
+      "passed": true
+    },
+    {
+      "name": "metricas 1440",
+      "passed": true
+    },
+    {
+      "name": "carrinho-vazio 1440",
+      "passed": true
+    },
+    {
+      "name": "Gráficos carregando e período com zeros preservados",
+      "passed": true
+    },
+    {
+      "name": "Sem erros JavaScript",
+      "passed": true
+    },
+    {
+      "name": "Tooltip editorial com data e moeda completas",
+      "passed": true
+    },
+    {
+      "name": "produtos 320",
+      "passed": true
+    },
+    {
+      "name": "produtos 390",
+      "passed": true
+    },
+    {
+      "name": "produtos 768",
+      "passed": true
+    },
+    {
+      "name": "produtos 1024",
+      "passed": true
+    },
+    {
+      "name": "produtos 1440",
+      "passed": true
+    },
+    {
+      "name": "Conta UF por teclado",
+      "passed": true
+    },
+    {
+      "name": "Checkout formulário e UF nas cinco larguras",
+      "passed": true
+    },
+    {
+      "name": "colecao 320",
+      "passed": true
+    },
+    {
+      "name": "colecao 390",
+      "passed": true
+    },
+    {
+      "name": "colecao 768",
+      "passed": true
+    },
+    {
+      "name": "colecao 1024",
+      "passed": true
+    },
+    {
+      "name": "colecao 1440",
+      "passed": true
+    },
+    {
+      "name": "Coleção busca vazia, limpeza e ordenação compartilhada",
+      "passed": true
+    },
+    {
+      "name": "Preço e estoque sem moldura dupla em cinco larguras",
+      "passed": true
+    },
+    {
+      "name": "Aviso inline de quantidade no contexto do carrinho",
+      "passed": true
+    },
+    {
+      "name": "avaliacoes 320",
+      "passed": true
+    },
+    {
+      "name": "avaliacoes 390",
+      "passed": true
+    },
+    {
+      "name": "avaliacoes 768",
+      "passed": true
+    },
+    {
+      "name": "avaliacoes 1024",
+      "passed": true
+    },
+    {
+      "name": "avaliacoes 1440",
+      "passed": true
+    },
+    {
+      "name": "Conta formulário e overlay de UF visualmente verificáveis",
+      "passed": true
+    },
+    {
+      "name": "Conta altura do estado de endereço comparada aos dados",
+      "passed": true
+    },
+    {
+      "name": "Conta erro de endereço compacto, sem crescimento e com recuperação",
+      "passed": true
+    },
+    {
+      "name": "Conta altura preservada durante tentativa de recarregar",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,61 @@
+[
+  {
+    "suite": "audit.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  },
+  {
+    "suite": "product-crud.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true,
+    "attempts": [
+      {
+        "passed": false,
+        "error": "Timeout de navega\u00e7\u00e3o SPA ap\u00f3s PATCH HTTP 2xx (15 s)"
+      },
+      {
+        "passed": true,
+        "responseAndPersistedPriceStockChecked": true
+      }
+    ]
+  },
+  {
+    "suite": "admin-orders.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  },
+  {
+    "suite": "admin-orders-states.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  },
+  {
+    "suite": "admin-customers.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  },
+  {
+    "suite": "dashboard.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  },
+  {
+    "suite": "reports.cjs",
+    "passed": true,
+    "exitCode": 0,
+    "isolatedSchemaRemoved": true,
+    "principalUnchanged": true
+  }
+]

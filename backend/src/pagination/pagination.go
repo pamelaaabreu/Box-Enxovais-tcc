@@ -150,7 +150,10 @@ func ReadPage[T any](ctx context.Context, database *sql.DB, baseSQL string, base
 	if err = tx.QueryRowContext(ctx, "SELECT COUNT(*)"+source, args...).Scan(&result.Pagination.Total); err != nil {
 		return result, err
 	}
-	sqlQuery := fmt.Sprintf("SELECT page.*%s ORDER BY %s LIMIT $%d OFFSET $%d", source, orderBy, len(args)+1, len(args)+2)
+	sqlQuery := fmt.Sprintf(`SELECT page.*%s
+ORDER BY %s
+LIMIT $%d
+OFFSET $%d`, source, orderBy, len(args)+1, len(args)+2)
 	rows, err := tx.QueryContext(ctx, sqlQuery, append(args, query.Limit, query.Offset)...)
 	if err != nil {
 		return result, err

@@ -1,0 +1,91 @@
+{
+  "results": [
+    {
+      "name": "Carrossel real: carregamento lazy, indicadores e teclado",
+      "passed": true
+    },
+    {
+      "name": "home visual 1440",
+      "passed": true
+    },
+    {
+      "name": "login visual 1440",
+      "passed": true
+    },
+    {
+      "name": "home visual 1024",
+      "passed": true
+    },
+    {
+      "name": "login visual 1024",
+      "passed": true
+    },
+    {
+      "name": "home visual 768",
+      "passed": true
+    },
+    {
+      "name": "login visual 768",
+      "passed": true
+    },
+    {
+      "name": "home visual 390",
+      "passed": true
+    },
+    {
+      "name": "login visual 390",
+      "passed": true
+    },
+    {
+      "name": "promotion visual 1440",
+      "passed": true
+    },
+    {
+      "name": "report visual 1440",
+      "passed": true
+    },
+    {
+      "name": "promotion visual 1024",
+      "passed": true
+    },
+    {
+      "name": "report visual 1024",
+      "passed": true
+    },
+    {
+      "name": "promotion visual 768",
+      "passed": true
+    },
+    {
+      "name": "report visual 768",
+      "passed": true
+    },
+    {
+      "name": "promotion visual 390",
+      "passed": true
+    },
+    {
+      "name": "report visual 390",
+      "passed": true
+    }
+  ],
+  "accessibility": [
+    {
+      "page": "home",
+      "violations": []
+    },
+    {
+      "page": "login",
+      "violations": []
+    },
+    {
+      "page": "promotion",
+      "violations": []
+    },
+    {
+      "page": "report",
+      "violations": []
+    }
+  ],
+  "pageErrors": []
+}

@@ -1,5 +1,6 @@
+const run=require('../../frontend/e2e/artifacts.cjs').createArtifacts('catalog-check','docs/validacao-visual/produto',[]);
 const fs=require('node:fs/promises');
-const out=process.argv[2] ?? 'capturas-catalogo';
+const out=process.argv[2] ?? run.directory;
 const baseline=process.argv[3];
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 async function main(){

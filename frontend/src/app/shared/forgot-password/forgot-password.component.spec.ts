@@ -55,7 +55,7 @@ describe('ForgotPasswordComponent recovery', () => {
     } as unknown as ClipboardEvent);
   }
   function initialSend() {
-    const response = new Subject<any>();
+    const response = new Subject<unknown>();
     auth.requestPasswordReset.and.returnValue(response);
     const fixture = TestBed.createComponent(ForgotPasswordComponent);
     fixture.componentInstance.forgotForm.controls.email.setValue(
@@ -158,7 +158,7 @@ describe('ForgotPasswordComponent recovery', () => {
     ).toBeFalse();
     expect(TestBed.inject(CustomAlertService).error).toHaveBeenCalled();
     expect(router.navigate).not.toHaveBeenCalled();
-    auth.requestPasswordReset.and.returnValue(new Subject<any>());
+    auth.requestPasswordReset.and.returnValue(new Subject<unknown>());
     button.click();
     expect(auth.requestPasswordReset).toHaveBeenCalledTimes(2);
     fixture.destroy();
@@ -254,7 +254,7 @@ describe('ForgotPasswordComponent recovery', () => {
     }, 15000);
   });
   it('submits from the actual eight-input form and navigates after verification', () => {
-    const response = new Subject<any>();
+    const response = new Subject<{success:boolean;data:{resetToken:string}}>();
     auth.validateResetCode.and.returnValue(response);
     const fixture = TestBed.createComponent(ForgotPasswordComponent);
     const page = fixture.componentInstance;
@@ -297,7 +297,7 @@ describe('ForgotPasswordComponent recovery', () => {
     expect(auth.validateResetCode).not.toHaveBeenCalled();
   });
   it('submits a single request and navigates with an in-memory token', () => {
-    const response = new Subject<any>();
+    const response = new Subject<{success:boolean;data:{resetToken:string}}>();
     auth.validateResetCode.and.returnValue(response);
     paste('AB12CD34');
     component.onSubmit();

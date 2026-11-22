@@ -18,6 +18,24 @@ describe('AdminPageHeaderComponent', () => {
     expect(host.querySelector('mat-icon')?.textContent?.trim()).toBe('category');
     expect(host.querySelectorAll('h1').length).toBe(1);
   });
+  it('adds one creation icon without duplicating textual plus signs or affecting other actions', () => {
+    const fixture = TestBed.createComponent(AdminPageHeaderComponent);
+    fixture.componentRef.setInput('title', 'Cadastro');
+    for (const label of ['+ Novo produto', '+ Nova promoção', 'Nova categoria', 'Nova marca', 'Nova faixa de CEP']) {
+      fixture.componentRef.setInput('actionLabel', label);
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('.primary-action') as HTMLElement;
+      expect(button.querySelectorAll('mat-icon').length).toBe(1);
+      expect(button.querySelector('mat-icon')?.textContent).toBe('add');
+      expect(button.textContent).not.toContain('+');
+    }
+    for (const label of ['Salvar', 'Editar', 'Cancelar', 'Excluir']) {
+      fixture.componentRef.setInput('actionLabel', label);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.primary-action mat-icon')).toBeNull();
+    }
+  });
+
   it('emits its contextual action once and respects disabled state', () => {
     const fixture = TestBed.createComponent(AdminPageHeaderComponent);
     fixture.componentRef.setInput('title', 'Faixas de CEP');

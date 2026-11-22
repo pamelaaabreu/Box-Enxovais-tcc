@@ -1,3 +1,5 @@
+import { ConfirmedOrder } from '../../../shared/types/checkout/checkout';
+import { installmentSummary } from '../../../shared/utils/installments';
 import { Component, inject, signal } from '@angular/core';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
@@ -13,6 +15,7 @@ import {
   takeUntil,
 } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { PurchaseReviewComponent } from '../../purchase-review/purchase-review.component';
 import { CatalogLayoutComponent } from '../../catalog/components/catalog-layout/catalog-layout.component';
 
 registerLocaleData(localePt);
@@ -20,7 +23,7 @@ registerLocaleData(localePt);
 @Component({
   selector: 'app-checkout-success',
   standalone: true,
-  imports: [CurrencyPipe, RouterLink, CatalogLayoutComponent],
+  imports: [CurrencyPipe, RouterLink, CatalogLayoutComponent, PurchaseReviewComponent],
   styleUrl: './checkout-success.component.scss',
   templateUrl: './checkout-success.component.html',
 })
@@ -34,7 +37,7 @@ export class CheckoutSuccessComponent {
   readonly error = signal('');
   readonly notFound = signal(false);
   readonly canRetry = signal(false);
-  readonly order = signal<{ id: number; total: number; status: string } | null>(
+  readonly order = signal<ConfirmedOrder | null>(
     null,
   );
 
@@ -60,7 +63,7 @@ export class CheckoutSuccessComponent {
           return this.http
             .get<{
               success: boolean;
-              data?: { id: number; total: number; status: string };
+              data?: ConfirmedOrder;
             }>(`http://localhost:8080/checkout/success/${id}`)
             .pipe(
               takeUntil(this.auth.userChanged),
@@ -93,6 +96,8 @@ export class CheckoutSuccessComponent {
         }
       });
   }
+
+  planLabel(order:ConfirmedOrder):string{return installmentSummary(Math.round(order.total*100),order.installments)}
 
   retry(): void {
     if (!this.canRetry() || this.loading()) return;

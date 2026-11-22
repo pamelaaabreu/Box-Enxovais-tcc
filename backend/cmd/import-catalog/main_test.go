@@ -14,33 +14,33 @@ import (
 	"github.com/lib/pq"
 )
 
-func fixture(t *testing.T) (string, manifest) {
+func fixture(t *testing.T) (string, catalogManifest) {
 	t.Helper()
 	root := t.TempDir()
 	if err := os.WriteFile(filepath.Join(root, "cover.jpg"), []byte{0xff, 0xd8, 0xff, 0xe0}, 0600); err != nil {
 		t.Fatal(err)
 	}
 	price, stock := int64(15990), 0
-	return root, manifest{1, []product{{Key: "cama-teste", Name: "Produto teste", Category: "Cama", Brand: "Marca teste", Description: "Descrição", Care: "Cuidados", Characteristics: map[string]string{"Material": "Algodão"}, Price: &price, Stock: &stock, Status: "inactive", Approved: true, Images: []imageEntry{{"cover.jpg", "Capa", true}}}}}
+	return root, catalogManifest{1, []manifestProduct{{Key: "cama-teste", Name: "Produto teste", Category: "Cama", Brand: "Marca teste", Description: "Descrição", Care: "Cuidados", Characteristics: map[string]string{"Material": "Algodão"}, Price: &price, Stock: &stock, Status: "inactive", Approved: true, Images: []manifestImage{{"cover.jpg", "Capa", true}}}}}
 }
 
 func TestDecodeAndPrepare(t *testing.T) {
 	for _, raw := range []string{
 		"{", `{"version":2,"products":[]}`, `{"version":1,"products":[{"key":"a","name":"A"},{"key":"a","name":"B"}]}`, `{"version":1,"products":[{"key":"a","name":"A","typo":1}]}`,
 	} {
-		if _, err := decode(strings.NewReader(raw)); err == nil {
+		if _, err := decodeManifest(strings.NewReader(raw)); err == nil {
 			t.Fatalf("accepted %s", raw)
 		}
 	}
-	if _, err := decode(strings.NewReader(`{"version":1,"products":[{"key":"a","name":"A"}]}`)); err != nil {
+	if _, err := decodeManifest(strings.NewReader(`{"version":1,"products":[{"key":"a","name":"A"}]}`)); err != nil {
 		t.Fatal(err)
 	}
 	root, m := fixture(t)
-	if got := prepare(root, m)[0]; len(got.pending) > 0 || len(got.assets) != 1 {
+	if got := prepareProducts(root, m)[0]; len(got.pending) > 0 || len(got.assets) != 1 {
 		t.Fatalf("unexpected preparation: %v", got.pending)
 	}
-	m.Products[0].Images = append(m.Products[0].Images, imageEntry{"cover.jpg", "Duplicada", false}, imageEntry{"missing.jpg", "Ausente", false})
-	pending := strings.Join(prepare(root, m)[0].pending, " ")
+	m.Products[0].Images = append(m.Products[0].Images, manifestImage{"cover.jpg", "Duplicada", false}, manifestImage{"missing.jpg", "Ausente", false})
+	pending := strings.Join(prepareProducts(root, m)[0].pending, " ")
 	for _, needle := range []string{"imagem idêntica", "missing.jpg"} {
 		if !strings.Contains(pending, needle) {
 			t.Fatal(pending)
@@ -90,7 +90,7 @@ func TestImportIsolatedPostgres(t *testing.T) {
 		t.Fatal(err)
 	}
 	root, m := fixture(t)
-	r := prepare(root, m)[0]
+	r := prepareProducts(root, m)[0]
 	dest := t.TempDir()
 	if _, err = applyProduct(ctx, database, dest, r, false, schema); err == nil {
 		t.Fatal("missing category should block import")
@@ -124,12 +124,12 @@ func TestImportIsolatedPostgres(t *testing.T) {
 	second := m.Products[0]
 	second.Key += "-azul"
 	second.Name += " - Azul"
-	second.Images = []imageEntry{{"blue.jpg", "Capa azul", true}}
+	second.Images = []manifestImage{{"blue.jpg", "Capa azul", true}}
 	if err := os.WriteFile(filepath.Join(root, "blue.jpg"), []byte{0xff, 0xd8, 0xff, 0xe1}, 0600); err != nil {
 		t.Fatal(err)
 	}
 	m.Products = append(m.Products, second)
-	blue := prepare(root, m)[1]
+	blue := prepareProducts(root, m)[1]
 	if len(blue.pending) != 0 {
 		t.Fatal(blue.pending)
 	}

@@ -1,3 +1,4 @@
+import { AdminStateComponent } from '../../../../shared/components/admin-state/admin-state.component';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { CatalogToolbarComponent } from '../../components/catalog-toolbar/catalog-toolbar.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -44,7 +45,7 @@ interface CategoryData {
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [PaginationComponent,
+  imports: [AdminStateComponent,PaginationComponent,
     CatalogToolbarComponent,
     MatIconModule,
     RouterLink,

@@ -1,3 +1,4 @@
+import { ProductVariantsPageComponent } from '../../features/product-manage/product-variants-page.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -5,7 +6,6 @@ import { AdminComponent } from './admin/admin.component';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProductComponent } from './product/product.component';
-import { PromotionComponent } from './promotion/promotion.component';
 import { ReportComponent } from './report/report.component';
 
 import { AdminGuard } from '../../core/guards/admin.guard';
@@ -22,6 +22,10 @@ const routes: Routes = [
     canActivate: [AdminGuard],
 
     children: [
+ {path:'customers',loadComponent:()=>import('./customers/admin-customers.component').then(m=>m.AdminCustomersComponent)},
+ {path:'customers/:id',loadComponent:()=>import('./customers/admin-customer-detail.component').then(m=>m.AdminCustomerDetailComponent)},
+ {path:'orders',loadComponent:()=>import('./orders/admin-orders.component').then(m=>m.AdminOrdersComponent)},
+ {path:'orders/:id',loadComponent:()=>import('./orders/admin-order-detail.component').then(m=>m.AdminOrderDetailComponent)},
  {path:"experience-reviews",loadComponent:()=>import("./experience-reviews.component").then(m=>m.ExperienceReviewsComponent)},
       {
         path: '',
@@ -35,10 +39,15 @@ const routes: Routes = [
         component: DashboardComponent,
       },
 
+      {path:'metrics',component:DashboardComponent},
+
       // PRODUTOS
       {
         path: 'products',
         children: [
+          {path: ':id/edit',component:ProductManageComponent,canDeactivate:[(page:ProductManageComponent)=>page.canLeave()]},
+          {path: ':id/images',component:ProductManageComponent,canDeactivate:[(page:ProductManageComponent)=>page.canLeave()]},
+          {path: ':id/variants',component:ProductVariantsPageComponent,canDeactivate:[(page:ProductVariantsPageComponent)=>page.canLeave()]},
           {
             path: '',
             component: ProductComponent,
@@ -69,7 +78,7 @@ const routes: Routes = [
         children: [
           { path: 'categories', component: CatalogRegistrationComponent, data: { kind: 'categories' } },
           { path: 'brands', component: CatalogRegistrationComponent, data: { kind: 'brands' } },
-          { path: 'shipping-ranges', loadComponent: () => import('./shipping-ranges.component').then(module => module.ShippingRangesComponent) },
+          { path: 'shipping-ranges', loadComponent: () => import('./shipping-ranges/shipping-ranges.component').then(module => module.ShippingRangesComponent) },
         ],
       },
       // RELATÓRIOS

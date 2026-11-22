@@ -109,12 +109,12 @@
       @if (cart.reordering()) {
         <p role="status">Adicionando produtos ao carrinho…</p>
       } @else if (cart.error()) {
-        <p role="alert" class="cancel-error">{{ cart.error() }}</p>
+        <app-inline-notice>{{ cart.error() }}</app-inline-notice>
       }
     }
     @switch (state()) {
       @case ("loading") {
-        <p role="status">Carregando pedidos…</p>
+        <app-admin-state kind="loading" title="Carregando pedidos…" />
         <div class="orders-grid" aria-hidden="true">
           <div class="skeleton"></div>
           <div class="skeleton"></div>
@@ -131,20 +131,10 @@
         <p role="alert">Sua sessão expirou. Faça login novamente.</p>
       }
       @case ("missing") {
-        <div class="state">
-          <h2>Pedido não encontrado</h2>
-          <a class="action" routerLink="/meus-pedidos"
-            >Voltar aos meus pedidos</a
-          >
-        </div>
+        <app-admin-state title="Pedido não encontrado" actionLabel="Voltar aos meus pedidos" actionLink="/meus-pedidos" />
       }
       @case ("error") {
-        <div class="state">
-          <p role="alert">Não foi possível carregar seus pedidos.</p>
-          <button type="button" class="action" (click)="retry()">
-            Tentar novamente
-          </button>
-        </div>
+        <app-admin-state kind="error" title="Não foi possível carregar seus pedidos." actionLabel="Tentar novamente" (action)="retry()" />
       }
       @case ("ready") {
         @if (details(); as order) {
@@ -280,7 +270,7 @@
                 <dl>
                   <div>
                     <dt>Forma de pagamento</dt>
-                    <dd>{{ payments[order.paymentMethod] }}</dd>
+                    <dd>{{ payments[order.paymentMethod] }}<br>{{planLabel(order)}}</dd>
                   </div>
                   <div>
                     <dt>
@@ -289,11 +279,14 @@
                     </dt>
                     <dd>
                       {{
-                        subtotal(order)
+                        (order.productsSubtotal ?? subtotal(order))
                           | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
                       }}
                     </dd>
                   </div>
+                  <div><dt>Descontos</dt><dd>@if(order.discount !== null && order.discount !== undefined){ {{order.discount|currency:'BRL':'symbol':'1.2-2':'pt-BR'}} }@else{Não registrados}</dd></div>
+                  <div><dt>Frete</dt><dd>@if(order.shipping !== null && order.shipping !== undefined){ {{order.shipping|currency:'BRL':'symbol':'1.2-2':'pt-BR'}} }@else{Não registrado}</dd></div>
+                  @if(order.shippingMethod === 'delivery'){<div><dt>Entrega</dt><dd>{{order.shippingMinDays}} a {{order.shippingMaxDays}} dias úteis</dd></div>}
                   <div class="detail-total">
                     <dt>Total do pedido</dt>
                     <dd>
@@ -392,7 +385,7 @@
                     }
                   </div>
                   @if (cancelError()) {
-                    <p class="cancel-error" role="alert">{{ cancelError() }}</p>
+                    <app-inline-notice>{{ cancelError() }}</app-inline-notice>
                   } @else if (!details()?.canCancel && !cancelling()) {
                     <p class="cancel-error" role="alert">
                       Este pedido não está disponível para cancelamento.
@@ -514,38 +507,9 @@
               }
             </div>
           } @else if (filtersActive()) {
-            <div class="state no-results">
-              <h2>Nenhum pedido encontrado</h2>
-              @if (search()) {
-                <p>Não encontramos pedidos para sua pesquisa.</p>
-                <button
-                  class="clear-filters"
-                  type="button"
-                  (click)="submitSearch('')"
-                >
-                  Limpar pesquisa
-                </button>
-              } @else {
-                <p>Não encontramos pedidos para os filtros selecionados.</p>
-                <button
-                  class="clear-filters"
-                  type="button"
-                  (click)="clearFilters()"
-                >
-                  Limpar filtros
-                </button>
-              }
-            </div>
+            <app-admin-state title="Nenhum pedido encontrado" [description]="search() ? 'Não encontramos pedidos para sua pesquisa.' : 'Não encontramos pedidos para os filtros selecionados.'" [actionLabel]="search() ? 'Limpar pesquisa' : 'Limpar filtros'" (action)="search() ? submitSearch('') : clearFilters()" />
           } @else {
-            <div class="state empty">
-              <span class="illustration" aria-hidden="true"
-                ><ng-container [ngTemplateOutlet]="boxIcon"
-              /></span>
-              <h2>Você ainda não fez nenhum pedido</h2>
-              <a class="action" routerLink="/home"
-                >Explorar produtos <span aria-hidden="true">→</span></a
-              >
-            </div>
+            <app-admin-state class="empty" icon="inventory_2" title="Você ainda não fez nenhum pedido" actionLabel="Explorar produtos" actionLink="/home" />
           }
           @if(orders().length && totalOrders()>10){<app-pagination [page]="page()" [total]="totalOrders()" [pageSize]="10" [disabled]="state()!=='ready'" (pageChange)="goToOrderPage($event)" />}
 

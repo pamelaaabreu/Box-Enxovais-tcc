@@ -45,11 +45,13 @@ func TestHomePostgres(t *testing.T) {
 		}
 		return string(b)
 	}
-	for _, n := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000006_checkout", "000007_order_cancellation", "000013_product_variants", "000024_catalog_brand_editorial", "000048_product_external_sku", "000045_home_experience_campaigns"} {
+	for _, n := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000006_checkout", "000051_order_shipping", "000053_checkout_installments", "000007_order_cancellation", "000013_product_variants", "000024_catalog_brand_editorial", "000048_product_external_sku", "000045_home_experience_campaigns"} {
 		exec(mig(n, "up"))
 	}
+	exec(mig("000049_promotion_timestamps", "up"))
 	exec(mig("000045_home_experience_campaigns", "down"))
 	exec(mig("000045_home_experience_campaigns", "up"))
+	exec(mig("000052_purchase_review_optional_criteria", "up"))
 	exec(`INSERT INTO users(id,full_name,email,password,role) VALUES(1,'Comprador','home1@example.test','unused','customer'),(2,'Outro','home2@example.test','unused','customer'),(3,'Admin','home3@example.test','unused','admin');INSERT INTO products(id,name,price,quantity,status) VALUES(1,'Mais estoque',10,100,'active'),(2,'Mais vendido',20,1,'active'),(3,'Inativo',50,20,'inactive');INSERT INTO product_variants(id,product_id,size,price,quantity) VALUES(1,2,'Casal',20,1),(2,2,'Queen',40,0);`)
 	repo := repositories.HomeRepository{DB: d}
 	p, s, e := repo.Highlights(context.Background())
@@ -282,7 +284,7 @@ func TestHomeFeaturedPostgres(t *testing.T) {
 	exec("CREATE SCHEMA " + schema)
 	defer d.Exec("DROP SCHEMA " + schema + " CASCADE")
 	exec("SET search_path TO " + schema)
-	for _, name := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000006_checkout", "000007_order_cancellation", "000013_product_variants", "000024_catalog_brand_editorial", "000048_product_external_sku"} {
+	for _, name := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000006_checkout", "000051_order_shipping", "000053_checkout_installments", "000007_order_cancellation", "000013_product_variants", "000024_catalog_brand_editorial", "000048_product_external_sku"} {
 		data, err := os.ReadFile("../../migrations/" + name + ".up.sql")
 		if err != nil {
 			t.Fatal(err)

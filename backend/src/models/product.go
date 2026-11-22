@@ -69,3 +69,10 @@ type AddToPromotionRequest struct {
 	PromotionName    string  `json:"promotion_name"`
 	PromotionalPrice float64 `json:"promotional_price"`
 }
+
+type ProductCommerceChange struct {
+	Price            float64 `json:"price"`
+	Quantity         int     `json:"quantity"`
+	ExpectedPrice    float64 `json:"expected_price"`
+	ExpectedQuantity int     `json:"expected_quantity"`
+}

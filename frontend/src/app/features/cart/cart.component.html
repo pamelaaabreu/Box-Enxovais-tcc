@@ -17,7 +17,7 @@
     </header>
 
     @if (cart.error()) {
-      <div class="cart-alert" role="alert">
+      <app-inline-notice>
         <span>{{ cart.error() }}</span>
         <button
           type="button"
@@ -27,38 +27,15 @@
         >
           Tentar novamente
         </button>
-      </div>
+      </app-inline-notice>
     }
 
     @if (cart.loading()) {
-      <div class="cart-state" role="status" aria-live="polite">
-        <span class="cart-loader" aria-hidden="true"></span>
-        Carregando seu carrinho…
-      </div>
+      <app-admin-state kind="loading" title="Carregando seu carrinho…" />
     } @else if (!cart.cart().items.length && !cart.error()) {
-      <section class="empty" role="status">
-        <span class="empty__icon" aria-hidden="true">
-          <svg
-            viewBox="0 0 48 48"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M12 17h24l-2 22H14l-2-22Z" />
-            <path d="M18 19v-7a6 6 0 0 1 12 0v7" />
-          </svg>
-        </span>
-        <h2>Seu carrinho está vazio</h2>
-        <p>
-          Que tal explorar nossa coleção e encontrar peças especiais para sua
-          casa?
-        </p>
-        <a routerLink="/home" class="primary empty__button">
-          Explorar produtos <span aria-hidden="true">→</span>
-        </a>
-      </section>
+      <app-admin-state class="empty" layout="page" icon="shopping_bag" title="Seu carrinho está vazio"
+        description="Que tal explorar nossa coleção e encontrar peças especiais para sua casa?"
+        actionLabel="Explorar produtos" actionLink="/home" />
     } @else if (cart.cart().items.length) {
       <div class="cart-grid">
         <section class="cart-products" aria-label="Produtos do carrinho">
@@ -110,9 +87,9 @@
                     >
                     <small>No seu carrinho ({{ item.quantity }})</small>
                     @if (!item.available) {
-                      <p class="stock-warning" role="alert">
+                      <app-inline-notice>
                         Quantidade indisponível. Ajuste ou remova este produto.
-                      </p>
+                      </app-inline-notice>
                     }
                   </div>
                 </div>

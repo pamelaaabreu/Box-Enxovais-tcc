@@ -1,0 +1,6 @@
+<form [formGroup]="form()" (ngSubmit)="applied.emit()" aria-label="Filtrar indicadores por período">
+<label>Período<select aria-label="Período" formControlName="period"><option value="today">Hoje</option><option value="7d">Últimos 7 dias</option><option value="30d">Últimos 30 dias</option><option value="month">Este mês</option><option value="last_month">Mês anterior</option><option value="custom">Período personalizado</option></select></label>
+@if(form().controls.period.value==='custom'){<label>Data inicial<input type="date" formControlName="dateFrom" required /></label><label>Data final<input type="date" formControlName="dateTo" required /></label>}
+@if(showGrouping()){<label>Agrupamento<select aria-label="Agrupamento" formControlName="group"><option value="auto">Automático</option><option value="day">Por dia</option><option value="month">Por mês</option></select></label>}
+<button type="submit">Aplicar período</button>
+</form>

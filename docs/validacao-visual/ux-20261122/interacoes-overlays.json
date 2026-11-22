@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Seletor de participantes: modal, foco e Escape 320",
+    "passed": true
+  },
+  {
+    "name": "Seletor de participantes: modal, foco e Escape 360",
+    "passed": true
+  },
+  {
+    "name": "Seletor de participantes: modal, foco e Escape 390",
+    "passed": true
+  },
+  {
+    "name": "Seletor de participantes: modal, foco e Escape 430",
+    "passed": true
+  },
+  {
+    "name": "Seletor de participantes: modal, foco e Escape 768",
+    "passed": true
+  },
+  {
+    "name": "Seletor de participantes: modal, foco e Escape 1024",
+    "passed": true
+  },
+  {
+    "name": "Seletor de participantes: modal, foco e Escape 1440",
+    "passed": true
+  },
+  {
+    "name": "Seletor de participantes: modal, foco e Escape 1920",
+    "passed": true
+  },
+  {
+    "name": "Moderação real com consentimento ausente preservado",
+    "passed": true
+  },
+  {
+    "name": "Ações e valores de tabelas acessíveis sem rolagem lateral",
+    "passed": true
+  }
+]

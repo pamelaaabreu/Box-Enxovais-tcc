@@ -10,9 +10,22 @@ import (
 var ErrCartOrderNotFound = errors.New("Pedido não encontrado")
 
 func reorderItems(ctx context.Context, tx *sql.Tx, userID int, cartID, orderID int64) error {
-	rows, err := tx.QueryContext(ctx, `SELECT i.product_id, COALESCE(i.variant_id,0), SUM(i.quantity), MIN(i.name)
- FROM checkout_order_items i JOIN checkout_orders o ON o.id=i.order_id
- WHERE o.id=$1 AND o.user_id=$2 GROUP BY i.product_id,i.variant_id ORDER BY i.product_id,i.variant_id`, orderID, userID)
+	rows, err := tx.QueryContext(ctx, `SELECT
+    i.product_id,
+    COALESCE(i.variant_id, 0),
+    SUM(i.quantity),
+    MIN(i.name)
+FROM checkout_order_items i
+JOIN checkout_orders o
+    ON o.id = i.order_id
+WHERE o.id = $1
+    AND o.user_id = $2
+GROUP BY
+    i.product_id,
+    i.variant_id
+ORDER BY
+    i.product_id,
+    i.variant_id`, orderID, userID)
 	if err != nil {
 		return err
 	}

@@ -28,6 +28,7 @@ import { CustomAlertService } from '../../core/services/custom-alert.service';
 type RecoveryStep = 'email' | 'otp';
 
 @Component({
+  host: {class: 'box-auth-surface'},
   selector: 'app-forgot-password',
   standalone: true,
 

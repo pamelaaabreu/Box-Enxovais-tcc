@@ -1,3 +1,5 @@
+import type { ProductUpdateRequest, ProductImageRecord, ProductCommerceUpdate } from '../../shared/types/products/admin-product';
+export type { ProductUpdateRequest, ProductImageRecord } from '../../shared/types/products/admin-product';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Product } from '../../shared/models';
@@ -47,6 +49,17 @@ export class ProductService {
     return this.http.post<{ id: number }>(this.apiUrl, product);
   }
 
+  getAdminProduct(id:number){return this.http.get<Product>(`http://localhost:8080/admin/products/${id}`);}
+  updateProduct(id:number,request:ProductUpdateRequest){return this.http.patch<Product>(`http://localhost:8080/admin/products/${id}`,request);}
+  removeProduct(id:number){return this.http.delete<{action:'deleted'|'archived'}>(`http://localhost:8080/admin/products/${id}`);}
+  getProductImages(id:number){return this.http.get<ProductImageRecord[]>(`http://localhost:8080/admin/products/${id}/images`);}
+  orderProductImages(id:number,variant_id:number|null,ids:number[],expected_ids:number[],primary_id:number){return this.http.put<ProductImageRecord[]>(`http://localhost:8080/admin/products/${id}/images`,{variant_id,ids,expected_ids,primary_id});}
+  removeProductImage(id:number,imageId:number){return this.http.delete<ProductImageRecord[]>(`http://localhost:8080/admin/products/${id}/images/${imageId}`);}
+
+  saveVariants(id:number,variants:NonNullable<Product['variants']>,expected:NonNullable<Product['variants']>,commerce?:ProductCommerceUpdate) {
+    return this.http.put<{variants:NonNullable<Product['variants']>}>(`http://localhost:8080/admin/products/${id}/variants`,{variants,expected_variants:expected,...(commerce ? {commerce} : {})});
+  }
+
   getProduct(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
@@ -60,3 +73,4 @@ export class ProductService {
     return forkJoin(requests);
   }
 }
+

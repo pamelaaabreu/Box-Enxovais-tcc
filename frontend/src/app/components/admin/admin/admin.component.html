@@ -1,4 +1,4 @@
-<div class="admin-shell" (keydown.escape)="menuOpen.set(false)">
+<div class="admin-shell">
   <button type="button" class="menu-toggle promotions-menu-toggle" aria-label="Menu administrativo" aria-controls="admin-sidebar" [attr.aria-expanded]="menuOpen()" (click)="menuOpen.set(!menuOpen())"><mat-icon aria-hidden="true">menu</mat-icon></button>
   @if (menuOpen()) {
     <button
@@ -22,30 +22,10 @@
         ariaCurrentWhenActive="page"
         ><mat-icon aria-hidden="true">dashboard</mat-icon> Dashboard</a
       >
-      <details [open]="section() === 'products' && !isProductCreate()">
-        <summary>
-          <mat-icon aria-hidden="true">inventory_2</mat-icon> Produtos
-          <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon>
-        </summary>
-        <a
-          routerLink="/admin/products"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          [routerLinkActiveOptions]="{
-            paths: 'exact',
-            queryParams: 'ignored',
-            matrixParams: 'ignored',
-            fragment: 'ignored',
-          }"
-          >Listagem</a
-        >
-      </details>
-      @for (page of pendingPages; track page.icon) {
-        <span class="pending-page" role="link" aria-disabled="true"
-          ><mat-icon aria-hidden="true">{{ page.icon }}</mat-icon
-          ><span>{{ page.label }}</span></span
-        >
-      }
+      <a routerLink="/admin/products" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="menuOpen.set(false)"><mat-icon aria-hidden="true">inventory_2</mat-icon> Produtos</a>
+      <a routerLink="/admin/orders" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="menuOpen.set(false)"><mat-icon aria-hidden="true">receipt_long</mat-icon> Pedidos</a>
+      <a routerLink="/admin/customers" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="menuOpen.set(false)"><mat-icon aria-hidden="true">groups</mat-icon> Clientes</a>
+      <a routerLink="/admin/metrics" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">monitoring</mat-icon> Métricas analíticas</a>
       <a
         routerLink="/admin/reports"
         routerLinkActive="active"
@@ -53,17 +33,11 @@
         ><mat-icon aria-hidden="true">description</mat-icon> Relatórios</a
       >
       <a routerLink="/admin/promotions" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">sell</mat-icon> Promoções</a>
-      <details [open]="section() === 'catalog' || isProductCreate()">
+      <details [open]="section() === 'catalog'">
         <summary>
           <mat-icon aria-hidden="true">category</mat-icon> Cadastros
           <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon>
         </summary>
-        <a
-          routerLink="/admin/products/manage"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          >Produtos</a
-        >
         <a
           routerLink="/admin/catalog/categories"
           routerLinkActive="active"
@@ -107,8 +81,8 @@
     </div>
   </aside>
   <main class="content">
-    @if (section() !== 'promotions' && section() !== 'catalog' && section() !== 'experience-reviews' && (section() !== 'products' || isProductCreate())) {
-      <app-admin-page-header [title]="title()" [description]="subtitle()" [icon]="isProductCreate() ? 'inventory_2' : section() === 'reports' ? 'description' : 'dashboard'" [compact]="isProductCreate()" [breadcrumb]="isProductCreate() ? [{label:'Cadastros',url:'/admin/catalog/categories'},{label:'Produtos',url:'/admin/products'},{label:title()}] : [{label:title()}]" />
+    @if (section() !== 'customers' && section() !== 'orders' && section() !== 'promotions' && section() !== 'catalog' && section() !== 'experience-reviews' && (section() !== 'products' || isProductCreate())) {
+      <app-admin-page-header [title]="title()" [description]="subtitle()" [icon]="isProductCreate() ? 'inventory_2' : section() === 'reports' ? 'description' : 'dashboard'" [compact]="isProductCreate()" [breadcrumb]="isProductCreate() ? [{label:'Produtos',url:'/admin/products'},{label:title()}] : [{label:title()}]" />
     }
     <router-outlet />
   </main>

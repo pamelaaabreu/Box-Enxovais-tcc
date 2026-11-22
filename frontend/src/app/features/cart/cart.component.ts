@@ -1,3 +1,5 @@
+import { InlineNoticeComponent } from '../../shared/components/inline-notice/inline-notice.component';
+import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { Component, inject } from '@angular/core';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
@@ -11,7 +13,7 @@ registerLocaleData(localePt);
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CurrencyPipe, RouterLink, CatalogLayoutComponent, MatIconModule],
+  imports: [InlineNoticeComponent, AdminStateComponent, CurrencyPipe, RouterLink, CatalogLayoutComponent, MatIconModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss',
 })

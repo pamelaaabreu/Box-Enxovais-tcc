@@ -1,3 +1,4 @@
+import { variantForm } from '../../../../shared/components/product-variants/product-variants.component';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
@@ -49,6 +50,37 @@ describe('ProductCreateComponent', () => {
     }
     type('');expect(page.fields.price.invalid).toBeTrue();
     type('0');expect(input.value).toBe('0,00');expect(page.fields.price.invalid).toBeTrue();
+  });
+
+  it('creates real variants, derives totals and omits the generic size characteristic',()=>{
+    const {fixture,page,http}=setup();
+    page.form.patchValue({name:'Edredom teste',category:9,price:'10,00',quantity:1,size:'Genérico'});
+    page.fields.variants.push(variantForm({id:0,size:'Solteiro',dimensions:'160 × 220 cm',price:249.90,stock:2}));
+    page.fields.variants.push(variantForm({id:0,size:'Queen',dimensions:'240 × 260 cm',price:329.90,stock:3}));
+    fixture.detectChanges();
+    expect(page.fields.price.value).toBe('10,00');expect(page.fields.quantity.value).toBe(1);expect(page.fields.price.disabled).toBeTrue();expect(page.fields.quantity.disabled).toBeTrue();
+    expect(fixture.nativeElement.querySelector('#product-size')).toBeNull();
+    page.onSubmit();const req=http.expectOne(url);expect(req.request.body.variants.length).toBe(2);expect(req.request.body.variants[1].price).toBe(329.90);expect(req.request.body.quantity).toBe(5);expect(req.request.body.measurements.Tamanho).toBeUndefined();req.flush({id:25});
+  });
+
+  it('preserves size when adding, editing and removing variants and restores the field',()=>{
+    const {fixture,page,http}=setup();
+    page.form.patchValue({name:'Produto teste',category:9,price:'49,90',quantity:2,size:'70 × 140 cm'});
+    expect(fixture.nativeElement.querySelector('#product-size')).not.toBeNull();
+    page.fields.variants.push(variantForm({id:0,size:'Casal',dimensions:'220 × 240 cm',price:249.90,stock:2}));fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('#product-size')).toBeNull();expect(page.fields.size.value).toBe('70 × 140 cm');
+    page.fields.variants.at(0).controls.dimensions.setValue('240 × 260 cm');fixture.detectChanges();expect(page.fields.size.value).toBe('70 × 140 cm');
+    page.fields.variants.removeAt(0);fixture.detectChanges();expect(fixture.nativeElement.querySelector('#product-size').value).toBe('70 × 140 cm');
+    page.onSubmit();const req=http.expectOne(url);expect(req.request.body.measurements.Tamanho).toBe('70 × 140 cm');expect(req.request.body.variants).toEqual([]);req.flush({id:26});
+  });
+
+  it('switches commerce modes without overwriting simple values and blocks invalid variants',()=>{
+    const {fixture,page,http}=setup();page.form.patchValue({name:'Teste',category:9,price:'89,90',quantity:7});page.fields.price.markAsTouched();
+    page.fields.variants.push(variantForm());fixture.detectChanges();expect(fixture.nativeElement.querySelector('#product-price')).toBeNull();expect(fixture.nativeElement.querySelector('#quantity')).toBeNull();expect(fixture.nativeElement.querySelector('#price-error')).toBeNull();expect(fixture.nativeElement.textContent).toContain('Valores calculados automaticamente a partir das variações.');page.onSubmit();http.expectNone(url);
+    page.fields.variants.at(0).patchValue({size:'Solteiro',dimensions:'160 × 220 cm',price:'249,90',stock:8});page.fields.variants.push(variantForm({id:0,size:'Casal',dimensions:'220 × 240 cm',price:289.90,stock:8}));page.fields.variants.push(variantForm({id:0,size:'Queen',dimensions:'240 × 260 cm',price:329.90,stock:8}));fixture.detectChanges();
+    const summary=fixture.nativeElement.querySelector('app-product-commerce-summary');expect(summary.textContent).toContain('R$ 249,90');expect(summary.textContent).toContain('24 unidades');
+    page.fields.variants.at(0).patchValue({price:'349,90',stock:2});fixture.detectChanges();expect(summary.textContent).toContain('R$ 289,90');expect(summary.textContent).toContain('18 unidades');
+    page.fields.variants.clear();fixture.detectChanges();expect(fixture.nativeElement.querySelector('#product-price').value).toBe('89,90');expect(page.fields.quantity.value).toBe(7);expect(page.fields.price.enabled).toBeTrue();expect(page.fields.quantity.enabled).toBeTrue();page.onSubmit();const req=http.expectOne(url);expect(req.request.body.price).toBe(89.90);expect(req.request.body.quantity).toBe(7);req.flush({id:27});
   });
 
   it('starts pending, rejects invalid fields and renders the checklist and name counter', () => {
@@ -123,6 +155,24 @@ describe('ProductCreateComponent', () => {
     expect(router).toHaveBeenCalledWith(['/admin/products']);
   });
 
+  it('keeps the characteristic action beside material and color and removes added rows', () => {
+    const { fixture, page } = setup();
+    const host = fixture.nativeElement as HTMLElement;
+    const grid = host.querySelector('.standard-characteristics')!;
+    const children = Array.from(grid.children);
+    expect(children[0].querySelector('#product-material')).not.toBeNull();
+    expect(children[1].querySelector('#product-color')).not.toBeNull();
+    const add = children[2] as HTMLButtonElement;
+    expect(add.classList.contains('add-characteristic')).toBeTrue();
+    add.click();
+    fixture.detectChanges();
+    expect(page.fields.measurements.length).toBe(1);
+    (host.querySelector('[aria-label="Remover característica 1"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(page.fields.measurements.length).toBe(0);
+    expect(host.querySelector('#product-care')).not.toBeNull();
+  });
+
   it('asks before discarding a dirty form', () => {
     const { page } = setup();
     expect(page.canLeave()).toBeTrue();
@@ -166,5 +216,23 @@ describe('ProductCreateComponent', () => {
       expect(page.registrationName.value).toBe('Casa');
       expect(page.fields.category.value).toBe(9);
     }
+  });
+
+  it('loads existing data and saves only the editable contract without regenerating SKU',()=>{
+    const fixture=TestBed.createComponent(ProductCreateComponent),page=fixture.componentInstance,http=TestBed.inject(HttpTestingController);
+    fixture.componentRef.setInput('editId',42);
+    http.expectOne(url+'/categories').flush([{id:9,name:'Toalhas'}]);http.expectOne('http://localhost:8080/admin/products/brands').flush([{id:8,name:'Box Enxovais'}]);fixture.detectChanges();
+    const product={id:42,sku:'BX-TOA-042',name:'Original',description:'Descrição',brand_id:8,product_type_id:9,status:'active',price:89.90,quantity:4,updated_at:'2026-11-20T12:00:00Z',measurements:{Material:'Algodão',Cor:'Areia',Acabamento:'Barra'.repeat(50),coordinated_family:'preservada'},variants:[],promotional_price:0};
+    http.expectOne('http://localhost:8080/admin/products/42').flush(product);fixture.detectChanges();http.expectOne(url+'/42').flush(product);
+    expect(page.fields.name.value).toBe('Original');expect(page.form.pristine).toBeTrue();expect(page.form.valid).toBeTrue();expect(fixture.nativeElement.querySelector('app-product-sku input').readOnly).toBeTrue();expect(fixture.nativeElement.textContent).toContain('Salvar alterações');
+    page.fields.name.setValue('Editado');page.fields.color.setValue('Oliva');page.fields.price.setValue('99,90');page.removeMeasurement(0);const updated=jasmine.createSpy();page.productUpdated.subscribe(updated);page.onSubmit();
+    const request=http.expectOne('http://localhost:8080/admin/products/42');expect(request.request.method).toBe('PATCH');expect(request.request.body.sku).toBeUndefined();expect(request.request.body.updated_at).toBeUndefined();expect(request.request.body.expected_updated_at).toBe(product.updated_at);expect(request.request.body.measurements).toEqual({Material:'Algodão',Cor:'Oliva',coordinated_family:'preservada'});expect(request.request.body.commerce).toEqual({price:99.90,quantity:4,expected_price:89.90,expected_quantity:4});
+    request.flush({...product,name:'Editado',price:99.90});expect(updated).toHaveBeenCalledOnceWith(42);expect(page.form.pristine).toBeTrue();http.expectNone(request=>request.method==='POST');
+  });
+
+  it('keeps edits after HTTP conflict and still confirms cancellation',()=>{
+    const {page,http}=setup();page.editId=42;page.loadProduct();const product={id:42,name:'Original',sku:'BX-TOA-042',product_type_id:9,status:'active',price:89.90,quantity:4,updated_at:'2026-11-20T12:00:00Z',measurements:{},variants:[]};http.expectOne('http://localhost:8080/admin/products/42').flush(product);
+    page.fields.name.setValue('Preservado');page.form.markAsDirty();page.onSubmit();http.expectOne('http://localhost:8080/admin/products/42').flush({message:'Estoque alterado'},{status:409,statusText:'Conflict'});
+    expect(page.fields.name.value).toBe('Preservado');expect(page.form.dirty).toBeTrue();expect(alerts.error).toHaveBeenCalledWith('Não foi possível atualizar o produto.','Estoque alterado');const result=page.canLeave() as Observable<boolean>;result.subscribe(value=>expect(value).toBeFalse());expect(confirm).toHaveBeenCalled();
   });
 });

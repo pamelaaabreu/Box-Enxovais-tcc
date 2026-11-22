@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Estados vazios reais de sacola e favoritos",
+    "passed": true
+  },
+  {
+    "name": "Perfis anônimo e cliente sem acesso administrativo",
+    "passed": true
+  },
+  {
+    "name": "Ampliação CDP 200% e reflow home",
+    "passed": true
+  },
+  {
+    "name": "Ampliação CDP 200% e reflow checkout",
+    "passed": true
+  },
+  {
+    "name": "Ampliação CDP 200% e reflow formulario",
+    "passed": true
+  },
+  {
+    "name": "Ampliação CDP 200% e reflow relatorio",
+    "passed": true
+  }
+]

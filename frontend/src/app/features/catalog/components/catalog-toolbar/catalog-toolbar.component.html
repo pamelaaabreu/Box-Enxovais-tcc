@@ -1,0 +1,17 @@
+
+ <div class="toolbar" aria-label="Resultados e ordenação">
+  <span class="count" role="status">{{ loading() ? 'Carregando produtos…' : total() + (total() === 1 ? ' produto' : ' produtos') }}</span>
+  <div class="toolbar-controls">
+   @if (showFilters()) {
+    <button class="filter-toggle" type="button" aria-controls="catalog-filters" [attr.aria-expanded]="filtersOpen()" (click)="filtersToggle.emit()">Filtros</button>
+   }
+   <ng-content />
+   <div class="catalog-sort"><span>Ordenar por</span>
+    <mat-select aria-label="Ordenar produtos" [panelClass]="['box-form-options', 'catalog-sort-options']" panelWidth="230px" [value]="sort()" [disabled]="disabled()" (selectionChange)="sortChange.emit($event.value)">
+     @for (option of sortOptions(); track option.value) {
+      <mat-option [value]="option.value">{{option.label}}</mat-option>
+     }
+    </mat-select>
+   </div>
+  </div>
+ </div>

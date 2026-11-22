@@ -203,12 +203,12 @@
     sans-serif;
   cursor: pointer;
 }
-.alert-toast .alert-icon mat-icon {
+.alert-toast .alert-icon .material-icons {
   width: 20px;
   height: 20px;
   font-size: 20px;
 }
-.alert-toast .alert-close mat-icon {
+.alert-toast .alert-close .material-icons {
   width: 16px;
   height: 16px;
   font-size: 16px;
@@ -217,3 +217,5 @@
   outline: 2px solid #667255;
   outline-offset: 2px;
 }
+
+.alert-toast .material-icons{display:inline-block;flex-shrink:0;font-family:"Material Icons";font-weight:normal;font-style:normal;line-height:1;letter-spacing:normal;text-transform:none;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:"liga";-webkit-font-smoothing:antialiased}

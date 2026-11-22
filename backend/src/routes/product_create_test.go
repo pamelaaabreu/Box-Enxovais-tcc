@@ -44,7 +44,7 @@ func TestProductCreatePostgres(t *testing.T) {
 	if _, err = conn.Exec(`SET search_path TO ` + schema); err != nil {
 		t.Fatal(err)
 	}
-	for _, name := range []string{"000001_initial_schema.up.sql", "000002_simplify_customer_registration.up.sql", "000003_cart.up.sql", "000006_checkout.up.sql", "000013_product_variants.up.sql", "000024_catalog_brand_editorial.up.sql", "000048_product_external_sku.up.sql"} {
+	for _, name := range []string{"000001_initial_schema.up.sql", "000002_simplify_customer_registration.up.sql", "000003_cart.up.sql", "000006_checkout.up.sql", "000051_order_shipping.up.sql", "000053_checkout_installments.up.sql", "000013_product_variants.up.sql", "000024_catalog_brand_editorial.up.sql", "000048_product_external_sku.up.sql"} {
 		migration, err := os.ReadFile("../../migrations/" + name)
 		if err != nil {
 			t.Fatal(err)
@@ -193,6 +193,14 @@ func TestProductCreatePostgres(t *testing.T) {
 			mux.ServeHTTP(w, r)
 			if w.Code != want {
 				t.Fatalf("upload got %d want %d: %s", w.Code, want, w.Body.String())
+			}
+			if want == http.StatusCreated {
+				var result struct {
+					FilePath string `json:"filePath"`
+				}
+				if err := json.Unmarshal(w.Body.Bytes(), &result); err != nil || !strings.HasPrefix(result.FilePath, "uploads/") || strings.Contains(result.FilePath, "\\") {
+					t.Fatal("upload must return a public relative path")
+				}
 			}
 		}
 		png, err := base64.StdEncoding.DecodeString("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/Z0cAAAAASUVORK5CYII=")

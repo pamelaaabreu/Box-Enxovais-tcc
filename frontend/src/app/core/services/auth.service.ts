@@ -89,11 +89,11 @@ export class AuthService implements OnDestroy {
     );
   }
 
-  register(userData: RegisterPayload): Observable<any> {
+  register(userData: RegisterPayload): Observable<unknown> {
     return this.http.post(`${this.baseUrl}/register`, userData);
   }
 
-  requestPasswordReset(email: string): Observable<any> {
+  requestPasswordReset(email: string): Observable<unknown> {
     return this.http.post(`${this.baseUrl}/send-reset-token`, { email });
   }
 
@@ -107,14 +107,14 @@ export class AuthService implements OnDestroy {
     );
   }
 
-  resetPassword(resetToken: string, newPassword: string): Observable<any> {
+  resetPassword(resetToken: string, newPassword: string): Observable<unknown> {
     return this.http.post(`${this.baseUrl}/reset-password`, {
       resetToken,
       newPassword,
     });
   }
 
-  validateResetToken(token: string): Observable<any> {
+  validateResetToken(token: string): Observable<unknown> {
     return this.http.post(`${this.baseUrl}/validate-reset-token`, {
       resetToken: token,
     });

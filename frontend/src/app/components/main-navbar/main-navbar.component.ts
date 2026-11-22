@@ -8,7 +8,7 @@ import { CATEGORIES } from '../../features/catalog/data/categories';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './main-navbar.component.html',
-  styleUrl: './main-navbar.component.css',
+  styleUrl: './main-navbar.component.scss',
 })
 export class MainNavbarComponent {
   @Input() isHidden = false;

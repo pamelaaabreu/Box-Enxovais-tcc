@@ -11,7 +11,7 @@ import { CustomAlertComponent } from '../custom-alert/custom-alert.component';
 describe('ResetPasswordComponent recovery', () => {
  let component: ResetPasswordComponent;
  let auth: jasmine.SpyObj<AuthService>;
- let router: { events: Subject<any>; navigate: jasmine.Spy };
+ let router: { events: Subject<unknown>; navigate: jasmine.Spy };
  let alerts: jasmine.SpyObj<CustomAlertService>;
  let toast: CustomAlertComponent;
 
@@ -23,7 +23,7 @@ describe('ResetPasswordComponent recovery', () => {
   alerts.success.and.callFake((_title, _message, options) => {
    toast.duration = options!.duration!;
    return { instance: toast, hostView: { destroyed: false }, setInput: () => {},
-    changeDetectorRef: { detectChanges: () => toast.ngOnInit() } } as any;
+    changeDetectorRef: { detectChanges: () => toast.ngOnInit() } } as unknown as ReturnType<CustomAlertService['success']>;
   });
   TestBed.configureTestingModule({providers:[{provide:AuthService,useValue:auth}, {provide:Router,useValue:router}, {provide:CustomAlertService,useValue:alerts}]});
   component=TestBed.runInInjectionContext(()=>new ResetPasswordComponent());
@@ -35,7 +35,7 @@ describe('ResetPasswordComponent recovery', () => {
  afterEach(() => toast.ngOnDestroy());
  it('updates once and redirects only when the toast expires',fakeAsync(()=>{
   auth.getPasswordResetToken.and.returnValue('secret'); auth.validateResetToken.and.returnValue(of({}));
-  const response=new Subject<any>(); auth.resetPassword.and.returnValue(response);
+  const response=new Subject<unknown>(); auth.resetPassword.and.returnValue(response);
   component.ngOnInit(); component.resetForm.setValue({newPassword:'Password1@',confirmPassword:'Password1@'});
   component.onSubmit(); component.onSubmit();
   expect(auth.resetPassword).toHaveBeenCalledOnceWith('secret','Password1@');
@@ -57,7 +57,7 @@ describe('ResetPasswordComponent recovery', () => {
  for (const reason of ['navigation', 'destroy']) {
   it(`cancels redirect on ${reason}`, fakeAsync(() => {
    auth.getPasswordResetToken.and.returnValue('secret'); auth.validateResetToken.and.returnValue(of({}));
-   auth.resetPassword.and.returnValue(of({} as any));
+   auth.resetPassword.and.returnValue(of({}));
    component.ngOnInit(); component.resetForm.setValue({newPassword:'Password1@',confirmPassword:'Password1@'});
    component.onSubmit(); tick(1000);
    if(reason === 'navigation') router.events.next(new NavigationStart(1, '/home'));

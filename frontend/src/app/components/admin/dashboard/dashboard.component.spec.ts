@@ -1,40 +1,21 @@
 import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController,provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { ActivatedRoute,Router,convertToParamMap,provideRouter } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { DashboardComponent } from './dashboard.component';
-
-describe('DashboardComponent', () => {
-  const url = 'http://localhost:8080/admin/dashboard';
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [DashboardComponent],
-    providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
-  }));
-  afterEach(() => TestBed.inject(HttpTestingController).verify());
-
-  it('shows loading, offers retry and renders the empty catalog', () => {
-    const fixture = TestBed.createComponent(DashboardComponent);
-    const http = TestBed.inject(HttpTestingController);
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelectorAll('.skeleton').length).toBe(4);
-    http.expectOne(url).flush({}, { status: 503, statusText: 'Unavailable' });
-    fixture.detectChanges();
-    fixture.nativeElement.querySelector('button').click();
-    http.expectOne(url).flush({ orders: 0, products: 0, lowStock: 0, revenueCents: 0, months: [], categories: [] });
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelectorAll('.metric').length).toBe(4);
-    expect(fixture.nativeElement.textContent).toContain('Nenhum pedido registrado');
-    expect(fixture.nativeElement.querySelector('a').getAttribute('href')).toBe('/admin/products/manage');
-  });
-
-  it('renders orders and units sold from the API', () => {
-    const fixture = TestBed.createComponent(DashboardComponent);
-    TestBed.inject(HttpTestingController).expectOne(url).flush({
-      orders: 2, products: 3, lowStock: 1, revenueCents: 2000,
-      months: [{ month: '2026-01', total: 2, cancelled: 1 }], categories: [{ name: 'Cama', units: 4 }],
-    });
-    fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('2 · 1 cancelados');
-    expect(fixture.nativeElement.textContent).toContain('4 un.');
-  });
+import { Dashboard } from './models/dashboard.models';
+describe('DashboardComponent',()=>{
+ const url='http://localhost:8080/admin/dashboard';let query:BehaviorSubject<ReturnType<typeof convertToParamMap>>;
+ const summary=(changes:Partial<Dashboard>={}):Dashboard=>({orders:0,approvedOrders:0,cancelledOrders:0,revenueCents:0,averageTicketCents:0,products:0,activeProducts:0,lowStock:0,outOfStock:0,customers:0,newCustomers:0,customersWithOrders:0,period:{preset:'30d',from:'2026-01-01T03:00:00Z',until:'2026-02-01T03:00:00Z',group:'day',timezone:'America/Sao_Paulo'},series:[{bucket:'2026-01-01',orders:0,approved:0,cancelled:0,revenueCents:0,customers:0}],months:[],categories:[],topProducts:[],stock:[],recentOrders:[],...changes});
+ beforeEach(()=>{query=new BehaviorSubject(convertToParamMap({}));TestBed.configureTestingModule({imports:[DashboardComponent],providers:[provideHttpClient(),provideHttpClientTesting(),provideRouter([]),{provide:ActivatedRoute,useValue:{queryParamMap:query}}]});});
+ afterEach(()=>TestBed.inject(HttpTestingController).verify());
+ const request=()=>TestBed.inject(HttpTestingController).expectOne(r=>r.url===url);
+ it('shows six skeletons, retry and honest empty states',()=>{const f=TestBed.createComponent(DashboardComponent);f.detectChanges();expect(f.nativeElement.querySelectorAll('.skeleton').length).toBe(6);request().flush({},{status:503,statusText:'Unavailable'});f.detectChanges();const retry=[...f.nativeElement.querySelectorAll('button')].find((b:HTMLButtonElement)=>b.textContent?.includes('Tentar novamente')) as HTMLButtonElement;retry.click();request().flush(summary());f.detectChanges();expect(f.nativeElement.querySelectorAll('.metric').length).toBe(6);expect(f.nativeElement.textContent).toContain('Nenhum pedido registrado');expect(f.nativeElement.querySelector('a[href="/admin/products/manage"]')).not.toBeNull();});
+ it('renders real amounts, current metrics, status and historical rankings',()=>{const f=TestBed.createComponent(DashboardComponent);request().flush(summary({orders:2,approvedOrders:1,cancelledOrders:1,revenueCents:12345,averageTicketCents:12345,products:3,activeProducts:2,lowStock:1,customers:2,newCustomers:1,series:[{bucket:'2026-01-01',orders:2,approved:1,cancelled:1,revenueCents:12345,customers:1}],categories:[{name:'Cama',units:4}],topProducts:[{productId:7,name:'Nome histórico',units:4,revenueCents:12345,archived:true}]}));f.detectChanges();expect(f.nativeElement.textContent).toContain('123,45');expect(f.nativeElement.textContent).toContain('4 un.');expect(f.nativeElement.textContent).toContain('Arquivado ou fora do catálogo');expect(f.nativeElement.querySelectorAll('app-dashboard-trend').length).toBe(3);});
+ it('restores custom dates and grouping from URL',()=>{query.next(convertToParamMap({period:'custom',dateFrom:'2026-01-01',dateTo:'2026-03-01',group:'month'}));const f=TestBed.createComponent(DashboardComponent);const req=request();expect(req.request.params.get('dateTo')).toBe('2026-03-01');expect(req.request.params.get('group')).toBe('month');expect(f.componentInstance.filter.controls.period.value).toBe('custom');req.flush(summary());});
+ it('cancels obsolete requests and does not accept late results',()=>{const f=TestBed.createComponent(DashboardComponent);const previous=request();query.next(convertToParamMap({period:'7d'}));expect(previous.cancelled).toBeTrue();const next=request();expect(next.request.params.get('period')).toBe('7d');next.flush(summary({orders:3}));expect(f.componentInstance.data()?.orders).toBe(3);});
+ it('applies shared controls through URL without including irrelevant custom dates',()=>{const f=TestBed.createComponent(DashboardComponent);request().flush(summary());const nav=spyOn(TestBed.inject(Router),'navigate').and.resolveTo(true);f.componentInstance.filter.controls.period.setValue('7d');f.componentInstance.apply();const params=nav.calls.mostRecent().args[1]?.queryParams;expect(params?.['period']).toBe('7d');expect(params?.['dateFrom']).toBeUndefined();});
+ it('shows validation errors from the API without losing filters',()=>{query.next(convertToParamMap({period:'custom',dateFrom:'2026-02-01',dateTo:'2026-01-01'}));const f=TestBed.createComponent(DashboardComponent);request().flush({message:'Informe uma data final válida.'},{status:400,statusText:'Bad Request'});f.detectChanges();expect(f.nativeElement.textContent).toContain('Informe uma data final válida.');expect(f.componentInstance.filter.controls.dateFrom.value).toBe('2026-02-01');});
+ it('links recent orders and quick access to existing modules',()=>{const f=TestBed.createComponent(DashboardComponent);request().flush(summary({recentOrders:[{id:8,customer:'Cliente',createdAt:'2026-01-01T12:00:00Z',status:'cancelled',totalCents:1000}]}));f.detectChanges();for(const path of ['/admin/orders/8','/admin/orders','/admin/products','/admin/customers'])expect(f.nativeElement.querySelector(`a[href="${path}"]`)).not.toBeNull();});
 });

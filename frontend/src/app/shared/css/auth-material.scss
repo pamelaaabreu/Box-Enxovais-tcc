@@ -1,0 +1,232 @@
+
+
+.box-auth-surface .auth-tabs .mat-mdc-tab-header {
+  overflow: visible;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-radius: var(--auth-radius-lg);
+  background: var(--page-background);
+}
+.box-auth-surface .auth-tabs
+  :is(.mat-mdc-tab-label-container, .mat-mdc-tab-list) {
+  overflow: visible;
+}
+
+.box-auth-surface .auth-tabs .mat-mdc-tab-label-container {
+  border-bottom: 0;
+}
+
+.box-auth-surface .auth-tabs .mat-mdc-tab-labels {
+  justify-content: center;
+  gap: 4px;
+}
+
+.box-auth-surface .auth-tabs .mat-mdc-tab {
+  min-width: 0;
+  height: 46px;
+  flex: 1 1 0;
+  padding: 0 1rem;
+  border-radius: var(--auth-radius-md);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.box-auth-surface .auth-tabs .mat-mdc-tab:hover:not(.mdc-tab--active) {
+  background: rgba(102, 114, 85, 0.08);
+}
+
+.box-auth-surface .auth-tabs .mat-mdc-tab.mdc-tab--active {
+  background: var(--accent-dark);
+  box-shadow: 0 4px 12px rgba(63, 73, 55, 0.18);
+}
+
+.box-auth-surface .auth-tabs .mdc-tab__text-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.box-auth-surface .auth-tabs .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: var(--surface);
+  font-weight: 600;
+  transform: translateY(-1px);
+}
+
+.box-auth-surface .auth-tabs .mdc-tab-indicator__content--underline {
+  width: 24px;
+  margin: 0 auto;
+  border-radius: 999px;
+  box-shadow: none;
+}
+
+.box-auth-surface .field-group .mat-mdc-form-field-icon-prefix > .field-icon {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  margin-right: 7px;
+  font-size: 18px;
+  color: var(--muted);
+  transition: color 160ms ease;
+}
+
+.box-auth-surface .field-group.mat-focused
+  .mat-mdc-form-field-icon-prefix
+  > .field-icon {
+  color: var(--accent);
+}
+
+.box-auth-surface .field-group .mat-mdc-text-field-wrapper {
+  height: 50px;
+  padding-inline: 10px;
+  border: 0;
+  border-radius: 8px 8px 0 0;
+  outline: none;
+  background: transparent;
+}
+
+.box-auth-surface .field-group .mat-mdc-form-field-flex {
+  height: 50px;
+  align-items: center;
+}
+
+.box-auth-surface .field-group .mat-mdc-form-field-infix {
+  min-height: 50px;
+  padding-top: 22px;
+  padding-bottom: 0;
+}
+
+.box-auth-surface .field-group .mat-mdc-input-element {
+  min-height: 24px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.box-auth-surface .field-group .mat-mdc-form-field-error {
+  overflow-wrap: anywhere;
+  padding: 0;
+  color: var(--error);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+.box-auth-surface .field-group
+  :is(.mat-mdc-form-field-error-wrapper, .mat-mdc-form-field-hint-wrapper) {
+  position: static;
+  padding: 3px 10px 0;
+}
+
+.box-auth-surface .field-group .mat-mdc-form-field-bottom-align::before {
+  display: none;
+}
+
+.box-auth-surface .field-group .mat-mdc-form-field-focus-overlay {
+  opacity: 0;
+}
+
+.box-auth-surface .field-group .mdc-line-ripple::before {
+  border-bottom-color: var(--border);
+}
+
+.box-auth-surface .field-group:hover .mdc-line-ripple::before {
+  border-bottom-color: var(--accent);
+}
+
+.box-auth-surface .field-group.mat-focused .mdc-line-ripple::after {
+  border-color: var(--accent);
+  border-bottom-width: 2px;
+}
+
+.box-auth-surface .field-group.mat-form-field-invalid .mdc-line-ripple::before,
+.box-auth-surface .field-group.mat-form-field-invalid .mdc-line-ripple::after {
+  border-color: var(--error);
+}
+
+.box-auth-surface .field-group.mat-form-field-disabled
+  .mat-mdc-text-field-wrapper {
+  background: #e9e6de;
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+.box-auth-surface .field-group
+  :is(
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus
+  ) {
+  -webkit-text-fill-color: var(--text);
+  box-shadow: 0 0 0 1000px var(--surface) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
+.box-auth-surface .password-toggle app-show-password {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box-auth-surface .password-toggle .password-toggle-btn {
+  position: static;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
+  color: var(--secondary);
+  transform: none;
+}
+
+.box-auth-surface .password-toggle .password-toggle-btn:hover {
+  background: var(--page-background);
+  color: var(--accent-dark);
+}
+
+.box-auth-surface .password-toggle .password-toggle-btn svg {
+  width: 19px;
+  height: 19px;
+  display: block;
+}
+
+.box-auth-surface :is(.auth-form--login, .auth-form--register)
+  .field-group:not(.mat-form-field-invalid)
+  .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.box-auth-surface :is(.auth-form--login, .auth-form--register)
+  .field-group.mat-form-field-invalid
+  .mat-mdc-form-field-subscript-wrapper {
+  display: block;
+  min-height: 0;
+  margin: 0;
+}
+
+.box-auth-surface .auth-form--login
+  .field-group.mat-form-field-invalid
+  .mat-mdc-form-field-error-wrapper {
+  padding-top: 3px;
+  padding-bottom: 2px;
+}
+
+.box-auth-surface .is-skeleton .field-group > * {
+  visibility: hidden;
+}
+.box-auth-surface .submit-button:focus-visible,
+.box-auth-surface .forgot-password a:focus-visible,
+.box-auth-surface .auth-tabs .mat-mdc-tab:focus-visible,
+.box-auth-surface .password-toggle .password-toggle-btn:focus-visible {
+  outline: 2px solid var(--accent-dark);
+  outline-offset: 3px;
+}

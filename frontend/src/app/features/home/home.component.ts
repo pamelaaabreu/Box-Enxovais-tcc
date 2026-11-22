@@ -8,7 +8,6 @@ import {
 import { CampaignService } from '../../core/services/campaign.service';
 import { CampaignComponent } from '../campaign/campaign.component';
 import { FooterComponent } from '../../components/footer/footer.component';
-import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { CommonModule } from '@angular/common';
 import { MainNavbarComponent } from '../../components/main-navbar/main-navbar.component';
 import { CarouselComponent } from '../../components/carousel/carousel.component';
@@ -23,7 +22,6 @@ import { NewsletterComponent } from '../newsletter/newsletter.component';
   templateUrl: './home.component.html',
   imports: [
     FooterComponent,
-    CarouselModule,
     CommonModule,
     MainNavbarComponent,
     CarouselComponent,
@@ -34,7 +32,6 @@ import { NewsletterComponent } from '../newsletter/newsletter.component';
     ShopByCategoryComponent,
     CampaignComponent,
     NewsletterComponent,
-    FooterComponent,
   ],
   styleUrl: './home.component.scss',
   encapsulation: ViewEncapsulation.Emulated,

@@ -27,7 +27,7 @@
   </div>
 }
 <dialog #zoom aria-label="Imagem ampliada do produto">
-  <button type="button" class="close-zoom" autofocus aria-label="Fechar imagem ampliada" (click)="zoom.close()">
+  <button type="button" class="close-zoom" aria-label="Fechar imagem ampliada" (click)="zoom.close()">
     <mat-icon aria-hidden="true">close</mat-icon>
   </button>
   @if (selectedImage(); as image) {

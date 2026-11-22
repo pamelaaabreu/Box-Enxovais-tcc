@@ -16,7 +16,7 @@ import (
 
 func TestDashboardPostgres(t *testing.T) {
 	db, exec := checkoutTestDB(t)
-	exec("CREATE TABLE product_types(id INT PRIMARY KEY, name TEXT); ALTER TABLE products ADD COLUMN product_type_id INT")
+	exec("ALTER TABLE users ADD COLUMN role text NOT NULL DEFAULT 'customer'; ALTER TABLE users ADD COLUMN created_at timestamptz DEFAULT now(); CREATE TABLE product_types(id INT PRIMARY KEY, name TEXT); ALTER TABLE products ADD COLUMN product_type_id INT")
 	repo := repositories.ProductRepository{DB: db}
 	mux := http.NewServeMux()
 	InitRoutesProducts(mux, handlers.ProductHandler{Service: services.ProductService{Store: repo}}, handlers.ProductImageHandler{})
@@ -60,4 +60,29 @@ func TestDashboardPostgres(t *testing.T) {
 	if got := strings.Join(strings.Fields(string(actual.Months)), " "); got != "[{\"month\":\"2026-01\",\"total\":1,\"cancelled\":0}, {\"month\":\"2026-02\",\"total\":1,\"cancelled\":1}]" {
 		t.Fatalf("unexpected months: %s", got)
 	}
+	t.Run("period_validation_failure_and_recovery", func(t *testing.T) {
+		token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, models.Claims{UserID: 1, Role: "admin", RegisteredClaims: jwt.RegisteredClaims{Issuer: "box-enxovais-api", ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute))}}).SignedString([]byte("dashboard-tests-only-secret"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		call := func(path string, want int) {
+			t.Helper()
+			r := httptest.NewRequest(http.MethodGet, path, nil)
+			r.Header.Set("Authorization", "Bearer "+token)
+			w := httptest.NewRecorder()
+			mux.ServeHTTP(w, r)
+			if w.Code != want {
+				t.Fatalf("HTTP %d expected %d", w.Code, want)
+			}
+			if want == 500 && (strings.Contains(w.Body.String(), "SELECT") || strings.Contains(w.Body.String(), "relation")) {
+				t.Fatal("internal SQL exposed")
+			}
+		}
+		call("/admin/dashboard?period=custom&dateFrom=2026-02-01&dateTo=2026-01-01", 400)
+		exec("ALTER TABLE checkout_orders RENAME TO temporarily_unavailable_orders")
+		call("/admin/dashboard", 500)
+		exec("ALTER TABLE temporarily_unavailable_orders RENAME TO checkout_orders")
+		call("/admin/dashboard?period=30d", 200)
+	})
+
 }

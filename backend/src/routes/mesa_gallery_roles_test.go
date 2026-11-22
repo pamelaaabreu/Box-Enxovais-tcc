@@ -48,7 +48,7 @@ func TestMesaGalleryRolesPostgres(t *testing.T) {
 	execute("CREATE SCHEMA " + schema)
 	defer database.Exec("DROP SCHEMA " + schema + " CASCADE")
 	execute("SET search_path TO " + schema)
-	for _, name := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000005_favorites", "000006_checkout", "000007_order_cancellation", "000008_order_cancellation_reason", "000009_account_addresses", "000010_business_phone", "000011_user_cnpj", "000013_product_variants", "000024_catalog_brand_editorial", "000048_product_external_sku"} {
+	for _, name := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000005_favorites", "000006_checkout", "000051_order_shipping", "000053_checkout_installments", "000007_order_cancellation", "000008_order_cancellation_reason", "000009_account_addresses", "000010_business_phone", "000011_user_cnpj", "000013_product_variants", "000024_catalog_brand_editorial", "000048_product_external_sku"} {
 		execute(migration(name, "up"))
 	}
 	execute("INSERT INTO brands(name) VALUES('Box Enxovais'); INSERT INTO products(name,price,quantity,status) VALUES('Produto preservado',88.9,5,'active'); INSERT INTO product_images(product_id,image_path,is_primary,alt_text) SELECT id,'uploads/preserved.png',true,'Original' FROM products")

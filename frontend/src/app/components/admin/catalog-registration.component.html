@@ -1,0 +1,101 @@
+
+    <section
+      class="registrations catalog-registrations"
+      [class.in-dialog]="dialogRef"
+    >
+      <app-admin-page-header [title]="title" [description]="'Gerencie ' + title.toLowerCase() + ' do catálogo.'" [icon]="noun === 'categoria' ? 'category' : 'sell'" [breadcrumb]="dialogRef ? [] : [{label:'Cadastros',url:'/admin/products/manage'},{label:title}]" [compact]="!!dialogRef" [actionLabel]="'Nova ' + noun" (action)="start()">
+        @if (dialogRef) { <button header-actions mat-stroked-button type="button" mat-dialog-close>Fechar</button> }
+      </app-admin-page-header>
+
+      @if (editing()) {
+        <form
+          (ngSubmit)="save()"
+          class="editor"
+          aria-label="Formulário de cadastro"
+        >
+          <div class="editor-heading">
+            <h3>Dados da {{ noun }}</h3>
+          </div>
+          <label class="form-field">
+            Nome
+            <input
+              name="name"
+              maxlength="100"
+              required
+              [(ngModel)]="name"
+              [disabled]="saving()"
+            />
+          </label>
+          @if (formError()) {
+            <p role="alert">{{ formError() }}</p>
+          }
+          <div class="actions editor-actions">
+            <button
+              mat-flat-button
+              class="primary"
+              type="submit"
+              [disabled]="!name.trim() || saving() || loading()"
+            >
+              {{ saving() ? 'Salvando…' : 'Salvar' }}
+            </button>
+            <button
+              mat-stroked-button
+              type="button"
+              [disabled]="saving()"
+              (click)="editing.set(false)"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      }
+
+      <div class="registration-filters">
+        <label class="search-field">
+          Buscar por nome
+          <span class="search-input-wrap">
+            <input
+              type="search"
+              placeholder="Digite para buscar..."
+              [ngModel]="query()"
+              (ngModelChange)="query.set($event)"
+            />
+          </span>
+        </label>
+      </div>
+
+      @if (loading()) {
+        <app-admin-state kind="loading" [title]="'Carregando ' + title.toLowerCase() + '…'" />
+      } @else if (failed()) {
+        <app-admin-state kind="error" title="Não foi possível carregar os cadastros." actionLabel="Tentar novamente" (action)="load()" />
+      } @else if (filtered().length) {
+        <ul class="registration-list">
+          @for (item of filtered(); track item.id) {
+            <li class="registration-item">
+              <div class="item-content">
+                <strong>{{ item.name }}</strong>
+                <small>{{ item.productCount }} produto(s) vinculado(s)</small>
+              </div>
+              <div class="actions item-actions">
+                <button mat-stroked-button type="button" (click)="start(item)">
+                  Editar
+                </button>
+                <button
+                  mat-stroked-button
+                  type="button"
+                  [disabled]="item.productCount > 0"
+                  (click)="remove(item)"
+                >
+                  Excluir
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      } @else if (!items().length) {
+        <app-admin-state [icon]="noun === 'categoria' ? 'category' : 'sell'" [title]="'Nenhuma ' + noun + ' cadastrada.'" [actionLabel]="'Cadastrar ' + noun" (action)="start()" />
+      } @else {
+        <app-admin-state title="Nenhum resultado para a busca." />
+      }
+    </section>
+  

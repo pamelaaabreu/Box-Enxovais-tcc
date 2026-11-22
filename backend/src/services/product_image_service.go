@@ -20,15 +20,16 @@ type ProductImageService struct {
 	Directory string
 }
 
-func (service ProductImageService) Upload(ctx context.Context, productID int, filename string, source io.Reader) (string, error) {
+func (service ProductImageService) Upload(ctx context.Context, productID int, filename string, source io.Reader, variantID ...*int64) (string, error) {
 	path, err := SaveImageAsset(service.Directory, fmt.Sprint(productID), filename, source)
 	if err != nil {
 		return "", err
 	}
-	if err := service.Store.Create(ctx, productID, path); err != nil {
+	publicPath := "uploads/" + filepath.Base(path)
+	if err := service.Store.Create(ctx, productID, publicPath, variantID...); err != nil {
 		return "", errors.Join(ErrImageRecord, err, os.Remove(path))
 	}
-	return path, nil
+	return publicPath, nil
 }
 
 func SaveImageAsset(directory, prefix, filename string, source io.Reader) (string, error) {

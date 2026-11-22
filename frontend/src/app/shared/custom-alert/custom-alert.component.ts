@@ -8,17 +8,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { AlertType } from '../../shared/models';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-custom-alert',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
   templateUrl: './custom-alert.component.html',
   styleUrls: ['./custom-alert.component.scss'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   encapsulation: ViewEncapsulation.None,
 })
 export class CustomAlertComponent implements OnInit, OnDestroy {

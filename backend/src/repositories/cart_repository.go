@@ -38,12 +38,17 @@ func (repo CartRepository) Apply(ctx context.Context, userID int, operation stri
 		return empty, err
 	}
 	defer tx.Rollback()
-	_, err = tx.ExecContext(ctx, `INSERT INTO carts(user_id) VALUES($1) ON CONFLICT(user_id) DO NOTHING`, userID)
+	_, err = tx.ExecContext(ctx, `INSERT INTO carts(user_id)
+VALUES($1) ON CONFLICT(user_id) DO NOTHING`, userID)
 	if err != nil {
 		return empty, err
 	}
 	var cartID int64
-	err = tx.QueryRowContext(ctx, `SELECT id FROM carts WHERE user_id=$1 FOR UPDATE`, userID).Scan(&cartID)
+	err = tx.QueryRowContext(ctx, `SELECT id
+FROM carts
+WHERE user_id = $1
+    FOR
+    UPDATE`, userID).Scan(&cartID)
 	if err != nil {
 		return empty, err
 	}
@@ -58,7 +63,10 @@ func (repo CartRepository) Apply(ctx context.Context, userID int, operation stri
 		err = reorderItems(ctx, tx, userID, cartID, id)
 	case "remove":
 		var result sql.Result
-		result, err = tx.ExecContext(ctx, `DELETE FROM cart_items WHERE id=$1 AND cart_id=$2`, id, cartID)
+		result, err = tx.ExecContext(ctx, `DELETE
+FROM cart_items
+WHERE id = $1
+    AND cart_id = $2`, id, cartID)
 		if err == nil {
 			n, e := result.RowsAffected()
 			if e != nil {
@@ -69,7 +77,9 @@ func (repo CartRepository) Apply(ctx context.Context, userID int, operation stri
 			}
 		}
 	case "clear":
-		_, err = tx.ExecContext(ctx, `DELETE FROM cart_items WHERE cart_id=$1`, cartID)
+		_, err = tx.ExecContext(ctx, `DELETE
+FROM cart_items
+WHERE cart_id = $1`, cartID)
 	case "get":
 	default:
 		return empty, errors.New("invalid cart operation")
@@ -78,12 +88,45 @@ func (repo CartRepository) Apply(ctx context.Context, userID int, operation stri
 		return empty, err
 	}
 	if operation != "get" {
-		if _, err = tx.ExecContext(ctx, `UPDATE carts SET updated_at=NOW() WHERE id=$1`, cartID); err != nil {
+		if _, err = tx.ExecContext(ctx, `UPDATE carts
+SET updated_at = NOW()
+WHERE id = $1`, cartID); err != nil {
 			return empty, err
 		}
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT i.id,p.id,COALESCE(i.variant_id,0),p.name || COALESCE(' — ' || v.size,''),COALESCE((SELECT image_path FROM product_images WHERE product_id=p.id AND (variant_id=i.variant_id OR variant_id IS NULL) ORDER BY variant_id IS NULL,is_primary DESC NULLS LAST,id LIMIT 1),''),i.quantity,COALESCE(v.quantity,p.quantity),p.status,(COALESCE(v.price,LEAST(p.price,COALESCE((SELECT MIN(pp.promotional_price) FROM promotion_products pp JOIN promotions pr ON pr.id=pp.promotion_id WHERE pp.product_id=p.id AND pr.status='active' AND pr.start_date<=NOW() AND pr.end_date>=NOW() AND pp.promotional_price>=0),p.price)))*100)::bigint
- FROM cart_items i JOIN products p ON p.id=i.product_id LEFT JOIN product_variants v ON v.id=i.variant_id WHERE i.cart_id=$1 ORDER BY i.id`, cartID)
+	rows, err := tx.QueryContext(ctx, `SELECT
+    i.id,
+    p.id,
+    COALESCE(i.variant_id, 0),
+    p.name || COALESCE(' — ' || v.size, ''),
+    COALESCE(
+                 (SELECT image_path
+                  FROM product_images
+                  WHERE product_id = p.id
+                      AND (variant_id = i.variant_id
+                           OR variant_id IS NULL)
+                  ORDER BY variant_id IS NULL, is_primary DESC NULLS LAST, id
+                  LIMIT 1),''),
+    i.quantity,
+    COALESCE(v.quantity, p.quantity),
+    p.status,
+    (COALESCE(v.price, LEAST(p.price, COALESCE(
+                                                   (SELECT MIN(pp.promotional_price)
+                                                    FROM promotion_products pp
+                                                    JOIN promotions pr
+                                                        ON pr.id = pp.promotion_id
+                                                    WHERE pp.product_id = p.id
+                                                        AND pr.status = 'active'
+                                                        AND pr.start_date <= NOW()
+                                                        AND pr.end_date >= NOW()
+                                                        AND pp.promotional_price >= 0),p.price))) * 100)::bigint
+FROM cart_items i
+JOIN products p
+    ON p.id = i.product_id
+LEFT JOIN product_variants v
+    ON v.id = i.variant_id
+WHERE i.cart_id = $1
+ORDER BY i.id`, cartID)
 	if err != nil {
 		return empty, err
 	}
@@ -126,7 +169,12 @@ func writeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, operation stri
 	}
 	productID := id
 	if operation == "update" {
-		err := tx.QueryRowContext(ctx, "SELECT product_id, COALESCE(variant_id,0) FROM cart_items WHERE id=$1 AND cart_id=$2", id, cartID).Scan(&productID, &variantID)
+		err := tx.QueryRowContext(ctx, `SELECT
+    product_id,
+    COALESCE(variant_id, 0)
+FROM cart_items
+WHERE id = $1
+    AND cart_id = $2`, id, cartID).Scan(&productID, &variantID)
 		if errors.Is(err, sql.ErrNoRows) {
 			return ErrCartItemNotFound
 		}
@@ -137,8 +185,16 @@ func writeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, operation stri
 	var stock int64
 	var status string
 	var hasVariants bool
-	err := tx.QueryRowContext(ctx, `SELECT quantity,status,EXISTS(SELECT 1 FROM product_variants WHERE product_id=$1)
-	FROM products WHERE id=$1 FOR SHARE`, productID).Scan(&stock, &status, &hasVariants)
+	err := tx.QueryRowContext(ctx, `SELECT
+    quantity,
+    status,
+    EXISTS
+    (SELECT 1
+     FROM product_variants
+     WHERE product_id = $1)
+FROM products
+WHERE id = $1
+    FOR SHARE`, productID).Scan(&stock, &status, &hasVariants)
 	if errors.Is(err, sql.ErrNoRows) {
 		return ErrCartProduct
 	}
@@ -149,7 +205,11 @@ func writeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, operation stri
 		return ErrCartProduct
 	}
 	if variantID > 0 {
-		err = tx.QueryRowContext(ctx, "SELECT quantity FROM product_variants WHERE id=$1 AND product_id=$2 FOR SHARE", variantID, productID).Scan(&stock)
+		err = tx.QueryRowContext(ctx, `SELECT quantity
+FROM product_variants
+WHERE id = $1
+    AND product_id = $2
+    FOR SHARE`, variantID, productID).Scan(&stock)
 		if errors.Is(err, sql.ErrNoRows) {
 			return ErrCartProduct
 		}
@@ -159,7 +219,11 @@ func writeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, operation stri
 	}
 	if operation == "add" {
 		var existing int64
-		err = tx.QueryRowContext(ctx, "SELECT quantity FROM cart_items WHERE cart_id=$1 AND product_id=$2 AND COALESCE(variant_id,0)=$3", cartID, productID, variantID).Scan(&existing)
+		err = tx.QueryRowContext(ctx, `SELECT quantity
+FROM cart_items
+WHERE cart_id = $1
+    AND product_id = $2
+    AND COALESCE(variant_id, 0) = $3`, cartID, productID, variantID).Scan(&existing)
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			return err
 		}
@@ -171,7 +235,11 @@ func writeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, operation stri
 	if quantity > 1000000 {
 		return ErrCartQuantity
 	}
-	_, err = tx.ExecContext(ctx, `INSERT INTO cart_items(cart_id,product_id,variant_id,quantity) VALUES($1,$2,NULLIF($3,0),$4)
-	ON CONFLICT(cart_id,product_id,COALESCE(variant_id,0)) DO UPDATE SET quantity=EXCLUDED.quantity,updated_at=NOW()`, cartID, productID, variantID, quantity)
+	_, err = tx.ExecContext(ctx, `INSERT INTO cart_items(cart_id, product_id, variant_id, quantity)
+VALUES($1,$2,NULLIF($3,0),$4) ON CONFLICT(cart_id, product_id, COALESCE(variant_id, 0)) DO
+UPDATE
+SET
+    quantity = EXCLUDED.quantity,
+    updated_at = NOW()`, cartID, productID, variantID, quantity)
 	return err
 }

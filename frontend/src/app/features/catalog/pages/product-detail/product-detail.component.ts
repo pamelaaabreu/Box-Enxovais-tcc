@@ -1,3 +1,4 @@
+import { AdminStateComponent } from '../../../../shared/components/admin-state/admin-state.component';
 import { CustomAlertService } from '../../../../core/services/custom-alert.service';
 import { CAMA_GROUP } from '../../data/categories';
 import { ShippingQuoteComponent } from './shipping-quote.component';
@@ -41,7 +42,7 @@ import { QuantitySelectorComponent } from '../../components/quantity-selector/qu
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [
+  imports: [AdminStateComponent,
     ShippingQuoteComponent,
     CurrencyPipe,
     FavoriteButtonComponent,

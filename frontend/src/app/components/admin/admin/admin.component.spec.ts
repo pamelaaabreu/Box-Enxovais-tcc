@@ -28,13 +28,22 @@ describe('Administrative page headers', () => {
     const host = render('/admin/products/manage');
     expect(host.querySelector('app-admin-page-header h1')?.textContent).toBe('Cadastrar produto');
     expect(host.querySelector('app-admin-page-header header.compact')).not.toBeNull();
-    expect(host.querySelector('app-admin-page-header nav a')?.getAttribute('href')).toBe('/admin/catalog/categories');
+    expect(host.querySelector('app-admin-page-header nav a')?.getAttribute('href')).toBe('/admin/products');
     expect(host.querySelector('.admin-search')).toBeNull();
   });
+  it('links Products directly to its listing without a duplicate creation submenu', () => {
+    const host = render('/admin/products/manage');
+    expect(host.querySelector('nav > a[routerlink="/admin/products"]')).not.toBeNull();
+    expect(host.querySelector('nav a[routerlink="/admin/products/manage"]')).toBeNull();
+    expect(host.querySelectorAll('summary').length).toBe(1);
+    expect(host.querySelector('summary')?.textContent).toContain('Cadastros');
+    expect(host.querySelector('nav')?.textContent).not.toContain('Listagem');
+  });
+  it('keeps Reports enabled with its required shared header',()=>{const host=render('/admin/reports');expect(host.querySelector('h1')?.textContent).toBe('Relatórios');expect(host.textContent).toContain('Consulte e analise os resultados da loja por período.');expect(host.querySelector('a[href="/admin/reports"]')).not.toBeNull();expect(host.querySelectorAll('app-admin-page-header').length).toBe(1);});
   it('preserves native disclosure controls and active route semantics', () => {
     const host = render('/admin/catalog/categories');
-    const summary = host.querySelectorAll('summary')[1];
-    expect(summary.parentElement?.hasAttribute('open')).toBeTrue();
+    const summary = host.querySelector('summary');
+    expect(summary?.parentElement?.hasAttribute('open')).toBeTrue();
     expect(host.querySelector('nav a[routerlink="/admin/catalog/categories"]')).not.toBeNull();
     expect(host.querySelector('app-admin-page-header')).toBeNull();
   });

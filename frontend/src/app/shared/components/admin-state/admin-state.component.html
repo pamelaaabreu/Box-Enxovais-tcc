@@ -1,0 +1,13 @@
+
+    <section class="state" [class.page]="layout === 'page'" [class.compact]="layout === 'compact'" [attr.role]="kind === 'error' ? 'alert' : 'status'" [attr.aria-busy]="kind === 'loading'">
+      <span class="state-icon" aria-hidden="true">@if (icon.includes('shopping') && kind === 'empty') {
+        <svg viewBox="0 0 48 48" [attr.width]="layout === 'page' ? 47 : 36" [attr.height]="layout === 'page' ? 47 : 36" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17h24l-2 22H14l-2-22Z" /><path d="M18 19v-7a6 6 0 0 1 12 0v7" /></svg>
+      } @else {<lucide-icon [img]="stateIcon" [size]="layout === 'page' ? 47 : 36" [strokeWidth]="1.5" />}</span>
+      <h2>{{ title }}</h2>
+      @if (description) { <p>{{ description }}</p> }
+      @if (actionLabel) {
+        @if (actionLink) { <a [routerLink]="actionLink">{{ actionLabel }} <span aria-hidden="true">→</span></a> }
+        @else { <button type="button" (click)="action.emit()">{{ actionLabel }}</button> }
+      }
+    </section>
+  

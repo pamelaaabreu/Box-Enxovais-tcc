@@ -55,6 +55,10 @@ describe('CheckoutSuccessComponent', () => {
     expect(page.textContent).toContain('Seu pedido foi realizado!');
     expect(Array.from(page.querySelectorAll('.success-actions a'), link => link.getAttribute('href')))
       .toEqual(['/meus-pedidos/7', '/home']);
+    http.expectOne('http://localhost:8080/orders/7/review').flush(null);
+    fixture.detectChanges();
+    expect(page.querySelectorAll('app-purchase-review input[type=radio]').length).toBe(5);
+    expect(page.textContent).toContain('Conte como foi sua experiência');
     http.expectNone(request => request.method === 'POST');
     http.verify();
   });

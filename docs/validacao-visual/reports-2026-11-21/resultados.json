@@ -1,0 +1,114 @@
+{
+  "results": [
+    {
+      "name": "Login real e entrada Relatórios com cabeçalho único",
+      "passed": true
+    },
+    {
+      "name": "Vendas, produtos históricos, clientes e estoque correspondem aos dados reais isolados",
+      "passed": true
+    },
+    {
+      "name": "Autorização de consultas e exportações, sem exportação de clientes",
+      "passed": true
+    },
+    {
+      "name": "Layout sales 1440",
+      "passed": true
+    },
+    {
+      "name": "Layout products 1440",
+      "passed": true
+    },
+    {
+      "name": "Layout customers 1440",
+      "passed": true
+    },
+    {
+      "name": "Layout stock 1440",
+      "passed": true
+    },
+    {
+      "name": "Layout sales 1024",
+      "passed": true
+    },
+    {
+      "name": "Layout products 1024",
+      "passed": true
+    },
+    {
+      "name": "Layout customers 1024",
+      "passed": true
+    },
+    {
+      "name": "Layout stock 1024",
+      "passed": true
+    },
+    {
+      "name": "Layout sales 768",
+      "passed": true
+    },
+    {
+      "name": "Layout products 768",
+      "passed": true
+    },
+    {
+      "name": "Layout customers 768",
+      "passed": true
+    },
+    {
+      "name": "Layout stock 768",
+      "passed": true
+    },
+    {
+      "name": "Layout sales 390",
+      "passed": true
+    },
+    {
+      "name": "Layout products 390",
+      "passed": true
+    },
+    {
+      "name": "Layout customers 390",
+      "passed": true
+    },
+    {
+      "name": "Layout stock 390",
+      "passed": true
+    },
+    {
+      "name": "Paginação real, busca, status, ordenação, limpeza e URL",
+      "passed": true
+    },
+    {
+      "name": "Todos os períodos e período vazio preservam estoque atual",
+      "passed": true
+    },
+    {
+      "name": "Seleção de períodos pela interface e restauração de datas",
+      "passed": true
+    },
+    {
+      "name": "CSV completo, filtrado, com acentos e proteção contra fórmulas, sem PII",
+      "passed": true
+    },
+    {
+      "name": "Estado vazio nos quatro relatórios",
+      "passed": true
+    },
+    {
+      "name": "Carregamento, falha HTTP e recuperação",
+      "passed": true
+    },
+    {
+      "name": "Cancelamento de consulta obsoleta",
+      "passed": true
+    },
+    {
+      "name": "Teclado e links para pedidos e clientes",
+      "passed": true
+    }
+  ],
+  "pageErrors": [],
+  "notes": "Dados e navegação reais em PostgreSQL isolado. HTTP 503 e espera injetados somente para recuperação/cancelamento. Screenshots finais desktop/mobile; navegação também em 1024/768."
+}

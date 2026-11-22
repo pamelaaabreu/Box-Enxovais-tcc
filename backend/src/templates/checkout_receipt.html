@@ -375,6 +375,7 @@
                       "
                     >
                       {{money .Order.Total}}
+ {{if .Order.Installments}}<p>Pagamento em {{.Order.Installments}} parcela(s), sem juros.</p><p>{{range .Order.InstallmentAmounts}}{{money .}} · {{end}}</p>{{end}}
                     </td>
                   </tr>
                 </table>

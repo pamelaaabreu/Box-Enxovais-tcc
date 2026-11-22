@@ -3,7 +3,7 @@
     <section class="checkout checkout-flow" aria-labelledby="checkout-title">
       <h1 id="checkout-title">Pedido registrado</h1>
       @if (error()) {
-        <p class="error" role="alert">{{ error() }}</p>
+        <app-inline-notice>{{ error() }}</app-inline-notice>
       }
       <button
         type="button"
@@ -39,10 +39,10 @@
         }
       </ol>
       @if (error()) {
-        <p role="alert" class="error">{{ error() }}</p>
+        <app-inline-notice>{{ error() }}</app-inline-notice>
       }
       @if (cart.error()) {
-        <p role="alert" class="error">
+        <app-inline-notice>
           {{ cart.error() }}
           <button
             type="button"
@@ -52,7 +52,7 @@
           >
             Tentar novamente
           </button>
-        </p>
+        </app-inline-notice>
       }
       @if (cart.loading()) {
         <p role="status" class="muted">Atualizando carrinho…</p>
@@ -65,21 +65,34 @@
           @if (step() === 1) {
             <h2>Informações de entrega</h2>
             <form id="delivery-form" [formGroup]="address" (ngSubmit)="next()">
-              @if (savedAddresses().length) {
-                <mat-form-field class="saved-address-select box-form-field" appearance="outline">
-                  <mat-label>Endereço de entrega</mat-label>
-                  <mat-select id="saved-delivery-address" panelClass="box-form-options" [value]="selectedAddressId()" (selectionChange)="selectedAddressId.set($event.value)">
-                    <mat-option [value]="0">Preencher novo endereço</mat-option>
-                    @for (item of savedAddresses(); track item.id) {
-                      <mat-option [value]="item.id">{{ item.label }} · {{ item.street }}, {{ item.number }}{{ item.isDefault ? ' (padrão)' : '' }}</mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-              }
-              @if (selectedAddress(); as saved) {
-                <p>{{ saved.recipient }} · {{ saved.street }}, {{ saved.number }} {{ saved.complement }}<br>
-                   {{ saved.neighborhood }} · {{ saved.city }} / {{ saved.state }} · {{ saved.zipCode }}</p>
+              @if (addressesLoading()) {
+                <p class="muted" role="status">Carregando seus endereços…</p>
+              } @else if (addressesError()) {
+                <app-inline-notice>{{ addressesError() }}
+                  <button type="button" class="text-button" (click)="retryAddresses()">Tentar novamente</button>
+                </app-inline-notice>
               } @else {
+              @if (savedAddresses().length) {
+                <fieldset class="address-options">
+                  <legend>Selecione o endereço de entrega</legend>
+                  @for (item of savedAddresses(); track item.id) {
+                    <label class="saved-address-card" [class.selected]="selectedAddressId() === item.id">
+                      <input type="radio" name="delivery-address" [checked]="selectedAddressId() === item.id" (change)="selectAddress(item.id)">
+                      <span class="address-copy"><strong>{{ item.label }} @if (item.isDefault) { <span class="default-address">Padrão</span> }</strong>
+                        <span>{{ item.recipient }}</span>
+                        <span>{{ item.street }}, {{ item.number }}{{ item.complement ? ' — ' + item.complement : '' }}</span>
+                        <span>{{ item.neighborhood }} · {{ item.city }} / {{ item.state }}</span>
+                        <span>CEP {{ item.zipCode.slice(0, 5) }}-{{ item.zipCode.slice(-3) }}</span>
+                      </span>
+                    </label>
+                  }
+                  <label class="saved-address-card other-address" [class.selected]="selectedAddressId() === 0">
+                    <input type="radio" name="delivery-address" [checked]="selectedAddressId() === 0" (change)="selectAddress(0)">
+                    <span>Usar outro endereço</span>
+                  </label>
+                </fieldset>
+              }
+              @if (!selectedAddress()) {
               <div class="fields">
                 @for (field of fields; track field.key) {
                   <div class="field" [class]="'field field-' + field.key">
@@ -109,7 +122,7 @@
                       address.get(field.key)?.touched &&
                       address.get(field.key)?.invalid
                     ) {
-                      <small class="error" [id]="field.key + '-error'">{{
+                      <small class="error box-field-error" [id]="field.key + '-error'">{{
                         field.key === "zipCode"
                           ? "Informe um CEP com 8 dígitos."
                           : "Preencha " +
@@ -143,27 +156,27 @@
                       readonly
                     />
                   } @else {
-                    <select
+                    <mat-select
                       id="state"
                       formControlName="state"
-                      autocomplete="address-level1"
+                      panelClass="box-form-options" aria-label="Estado"
                       [attr.aria-invalid]="
                         address.controls.state.touched &&
                         address.controls.state.invalid
                       "
                       aria-describedby="state-error"
                     >
-                      <option value="">Selecione</option>
+                      <mat-option value="">Selecione</mat-option>
                       @for (state of states; track state) {
-                        <option [value]="state">{{ state }}</option>
+                        <mat-option [value]="state">{{ state }}</mat-option>
                       }
-                    </select>
+                    </mat-select>
                   }
                   @if (
                     address.controls.state.touched &&
                     address.controls.state.invalid
                   ) {
-                    <small id="state-error" class="error"
+                    <small id="state-error" class="error box-field-error"
                       >Selecione o estado.</small
                     >
                   }
@@ -187,18 +200,27 @@
               }
                 <label class="save-delivery-address">
                   <input type="checkbox" [formControl]="saveAddress">
-                  Salvar este endereço na minha conta
+                  <span>Salvar este endereço na minha conta</span>
                 </label>
               }
+              <div class="delivery-coverage">
+                @if (coverageLoading()) { <p class="muted" role="status">Verificando cobertura de entrega…</p> }
+                @else if (coverageMessage()) {
+                  <app-inline-notice>{{ coverageMessage() }}
+                    <button type="button" class="text-button" (click)="checkCoverage()">Consultar entrega novamente</button>
+                  </app-inline-notice>
+                } @else if (deliveryCovered()) { <p class="muted" role="status">Entrega disponível para este CEP.</p> }
+              </div>
               <div class="field delivery-choice">
                 <label for="checkout-contact-phone">Telefone para contato</label>
                 <input id="checkout-contact-phone" type="tel" mask="(00) 0000-0000||(00) 00000-0000" [dropSpecialCharacters]="false" autocomplete="tel" maxlength="25"
                   [formControl]="contactPhone" [attr.aria-invalid]="contactPhone.touched && contactPhone.invalid"
                   [attr.aria-describedby]="contactPhone.touched && contactPhone.invalid ? 'checkout-phone-error' : null">
                 @if (contactPhone.touched && contactPhone.invalid) {
-                  <small id="checkout-phone-error" class="error">Informe um telefone válido com DDD.</small>
+                  <small id="checkout-phone-error" class="error box-field-error">Informe um telefone válido com DDD.</small>
                 }
               </div>
+              }
             </form>
             <footer class="stage-footer">
               <a routerLink="/cart" class="back-link"
@@ -271,29 +293,15 @@
                     </span>
                   </label>
                   @if (method === "card" && payment.value === "card") {
-                    <div class="card-demo">
-                      <div class="card-demo-content">
-                        <p>Dados fictícios para demonstração</p>
-                        <dl>
-                          <div class="card-demo-wide">
-                            <dt>Nome no cartão</dt>
-                            <dd>CLIENTE TESTE</dd>
-                          </div>
-                          <div class="card-demo-wide">
-                            <dt>Número do cartão</dt>
-                            <dd>•••• •••• •••• 1234</dd>
-                          </div>
-                          <div>
-                            <dt>Validade</dt>
-                            <dd>12/30</dd>
-                          </div>
-                          <div>
-                            <dt>CVV</dt>
-                            <dd>•••</dd>
-                          </div>
-                        </dl>
+                    <div class="card-demo"><div class="card-demo-content">
+                      <p>Pagamento demonstrativo. Nenhum dado de cartão é solicitado.</p>
+                      <div class="field"><label for="checkout-installments">Parcelamento sem juros</label>
+                        <select id="checkout-installments" [formControl]="installments">
+                          @for(n of installmentOptions;track n){<option [ngValue]="n">{{n}} parcela{{n===1?'':'s'}} — {{planLabel(n)}}</option>}
+                        </select>
+                        @if(installments.touched && installments.invalid){<small class="error box-field-error">Selecione de 1 a 6 parcelas.</small>}
                       </div>
-                    </div>
+                    </div></div>
                   }
                 </div>
               }
@@ -392,11 +400,11 @@
                   }
                 }
                 <span class="review-payment-copy">
-                  <strong>{{ paymentLabels[payment.value] }}</strong>
+                  <strong>{{ paymentLabels[payment.value] }}</strong><span>{{planLabel()}}</span>
                   <span class="muted">
                     {{
                       payment.value === "card"
-                        ? "Mastercard terminando em 1234"
+                        ? "Cartão demonstrativo, sem cobrança real"
                         : payment.value === "pix"
                           ? "Pagamento à vista"
                           : "Pagamento em parcela única"
@@ -481,7 +489,7 @@
                     </div>
                   }
                   @if (!item.available) {
-                    <small class="error"
+                    <small class="error box-field-error"
                       >Quantidade indisponível. Ajuste seu carrinho.</small
                     >
                   }
@@ -496,10 +504,12 @@
                 cart.total() | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
               }}</span>
             </p>
+            <p class="price-line"><span>Frete</span><span>@if (deliveryCovered() && deliveryQuote(); as quote) {{{ quote.priceCents / 100 | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR" }}} @else {A calcular}</span></p>
+            @if (deliveryCovered() && deliveryQuote(); as quote) {<p class="muted">Entrega · {{quote.minDays}} a {{quote.maxDays}} dias úteis</p>}
             <p class="price-line grand-total" aria-live="polite">
               <strong>Total</strong
               ><strong>{{
-                cart.total() | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                checkoutTotal() | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
               }}</strong>
             </p>
           </div>
@@ -509,7 +519,7 @@
               [type]="step() === 1 ? 'submit' : 'button'"
               [attr.form]="step() === 1 ? 'delivery-form' : null"
               (click)="step() === 3 ? confirm() : step() === 2 ? next() : null"
-              [disabled]="busy() || !ready() || !!order()"
+              [disabled]="busy() || !ready() || !!order() || addressesLoading() || !!addressesError() || (step() === 1 && (coverageLoading() || !deliveryCovered()))"
             >
               @if (busy() || cart.busy()) {
                 <span class="loading-dot" aria-hidden="true"></span>

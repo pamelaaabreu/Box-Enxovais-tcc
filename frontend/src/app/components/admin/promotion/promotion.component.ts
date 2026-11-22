@@ -6,6 +6,6 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './promotion.component.html',
-  styleUrl: './promotion.component.css',
+  styleUrl: './promotion.component.scss',
 })
 export class PromotionComponent {}

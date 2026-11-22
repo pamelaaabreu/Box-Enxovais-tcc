@@ -6,7 +6,7 @@ describe('ProductPrice storefront', () => {
     const fixture = TestBed.createComponent(ProductPriceComponent);
     fixture.componentRef.setInput('price', 299.9);
     fixture.detectChanges();
-    const text = () => [...fixture.nativeElement.children].map((element: any) => element.textContent.trim()).join(' ').replace(/\s+/g, ' ');
+    const text = () => [...fixture.nativeElement.children].map((element: HTMLElement) => element.textContent?.trim()).join(' ').replace(/\s+/g, ' ');
     expect(text()).toBe('R$ 299,90 ou 4x de R$ 74,98 sem juros');
     expect(fixture.nativeElement.querySelector('del, .discount')).toBeNull();
     fixture.componentRef.setInput('price', 400);

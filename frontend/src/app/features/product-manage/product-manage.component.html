@@ -1,10 +1,10 @@
 <section
   class="manage-container"
   [class.with-summary]="selectedTabIndex === 0"
-  aria-label="Cadastrar produto"
+  [attr.aria-label]="editId ? 'Editar produto' : 'Cadastrar produto'"
 >
-  @if (productId) {
-    <app-product-sku [productId]="productId" />
+  @if (productId && selectedTabIndex === 1) {
+    <div class="saved-product-info"><app-product-sku [productId]="productId" /><a class="image-note" [routerLink]="['/admin/products',productId,'variants']">Gerenciar variações</a></div>
   }
   <mat-tab-group
     [(selectedIndex)]="selectedTabIndex"
@@ -19,6 +19,9 @@
       }
       <app-product-create
         [externalSummary]="true"
+        [editId]="editId"
+        (productUpdated)="onProductUpdated()"
+        (productLoaded)="onProductLoaded($event)"
         [previewImage]="previewImage"
         (productCreated)="onProductCreated($event)"
       />
@@ -34,6 +37,9 @@
         <div class="tab-content">
           <app-product-image-upload
             [productId]="id"
+            [showComplete]="true"
+            [editing]="!!editId"
+            (completed)="complete()"
             (coverChanged)="previewImage = $event"
           />
         </div>

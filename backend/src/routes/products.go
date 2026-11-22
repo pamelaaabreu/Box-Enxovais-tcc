@@ -7,6 +7,14 @@ import (
 )
 
 func InitRoutesProducts(mux *http.ServeMux, products handlers.ProductHandler, images handlers.ProductImageHandler) {
+	for _, method := range []string{http.MethodGet, http.MethodPatch, http.MethodDelete} {
+		adminRoute(mux, method, method+" /admin/products/{id}", products.AdminProduct)
+	}
+	adminRoute(mux, http.MethodGet, "GET /admin/products/{id}/images", images.AdminImages)
+	adminRoute(mux, http.MethodPut, "PUT /admin/products/{id}/images", images.AdminImages)
+	adminRoute(mux, http.MethodDelete, "DELETE /admin/products/{id}/images/{imageId}", images.AdminImages)
+
+	adminRoute(mux, http.MethodPut, "PUT /admin/products/{id}/variants", products.SaveProductVariants)
 	adminRoute(mux, http.MethodGet, "GET /admin/products", products.ListAdminProducts)
 	for path, kind := range map[string]repositories.CatalogKind{"categories": repositories.Categories, "brands": repositories.Brands} {
 		base := "/admin/catalog/" + path
@@ -18,6 +26,12 @@ func InitRoutesProducts(mux *http.ServeMux, products handlers.ProductHandler, im
 	}
 	adminRoute(mux, http.MethodGet, "GET /admin/products/brands", products.ListProductBrands)
 	adminRoute(mux, http.MethodGet, "GET /admin/dashboard", products.GetDashboard)
+	for _, kind := range []string{"sales", "products", "customers", "stock"} {
+		adminRoute(mux, http.MethodGet, "GET /admin/reports/"+kind, products.Report(kind, false))
+		if kind != "customers" {
+			adminRoute(mux, http.MethodGet, "GET /admin/reports/"+kind+"/export", products.Report(kind, true))
+		}
+	}
 	publicRoute(mux, http.MethodGet, "GET /products", products.ListProducts)
 	publicRoute(mux, http.MethodGet, "GET /products/categories", products.ListProductTypes)
 	adminRoute(mux, http.MethodPost, "/upload-image", images.UploadProductImage)

@@ -1,0 +1,118 @@
+{
+  "results": [
+    {
+      "name": "Login real, sidebar Clientes e cabeçalho único",
+      "passed": true
+    },
+    {
+      "name": "Indicadores excluem administradores e usam pedidos reais",
+      "passed": true
+    },
+    {
+      "name": "Paginação, ordenação e atualização de página",
+      "passed": true
+    },
+    {
+      "name": "Pesquisa por nome e e-mail via formulário real",
+      "passed": true
+    },
+    {
+      "name": "Autorização, IDs inválidos e módulo exclusivamente consulta",
+      "passed": true
+    },
+    {
+      "name": "Listagem responsiva 1440",
+      "passed": true
+    },
+    {
+      "name": "Cadastro, endereços e totais históricos 1440",
+      "passed": true
+    },
+    {
+      "name": "Cliente sem compras e endereços 1440",
+      "passed": true
+    },
+    {
+      "name": "Pesquisa vazia e recuperação 1440",
+      "passed": true
+    },
+    {
+      "name": "Listagem responsiva 1024",
+      "passed": true
+    },
+    {
+      "name": "Cadastro, endereços e totais históricos 1024",
+      "passed": true
+    },
+    {
+      "name": "Cliente sem compras e endereços 1024",
+      "passed": true
+    },
+    {
+      "name": "Pesquisa vazia e recuperação 1024",
+      "passed": true
+    },
+    {
+      "name": "Listagem responsiva 768",
+      "passed": true
+    },
+    {
+      "name": "Cadastro, endereços e totais históricos 768",
+      "passed": true
+    },
+    {
+      "name": "Cliente sem compras e endereços 768",
+      "passed": true
+    },
+    {
+      "name": "Pesquisa vazia e recuperação 768",
+      "passed": true
+    },
+    {
+      "name": "Listagem responsiva 390",
+      "passed": true
+    },
+    {
+      "name": "Cadastro, endereços e totais históricos 390",
+      "passed": true
+    },
+    {
+      "name": "Cliente sem compras e endereços 390",
+      "passed": true
+    },
+    {
+      "name": "Pesquisa vazia e recuperação 390",
+      "passed": true
+    },
+    {
+      "name": "Histórico pertence ao cliente, pagina e mostra cancelados",
+      "passed": true
+    },
+    {
+      "name": "Cliente com um pedido mantém o ID correto",
+      "passed": true
+    },
+    {
+      "name": "Cliente inexistente e retorno",
+      "passed": true
+    },
+    {
+      "name": "Carregamento com resposta real temporariamente aguardada",
+      "passed": true
+    },
+    {
+      "name": "Falha 503 injetada e retry real",
+      "passed": true
+    },
+    {
+      "name": "Erro isolado no histórico preserva cadastro e permite retry",
+      "passed": true
+    },
+    {
+      "name": "Navegação de teclado e ausência de erros Angular",
+      "passed": true
+    }
+  ],
+  "pageErrors": [],
+  "networkFaults": "503 injetados apenas para conferir recuperação; consultas e navegação restantes usam a API real e PostgreSQL isolado."
+}

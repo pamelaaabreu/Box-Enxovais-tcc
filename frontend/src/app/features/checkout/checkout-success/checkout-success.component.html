@@ -19,6 +19,7 @@
             </div>
           </div>
 
+          @if(approved.installments){<p class="muted">{{planLabel(approved)}}</p>}
           <p class="demo-note">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5 M12 8h.01"/></svg>
             <span>Compra demonstrativa. Nenhuma cobrança foi realizada.</span>
@@ -29,6 +30,7 @@
           </div>
         </div>
       </div>
+      <app-purchase-review [orderId]="approved.id" />
     } @else if (notFound()) {
       <div class="lookup-state">
         <h1 id="success-title">Pedido não encontrado</h1>

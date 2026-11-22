@@ -15,6 +15,7 @@ import (
 
 func TestShippingRangesPostgres(t *testing.T) {
 	db, exec := checkoutTestDB(t)
+	exec("DROP TABLE shipping_ranges")
 	migration, err := os.ReadFile("../../migrations/000012_shipping_ranges.up.sql")
 	if err != nil {
 		t.Fatal(err)

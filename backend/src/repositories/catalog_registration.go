@@ -10,10 +10,7 @@ import (
 
 var ErrDuplicateCatalogName = errors.New("duplicate catalog name")
 
-type CatalogRegistration struct {
-	models.ProductType
-	ProductCount int64 `json:"productCount"`
-}
+type CatalogRegistration = models.CatalogRegistration
 
 type CatalogKind bool
 
@@ -29,16 +26,28 @@ func (kind CatalogKind) columns() (string, string) {
 	return "product_types", "product_type_id"
 }
 
-func (repo ProductRepository) ListRegistrations(ctx context.Context, kind CatalogKind) ([]CatalogRegistration, error) {
+func (repo ProductRepository) ListRegistrations(ctx context.Context, kind CatalogKind) ([]models.CatalogRegistration, error) {
 	table, column := kind.columns()
-	rows, err := repo.DB.QueryContext(ctx, fmt.Sprintf("SELECT c.id,c.name,count(p.id) FROM %s c LEFT JOIN products p ON p.%s=c.id GROUP BY c.id,c.name ORDER BY lower(c.name),c.id", table, column))
+	rows, err := repo.DB.QueryContext(ctx, fmt.Sprintf(`SELECT
+    c.id,
+    c.name,
+    count(p.id)
+FROM %s c
+LEFT JOIN products p
+    ON p.%s = c.id
+GROUP BY
+    c.id,
+    c.name
+ORDER BY
+    lower(c.name),
+    c.id`, table, column))
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	result := []CatalogRegistration{}
+	result := []models.CatalogRegistration{}
 	for rows.Next() {
-		var entry CatalogRegistration
+		var entry models.CatalogRegistration
 		if err := rows.Scan(&entry.ID, &entry.Name, &entry.ProductCount); err != nil {
 			return nil, err
 		}
@@ -60,12 +69,20 @@ func (repo ProductRepository) SaveRegistration(ctx context.Context, kind Catalog
 	}
 	if id > 0 {
 		var found int
-		if err = tx.QueryRowContext(ctx, "SELECT id FROM "+table+" WHERE id=$1", id).Scan(&found); err != nil {
+		if err = tx.QueryRowContext(ctx, `SELECT id
+FROM
+`+table+`
+WHERE id = $1`, id).Scan(&found); err != nil {
 			return models.ProductType{}, err
 		}
 	}
 	var duplicate bool
-	err = tx.QueryRowContext(ctx, "SELECT EXISTS (SELECT 1 FROM "+table+" WHERE lower(regexp_replace(btrim(name),'[[:space:]]+',' ','g'))=lower($1) AND id<>$2)", name, id).Scan(&duplicate)
+	err = tx.QueryRowContext(ctx, `SELECT EXISTS (
+SELECT 1
+FROM
+`+table+`
+WHERE lower(regexp_replace(btrim(name), '[[:space:]]+', ' ', 'g')) = lower($1)
+    AND id <> $2)`, name, id).Scan(&duplicate)
 	if err != nil {
 		return models.ProductType{}, err
 	}
@@ -74,9 +91,12 @@ func (repo ProductRepository) SaveRegistration(ctx context.Context, kind Catalog
 	}
 	entry := models.ProductType{ID: id, Name: name}
 	if id == 0 {
-		err = tx.QueryRowContext(ctx, "INSERT INTO "+table+" (name) VALUES ($1) RETURNING id", name).Scan(&entry.ID)
+		err = tx.QueryRowContext(ctx, `INSERT INTO
+`+table+" (name) VALUES ($1) RETURNING id", name).Scan(&entry.ID)
 	} else {
-		_, err = tx.ExecContext(ctx, "UPDATE "+table+" SET name=$1 WHERE id=$2", name, id)
+		_, err = tx.ExecContext(ctx, `UPDATE
+`+table+`
+SET name=$1 WHERE id=$2`, name, id)
 	}
 	if err != nil {
 		return models.ProductType{}, err
@@ -86,7 +106,9 @@ func (repo ProductRepository) SaveRegistration(ctx context.Context, kind Catalog
 
 func (repo ProductRepository) DeleteRegistration(ctx context.Context, kind CatalogKind, id int) error {
 	table, _ := kind.columns()
-	result, err := repo.DB.ExecContext(ctx, "DELETE FROM "+table+" WHERE id=$1", id)
+	result, err := repo.DB.ExecContext(ctx, `DELETE
+FROM `+table+`
+WHERE id = $1`, id)
 	if err != nil {
 		return err
 	}

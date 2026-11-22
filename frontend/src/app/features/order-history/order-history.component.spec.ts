@@ -108,7 +108,7 @@ describe('OrderHistoryComponent', () => {
       .flush({ data: { orders: [], hasMore: false } });
     fixture.detectChanges();
     expect(page.textContent).toContain('Nenhum pedido encontrado');
-    page.querySelector<HTMLButtonElement>('.state .clear-filters')!.click();
+    page.querySelector<HTMLButtonElement>('app-admin-state .state button')!.click();
     http.expectOne(url).flush({ data: { orders: [], hasMore: false } });
     fixture.detectChanges();
     expect(page.querySelector('.empty')).not.toBeNull();

@@ -1,17 +1,18 @@
 # Box Enxovais — arquitetura do projeto
 
-E-commerce desenvolvido como evolução de um projeto de TCC. O repositório reúne uma aplicação Angular, uma API HTTP em Go e um banco PostgreSQL. Atualmente, os fluxos mais completos são autenticação, administração de produtos e promoções, upload de imagens e newsletter; catálogo, carrinho, checkout e relatórios ainda estão parciais.
+E-commerce desenvolvido como evolução de um projeto de TCC. O repositório reúne uma aplicação Angular, uma API HTTP em Go e um banco PostgreSQL. Os fluxos implementados incluem autenticação, catálogo, favoritos, carrinho, checkout demonstrativo, administração de produtos/promoções/pedidos e consulta administrativa de clientes. Resultados, limites e evidências estão em [AUDITORIA_FINAL.md](AUDITORIA_FINAL.md).
+
+O [guia completo para a defesa do TCC](docs/GUIA_COMPLETO_TCC/README.md) explica arquitetura, fluxos, segurança e testes. As migrations 52 e 53 permanecem pendentes de aplicação autorizada no banco principal.
 
 ## Visão geral
 
 ```mermaid
 flowchart LR
-    U[Usuário no navegador] -->|SPA / SSR| F[Frontend Angular 19]
+    U[Usuário no navegador] -->|SPA| F[Frontend Angular 19]
     F -->|HTTP + JSON / Bearer JWT| API[API Go :8080]
     API -->|database/sql + lib/pq| DB[(PostgreSQL)]
     API -->|leitura e gravação| FS[(backend/uploads)]
     API -->|SMTP| SMTP[Servidor de e-mail]
-    API -->|API HTTP| SG[SendGrid]
 ```
 
 O frontend roda por padrão em `http://localhost:4200` e consome o backend em `http://localhost:8080`. A API permite CORS apenas para essa origem e publica `backend/uploads` em `/uploads/`.
@@ -21,17 +22,17 @@ O frontend roda por padrão em `http://localhost:4200` e consome o backend em `h
 | Camada | Tecnologias principais |
 | --- | --- |
 | Frontend | Angular 19, TypeScript 5.7, RxJS, Router, Bootstrap 5, SweetAlert2, Lucide e ngx-mask |
-| Backend | Go 1.24, `net/http`, `database/sql` e PostgreSQL/lib/pq |
+| Backend | Go 1.26.11, `net/http`, `database/sql` e PostgreSQL/lib/pq |
 | Segurança | JWT HS256, bcrypt, guards Angular e middlewares de autenticação/autorização |
-| Integrações | SendGrid para newsletter e SMTP/Gomail para recuperação de senha |
+| Integrações | SMTP/Gomail para newsletter e recuperação de senha |
 | Banco | PostgreSQL e migrações com golang-migrate |
 
-Gorilla Mux consta no `go.mod`, mas o roteamento atual utiliza `http.ServeMux`.
+O roteamento atual utiliza `http.ServeMux` da biblioteca padrão. O build ativo do Angular é de navegador; SSR não está habilitado.
 
 ## Organização do repositório
 
 ```text
-Box-Enxovais-v1/
+Box-Enxovais-tcc/
 ├── frontend/
 │   ├── public/                 # imagens e arquivos estáticos
 │   └── src/app/
@@ -76,9 +77,11 @@ A aplicação é formada majoritariamente por componentes standalone carregados 
 
 Rotas administrativas usam `AdminGuard`, que decodifica o JWT, verifica expiração e exige role `admin`:
 
-- `/admin/dashboard`
+- `/admin/dashboard` e `/admin/metrics` (indicadores e gráficos com filtro de período)
 - `/admin/products` e `/admin/products/manage`
-- `/admin/promotions/create` e `/admin/promotions/add-product`
+- `/admin/promotions`, `/admin/promotions/new` e `/admin/promotions/:id/edit`
+- `/admin/orders` e `/admin/orders/:id`
+- `/admin/customers` e `/admin/customers/:id` (somente consulta)
 - `/admin/reports`
 - `/product-register`, `/image-upload/:id`, `/promotion-register` e `/add-to-promotion` são atalhos standalone também protegidos.
 
@@ -87,8 +90,8 @@ O token, nome, e-mail e role ficam no `sessionStorage`. O interceptor inclui `Au
 ### Serviços e estado
 
 - `AuthService`: cadastro, login, logout e recuperação de senha.
-- `ProductService`: criação e consulta individual; a vitrine agrega IDs fixos com `forkJoin`.
-- `PromoService`: criação, associação de produtos e consulta por nome.
+- `ProductService`: cadastro, edição, variantes, imagens e exclusão/arquivamento seguro; listagens utilizam filtros e paginação do backend.
+- `PromoService`: campanhas, participantes por nome/SKU, imagens e descontos.
 - `UploadService`: envio multipart de imagens.
 - `SweetAlertService` e `CustomAlertService`: feedback visual.
 
@@ -122,13 +125,16 @@ Rotas públicas passam pelo middleware de método. Rotas administrativas passam 
 | `POST` | `/login` | Público | Autentica e emite JWT válido por 2 horas |
 | `POST` | `/send-reset-token` | Público | Envia código de recuperação por SMTP |
 | `POST` | `/reset-password` | Público | Valida código e troca a senha |
-| `POST` | `/api/newsletter/subscribe` | Público | Envia cupom via SendGrid e persiste assinante |
+| `POST` | `/api/newsletter/subscribe` | Público | Envia confirmação por SMTP e persiste assinante, sem cupom não configurado |
 | `GET` | `/products/{id}` | Público | Retorna produto e imagens |
 | `GET` | `/api/promotions/{nome}` | Público | Lista produtos de uma promoção ativa |
 | `POST` | `/products` | Admin | Cria produto |
 | `POST` | `/upload-image` | Admin | Salva imagem e associa ao produto |
 | `POST` | `/api/promotions/create` | Admin | Cria promoção |
 | `POST` | `/api/promotions/add` | Admin | Associa produto e preço promocional |
+| `GET` | `/admin/customers`, `/admin/customers/{id}`, `/admin/customers/{id}/orders` | Admin | Consulta de clientes, endereços e histórico |
+| `GET` | `/admin/orders`, `/admin/orders/{id}` | Admin | Pedidos históricos paginados |
+| `POST` | `/admin/orders/{id}/cancel` | Admin | Cancelamento transacional com reposição |
 | `GET` | `/uploads/{arquivo}` | Público | Entrega imagem local |
 
 Existe um handler para `GET /validate-reset-token/{token}`, porém ele não está registrado. O frontend usa hoje o fluxo de código enviado por e-mail, e não o schema `password_resets` baseado em link.
@@ -158,7 +164,7 @@ Consulte `backend/migrations/README.md` antes de aplicar migrações, especialme
 - Go 1.24
 - PostgreSQL
 - golang-migrate
-- credenciais SMTP e/ou SendGrid para testar e-mails
+- credenciais SMTP para testar e-mails
 
 ### Ambiente do backend
 
@@ -171,7 +177,6 @@ DB_USER=...
 DB_PASSWORD=...
 DB_NAME=...
 JWT_SECRET=uma-chave-longa-e-aleatoria
-SENDGRID_API_KEY=...
 EMAIL=...
 EMAIL_KEY=...
 EMAIL_SMTP=...
@@ -227,29 +232,16 @@ npm test
 npm run build
 ```
 
-Os testes Go cobrem validação de cadastro, método HTTP e autorização administrativa. A cobertura dos fluxos de negócio e do frontend ainda é limitada.
+Os testes incluem Angular, HTTP/Go, integração PostgreSQL em schemas isolados e Playwright. Consulte [o roteiro de validação](docs/validacao-visual/README.md). Testes que escrevem dados não devem utilizar o schema principal.
 
 ## Limitações e decisões pendentes
 
-- URLs da API, CORS, portas e infraestrutura estão fixos para desenvolvimento local.
-- A aplicação não usa a mesma `DATABASE_URL` das migrações e contém credenciais no código.
-- Códigos de recuperação ficam em um `map` sem sincronização; reinícios os apagam e múltiplas instâncias não compartilham estado.
-- O código de recuperação válido não é removido após uso.
-- Uploads ficam no filesystem local, sem validação explícita de MIME/extensão e sem storage externo.
-- Vários handlers acessam `db.DB` diretamente; somente usuários têm uma camada inicial de repositório.
-- Respostas de erro alternam entre `APIResponse`, `ErrorResponse` e `http.Error`.
-- Não há listagem, edição ou remoção de produtos, paginação ou filtros de catálogo.
-- IDs de destaque e nomes de promoções estão fixos no frontend.
-- Links de categorias, produto, conta e pedidos não possuem rotas correspondentes.
-- Carrinho, checkout, dashboard e relatórios não têm regras completas.
-- Não há containers, CI/CD, observabilidade ou configuração de deploy.
+- URLs da API e configuração de desenvolvimento permanecem locais.
+- Checkout e dados comerciais do catálogo são demonstrativos para o TCC; não representam cobrança real.
+- Pedidos antigos não registram detalhamento separado de frete/desconto nem acompanhamento de envio/entrega.
+- Clientes administrativos são somente consulta. Relatórios ainda possui escopo pendente descrito na auditoria; Dashboard/Métricas utiliza indicadores e gráficos reais com filtros de período.
+- Kits de capas com estoque compartilhado precisam de modelagem de componentes antes da publicação.
+- SMTP depende das credenciais do ambiente. Testes com envio controlado não comprovam entrega real.
+- Deploy e observabilidade não foram revalidados durante a limpeza documental.
 
-## Próximos passos recomendados
-
-1. Externalizar banco, CORS, portas e URLs por ambiente.
-2. Remover segredos do histórico, trocar credenciais e usar um secret manager.
-3. Persistir códigos de recuperação no PostgreSQL, com uso único e expiração transacional.
-4. Padronizar respostas, validação, logging e camadas de serviço/repositório.
-5. Criar catálogo e concluir carrinho, checkout, pedidos e administração.
-6. Migrar uploads para object storage.
-7. Ampliar testes de integração, componentes e fluxos e2e.
+As migrations e os manifestos estruturados são a referência dos dados demonstrativos. Contratos permanentes ficam em docs; relatórios de etapas concluídas foram consolidados no AUDITORIA_FINAL.md. Artefatos intermediários usam `.artifacts/`, com retenção explícita das evidências finais.

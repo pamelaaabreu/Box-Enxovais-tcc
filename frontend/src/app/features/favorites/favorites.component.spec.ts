@@ -12,7 +12,7 @@ import { Product } from '../../shared/models';
 import { CatalogProduct } from '../catalog/interfaces/product.interface';
 
 @Component({ selector: 'app-catalog-layout', standalone: true, template: '<ng-content />' })
-class TestFavoritesLayout {}
+class TestFavoritesLayoutComponent {}
 
 const product = (id: number, overrides: Partial<Product> = {}): Product => ({id,name:'Produto '+id,price:100,quantity:8,status:'active',measurements:{},promotional_price:0,...overrides});
 const adapt = (p: Product): CatalogProduct => ({...p,id:p.id!,slug:String(p.id),active:p.status==='active',featured:false,description:p.description??'',category:{id:1,name:'Casa',slug:'casa'},images:[],variants:(p.variants??[]).map(v=>({...v,images:[]}))});
@@ -33,7 +33,7 @@ describe('Favorites page', () => {
   const cart={cart:()=>({items:[]}),pending:()=>new Set(),feedback:()=>({}),add:jasmine.createSpy('add')};
   const recommendations=jasmine.createSpy('recommendations').and.returnValue(of([]));
   TestBed.configureTestingModule({providers:[provideRouter([]),{provide:FavoritesService,useValue:favorites},{provide:CartService,useValue:cart},{provide:CatalogService,useValue:{adapt,getRecommendations:recommendations}}]});
-  TestBed.overrideComponent(FavoritesComponent,{remove:{imports:[CatalogLayoutComponent]},add:{imports:[TestFavoritesLayout]}});
+  TestBed.overrideComponent(FavoritesComponent,{remove:{imports:[CatalogLayoutComponent]},add:{imports:[TestFavoritesLayoutComponent]}});
   const fixture=TestBed.createComponent(FavoritesComponent);
   return {fixture,root:fixture.nativeElement as HTMLElement,favorites,cart,recommendations};
  }

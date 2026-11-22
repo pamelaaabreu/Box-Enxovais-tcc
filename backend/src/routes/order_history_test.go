@@ -43,6 +43,20 @@ func TestOrderHistoryPostgres(t *testing.T) {
     `); err != nil {
 		t.Fatal(err)
 	}
+	shipping, err := os.ReadFile("../../migrations/000051_order_shipping.up.sql")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = db.Exec(string(shipping)); err != nil {
+		t.Fatal(err)
+	}
+	installments, err := os.ReadFile("../../migrations/000053_checkout_installments.up.sql")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = db.Exec(string(installments)); err != nil {
+		t.Fatal(err)
+	}
 	cancellation, err := os.ReadFile("../../migrations/000007_order_cancellation.up.sql")
 	if err != nil {
 		t.Fatal(err)

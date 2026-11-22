@@ -1,0 +1,3 @@
+<p class="chart-summary">{{values().length}} {{values().length === 1 ? 'grupo' : 'grupos'}} · {{total()}} {{unit()}}</p>
+<app-chart [height]="height()" [options]="options()" [description]="title() + '. Valores disponíveis na tabela abaixo.'" />
+<details><summary>Ver valores de {{title().toLowerCase()}}</summary><table><caption class="visually-hidden">{{title()}}</caption><thead><tr><th>Descrição</th><th>Quantidade</th></tr></thead><tbody>@for(item of values(); track $index){<tr><td>{{item.name}}</td><td>{{item.value}}</td></tr>}</tbody></table></details>

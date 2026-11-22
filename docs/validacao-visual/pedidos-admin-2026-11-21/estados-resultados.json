@@ -1,0 +1,41 @@
+{
+  "results": [
+    {
+      "name": "Carregamento e resposta real 1440",
+      "passed": true
+    },
+    {
+      "name": "Erro injetado e retry real 1440",
+      "passed": true
+    },
+    {
+      "name": "Carregamento e resposta real 1024",
+      "passed": true
+    },
+    {
+      "name": "Erro injetado e retry real 1024",
+      "passed": true
+    },
+    {
+      "name": "Carregamento e resposta real 768",
+      "passed": true
+    },
+    {
+      "name": "Erro injetado e retry real 768",
+      "passed": true
+    },
+    {
+      "name": "Carregamento e resposta real 390",
+      "passed": true
+    },
+    {
+      "name": "Erro injetado e retry real 390",
+      "passed": true
+    },
+    {
+      "name": "HTTP 409 injetado mantém confirmação aberta e permite desistir",
+      "passed": true
+    }
+  ],
+  "errorResponses": "503 e 409 injetados no navegador, sem alteração do banco; carregamento e recuperação usam a API real."
+}
