@@ -83,10 +83,10 @@
       <div class="campaign-list-tools">
         <div class="campaign-filters" aria-label="Filtrar campanhas">
           @for (filter of campaignFilters; track filter) {
-            <button type="button" [class.active]="campaignFilter === filter" [attr.aria-pressed]="campaignFilter === filter" (click)="campaignFilter = filter">{{ filter }} <span>{{ campaignCount(filter) }}</span></button>
+            <button type="button" [class.active]="campaignFilter === filter" [attr.aria-pressed]="campaignFilter === filter" (click)="campaignFilter = filter; campaignPage = 1">{{ filter }} <span>{{ campaignCount(filter) }}</span></button>
           }
         </div>
-        <input type="search" aria-label="Buscar campanha" placeholder="Buscar campanha" [(ngModel)]="campaignSearch" />
+        <input type="search" aria-label="Buscar campanha" placeholder="Buscar campanha" [(ngModel)]="campaignSearch" (ngModelChange)="campaignPage = 1" />
       </div>
       <div class="table-scroll campaign-table">
         <table aria-label="Campanhas cadastradas">
@@ -107,7 +107,7 @@
           </thead>
 
           <tbody>
-            @for (campaign of visibleCampaigns; track campaign.id) {
+            @for (campaign of pagedCampaigns; track campaign.id) {
               <tr>
                 <td>
                   <strong>{{ campaign.name }}</strong>
@@ -154,6 +154,7 @@
           </tbody>
         </table>
       </div>
+      <app-pagination [page]="currentCampaignPage" [total]="visibleCampaigns.length" [pageSize]="campaignPageSize" (pageChange)="campaignPage = $event" label="Paginação de campanhas" />
     }
   } @else {
     <form #campaignForm="ngForm" (ngSubmit)="onSubmit()">

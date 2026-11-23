@@ -14,6 +14,7 @@ import { CustomAlertService } from '../../../core/services/custom-alert.service'
 })
 export class ProductSkuComponent implements OnChanges {
   @Input({ required: true }) productId!: number;
+  @Input() compact = false;
   private readonly products = inject(ProductService);
   private readonly clipboard = inject(Clipboard);
   private readonly alerts = inject(CustomAlertService);

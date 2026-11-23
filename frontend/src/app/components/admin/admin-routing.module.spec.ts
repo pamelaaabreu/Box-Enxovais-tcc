@@ -21,4 +21,12 @@ describe('Promotion management routes', () => {
     expect(routes.find(route => route.path === 'promotion-register')?.redirectTo).toBe('admin/promotions/new');
     expect(routes.find(route => route.path === 'add-to-promotion')?.redirectTo).toBe('admin/promotions');
   });
+  it('redirects the redundant metrics address to the existing dashboard', () => {
+    TestBed.configureTestingModule({imports: [AdminRoutingModule], providers: [provideRouter([])]});
+    const children = TestBed.inject(Router).config.find(route => route.children)?.children ?? [];
+    expect(children.find(route => route.path === 'metrics')?.redirectTo).toBe('dashboard');
+    expect(children.find(route => route.path === 'metrics')?.pathMatch).toBe('full');
+    expect(children.find(route => route.path === 'dashboard')?.component).toBeDefined();
+  });
+
 });

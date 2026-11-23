@@ -1,6 +1,7 @@
+import { AdminPageHeaderComponent } from '../../shared/components/admin-page-header/admin-page-header.component';
 import { Product } from '../../shared/models';
 import { isObservable, of, switchMap } from 'rxjs';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductSkuComponent } from '../../shared/components/product-sku/product-sku.component';
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, inject, viewChild } from '@angular/core';
@@ -15,7 +16,7 @@ import { ProductImageUploadComponent } from './images/product-image-upload/produ
 @Component({
   selector: 'app-product-manage',
   standalone: true,
-  imports: [RouterLink,ProductSkuComponent,
+  imports: [AdminPageHeaderComponent, ProductSkuComponent,
     NgTemplateOutlet,
     MatTabsModule,
     MatIconModule,
@@ -45,6 +46,7 @@ export class ProductManageComponent {
 
   productId: number | null = this.editId;
   previewImage = '';
+  productName = '';
 
   complete(): void {
     const gallery = this.gallery();
@@ -54,8 +56,12 @@ export class ProductManageComponent {
   }
 
   onProductLoaded(product:Product):void {
-    const path=product.image_paths?.[0];
-    this.previewImage=path ? (/^https?:\/\//.test(path) ? path : 'http://localhost:8080/'+path.replace(/^\/+/,'') ) : '';
+    // The child can emit synchronously during its initial view check.
+    queueMicrotask(() => {
+      this.productName = product.name;
+      const path = product.image_paths?.[0];
+      this.previewImage = path ? (/^https?:\/\//.test(path) ? path : 'http://localhost:8080/' + path.replace(/^\/+/, '')) : '';
+    });
   }
 
   onProductUpdated():void {
@@ -64,6 +70,7 @@ export class ProductManageComponent {
 
   onProductCreated(id: number): void {
     this.productId = id;
+    this.productName = this.createForm()?.fields.name.value || this.productName;
 
     // muda automaticamente para a aba de imagens
     this.selectedTabIndex = 1;

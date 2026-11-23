@@ -1,21 +1,16 @@
 <section class="reports" aria-label="Relatórios administrativos" [attr.aria-busy]="state()==='loading'">
 <nav class="report-tabs" aria-label="Tipo de relatório">@for(k of kinds;track k.value){<button type="button" [class.active]="kind()===k.value" [attr.aria-pressed]="kind()===k.value" (click)="select(k.value)">{{k.label}}</button>}</nav>
 @if(kind()!=='stock'){<app-period-filter [form]="filter" [showGrouping]="false" (applied)="apply()" />}
-<form class="toolbar" [class.with-status]="kind()==='sales'||kind()==='stock'" [formGroup]="controls" (ngSubmit)="apply()" aria-label="Filtros do relatório">
-<label>Buscar<input type="search" formControlName="search" maxlength="160" [placeholder]="kind()==='sales'?'Pedido ou cliente':kind()==='customers'?'Nome ou e-mail':'Produto ou SKU'" /></label>
-@if(kind()==='sales'||kind()==='stock'){<label>Status<select aria-label="Status" formControlName="status"><option [value]="''">Todos</option>@if(kind()==='sales'){<option [value]="'simulated_approved'">Aprovado em simulação</option><option [value]="'cancelled'">Cancelado</option>}@else{<option [value]="'available'">Em estoque</option><option [value]="'low'">Estoque baixo</option><option [value]="'out'">Esgotado</option>}</select></label>}
-<label>Ordenar por<select aria-label="Ordenar por" formControlName="sort"><option [value]="''">Padrão</option>@if(kind()==='sales'){<option [value]="'date'">Mais recentes</option>}@else{<option [value]="'name'">Nome</option><option [value]="'units'">{{kind()==='customers'?'Pedidos aprovados':'Unidades'}}</option>}@if(kind()!=='stock'){<option [value]="'revenue'">Maior valor</option>}</select></label>
-<button type="submit" class="primary">Aplicar filtros</button><button type="button" (click)="clear()">Limpar filtros</button>
-</form>
+<app-admin-filters [fields]="filterFields()" applyLabel="Aplicar filtros" clearLabel="Limpar filtros" label="Filtros do relatório" (applied)="apply()" (cleared)="clear()" />
 @if(active()){<p class="filter-note">Filtros ativos</p>}
 <p class="note">@if(kind()==='stock'){Estoque atual de produtos ativos. Variações contabilizadas individualmente, sem duplicar o estoque do produto. Baixo: 1 a 5 unidades.}@else{Período no fuso de São Paulo. Valores históricos de pedidos aprovados em simulação; não representam liquidação de gateway.}
 @if(kind()==='products'){ Nomes e valores de vendas são históricos. SKU, categoria e marca são do cadastro atual. Faturamento dos produtos não inclui frete.}
 @if(kind()==='customers'){ Recorrentes: pelo menos dois pedidos aprovados no período. Clientes sem compras são exibidos com valor zero.}
 </p>
-@if(state()==='loading'){<app-admin-state kind="loading" title="Carregando relatório…" /><div class="metrics" aria-hidden="true">@for(i of [1,2,3,4];track i){<div class="metric skeleton"></div>}</div>}
+@if(state()==='loading'){<app-admin-state kind="loading" title="Carregando relatório…" /><div class="metrics" aria-hidden="true">@for(i of [1,2,3,4];track i){<app-admin-kpi-card title="Carregando indicador" [loading]="true" [compact]="true" />}</div>}
 @else if(state()==='error'){<app-admin-state kind="error" title="Não foi possível carregar o relatório" [description]="error()" actionLabel="Tentar novamente" (action)="load()" />}
 @else{ @if(data();as report){
-<div class="metrics">@for(s of stats();track s.key){<article class="metric"><h2>{{s.label}}</h2><strong>@if(s.money){ {{s.value/100|currency:'BRL':'symbol':'1.2-2':'pt-BR'}} }@else{ {{s.value}} }</strong></article>}</div>
+<div class="metrics">@for(s of stats();track s.key){<app-admin-kpi-card [title]="s.label" [value]="s.money ? s.value/100 : s.value" [format]="s.money ? 'currency' : 'number'" [compact]="true" [variant]="s.key==='cancelledOrders'||s.key==='lowStock'||s.key==='outOfStock'?'warning':s.key==='revenueCents'?'featured':s.key==='approvedOrders'?'success':'default'" />}</div>
 <div class="results-bar"><p>{{report.total}} {{report.total===1?'registro encontrado':'registros encontrados'}}</p>@if(kind()!=='customers'){<button type="button" (click)="export()" [disabled]="exporting()||!report.total"><mat-icon aria-hidden="true">download</mat-icon>{{exporting()?'Exportando…':'Exportar CSV'}}</button>}</div>
 @if(exportError()){<p class="feedback" role="alert">{{exportError()}}</p>}
 @if(!report.rows.length){<app-admin-state title="Nenhum registro encontrado" description="Não há registros para os filtros selecionados." actionLabel="Limpar filtros" (action)="clear()" />}

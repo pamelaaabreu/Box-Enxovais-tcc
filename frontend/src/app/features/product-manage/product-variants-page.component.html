@@ -9,7 +9,9 @@
         { label: 'Produtos', url: '/admin/products' },
         { label: 'Variações' },
       ]"
-    />
+    >
+      @if (product) { <app-product-sku header-actions [productId]="id" [compact]="true" /> }
+    </app-admin-page-header>
     @if (loading) {
       <app-admin-state kind="loading" title="Carregando variações…" />
     } @else if (!product) {
@@ -21,11 +23,11 @@
         (action)="load()"
       />
     } @else {
-      <app-product-sku [productId]="id" />
+
       <form class="editor" [formGroup]="form" (ngSubmit)="save()">
         <fieldset [disabled]="saving" [attr.inert]="saving ? '' : null">
           @if (variants.length) {
-            <app-product-commerce-summary [variants]="variants" />
+            <app-product-commerce-summary [cards]="true" [variants]="variants" />
           } @else {
             <section class="simple-commerce" aria-label="Preço e estoque">
               <h2>Preço e estoque</h2>
@@ -68,13 +70,14 @@
           </button>
         }
         <div class="actions">
+          <span class="dirty-note" role="status">{{ form.dirty ? 'Alterações não salvas' : 'Nenhuma alteração pendente' }}</span>
           <button
             type="submit"
-            class="primary"
+            class="primary box-button"
             [disabled]="saving || form.invalid || !form.dirty"
           >
             {{ saving ? 'Salvando…' : 'Salvar variações' }}</button
-          ><a routerLink="/admin/products">Voltar para produtos</a>
+          ><a class="box-button" data-variant="outline" routerLink="/admin/products">Voltar para produtos</a>
         </div>
       </form>
     }

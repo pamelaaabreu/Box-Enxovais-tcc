@@ -1,0 +1,38 @@
+:host { display: block; min-width: 0; }
+.order-date { color: #667255; font-size: 13px; font-weight: 400; line-height: 1.5; }
+.order-details { display: grid; grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr); gap: 16px; align-items: start; margin: 16px 0; }
+.detail-main, .detail-side { display: grid; gap: 16px; min-width: 0; align-content: start; }
+.order-details .panel { margin: 0; padding: 18px; border-radius: 17px; min-width: 0; }
+.order-details h2 { font-size: 16px; color: #3d4836; margin: 0 0 14px; }
+.order-products th, .order-products td { padding: 10px; }
+.order-products th { font-size: 11px; text-transform: uppercase; white-space: nowrap; }
+.order-products th:not(:first-child), .order-products td:not(:first-child) { text-align: right; }
+.product-info { align-items: start; }
+.product-info > div { min-width: 0; }
+.product-info img { width: 68px; height: 68px; border-radius: 10px; }
+.product-info strong { color: #3d4836; font-size: 14px; font-weight: 600; line-height: 1.45; overflow-wrap: anywhere; }
+.product-info small { font-size: 12px; line-height: 1.45; }
+.order-finance dl > div { gap: 12px; align-items: baseline; }
+.order-finance .total { font-size: 18px; color: #fffdf8; border-color: #ffffff40; }
+.order-finance .total dd { font-weight: 700; }
+.order-finance .payment-strip { display: grid; gap: 6px; background: #ffffff12; border-radius: 12px; padding: 12px; margin-bottom: 0; }
+.payment-strip dd { text-align: left; line-height: 1.6; }
+.order-delivery address { font-size: 13px; overflow-wrap: anywhere; }
+@media (max-width: 1100px) {
+ .order-details { display: flex; flex-direction: column; }
+ .detail-main, .detail-side { display: contents; }
+ .order-details > *, .order-details .panel { width: 100%; }
+ .order-products { order: 1; }.order-finance { order: 2; }.order-delivery { order: 3; }
+}
+@media (max-width: 767px) {
+ .order-details .panel { padding: 16px; }
+ .order-products tr { padding: 10px 0; margin-bottom: 0; border: 0; border-bottom: 1px solid #e4e3d8; border-radius: 0; }
+ .order-products tr:last-child { border-bottom: 0; }
+ .order-products td { padding: 6px 0; }
+ .order-products td:not(:first-child) { text-align: right; }
+}
+.order-details .order-finance { background: linear-gradient(135deg, #3d4836, #46543c); border-color: #3d4836; color: #fffdf8; box-shadow: 0 3px 12px #3d483614; --box-focus-color: var(--box-focus-on-dark); }
+.order-finance h2, .order-finance dt, .order-finance dd, .order-finance .note { color: #fffdf8; }
+.order-finance dl { margin-bottom: 0; }
+.order-finance .note:empty { display: none; }
+

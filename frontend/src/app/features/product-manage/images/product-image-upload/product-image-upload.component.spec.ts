@@ -1,3 +1,6 @@
+import { provideRouter } from '@angular/router';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { ProductImageRecord } from '../../../../core/services/product.service';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
@@ -7,7 +10,7 @@ import { ProductImageUploadComponent } from './product-image-upload.component';
 describe('ProductImageUploadComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports: [ProductImageUploadComponent],
-    providers: [provideHttpClient(), provideHttpClientTesting(), {
+    providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(), {
       provide: CustomAlertService, useValue: { success: jasmine.createSpy(), error: jasmine.createSpy() },
     }],
   }));
@@ -77,4 +80,53 @@ describe('ProductImageUploadComponent', () => {
     page.setCover(images[0]);http.expectOne(endpoint).flush({message:'Galeria alterada'},{status:409,statusText:'Conflict'});expect(page.images[0]).toBe('uploads/two.png');expect(page.error).toBe('Galeria alterada');
     page.selectVariant({target:{value:'7'}} as unknown as Event);expect(page.images).toEqual(['uploads/queen.png']);http.verify();
   });
+  it('uploads multiple files sequentially, isolates failures and reloads the gallery', () => {
+    const fixture = TestBed.createComponent(ProductImageUploadComponent);
+    fixture.componentRef.setInput('productId', 42); fixture.detectChanges();
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne('http://localhost:8080/products/42').flush({variants: []});
+    http.expectOne('http://localhost:8080/admin/products/42/images').flush([]);
+    const page = fixture.componentInstance;
+    page.enqueueFiles([new File(['one'], 'one.png', {type:'image/png'}), new File(['two'], 'two.png', {type:'image/png'}), new File(['bad'], 'bad.txt', {type:'text/plain'})]);
+    expect(page.canLeave()).toBeFalse();
+    const first = http.expectOne('http://localhost:8080/upload-image');
+    expect(first.request.body.get('image').name).toBe('one.png');
+    first.flush({filePath:'uploads/one.png'});
+    const second = http.expectOne('http://localhost:8080/upload-image');
+    expect(second.request.body.get('image').name).toBe('two.png');
+    second.flush({}, {status:500,statusText:'Falha'});
+    http.expectOne('http://localhost:8080/admin/products/42/images').flush([{id:1,path:'uploads/one.png',variant_id:null}]);
+    expect(page.uploadItems.map(item=>item.status)).toEqual(['done','error','error']);
+    expect(page.loading).toBeFalse(); expect(page.images.length).toBe(1);
+    http.verify();
+  });
+  it('reorders dragged photos using existing image IDs and the expected snapshot', () => {
+    const fixture = TestBed.createComponent(ProductImageUploadComponent);
+    fixture.componentRef.setInput('productId', 42); fixture.detectChanges();
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne('http://localhost:8080/products/42').flush({variants: []});
+    const images = [{id:1,path:'one.png',variant_id:null},{id:2,path:'two.png',variant_id:null}];
+    const endpoint = 'http://localhost:8080/admin/products/42/images';
+    http.expectOne(endpoint).flush(images);
+    fixture.componentInstance.dropImage({previousIndex:0,currentIndex:1} as CdkDragDrop<ProductImageRecord[]>);
+    const request = http.expectOne(endpoint);
+    expect(request.request.body.ids).toEqual([2,1]);
+    expect(request.request.body.expected_ids).toEqual([1,2]);
+    request.flush([images[1],images[0]]); http.verify();
+  });
+
+  it('recovers the gallery and variant selector after an initial loading failure', () => {
+    const fixture = TestBed.createComponent(ProductImageUploadComponent);
+    fixture.componentRef.setInput('productId', 42); fixture.detectChanges();
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne('http://localhost:8080/products/42').flush({variants: []});
+    http.expectOne('http://localhost:8080/admin/products/42/images').flush({}, {status:503,statusText:'Unavailable'});
+    expect(fixture.componentInstance.galleryFailed).toBeTrue();
+    fixture.componentInstance.retryGallery();
+    http.expectOne('http://localhost:8080/products/42').flush({variants: [{id:7,size:'Queen'}]});
+    http.expectOne('http://localhost:8080/admin/products/42/images').flush([]);
+    expect(fixture.componentInstance.galleryFailed).toBeFalse();
+    expect(fixture.componentInstance.variants[0].id).toBe(7); http.verify();
+  });
+
 });

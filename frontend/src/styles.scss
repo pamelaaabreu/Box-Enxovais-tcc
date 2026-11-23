@@ -287,7 +287,7 @@ app-top-navbar {
 }
 .mat-mdc-select-panel.box-admin-options {
   padding-block: 4px;
-  min-width: min(230px, calc(100vw - 24px));
+  min-width: 0;
   max-width: calc(100vw - 24px);
 }
 .admin-shell
@@ -380,3 +380,19 @@ app-top-navbar {
     sans-serif;
   box-shadow: 0 3px 10px #39473512;
 }
+
+// Material overlays are outside the component host; keep this scope administrative.
+.box-admin-product-menu.mat-mdc-menu-panel {
+  --mat-menu-container-color: #fffdf8;
+  --mat-menu-container-shape: 12px;
+  --mat-menu-item-label-text-font: Montserrat, sans-serif;
+  --mat-menu-item-label-text-size: 13px;
+  --mat-menu-item-label-text-weight: 500;
+  min-width: 180px;
+  box-shadow: 0 4px 16px #3d48361f;
+}
+.box-admin-product-menu .mat-mdc-menu-item { min-height: 44px; }
+.box-admin-product-menu .mat-mdc-menu-content { padding-block: 4px; }
+
+// Only the shipping editor uses this right-hand Material dialog.
+.box-shipping-drawer .mat-mdc-dialog-surface { border-radius: 0; padding: 0; background: #fffdf8; }

@@ -30,7 +30,6 @@
       <a routerLink="/admin/products" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">inventory_2</mat-icon> Produtos</a>
       <a routerLink="/admin/orders" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">receipt_long</mat-icon> Pedidos</a>
       <a routerLink="/admin/customers" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">groups</mat-icon> Clientes</a>
-      <a routerLink="/admin/metrics" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">monitoring</mat-icon> Métricas analíticas</a>
       <a
         routerLink="/admin/reports"
         routerLinkActive="active"
@@ -87,7 +86,7 @@
   </aside>
   }
   <main class="content" [attr.inert]="mobile() && menuOpen() ? '' : null">
-    @if (section() !== 'customers' && section() !== 'orders' && section() !== 'promotions' && section() !== 'catalog' && section() !== 'experience-reviews' && (section() !== 'products' || isProductCreate())) {
+    @if (section() !== 'customers' && section() !== 'orders' && section() !== 'promotions' && section() !== 'catalog' && section() !== 'experience-reviews' && section() !== 'products') {
       <app-admin-page-header [title]="title()" [description]="subtitle()" [icon]="isProductCreate() ? 'inventory_2' : section() === 'reports' ? 'description' : 'dashboard'" [compact]="isProductCreate()" [breadcrumb]="isProductCreate() ? [{label:'Produtos',url:'/admin/products'},{label:title()}] : [{label:title()}]" />
     }
     <router-outlet />

@@ -1,9 +1,11 @@
+import { AdminFiltersComponent, AdminFilterField } from '../../../shared/components/admin-filters/admin-filters.component';
+import { AdminKpiCardComponent } from '../../../shared/components/admin-kpi-card/admin-kpi-card.component';
 import { CurrencyPipe, DecimalPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
@@ -12,7 +14,7 @@ import { PeriodFilterComponent } from '../../../shared/components/period-filter/
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { ReportData, ReportKind } from './report.models';
 registerLocaleData(localePt,'pt-BR');
-@Component({selector:'app-report',imports:[CurrencyPipe,DecimalPipe,ReactiveFormsModule,RouterLink,MatIconModule,AdminStateComponent,PeriodFilterComponent,PaginationComponent],templateUrl:'./report.component.html',styleUrl:'./report.component.scss'})
+@Component({selector:'app-report',imports:[AdminFiltersComponent,AdminKpiCardComponent,CurrencyPipe,DecimalPipe,RouterLink,MatIconModule,AdminStateComponent,PeriodFilterComponent,PaginationComponent],templateUrl:'./report.component.html',styleUrl:'./report.component.scss'})
 export class ReportComponent {
  private readonly http=inject(HttpClient);
  private readonly route=inject(ActivatedRoute);
@@ -32,6 +34,13 @@ export class ReportComponent {
  readonly controls=new FormGroup({search:new FormControl('',{nonNullable:true}),status:new FormControl('',{nonNullable:true}),sort:new FormControl('',{nonNullable:true})});
  readonly labels:Record<string,string>={orders:'Total de pedidos',approvedOrders:'Pedidos aprovados',cancelledOrders:'Pedidos cancelados',revenueCents:'Faturamento aprovado',averageTicketCents:'Ticket médio',soldProducts:'Produtos vendidos',units:'Unidades',unsoldProducts:'Produtos sem vendas',buyers:'Clientes que compraram',newCustomers:'Novos clientes',recurringCustomers:'Clientes recorrentes',averageCustomerCents:'Média por cliente comprador',activeProducts:'Produtos ativos',outOfStock:'Produtos esgotados',lowStock:'Produtos com estoque baixo'};
  readonly metricKeys:Record<ReportKind,string[]>={sales:['orders','approvedOrders','cancelledOrders','revenueCents','averageTicketCents'],products:['soldProducts','units','revenueCents','unsoldProducts'],customers:['buyers','newCustomers','recurringCustomers','averageCustomerCents'],stock:['activeProducts','outOfStock','lowStock','units']};
+ filterFields():AdminFilterField[]{
+  const kind=this.kind();const c=this.controls.controls;
+  const fields:AdminFilterField[]=[{key:'report-search',type:'search',label:'Buscar',control:c.search,maxlength:160,wide:true,placeholder:kind==='sales'?'Pedido ou cliente':kind==='customers'?'Nome ou e-mail':'Produto ou SKU'}];
+  if(kind==='sales'||kind==='stock')fields.push({key:'report-status',type:'select',label:'Status',control:c.status,options:[{value:'',label:'Todos'},...(kind==='sales'?[{value:'simulated_approved',label:'Aprovado em simulação'},{value:'cancelled',label:'Cancelado'}]:[{value:'available',label:'Em estoque'},{value:'low',label:'Estoque baixo'},{value:'out',label:'Esgotado'}])]});
+  fields.push({key:'report-sort',type:'select',label:'Ordenar por',control:c.sort,options:[{value:'',label:'Padrão'},...(kind==='sales'?[{value:'date',label:'Mais recentes'}]:[{value:'name',label:'Nome'},{value:'units',label:kind==='customers'?'Pedidos aprovados':'Unidades'}]),...(kind!=='stock'?[{value:'revenue',label:'Maior valor'}]:[])]});
+  return fields;
+ }
  readonly stats=computed(()=>this.metricKeys[this.kind()].map(key=>({key,value:this.data()?.stats[key]??0,label:this.labels[key],money:key.endsWith('Cents')})));
  readonly active=computed(()=>{const p=this.parameters();return !!(p['search']||p['status']||p['sort']||p['period']&&p['period']!=='30d');});
  private readonly parameters=signal<Record<string,string>>({});

@@ -86,6 +86,9 @@ export class ProductCreateComponent implements OnInit {
   private retainedMeasurements:Record<string,string>={};
   @Input() previewImage = '';
   @Input() externalSummary = false;
+  @Input() externalVariants = false;
+  @Input() externalSku = false;
+  readonly variantsPanel = viewChild<TemplateRef<unknown>>('variantsPanel');
   readonly summary = viewChild<TemplateRef<unknown>>('summary');
   @Output() productCreated = new EventEmitter<number>();
   private readonly fb = inject(FormBuilder);

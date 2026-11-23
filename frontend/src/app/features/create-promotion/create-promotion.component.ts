@@ -116,6 +116,11 @@ export class CreatePromotionComponent implements OnInit {
 
   campaigns: PromotionRecord[] = [];
   campaignSearch = '';
+  campaignPage = 1;
+  readonly campaignPageSize = 10;
+  get currentCampaignPage():number { return Math.min(this.campaignPage, Math.max(1,Math.ceil(this.visibleCampaigns.length / this.campaignPageSize))); }
+  get pagedCampaigns():PromotionRecord[] { return this.visibleCampaigns.slice((this.currentCampaignPage-1)*this.campaignPageSize,this.currentCampaignPage*this.campaignPageSize); }
+
   campaignFilter = 'Todas';
   readonly campaignFilters = ['Todas', 'Ativas', 'Agendadas', 'Encerradas'];
   previewDevice: 'desktop' | 'mobile' = 'desktop';

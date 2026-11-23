@@ -1,188 +1,83 @@
-<section class="registrations">
-  <app-admin-page-header
-    title="Faixas de CEP"
-    description="Gerencie regiões, valores e prazos de entrega."
-    icon="local_shipping"
-    [breadcrumb]="[
-      { label: 'Cadastros', url: '/admin/products/manage' },
-      { label: 'Faixas de CEP' },
-    ]"
-    actionLabel="Nova faixa de CEP"
-    [actionDisabled]="loading() || failed() || saving()"
-    (action)="start()"
-  />
-  @if (editing()) {
-    <form class="editor" [formGroup]="form" (ngSubmit)="save()" novalidate>
-      <fieldset class="shipping-fields" [disabled]="saving()">
-        <legend>
-          {{
-            form.controls.name.value
-              ? "Dados da faixa"
-              : "Identificação e cobertura"
-          }}
-        </legend>
-        <label
-          >Nome da região
-          <input formControlName="name" required maxlength="100"
-        /></label>
-        <label
-          >CEP inicial
-          <input
-            formControlName="startCep"
-            required
-            inputmode="numeric"
-            mask="00000-000"
-            placeholder="00000-000"
-        /></label>
-        <label
-          >CEP final
-          <input
-            formControlName="endCep"
-            required
-            inputmode="numeric"
-            mask="00000-000"
-            placeholder="00000-000"
-        /></label>
-        <label
-          >Valor do frete (R$)
-          <input
-            type="number"
-            formControlName="price"
-            required
-            min="0"
-            step="0.01"
-        /></label>
-        <label
-          >Prazo mínimo (dias úteis)
-          <input
-            type="number"
-            formControlName="minDays"
-            required
-            min="0"
-            step="1"
-        /></label>
-        <label
-          >Prazo máximo (dias úteis)
-          <input
-            type="number"
-            formControlName="maxDays"
-            required
-            min="0"
-            step="1"
-        /></label>
-        <label class="shipping-check"
-          ><input type="checkbox" formControlName="active" /> Faixa ativa</label
-        >
-      </fieldset>
-      @if (error()) {
-        <p role="alert">{{ error() }}</p>
-      }
-      <div class="actions">
-        <button
-          mat-flat-button
-          class="primary"
-          type="submit"
-          [disabled]="saving() || loading()"
-        >
-          {{ saving() ? "Salvando…" : "Salvar faixa" }}
-        </button>
-        <button
-          mat-stroked-button
-          type="button"
-          [disabled]="saving()"
-          (click)="editing.set(false); error.set('')"
-        >
-          Cancelar
-        </button>
-      </div>
-    </form>
-  } @else if (error()) {
-    <p role="alert">{{ error() }}</p>
-  }
-  <div class="actions">
-    <label
-      >Buscar por nome ou CEP
-      <input
-        type="search"
-        [value]="query()"
-        (input)="query.set($any($event.target).value)"
-    /></label>
-    <label
-      >Status
-      <select
-        [value]="status()"
-        (change)="status.set($any($event.target).value)"
-      >
-        <option value="all">Todos</option>
-        <option value="active">Ativas</option>
-        <option value="inactive">Inativas</option>
-      </select>
+<section class="shipping-ranges">
+  <app-admin-page-header title="Faixas de CEP" description="Gerencie regiões, valores e prazos de entrega." icon="local_shipping"
+    [breadcrumb]="[{ label: 'Cadastros', url: '/admin/products/manage' }, { label: 'Faixas de CEP' }]"
+    actionLabel="Nova faixa de CEP" [actionDisabled]="loading() || failed() || saving()" (action)="start()" />
+  @if (error() && !editing()) { <p class="form-error" role="alert">{{ error() }}</p> }
+  <div class="range-filters">
+    <label>Buscar por nome ou CEP
+      <input type="search" placeholder="Buscar por nome ou CEP" [value]="query()" (input)="query.set($any($event.target).value); page.set(1)" />
+    </label>
+    <label>Status
+      <mat-select aria-label="Status" panelClass="box-form-options box-admin-options" [value]="status()" (selectionChange)="status.set($event.value); page.set(1)">
+        <mat-option value="all">Todos os status</mat-option><mat-option value="active">Ativas</mat-option><mat-option value="inactive">Inativas</mat-option>
+      </mat-select>
     </label>
   </div>
   @if (loading()) {
     <app-admin-state kind="loading" title="Carregando faixas…" />
   } @else if (failed()) {
-    <app-admin-state
-      kind="error"
-      title="Não foi possível carregar as faixas."
-      actionLabel="Tentar novamente"
-      (action)="load()"
-    />
+    <app-admin-state kind="error" title="Não foi possível carregar as faixas." actionLabel="Tentar novamente" (action)="load()" />
   } @else if (filtered().length) {
-    <ul>
-      @for (item of filtered(); track item.id) {
-        <li>
-          <div>
-            <strong>{{ item.name }}</strong>
-            <small
-              >{{ formatCep(item.startCep) }} a {{ formatCep(item.endCep) }} ·
-              {{ item.active ? "Ativa" : "Inativa" }}</small
-            >
-            <small
-              >{{
-                item.priceCents / 100
-                  | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-              }}
-              · {{ item.minDays }}–{{ item.maxDays }} dias úteis</small
-            >
-          </div>
-          <div class="actions">
-            <button
-              mat-stroked-button
-              type="button"
-              [disabled]="saving() || editing()"
-              (click)="start(item)"
-            >
-              Editar
-            </button>
-            <button
-              mat-stroked-button
-              type="button"
-              [disabled]="saving() || editing()"
-              (click)="toggle(item)"
-            >
-              {{ item.active ? "Desativar" : "Ativar" }}
-            </button>
-            <button
-              mat-stroked-button
-              type="button"
-              [disabled]="saving() || editing()"
-              (click)="remove(item)"
-            >
-              Excluir
-            </button>
-          </div>
-        </li>
-      }
-    </ul>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Faixas de CEP, tabela rolável">
+      <table>
+        <thead><tr><th scope="col">Região</th><th scope="col">Faixa de CEP</th><th scope="col">Frete</th><th scope="col">Prazo</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
+        <tbody>
+          @for (item of paged(); track item.id) {
+            <tr>
+              <th scope="row">{{ item.name }}</th>
+              <td class="cep-cell">{{ formatCep(item.startCep) }} a {{ formatCep(item.endCep) }}</td>
+              <td class="price-cell">{{ item.priceCents / 100 | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</td>
+              <td class="days-cell">{{ item.minDays }}–{{ item.maxDays }} dias úteis</td>
+              <td><button type="button" class="status-toggle" role="switch" [attr.aria-checked]="item.active" [attr.aria-label]="'Faixa ativa: ' + item.name"
+                [disabled]="saving() || editing()" (click)="toggle(item)"><span class="toggle-track" aria-hidden="true"></span><span>{{ item.active ? 'Ativa' : 'Inativa' }}</span></button></td>
+              <td><div class="row-actions">
+                <button type="button" class="primary" [disabled]="saving() || editing()" (click)="start(item)">Editar</button>
+                <button type="button" class="icon-button" [matMenuTriggerFor]="actions" [attr.aria-label]="'Mais ações: ' + item.name" [disabled]="saving() || editing()"><mat-icon>more_horiz</mat-icon></button>
+                <mat-menu #actions="matMenu" class="box-admin-product-menu">
+                  <button mat-menu-item (click)="remove(item)"><mat-icon>delete_outline</mat-icon><span>Excluir faixa</span></button>
+                </mat-menu>
+              </div></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="range-count" role="status">{{ filtered().length }} {{ filtered().length === 1 ? 'faixa encontrada' : 'faixas encontradas' }}</p>
+    <app-pagination [page]="currentPage()" [total]="filtered().length" [pageSize]="pageSize" (pageChange)="page.set($event)" label="Paginação de faixas de CEP" />
   } @else {
-    <app-admin-state
-      icon="local_shipping"
-      [title]="
-        items().length
-          ? 'Nenhuma faixa encontrada para os filtros.'
-          : 'Nenhuma faixa de CEP cadastrada.'
-      "
-    />
+    <app-admin-state icon="local_shipping" [title]="items().length ? 'Nenhuma faixa encontrada para os filtros.' : 'Nenhuma faixa de CEP cadastrada.'" />
   }
 </section>
+
+<ng-template #editor>
+  <form class="range-drawer" [formGroup]="form" (ngSubmit)="save()" novalidate [attr.aria-busy]="saving()">
+    <header class="drawer-heading"><h2 id="shipping-drawer-title">{{ editorTitle }}</h2><button type="button" class="icon-button" aria-label="Fechar faixa de CEP" [disabled]="saving()" (click)="requestClose()"><mat-icon>close</mat-icon></button></header>
+    <div class="drawer-body">
+      <fieldset [disabled]="saving()">
+        <label>Nome da região *
+          <input aria-label="Nome da região" id="shipping-name" formControlName="name" required maxlength="100" autocomplete="off" [attr.aria-invalid]="!!fieldError('name')" aria-describedby="shipping-name-error" />
+          <span id="shipping-name-error" class="field-error">{{ fieldError('name') }}</span>
+        </label>
+        <section aria-labelledby="coverage-title"><h3 id="coverage-title">Cobertura</h3><div class="field-pair">
+          <label>CEP inicial *<input aria-label="CEP inicial" formControlName="startCep" required inputmode="numeric" mask="00000-000" placeholder="00000-000" [attr.aria-invalid]="!!fieldError('startCep') || !!cepOrderError() || !!coverageError()" aria-describedby="shipping-start-error shipping-coverage-error" /><span id="shipping-start-error" class="field-error">{{ fieldError('startCep') }}</span></label>
+          <label>CEP final *<input aria-label="CEP final" formControlName="endCep" required inputmode="numeric" mask="00000-000" placeholder="00000-000" [attr.aria-invalid]="!!fieldError('endCep') || !!cepOrderError() || !!coverageError()" aria-describedby="shipping-end-error shipping-coverage-error" /><span id="shipping-end-error" class="field-error">{{ fieldError('endCep') }}</span></label>
+        </div><p class="hint">A faixa não pode se sobrepor a outra já cadastrada.</p>
+        @if (cepOrderError() || coverageError()) { <p id="shipping-coverage-error" class="field-error" role="alert">{{ cepOrderError() || coverageError() }}</p> }
+        </section>
+        <section aria-labelledby="delivery-title"><h3 id="delivery-title">Entrega</h3>
+          <label>Valor do frete (R$) *<input aria-label="Valor do frete (R$)" class="money-input" inputmode="numeric" [value]="priceText.value" (input)="maskFreight($event)" (blur)="form.controls.price.markAsTouched()" maxlength="16" placeholder="0,00" [attr.aria-invalid]="!!fieldError('price')" aria-describedby="shipping-price-error" /><span id="shipping-price-error" class="field-error">{{ fieldError('price') }}</span></label>
+          <div class="field-pair days-fields">
+            <label>Prazo mínimo *<input type="number" formControlName="minDays" required min="0" max="2147483647" step="1" inputmode="numeric" [attr.aria-invalid]="!!fieldError('minDays') || !!daysOrderError()" aria-describedby="shipping-min-error shipping-days-error" /><span id="shipping-min-error" class="field-error">{{ fieldError('minDays') }}</span></label>
+            <label>Prazo máximo *<input type="number" formControlName="maxDays" required min="0" max="2147483647" step="1" inputmode="numeric" [attr.aria-invalid]="!!fieldError('maxDays') || !!daysOrderError()" aria-describedby="shipping-max-error shipping-days-error" /><span id="shipping-max-error" class="field-error">{{ fieldError('maxDays') }}</span></label>
+          </div><p class="hint">Prazo em dias úteis.</p>
+          @if (daysOrderError()) { <p id="shipping-days-error" class="field-error" role="alert">{{ daysOrderError() }}</p> }
+        </section>
+        <div class="active-setting"><div><strong>Faixa ativa</strong><p class="hint" id="shipping-active-hint">Disponível para cálculo de frete na loja.</p></div>
+          <button type="button" class="status-toggle" role="switch" aria-label="Faixa ativa" aria-describedby="shipping-active-hint" [attr.aria-checked]="form.controls.active.value" (click)="form.controls.active.setValue(!form.controls.active.value); form.markAsDirty()"><span class="toggle-track" aria-hidden="true"></span><span>{{ form.controls.active.value ? 'Ativa' : 'Inativa' }}</span></button>
+        </div>
+      </fieldset>
+      @if (error()) { <p class="form-error" role="alert">{{ error() }}</p> }
+    </div>
+    <footer class="drawer-actions"><button type="button" [disabled]="saving()" (click)="requestClose()">Cancelar</button><button class="primary" type="submit" [disabled]="saving() || loading()">{{ saving() ? 'Salvando…' : 'Salvar faixa' }}</button></footer>
+  </form>
+</ng-template>

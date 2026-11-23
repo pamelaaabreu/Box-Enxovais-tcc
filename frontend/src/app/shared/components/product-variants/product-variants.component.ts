@@ -1,3 +1,4 @@
+import { AdminStateComponent } from '../admin-state/admin-state.component';
 import { Component, Input } from '@angular/core';
 import {
   FormArray,
@@ -75,7 +76,7 @@ export function variantPayload(form: FormArray<VariantForm>): ProductVariant[] {
 @Component({
   selector: 'app-product-variants',
   standalone: true,
-  imports: [ReactiveFormsModule, MatIconModule],
+  imports: [AdminStateComponent, ReactiveFormsModule, MatIconModule],
   templateUrl: './product-variants.component.html',
   styleUrl: './product-variants.component.scss',
 })

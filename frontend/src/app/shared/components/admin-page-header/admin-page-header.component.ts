@@ -22,6 +22,9 @@ export class AdminPageHeaderComponent {
   @Input() description = '';
   @Input() breadcrumb: AdminBreadcrumb[] = [];
   @Input() icon = '';
+  @Input() image = '';
+  failedImage = '';
+  get showImage(): boolean { return !!this.image && this.image !== this.failedImage; }
   @Input() status = '';
   @Input() compact = false;
   @Input() titleId: string | null = null;

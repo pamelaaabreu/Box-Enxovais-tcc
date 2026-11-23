@@ -58,7 +58,7 @@
               type="search"
               placeholder="Digite para buscar..."
               [ngModel]="query()"
-              (ngModelChange)="query.set($event)"
+              (ngModelChange)="query.set($event); page.set(1)"
             />
           </span>
         </label>
@@ -70,7 +70,7 @@
         <app-admin-state kind="error" title="Não foi possível carregar os cadastros." actionLabel="Tentar novamente" (action)="load()" />
       } @else if (filtered().length) {
         <ul class="registration-list">
-          @for (item of filtered(); track item.id) {
+          @for (item of paged(); track item.id) {
             <li class="registration-item">
               <div class="item-content">
                 <strong>{{ item.name }}</strong>
@@ -92,6 +92,7 @@
             </li>
           }
         </ul>
+        <app-pagination [page]="currentPage()" [total]="filtered().length" [pageSize]="pageSize" (pageChange)="page.set($event)" [label]="'Paginação de ' + title.toLowerCase()" />
       } @else if (!items().length) {
         <app-admin-state [icon]="noun === 'categoria' ? 'category' : 'sell'" [title]="'Nenhuma ' + noun + ' cadastrada.'" [actionLabel]="'Cadastrar ' + noun" (action)="start()" />
       } @else {

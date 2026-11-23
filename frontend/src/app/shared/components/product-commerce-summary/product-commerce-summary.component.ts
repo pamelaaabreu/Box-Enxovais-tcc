@@ -9,6 +9,7 @@ import { money, parsePrice } from '../../forms/price-input';
 })
 export class ProductCommerceSummaryComponent {
  @Input() framed = true;
+ @Input() cards = false;
  @Input({required:true}) variants!:FormArray<VariantForm>;
  get totalStock():number{return this.variants.controls.reduce((sum,row)=>sum+(row.controls.stock.valid?row.controls.stock.value??0:0),0);}
  get startingPrice():string {const prices=this.variants.controls.map(row=>parsePrice(row.controls.price.value)).filter((v):v is number=>v!==null);return prices.length?'R$ '+money.format(Math.min(...prices)):'—';}

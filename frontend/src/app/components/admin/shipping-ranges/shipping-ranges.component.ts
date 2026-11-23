@@ -1,10 +1,16 @@
+import { MatSelectModule } from '@angular/material/select';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { AdminStateComponent } from '../../../shared/components/admin-state/admin-state.component';
 import { AdminPageHeaderComponent } from '../../../shared/components/admin-page-header/admin-page-header.component';
 import { CurrencyPipe } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, TemplateRef, ViewChild, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { maskPriceInput, money } from '../../../shared/forms/price-input';
 import { MatButtonModule } from '@angular/material/button';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { filter, finalize } from 'rxjs';
@@ -26,6 +32,9 @@ interface ShippingRange {
   providers: [provideNgxMask()],
   selector: 'app-shipping-ranges',
   imports: [
+    MatDialogModule, MatIconModule, MatMenuModule,
+    PaginationComponent,
+    MatSelectModule,
     AdminStateComponent,
     AdminPageHeaderComponent,
     CurrencyPipe,
@@ -34,16 +43,29 @@ interface ShippingRange {
     ReactiveFormsModule,
   ],
   templateUrl: './shipping-ranges.component.html',
-  styleUrl: '../catalog-registration.component.scss',
+  styleUrl: './shipping-ranges.component.scss',
 })
 export class ShippingRangesComponent {
   private readonly http = inject(HttpClient);
+  private readonly dialog = inject(MatDialog);
+  @ViewChild('editor') private editor!: TemplateRef<unknown>;
+  private editorRef?: MatDialogRef<unknown>;
+  private confirmingClose = false;
+  readonly submitted = signal(false);
+  readonly coverageError = signal('');
+  readonly priceText = new FormControl('', { nonNullable: true });
+  get editorTitle(): string { return this.id ? 'Editar faixa de CEP' : 'Nova faixa de CEP'; }
+
   private readonly confirm = inject(ConfirmDialogService);
   private readonly alerts = inject(CustomAlertService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly url = 'http://localhost:8080/admin/catalog/shipping-ranges';
   private id: number | null = null;
   readonly items = signal<ShippingRange[]>([]);
+  readonly page = signal(1);
+  readonly pageSize = 10;
+  readonly currentPage = computed(() => Math.min(this.page(), Math.max(1, Math.ceil(this.filtered().length / this.pageSize))));
+  readonly paged = computed(() => this.filtered().slice((this.currentPage() - 1) * this.pageSize, this.currentPage() * this.pageSize));
   readonly query = signal('');
   readonly status = signal('all');
   readonly loading = signal(false);
@@ -84,6 +106,7 @@ export class ShippingRangesComponent {
 
   constructor() {
     this.load();
+    this.destroyRef.onDestroy(() => this.editorRef?.close());
   }
 
   load(): void {
@@ -102,7 +125,11 @@ export class ShippingRangesComponent {
   }
 
   start(item?: ShippingRange): void {
+    if (this.saving() || this.editing()) return;
     this.id = item?.id ?? null;
+    this.submitted.set(false);
+    this.coverageError.set('');
+    this.priceText.setValue(money.format((item?.priceCents ?? 0) / 100));
     this.error.set('');
     this.form.reset({
       name: item?.name ?? '',
@@ -114,10 +141,70 @@ export class ShippingRangesComponent {
       active: item?.active ?? true,
     });
     this.editing.set(true);
+    this.editorRef = this.dialog.open(this.editor, {
+      width: '540px', maxWidth: '100vw', height: '100dvh', maxHeight: '100dvh',
+      position: { right: '0', top: '0' }, panelClass: 'box-shipping-drawer',
+      ariaLabelledBy: 'shipping-drawer-title', autoFocus: '#shipping-name',
+      restoreFocus: true, disableClose: true,
+    });
+    this.editorRef.backdropClick().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.requestClose());
+    this.editorRef.keydownEvents().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
+      if (event.key === 'Escape') { event.preventDefault(); this.requestClose(); }
+    });
+    this.editorRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.editing.set(false); this.error.set(''); this.coverageError.set(''); this.editorRef = undefined;
+    });
+  }
+
+  requestClose(): void {
+    if (this.saving() || this.confirmingClose) return;
+    if (!this.form.dirty) { this.editorRef?.close(); return; }
+    this.confirmingClose = true;
+    this.confirm.open({
+      title: 'Descartar alterações?', message: 'Os dados ainda não foram salvos.',
+      variant: 'warning', primary: 'Continuar editando', secondary: 'Descartar',
+      confirmAction: 'secondary',
+    }).afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
+      this.confirmingClose = false;
+      if (result === true) this.editorRef?.close();
+    });
+  }
+
+  maskFreight(event: Event): void {
+    maskPriceInput(event, this.priceText);
+    const value = this.priceText.value.replace(/\./g, '').replace(',', '.');
+    this.form.controls.price.setValue(value ? Number(value) : null);
+    this.form.controls.price.markAsDirty();
+  }
+
+  fieldError(name: keyof typeof this.form.controls): string {
+    const control = this.form.controls[name];
+    if (!control.touched && !this.submitted()) return '';
+    if (control.hasError('required')) return 'Preencha este campo.';
+    if (control.hasError('pattern')) return 'Informe um CEP com 8 dígitos.';
+    if (control.hasError('maxlength')) return 'Use até 100 caracteres.';
+    if (control.hasError('min') || control.hasError('max')) return 'Informe um valor dentro do limite permitido.';
+    if ((name === 'minDays' || name === 'maxDays') && !Number.isInteger(control.value)) return 'Informe dias inteiros.';
+    return '';
+  }
+
+  cepOrderError(): string {
+    const { startCep, endCep } = this.form.getRawValue();
+    return (this.submitted() || this.form.controls.endCep.touched) && startCep && endCep && startCep > endCep
+      ? 'O CEP final deve ser maior ou igual ao inicial.' : '';
+  }
+
+  daysOrderError(): string {
+    const { minDays, maxDays } = this.form.getRawValue();
+    return (this.submitted() || this.form.controls.maxDays.touched) && minDays !== null && maxDays !== null && minDays > maxDays
+      ? 'O prazo máximo deve ser maior ou igual ao mínimo.' : '';
   }
 
   save(): void {
     if (this.saving()) return;
+    this.submitted.set(true);
+    this.form.markAllAsTouched();
+    this.coverageError.set('');
     const { name, startCep, endCep, price, minDays, maxDays, active } =
       this.form.getRawValue();
     if (
@@ -206,11 +293,16 @@ export class ShippingRangesComponent {
       )
       .subscribe({
         next: () => {
-          if (closeEditor) this.editing.set(false);
+          if (closeEditor) this.editorRef?.close();
           this.alerts.success(success);
           this.load();
         },
-        error: (error) => this.error.set(this.message(error)),
+        error: (error) => {
+          const message = this.message(error);
+          if (closeEditor && error instanceof HttpErrorResponse && (error.status === 409 || /sobrepo|CEP|faixa/i.test(message))) {
+            this.coverageError.set(message);
+          } else this.error.set(message);
+        },
       });
   }
 

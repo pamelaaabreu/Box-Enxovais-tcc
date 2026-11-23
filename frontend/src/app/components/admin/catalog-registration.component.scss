@@ -308,3 +308,5 @@
 }
 
 .registrations select { font-weight: 500; }
+
+.actions mat-select { display: flex; align-items: center; min-height: 44px; border: 1px solid #d5d7cc; border-radius: 12px; padding: 8px 12px; background: #fffdf8; color: #3d4836; font: 500 13px Montserrat, sans-serif; }

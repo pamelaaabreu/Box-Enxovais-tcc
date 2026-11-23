@@ -1,3 +1,4 @@
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { AdminPageHeaderComponent } from '../../shared/components/admin-page-header/admin-page-header.component';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -25,7 +26,7 @@ interface Registration {
 
 @Component({
   selector: 'app-catalog-registration',
-  imports: [AdminStateComponent, AdminPageHeaderComponent, FormsModule, MatButtonModule, MatDialogModule],
+  imports: [PaginationComponent, AdminStateComponent, AdminPageHeaderComponent, FormsModule, MatButtonModule, MatDialogModule],
   templateUrl: './catalog-registration.component.html',
   styleUrl: './catalog-registration.component.scss',
 })
@@ -46,6 +47,10 @@ export class CatalogRegistrationComponent {
   readonly title = this.kind === 'brands' ? 'Marcas' : 'Categorias';
   readonly noun = this.kind === 'brands' ? 'marca' : 'categoria';
   readonly items = signal<Registration[]>([]);
+  readonly page = signal(1);
+  readonly pageSize = 10;
+  readonly currentPage = computed(() => Math.min(this.page(), Math.max(1, Math.ceil(this.filtered().length / this.pageSize))));
+  readonly paged = computed(() => this.filtered().slice((this.currentPage() - 1) * this.pageSize, this.currentPage() * this.pageSize));
   readonly query = signal('');
   readonly loading = signal(false);
   readonly failed = signal(false);

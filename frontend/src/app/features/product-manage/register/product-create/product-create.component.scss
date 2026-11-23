@@ -339,6 +339,7 @@ progress::-moz-progress-bar {
   }
 }
 @media (max-width: 530px) {
+  .fields, .fields.commerce, .progress-panel { grid-template-columns: minmax(0, 1fr); }
   .fields,
   .fields.commerce,
   .progress-panel,
@@ -418,3 +419,6 @@ progress::-moz-progress-bar {
 .sku-hint {
   font-size: 12px;
 }
+
+.integrated-variants .variant-metrics { margin-bottom: 14px; }
+.integrated-variants .form-actions { gap: 10px; }

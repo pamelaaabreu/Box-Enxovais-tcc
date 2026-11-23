@@ -39,7 +39,7 @@ const routes: Routes = [
         component: DashboardComponent,
       },
 
-      {path:'metrics',component:DashboardComponent},
+      {path:'metrics',redirectTo:'dashboard',pathMatch:'full'},
 
       // PRODUTOS
       {

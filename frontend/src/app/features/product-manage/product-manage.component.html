@@ -3,9 +3,9 @@
   [class.with-summary]="selectedTabIndex === 0"
   [attr.aria-label]="editId ? 'Editar produto' : 'Cadastrar produto'"
 >
-  @if (productId && selectedTabIndex === 1) {
-    <div class="saved-product-info"><app-product-sku [productId]="productId" /><a class="image-note" [routerLink]="['/admin/products',productId,'variants']">Gerenciar variações</a></div>
-  }
+  <app-admin-page-header [image]="previewImage" [title]="editId ? 'Editar produto' : 'Cadastrar produto'" [description]="productName || 'Gerencie as informações e imagens do produto.'" icon="inventory_2" [breadcrumb]="[{label:'Produtos',url:'/admin/products'},{label:editId ? 'Editar produto' : 'Cadastrar produto'}]">
+    @if (productId) { <app-product-sku header-actions [productId]="productId" [compact]="true" /> }
+  </app-admin-page-header>
   <mat-tab-group
     [(selectedIndex)]="selectedTabIndex"
     [preserveContent]="true"
@@ -19,6 +19,8 @@
       }
       <app-product-create
         [externalSummary]="true"
+        [externalSku]="true"
+        [externalVariants]="!!editId"
         [editId]="editId"
         (productUpdated)="onProductUpdated()"
         (productLoaded)="onProductLoaded($event)"
@@ -45,6 +47,11 @@
         </div>
       }
     </mat-tab>
+    @if (editId) {
+      <mat-tab label="Variações">
+        <div class="tab-content"><ng-container [ngTemplateOutlet]="createForm()?.variantsPanel() ?? null" /></div>
+      </mat-tab>
+    }
   </mat-tab-group>
   @if (selectedTabIndex === 0) {
     <ng-container [ngTemplateOutlet]="createForm()?.summary() ?? null" />

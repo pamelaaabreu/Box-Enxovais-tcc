@@ -1,0 +1,18 @@
+<form (submit)="$event.preventDefault(); applied.emit()" [attr.aria-label]="label()">
+  @for (field of fields(); track field.key) {
+    <label [class.wide]="field.wide">
+      <span>{{ field.label }}</span>
+      @if (field.type === 'select') {
+        <mat-select [attr.data-filter-key]="field.key" panelClass="box-form-options box-admin-options" [aria-label]="field.label" [formControl]="field.control">
+          @for (option of field.options; track option.value) { <mat-option [value]="option.value">{{ option.label }}</mat-option> }
+        </mat-select>
+      } @else {
+        <input [id]="field.id || field.key" [type]="field.type" [formControl]="field.control" [placeholder]="field.placeholder || ''" [attr.maxlength]="field.maxlength ?? null" [required]="field.required || false" />
+      }
+    </label>
+  }
+  <div class="actions">
+    <button type="submit" class="primary" [disabled]="disabled()">{{ applyLabel() }}</button>
+    @if (showClear()) { <button type="button" [disabled]="disabled()" (click)="cleared.emit()">{{ clearLabel() }}</button> }
+  </div>
+</form>

@@ -1,0 +1,6 @@
+<article class="metric" [class.metric--featured]="variant()==='featured'" [class.metric--warning]="variant()==='warning'" [class.metric--success]="variant()==='success'" [class.metric--compact]="compact()" [class.skeleton]="loading()" [attr.aria-busy]="loading()" [attr.tabindex]="tooltip() ? 0 : null" [appHint]="tooltip()">
+ <div class="metric__main"><div class="metric__content"><h2>{{title()}}</h2>
+  @if(loading()){<span class="loading-value" role="status">Carregando indicador…</span>}@else{<strong class="metric__value">{{displayedValue()}}</strong>}
+ </div>@if(icon()){<span class="metric__icon"><mat-icon aria-hidden="true">{{icon()}}</mat-icon></span>}</div>
+ @if(description()&&!loading()){<p class="metric__description">{{description()}}</p>}
+</article>

@@ -1,0 +1,210 @@
+:host { display: block; min-width: 0; height: 100%; font-family: Montserrat, sans-serif; }
+.metric {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: var(--admin-kpi-min-height, 128px);
+  gap: 5px;
+  padding: var(--admin-kpi-padding, 13px 18px 11px);
+  overflow: hidden;
+  border: 0;
+  border-radius: 17px;
+  background: #fffdf8;
+  box-shadow: 0 3px 12px rgb(33 49 33 / 6%);
+  text-align: left;
+}
+
+.metric__main {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+.metric__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  gap: 2px;
+  text-align: left;
+}
+
+.metric h2 {
+  max-width: calc(100% - 38px);
+  margin: 0;
+  color: var(--dash-ink, #303b2d);
+  font-size: var(--admin-kpi-title-size, 14px);
+  padding-bottom: 5px;
+  font-weight: 550;
+  line-height: 1.32;
+  text-wrap: balance;
+}
+
+.metric__value {
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  color: var(--dash-ink, #303b2d);
+  font-size: var(--admin-kpi-value-size, clamp(25px, 2vw, 34px));
+  font-weight: 750;
+  line-height: 1.13;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric__description {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 3px 0 0;
+  padding: 0;
+  border: 0;
+  color: #3c6948;
+  font-size: var(--admin-kpi-description-size, 13px);
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+.metric__icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 31px;
+  height: 31px;
+  padding: 0;
+  border: 1.5px solid #667255;
+  border-radius: 50%;
+  background: transparent;
+  color: #496044;
+}
+
+.metric__icon mat-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.metric--featured {
+  border: 0;
+  background: linear-gradient(120deg, #33452f 0%, #3d5237 55%, #52694a 100%);
+  box-shadow: 0 8px 18px rgba(39, 59, 35, 0.13);
+}
+
+.metric--featured::before,
+.metric--featured::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 253, 248, 0.09);
+}
+
+.metric--featured::before {
+  top: -100px;
+  right: -72px;
+  width: 225px;
+  height: 225px;
+}
+
+.metric--featured::after {
+  bottom: -115px;
+  right: 28px;
+  width: 180px;
+  height: 180px;
+}
+
+.metric--featured .metric__main,
+.metric--featured .metric__description {
+  position: relative;
+  z-index: 1;
+}
+
+.metric--featured h2,
+.metric--featured .metric__value,
+.metric--featured .metric__description {
+  color: #fffdf8;
+}
+
+.metric--featured .metric__icon {
+  border-color: #fffdf8;
+  color: #3d4836;
+  background: #fffdf8;
+  box-shadow: 0 3px 9px rgba(15, 34, 15, 0.13);
+}
+
+.metric--warning {
+  background:
+    radial-gradient(
+      ellipse 175px 130px at 100% 0%,
+      rgba(174, 84, 69, 0.1),
+      transparent 78%
+    ),
+    linear-gradient(125deg, #fffdf8 0%, #fffdf8 60%, #fff8f5 100%);
+}
+
+.metric--warning::before {
+  content: "";
+  position: absolute;
+  top: -79px;
+  right: -63px;
+  width: 190px;
+  height: 190px;
+  border: 1px solid rgba(174, 84, 69, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.metric--warning .metric__icon {
+  border-color: #bf8174;
+  color: #9e503f;
+  background: transparent;
+}
+
+.metric--warning .metric__value {
+  color: var(--dash-ink, #303b2d);
+}
+
+.metric--warning .metric__description {
+  color: #9e503f;
+  font-weight: 600;
+}
+
+.metric:focus-visible {
+  outline: 3px solid #667255;
+  outline-offset: 3px;
+}
+
+
+.metric { height: 100%; }
+.metric--success { background: linear-gradient(120deg, #fffdf8, #eff4e9); }
+.metric--compact { min-height: 96px; padding: 14px 16px; }
+.metric--compact .metric__value { font-size: 24px; }
+.metric--compact h2 { font-size: 13px; }
+.loading-value { display: block; min-height: 28px; font-size: 12px; color: #667255; }
+.skeleton { background: #edf0e7; }
+.metric--featured:focus-visible { outline-color: #a8b997; }
+
+.metric:not(:has(.metric__icon)) h2 { max-width: 100%; }
+
+.skeleton h2 { color: var(--dash-ink, #303b2d); }

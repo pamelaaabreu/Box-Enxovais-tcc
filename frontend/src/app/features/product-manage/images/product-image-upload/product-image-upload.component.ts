@@ -1,10 +1,10 @@
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatSelectModule } from '@angular/material/select';
 import { ConfirmDialogService } from '../../../../shared/components/confirm-dialog/confirm-dialog.service';
-import { forkJoin, map, tap, finalize } from 'rxjs';
+import { forkJoin, map, tap, finalize, from, concatMap, catchError, of } from 'rxjs';
 import { AdminStateComponent } from '../../../../shared/components/admin-state/admin-state.component';
 import { Component, OnInit, DestroyRef, EventEmitter, Input, Output, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UploadService } from '../../../../core/services/upload.service';
 import { Product } from '../../../../shared/models';
@@ -14,7 +14,7 @@ import { CustomAlertService } from '../../../../core/services/custom-alert.servi
 
 @Component({
   selector: 'app-product-image-upload',
-  imports: [MatIconModule,AdminStateComponent, MatButtonModule, MatProgressSpinnerModule],
+  imports: [RouterLink, DragDropModule, MatSelectModule,MatIconModule,AdminStateComponent],
   templateUrl: './product-image-upload.component.html',
   styleUrl: './product-image-upload.component.scss',
 })
@@ -31,13 +31,14 @@ export class ProductImageUploadComponent implements OnInit {
     const cover=images.find(image=>image.variant_id===null);
     this.coverChanged.emit(cover?this.imageUrl(cover.path):'');
   }
-  selectVariant(event:Event):void {
-    this.variantId=Number((event.target as HTMLSelectElement).value)||null;
+  selectVariant(value:number|Event):void {
+    if (this.loading) return;
+    this.variantId=(typeof value === 'number' ? value : Number((value.target as HTMLSelectElement).value))||null;
     this.images=this.visibleImages.map(image=>image.path);
   }
   loadGallery():void {
-    this.loading=true;this.error='';
-    this.products.getProductImages(this.productId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({next:images=>{this.applyImages(images);this.loading=false;},error:()=>{this.loading=false;this.error='Não foi possível carregar a galeria. Tente novamente.';}});
+    this.loading=true;this.error='';this.galleryFailed=false;
+    this.products.getProductImages(this.productId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({next:images=>{this.applyImages(images);this.loading=false;},error:()=>{this.loading=false;this.galleryFailed=true;this.error='Não foi possível carregar a galeria. Tente novamente.';}});
   }
   moveImage(index:number,direction:number):void {
     const images=this.visibleImages;
@@ -72,18 +73,82 @@ export class ProductImageUploadComponent implements OnInit {
   images: string[] = [];
   loading = false;
   error = '';
+  galleryFailed = false;
+  uploading = false;
+  draggingFiles = false;
+  uploadItems: Array<{file: File; status: 'pending' | 'uploading' | 'done' | 'error'; message: string}> = [];
   private readonly uploaded = new Set<string>();
+  private disposed = false;
 
-  constructor() { this.destroyRef.onDestroy(() => this.clearSelection()); }
+  constructor() { this.destroyRef.onDestroy(() => { this.disposed = true; this.clearSelection(); }); }
+
+  retryGallery(): void { if (!this.loading) this.ngOnInit(); }
 
   ngOnInit(): void {
     if (!this.productId) return;
+    this.galleryFailed = false;
     this.loading=true;
     forkJoin([this.products.getProduct(this.productId),this.products.getProductImages(this.productId)]).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next:([product,images])=>{this.variants=product.variants||[];this.applyImages(images);this.loading=false;},
-      error:()=>{this.loading=false;this.error='Não foi possível consultar as imagens cadastradas.';},
+      error:()=>{this.loading=false;this.galleryFailed=true;this.error='Não foi possível consultar as imagens cadastradas.';},
     });
   }
+
+  selectFiles(input: HTMLInputElement): void {
+    const files = Array.from(input.files ?? []);
+    input.value = '';
+    this.enqueueFiles(files);
+  }
+  allowFileDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.draggingFiles = !this.loading && Array.from(event.dataTransfer?.types ?? []).includes('Files');
+  }
+  dropFiles(event: DragEvent): void {
+    event.preventDefault();
+    this.draggingFiles = false;
+    this.enqueueFiles(Array.from(event.dataTransfer?.files ?? []));
+  }
+  enqueueFiles(files: File[]): void {
+    if (this.loading || !this.productId || !files.length) return;
+    this.error = '';
+    const seen = new Set<string>();
+    this.uploadItems = files.map(file => {
+      const key = this.fileKey(file);
+      const message = !['image/jpeg', 'image/png', 'image/webp'].includes(file.type)
+        ? 'Selecione uma imagem JPEG, PNG ou WebP.'
+        : (!file.size || file.size > 10 * 1024 * 1024)
+          ? 'A imagem precisa ter entre 1 byte e 10 MB.'
+          : this.uploaded.has(key) || seen.has(key) ? 'Essa imagem já foi selecionada ou enviada nesta sessão.' : '';
+      seen.add(key);
+      return {file, status: message ? 'error' as const : 'pending' as const, message};
+    });
+    const pending = this.uploadItems.filter(item => item.status === 'pending');
+    if (!pending.length) return;
+    this.uploading = this.loading = true;
+    from(pending).pipe(concatMap(item => {
+      item.status = 'uploading';
+      const data = new FormData();
+      data.append('image', item.file);
+      data.append('productId', String(this.productId));
+      if (this.variantId) data.append('variantId', String(this.variantId));
+      return this.uploadService.uploadImage(data).pipe(
+        tap(() => { item.status = 'done'; this.uploaded.add(this.fileKey(item.file)); }),
+        catchError(() => { item.status = 'error'; item.message = 'Não foi possível enviar a imagem. Selecione-a novamente para tentar.'; return of(null); }),
+      );
+    }), takeUntilDestroyed(this.destroyRef)).subscribe({complete: () => {
+      if (this.disposed) return;
+      this.uploading = false;
+      this.loadGallery();
+      if (this.uploadItems.every(item => item.status === 'done')) this.alerts.success('Imagens enviadas com sucesso.');
+    }});
+  }
+  dropImage(event: CdkDragDrop<ProductImageRecord[]>): void {
+    if (this.loading || event.previousIndex === event.currentIndex) return;
+    const ids = this.visibleImages.map(image => image.id);
+    moveItemInArray(ids, event.previousIndex, event.currentIndex);
+    this.saveOrder(ids);
+  }
+  fileSize(file: File): string { return (file.size / 1024 / 1024).toFixed(1).replace('.', ',') + ' MB'; }
 
   onFileSelected(input: HTMLInputElement): void {
     this.clearSelection();
@@ -140,7 +205,7 @@ export class ProductImageUploadComponent implements OnInit {
   }
 
   complete(): void {
-    if (!this.showComplete || this.loading || this.selectedFile || (!this.editing && !this.images.length)) return;
+    if (!this.showComplete || this.loading || this.galleryFailed || this.selectedFile || (!this.editing && !this.images.length)) return;
     this.completed.emit();
   }
 

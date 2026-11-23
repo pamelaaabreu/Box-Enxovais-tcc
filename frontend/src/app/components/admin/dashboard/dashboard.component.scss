@@ -79,13 +79,11 @@
 
 .dashboard__top > app-period-filter {
   display: block;
+  --admin-filters-margin: 0;
   flex: 0 1 520px;
   min-width: min(100%, 460px);
 }
 
-:host ::ng-deep .dashboard__top > app-period-filter > form {
-  margin: 0;
-}
 
 .dashboard__top:has(input[type="date"]) > app-period-filter {
   flex-basis: 100%;
@@ -158,208 +156,6 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: stretch;
   gap: 12px;
-}
-
-.metric {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
-  box-sizing: border-box;
-  min-width: 0;
-  min-height: 128px;
-  gap: 5px;
-  padding: 13px 18px 11px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 17px;
-  background: #fffdf8;
-  box-shadow: 0 3px 12px rgb(33 49 33 / 6%);
-  text-align: left;
-}
-
-.metric__main {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  min-width: 0;
-}
-
-.metric__content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100%;
-  min-width: 0;
-  gap: 2px;
-  text-align: left;
-}
-
-.metric h2 {
-  max-width: calc(100% - 38px);
-  margin: 0;
-  color: var(--dash-ink);
-  font-size: 14px;
-  padding-bottom: 5px;
-  font-weight: 550;
-  line-height: 1.32;
-  text-wrap: balance;
-}
-
-.metric__value {
-  display: block;
-  max-width: 100%;
-  margin: 0;
-  color: var(--dash-ink);
-  font-size: clamp(25px, 2vw, 34px);
-  font-weight: 750;
-  line-height: 1.13;
-  letter-spacing: -0.035em;
-  overflow-wrap: anywhere;
-  font-variant-numeric: tabular-nums;
-}
-
-.metric__description {
-  flex: 0 0 auto;
-  width: 100%;
-  max-width: 100%;
-  margin: 3px 0 0;
-  padding: 0;
-  border: 0;
-  color: #3c6948;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.4;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-  overflow-wrap: anywhere;
-  text-align: left;
-}
-
-.metric__icon,
-.metric--featured .metric__icon,
-.metric--ticket .metric__icon,
-.metric--customers .metric__icon,
-.metric--products .metric__icon,
-.metric--stock .metric__icon {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: grid;
-  place-items: center;
-  box-sizing: border-box;
-  width: 31px;
-  height: 31px;
-  padding: 0;
-  border: 1.5px solid #667255;
-  border-radius: 50%;
-  background: transparent;
-  color: #496044;
-}
-
-.metric__icon mat-icon {
-  display: block;
-  width: 18px;
-  height: 18px;
-  font-size: 18px;
-  line-height: 18px;
-}
-
-.metric--featured {
-  border: 0;
-  background: linear-gradient(120deg, #33452f 0%, #3d5237 55%, #52694a 100%);
-  box-shadow: 0 8px 18px rgba(39, 59, 35, 0.13);
-}
-
-.metric--featured::before,
-.metric--featured::after {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  pointer-events: none;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 253, 248, 0.09);
-}
-
-.metric--featured::before {
-  top: -100px;
-  right: -72px;
-  width: 225px;
-  height: 225px;
-}
-
-.metric--featured::after {
-  bottom: -115px;
-  right: 28px;
-  width: 180px;
-  height: 180px;
-}
-
-.metric--featured .metric__main,
-.metric--featured .metric__description {
-  position: relative;
-  z-index: 1;
-}
-
-.metric--featured h2,
-.metric--featured .metric__value,
-.metric--featured .metric__description {
-  color: #fffdf8;
-}
-
-.metric--featured .metric__icon {
-  border-color: #fffdf8;
-  color: #3d4836;
-  background: #fffdf8;
-  box-shadow: 0 3px 9px rgba(15, 34, 15, 0.13);
-}
-
-/* Estoque baixo: toque rosado no fundo e descrição em tom de alerta. */
-.metric--stock {
-  background:
-    radial-gradient(
-      ellipse 175px 130px at 100% 0%,
-      rgba(174, 84, 69, 0.1),
-      transparent 78%
-    ),
-    linear-gradient(125deg, #fffdf8 0%, #fffdf8 60%, #fff8f5 100%);
-}
-
-.metric--stock::before {
-  content: "";
-  position: absolute;
-  top: -79px;
-  right: -63px;
-  width: 190px;
-  height: 190px;
-  border: 1px solid rgba(174, 84, 69, 0.12);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.metric--stock .metric__icon {
-  border-color: #bf8174;
-  color: #9e503f;
-  background: transparent;
-}
-
-.metric--stock .metric__value {
-  color: var(--dash-ink);
-}
-
-.metric--stock .metric__description {
-  color: #9e503f;
-  font-weight: 600;
-}
-
-.metric:focus-visible {
-  outline: 3px solid #667255;
-  outline-offset: 3px;
 }
 
 .charts-grid {
@@ -705,18 +501,12 @@
   .metrics {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
-  .metric {
-    min-height: 136px;
-    padding: 14px 12px 11px;
-  }
-  .metric__value {
-    font-size: clamp(22px, 1.52vw, 29px);
-  }
-  .metric h2 {
-    font-size: 13px;
-  }
-  .metric__description {
-    font-size: 12.5px;
+  .metrics {
+    --admin-kpi-min-height: 136px;
+    --admin-kpi-padding: 14px 12px 11px;
+    --admin-kpi-value-size: clamp(22px, 1.52vw, 29px);
+    --admin-kpi-title-size: 13px;
+    --admin-kpi-description-size: 12.5px;
   }
 }
 
@@ -771,8 +561,8 @@
   .metrics {
     grid-template-columns: minmax(0, 1fr);
   }
-  .metric {
-    min-height: 126px;
+  .metrics {
+    --admin-kpi-min-height: 126px;
   }
   .chart-panel {
     padding-inline: 14px;
@@ -780,11 +570,9 @@
 }
 
 @container dashboard-layout (max-width: 479px) {
-  .metric__value {
-    font-size: 29px;
-  }
-  .metric h2 {
-    font-size: 14px;
+  .metrics {
+    --admin-kpi-value-size: 29px;
+    --admin-kpi-title-size: 14px;
   }
   .panel__heading h2 {
     font-size: 15px;
@@ -836,16 +624,79 @@
   line-height: 1.5;
 }
 
-.stock-cards { display: none; }
+.stock-cards {
+  display: none;
+}
 @container dashboard-layout (max-width: 639px) {
-  .stock-table { display: none; }
-  .stock-cards { display: grid; gap: 12px; list-style: none; padding: 0; margin: 8px 0 0; }
-  .stock-card { border: 1px solid var(--dash-border); border-radius: 14px; padding: 14px; min-width: 0; background: var(--dash-surface); }
-  .stock-card > a { color: #303e2c; font-size: 13px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
-  .stock-card__total { margin: 8px 0; color: var(--dash-text); font-size: 12px; }
-  .stock-card > ul { list-style: none; margin: 0; padding: 0; }
-  .stock-card__variant { padding: 10px 0 0; margin-top: 10px; border-top: 1px solid var(--dash-border); }
-  .stock-card dl { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 0 0 8px; font-size: 12px; }
-  .stock-card dt { color: var(--dash-text); }
-  .stock-card dd { margin: 3px 0 0; color: var(--dash-ink); font-weight: 600; }
+  .stock-table {
+    display: none;
+  }
+  .stock-cards {
+    display: grid;
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+  }
+  .stock-card {
+    border: 1px solid var(--dash-border);
+    border-radius: 14px;
+    padding: 14px;
+    min-width: 0;
+    background: var(--dash-surface);
+  }
+  .stock-card > a {
+    color: #303e2c;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  .stock-card__total {
+    margin: 8px 0;
+    color: var(--dash-text);
+    font-size: 12px;
+  }
+  .stock-card > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .stock-card__variant {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 0 0;
+    margin-top: 10px;
+    border-top: 1px solid var(--dash-border);
+  }
+  .stock-card dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+  }
+  .stock-card__badge {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    padding: 4px 7px;
+    border-radius: 999px;
+    background: var(--dash-soft);
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  .stock-card dt {
+    color: var(--dash-text);
+  }
+  .stock-card dd {
+    margin: 0;
+    color: var(--dash-ink);
+    font-weight: 600;
+  }
+  .stock-card .table-status {
+    font-size: 11px;
+    padding: 4px 7px;
+  }
 }

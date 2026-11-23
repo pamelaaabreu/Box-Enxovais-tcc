@@ -14,7 +14,9 @@
 }
 <header [class.compact]="compact">
   <div class="heading">
-    @if (icon) {
+    @if (showImage) {
+      <img class="heading-image" [src]="image" alt="" width="56" height="56" (error)="failedImage = image" />
+    } @else if (icon) {
       <span class="icon"
         ><mat-icon fontSet="material-icons" aria-hidden="true">{{
           icon

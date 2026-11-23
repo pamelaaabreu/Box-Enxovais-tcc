@@ -1,15 +1,17 @@
 <section aria-label="Variações do produto">
+  @if (variants.length) {
   <div class="variant-heading">
     <div>
-      <h2>Variações do produto</h2>
+      <h2>Variações do produto <small>· {{ variants.length }}</small></h2>
     </div>
     <button type="button" (click)="add()" [disabled]="variants.length >= 50">
       <mat-icon aria-hidden="true">add</mat-icon>Adicionar variação
     </button>
   </div>
+  }
   @for (row of variants.controls; track row; let index = $index) {
     <div
-      class="variant-card"
+      class="variant-card" [class.invalid]="row.invalid && row.touched"
       [formGroup]="row"
       role="group"
       [attr.aria-label]="
@@ -32,7 +34,8 @@
           >Nome / tamanho *<input
             formControlName="size"
             maxlength="60"
-            placeholder="Ex.: Casal"
+            placeholder="Ex.: King"
+            [attr.aria-describedby]="row.invalid && row.touched ? 'variant-error-' + index : null"
             [attr.aria-invalid]="
               row.controls.size.touched && row.controls.size.invalid
             "
@@ -42,6 +45,7 @@
             formControlName="dimensions"
             maxlength="500"
             placeholder="Ex.: 220 × 240 cm"
+            [attr.aria-describedby]="row.invalid && row.touched ? 'variant-error-' + index : null"
             [attr.aria-invalid]="
               row.controls.dimensions.touched && row.controls.dimensions.invalid
             "
@@ -53,6 +57,7 @@
             maxlength="16"
             placeholder="0,00"
             (input)="mask($event, row)"
+            [attr.aria-describedby]="row.invalid && row.touched ? 'variant-error-' + index : null"
             [attr.aria-invalid]="
               row.controls.price.touched && row.controls.price.invalid
             "
@@ -65,18 +70,21 @@
             min="0"
             max="2147483647"
             step="1"
+            [attr.aria-describedby]="row.invalid && row.touched ? 'variant-error-' + index : null"
             [attr.aria-invalid]="
               row.controls.stock.touched && row.controls.stock.invalid
             "
         /></label>
       </div>
       @if (row.invalid && row.touched) {
-        <p class="error" role="alert">
-          <mat-icon aria-hidden="true">error_outline</mat-icon>Informe nome,
-          dimensões, preço maior que zero e estoque inteiro não negativo.
+        <p class="error" role="alert" [id]="'variant-error-' + index">
+          <mat-icon aria-hidden="true">error_outline</mat-icon><span>Preencha nome, dimensões, preço maior que zero e estoque inteiro não negativo para salvar.</span>
         </p>
       }
     </div>
+  }
+  @if (!variants.length) {
+    <app-admin-state icon="inventory_2" title="Nenhuma variação cadastrada" description="Use variações para vender o mesmo produto em tamanhos diferentes, cada um com seu preço e estoque. Sem variações, o preço e o estoque são definidos em Dados do produto." actionLabel="+ Adicionar primeira variação" (action)="add()" />
   }
   @if (showSummary && variants.length) {
     <p class="variant-summary" role="status">

@@ -55,4 +55,20 @@ describe('CatalogRegistrationComponent', () => {
     expect(host.querySelector('form.editor')).not.toBeNull();
     http.verify();
   });
+  it('paginates locally and clamps the current page after filtering', () => {
+    const fixture = TestBed.createComponent(CatalogRegistrationComponent);
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne(url).flush(Array.from({length: 23}, (_, index) => ({id: index + 1, name: 'Categoria ' + (index + 1), productCount: 0})));
+    const component = fixture.componentInstance;
+    expect(component.paged().length).toBe(10);
+    component.page.set(3);
+    expect(component.paged().map(item => item.id)).toEqual([21, 22, 23]);
+    component.query.set('Categoria 23');
+    expect(component.currentPage()).toBe(1);
+    expect(component.paged()[0].id).toBe(23);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-pagination')).not.toBeNull();
+    http.verify();
+  });
+
 });

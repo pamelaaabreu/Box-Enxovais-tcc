@@ -99,7 +99,6 @@ export class AdminComponent {
     const pages: Record<string, [string, string]> = {
       catalog: ['Cadastros', 'Gerencie as categorias e marcas do catálogo.'],
       products: ['Produtos', 'Gerencie o catálogo da loja.'],
-      metrics: ['Métricas', 'Indicadores e evolução do desempenho da loja.'],
       promotions: [
         'Promoções',
         'Gerencie campanhas, produtos e ofertas da sua loja.',

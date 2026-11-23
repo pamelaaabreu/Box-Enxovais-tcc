@@ -1,3 +1,4 @@
+import { AdminKpiCardComponent } from '../../../shared/components/admin-kpi-card/admin-kpi-card.component';
 import { CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -24,6 +25,7 @@ registerLocaleData(localePt, 'pt-BR');
   selector: 'app-dashboard',
   imports: [
     AdminStateComponent,
+    AdminKpiCardComponent,
     CurrencyPipe,
     EchartComponent,
     HintDirective,
@@ -235,7 +237,11 @@ export class DashboardComponent {
         itemStyle: { borderWidth: 0 },
         inactiveBorderWidth: 0,
         itemGap: 12,
-        textStyle: { fontFamily: 'Montserrat', color: '#3d4836', fontSize: 13.7 },
+        textStyle: {
+          fontFamily: 'Montserrat',
+          color: '#3d4836',
+          fontSize: 13.7,
+        },
       },
       series: [
         {

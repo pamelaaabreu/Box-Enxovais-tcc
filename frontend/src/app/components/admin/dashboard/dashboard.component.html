@@ -8,9 +8,6 @@
     @if (status() === "loaded") {
       @if (data(); as s) {
         <p class="period-note" aria-label="Período aplicado aos indicadores">
-          <span class="period-note__icon" aria-hidden="true">
-            <mat-icon>event</mat-icon>
-          </span>
           <span class="period-note__text">
             @if (displayedPeriod().from === displayedPeriod().until) {
               Dados de <strong>{{ displayedPeriod().from }}</strong>
@@ -45,123 +42,65 @@
   } @else {
     @if (data(); as s) {
       <div class="metrics" aria-label="Resumo dos indicadores">
-        <article
-          class="panel metric metric--featured"
-          tabindex="0"
-          appHint="Inclui o frete dos pedidos aprovados e exclui cancelamentos."
-        >
-          <div class="metric__main">
-            <div class="metric__content">
-              <h2>Faturamento</h2>
-              <strong class="metric__value">
-                {{
-                  s.revenueCents / 100
-                    | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-                }}
-              </strong>
-            </div>
-            <span class="metric__icon">
-              <mat-icon aria-hidden="true">payments</mat-icon>
-            </span>
-          </div>
-          <p class="metric__description">Aprovados com frete</p>
-        </article>
-        <article
-          class="panel metric metric--orders"
-          tabindex="0"
-          appHint="Pedidos feitos no período, incluindo aprovados e cancelados."
-        >
-          <div class="metric__main">
-            <div class="metric__content">
-              <h2>Pedidos realizados</h2>
-              <strong class="metric__value">{{ s.orders }}</strong>
-            </div>
-            <span class="metric__icon">
-              <mat-icon aria-hidden="true">shopping_bag</mat-icon>
-            </span>
-          </div>
-          <p class="metric__description">
-            {{ s.approvedOrders }} aprovados ·
-            {{ s.cancelledOrders }} cancelados no período
-          </p>
-        </article>
-        <article
-          class="panel metric metric--ticket"
-          tabindex="0"
-          appHint="Valor médio dos pedidos aprovados no período, incluindo frete."
-        >
-          <div class="metric__main">
-            <div class="metric__content">
-              <h2>Ticket médio</h2>
-              <strong class="metric__value">
-                {{
-                  s.averageTicketCents / 100
-                    | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-                }}
-              </strong>
-            </div>
-            <span class="metric__icon">
-              <mat-icon aria-hidden="true">receipt_long</mat-icon>
-            </span>
-          </div>
-          <p class="metric__description">Média dos pedidos aprovados</p>
-        </article>
-        <article
-          class="panel metric metric--customers"
-          tabindex="0"
-          appHint="Total de clientes cadastrados e quantos chegaram no período."
-        >
-          <div class="metric__main">
-            <div class="metric__content">
-              <h2>Clientes cadastrados</h2>
-              <strong class="metric__value">{{ s.customers }}</strong>
-            </div>
-            <span class="metric__icon">
-              <mat-icon aria-hidden="true">groups</mat-icon>
-            </span>
-          </div>
-          <p class="metric__description">
-            {{ s.newCustomers }}
-            {{ s.newCustomers === 1 ? "novo" : "novos" }} no período
-          </p>
-        </article>
-        <article
-          class="panel metric metric--products"
-          tabindex="0"
-          appHint="Produtos ativos no catálogo, em comparação com o total cadastrado."
-        >
-          <div class="metric__main">
-            <div class="metric__content">
-              <h2>Produtos ativos</h2>
-              <strong class="metric__value">{{ s.activeProducts }}</strong>
-            </div>
-            <span class="metric__icon">
-              <mat-icon aria-hidden="true">inventory_2</mat-icon>
-            </span>
-          </div>
-          <p class="metric__description">
-            {{ s.products }} cadastrados no total
-          </p>
-        </article>
-        <article
-          class="panel metric metric--stock"
-          tabindex="0"
-          appHint="Produtos com 1 a 5 unidades em estoque. Os indisponíveis estão zerados."
-        >
-          <div class="metric__main">
-            <div class="metric__content">
-              <h2>Estoque baixo</h2>
-              <strong class="metric__value">{{ s.lowStock }}</strong>
-            </div>
-            <span class="metric__icon">
-              <mat-icon aria-hidden="true">warning_amber</mat-icon>
-            </span>
-          </div>
-          <p class="metric__description">
-            1 a 5 unidades · {{ s.outOfStock }}
-            {{ s.outOfStock === 1 ? "indisponível" : "indisponíveis" }}
-          </p>
-        </article>
+        <app-admin-kpi-card
+          title="Faturamento"
+          [value]="s.revenueCents / 100"
+          format="currency"
+          variant="featured"
+          icon="payments"
+          description="Aprovados com frete"
+          tooltip="Inclui o frete dos pedidos aprovados e exclui cancelamentos."
+        />
+        <app-admin-kpi-card
+          title="Pedidos realizados"
+          [value]="s.orders"
+          icon="shopping_bag"
+          [description]="
+            s.approvedOrders +
+            ' aprovados · ' +
+            s.cancelledOrders +
+            ' cancelados no período'
+          "
+          tooltip="Pedidos feitos no período, incluindo aprovados e cancelados."
+        />
+        <app-admin-kpi-card
+          title="Ticket médio"
+          [value]="s.averageTicketCents / 100"
+          format="currency"
+          icon="receipt_long"
+          description="Média dos pedidos aprovados"
+          tooltip="Valor médio dos pedidos aprovados no período, incluindo frete."
+        />
+        <app-admin-kpi-card
+          title="Clientes cadastrados"
+          [value]="s.customers"
+          icon="groups"
+          [description]="
+            s.newCustomers +
+            (s.newCustomers === 1 ? ' novo' : ' novos') +
+            ' no período'
+          "
+          tooltip="Total de clientes cadastrados e quantos chegaram no período."
+        />
+        <app-admin-kpi-card
+          title="Produtos ativos"
+          [value]="s.activeProducts"
+          icon="inventory_2"
+          [description]="s.products + ' cadastrados no total'"
+          tooltip="Produtos ativos no catálogo, em comparação com o total cadastrado."
+        />
+        <app-admin-kpi-card
+          title="Estoque baixo"
+          [value]="s.lowStock"
+          variant="warning"
+          icon="warning_amber"
+          [description]="
+            '1 a 5 unidades · ' +
+            s.outOfStock +
+            (s.outOfStock === 1 ? ' indisponível' : ' indisponíveis')
+          "
+          tooltip="Produtos com 1 a 5 unidades em estoque. Os indisponíveis estão zerados."
+        />
       </div>
       <div class="charts-grid" aria-label="Análises e informações da loja">
         <section class="panel chart-panel charts-grid__revenue">
@@ -308,9 +247,16 @@
                       }}
                     </strong>
                   </div>
-                  <span class="recent-orders__customer">{{ order.customer }}</span>
-                  <time class="recent-orders__date" [attr.datetime]="order.createdAt">
-                    {{ order.createdAt | date: "dd/MM/yyyy 'às' HH:mm" : "-0300" }}
+                  <span class="recent-orders__customer">{{
+                    order.customer
+                  }}</span>
+                  <time
+                    class="recent-orders__date"
+                    [attr.datetime]="order.createdAt"
+                  >
+                    {{
+                      order.createdAt | date: "dd/MM/yyyy 'às' HH:mm" : "-0300"
+                    }}
                   </time>
                   <span
                     class="order-status"
@@ -356,7 +302,13 @@
                     <th scope="col">Produto</th>
                     <th scope="col">Tam.</th>
                     <th scope="col">Qtd.</th>
-                    <th scope="col" class="stock-table__total" appHint="Soma do estoque de todos os tamanhos do produto">Total geral</th>
+                    <th
+                      scope="col"
+                      class="stock-table__total"
+                      appHint="Soma do estoque de todos os tamanhos do produto"
+                    >
+                      Total geral
+                    </th>
                     <th scope="col">Situação</th>
                   </tr>
                 </thead>
@@ -385,7 +337,10 @@
                         <td>{{ product.size || "—" }}</td>
                         <td>{{ product.quantity }}</td>
                         @if (first) {
-                          <td class="stock-table__total" [attr.rowspan]="group.variants.length">
+                          <td
+                            class="stock-table__total"
+                            [attr.rowspan]="group.variants.length"
+                          >
                             {{ group.totalQuantity }}
                           </td>
                         }
@@ -414,17 +369,39 @@
             <ul class="stock-cards" aria-label="Estoque atual por produto">
               @for (group of stockGroups(); track group.productId) {
                 <li class="stock-card">
-                  <a [routerLink]="['/admin/products', group.productId, 'edit']">{{ group.name }}</a>
-                  <p class="stock-card__total">Total geral: <strong>{{ group.totalQuantity }}</strong></p>
+                  <a
+                    [routerLink]="['/admin/products', group.productId, 'edit']"
+                    >{{ group.name }}</a
+                  >
+                  <p class="stock-card__total">
+                    Total geral: <strong>{{ group.totalQuantity }}</strong>
+                  </p>
                   <ul>
                     @for (product of group.variants; track product.variantId) {
                       <li class="stock-card__variant">
                         <dl>
-                          <div><dt>Tamanho</dt><dd>{{ product.size || 'Único' }}</dd></div>
-                          <div><dt>Quantidade</dt><dd>{{ product.quantity }}</dd></div>
+                          <div class="stock-card__badge">
+                            <dt>Tam.</dt>
+                            <dd>{{ product.size || "Único" }}</dd>
+                          </div>
+                          <div class="stock-card__badge">
+                            <dt>Qtd.</dt>
+                            <dd>{{ product.quantity }}</dd>
+                          </div>
                         </dl>
-                        <span class="table-status" [class.table-status--critical]="product.quantity === 0">
-                          {{ product.quantity === 0 ? 'Indisponível' : product.quantity === 1 ? 'Última unidade' : 'Baixo estoque' }}
+                        <span
+                          class="table-status"
+                          [class.table-status--critical]="
+                            product.quantity === 0
+                          "
+                        >
+                          {{
+                            product.quantity === 0
+                              ? "Indisponível"
+                              : product.quantity === 1
+                                ? "Última unidade"
+                                : "Baixo estoque"
+                          }}
                         </span>
                       </li>
                     }

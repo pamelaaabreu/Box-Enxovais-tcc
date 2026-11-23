@@ -18,13 +18,13 @@ describe('PeriodFilterComponent', () => {
     fixture.componentRef.setInput('form', form);
     fixture.detectChanges();
     const loader = TestbedHarnessEnvironment.loader(fixture);
-    const period = await loader.getHarness(MatSelectHarness.with({ selector: '[formControlName="period"]' }));
+    const period = await loader.getHarness(MatSelectHarness.with({ selector: '[data-filter-key="period"]' }));
     await period.open();
     await period.clickOptions({ text: 'Período personalizado' });
     expect(form.controls.period.value).toBe('custom');
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll('input[type="date"]').length).toBe(2);
-    const group = await loader.getHarness(MatSelectHarness.with({ selector: '[formControlName="group"]' }));
+    const group = await loader.getHarness(MatSelectHarness.with({ selector: '[data-filter-key="group"]' }));
     await group.open();
     await group.clickOptions({ text: 'Por mês' });
     expect(form.controls.group.value).toBe('month');

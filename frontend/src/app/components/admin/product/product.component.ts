@@ -1,3 +1,7 @@
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { AdminFiltersComponent, AdminFilterField } from '../../../shared/components/admin-filters/admin-filters.component';
 import { ConfirmDialogService } from '../../../shared/components/confirm-dialog/confirm-dialog.service';
 import { CustomAlertService } from '../../../core/services/custom-alert.service';
 import { AdminStateComponent } from '../../../shared/components/admin-state/admin-state.component';
@@ -35,7 +39,7 @@ registerLocaleData(localePt);
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [AdminStateComponent, AdminPageHeaderComponent, PaginationComponent,
+  imports: [MatMenuModule, MatIconModule, MatSelectModule, AdminFiltersComponent, AdminStateComponent, AdminPageHeaderComponent, PaginationComponent,
     CurrencyPipe,
     DecimalPipe,
     ReactiveFormsModule,
@@ -71,6 +75,11 @@ export class ProductComponent {
     stock: '',
     limit: 20,
   });
+  readonly filterFields:AdminFilterField[]=[
+    {key:'product-search',id:'product-search',type:'search',label:'Buscar produto',control:this.filters.controls.name,placeholder:'Nome ou SKU do produto',maxlength:200,wide:true},
+    {key:'product-status',type:'select',label:'Status',control:this.filters.controls.status,options:[{value:'',label:'Todos os status'},{value:'active',label:'Ativos'},{value:'inactive',label:'Inativos'},{value:'archived',label:'Arquivados'}]},
+    {key:'product-stock',type:'select',label:'Estoque',control:this.filters.controls.stock,options:[{value:'',label:'Todos'},{value:'available',label:'Em estoque'},{value:'empty',label:'Sem estoque'}]},
+  ];
   readonly page = signal<Page<Product> | null>(null);
   readonly loading = signal(false);
   readonly error = signal('');

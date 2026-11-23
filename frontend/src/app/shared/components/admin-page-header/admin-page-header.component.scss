@@ -124,7 +124,9 @@ p {
   color: var(--olive, #3d4836);
   border-radius: 20px;
   padding: 5px 10px;
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -174,3 +176,9 @@ p {
   .heading { padding-right: 56px; }
   .admin-menu-button { position: absolute; top: 12px; right: 0; }
 }
+
+@media (min-width: 701px) and (max-width: 1024px) {
+  .actions:has(> .admin-menu-button:not(:only-child)) { padding-right: 56px; }
+}
+
+.heading-image { width: 56px; height: 56px; flex: 0 0 56px; border-radius: 12px; object-fit: cover; }

@@ -18,4 +18,16 @@ describe('ProductVariantsComponent',()=>{
   rows.at(0).controls.price.setValue('359,90');rows.at(1).controls.stock.setValue(2);fixture.detectChanges();expect(fixture.componentInstance.startingPrice).toBe('R$ 289,90');expect(fixture.componentInstance.totalStock).toBe(18);expect(fixture.nativeElement.querySelector('.remove').getAttribute('aria-label')).toContain('Solteiro');expect(fixture.nativeElement.querySelector('.remove mat-icon').textContent).toContain('delete_outline');
  });
 
+ it('keeps new rows quiet until interaction and associates errors with the inputs',()=>{
+  const fixture=TestBed.createComponent(ProductVariantsComponent),rows=variantsArray();
+  fixture.componentRef.setInput('variants',rows);fixture.detectChanges();
+  expect(fixture.nativeElement.querySelector('app-admin-state')).not.toBeNull();
+  fixture.componentInstance.add();fixture.detectChanges();
+  expect(fixture.nativeElement.querySelector('.variant-card .error')).toBeNull();
+  rows.at(0).markAllAsTouched();fixture.detectChanges();
+  const error=fixture.nativeElement.querySelector('.variant-card .error');
+  expect(error.getAttribute('role')).toBe('alert');
+  for(const input of fixture.nativeElement.querySelectorAll('.variant-card input')) expect(input.getAttribute('aria-describedby')).toBe(error.id);
+ });
+
 });
