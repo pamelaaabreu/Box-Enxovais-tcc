@@ -33,8 +33,7 @@ func saveVariants(ctx context.Context, tx *sql.Tx, productID int64, items, expec
     quantity
 FROM products
 WHERE id = $1
-    FOR
-    UPDATE`, productID).Scan(&basePrice, &baseStock); err != nil {
+FOR UPDATE`, productID).Scan(&basePrice, &baseStock); err != nil {
 		return nil, err
 	}
 	rows, err := tx.QueryContext(ctx, `SELECT
@@ -130,7 +129,8 @@ WHERE product_id = $1`, productID); err != nil {
 		v.Dimensions = strings.TrimSpace(v.Dimensions)
 		if v.ID == 0 {
 			err = tx.QueryRowContext(ctx, `INSERT INTO product_variants(product_id, size, price, quantity, dimensions)
-VALUES($1,$2,$3,$4,$5) RETURNING id`, productID, v.Size, v.Price, v.Stock, v.Dimensions).Scan(&v.ID)
+VALUES($1,$2,$3,$4,$5)
+RETURNING id`, productID, v.Size, v.Price, v.Stock, v.Dimensions).Scan(&v.ID)
 		} else {
 			_, err = tx.ExecContext(ctx, `UPDATE product_variants
 SET size =

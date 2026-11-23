@@ -1,2 +1,23 @@
-table {width:100%;font:400 13px/1.5 Montserrat,sans-serif;} th,td {padding:8px;text-align:left;border-bottom:1px solid #d5d7cc;} summary {font-size:13px;cursor:pointer;}
-.chart-summary { margin: 10px 0 0; font:400 12px/1.5 Montserrat,sans-serif; color:#5d6656; }
+table {
+  width: 100%;
+  font:
+    400 13px/1.5 Montserrat,
+    sans-serif;
+}
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #d5d7cc;
+}
+summary {
+  font-size: 13px;
+  cursor: pointer;
+}
+.chart-summary {
+  margin: 10px 0 0;
+  font:
+    400 12px/1.5 Montserrat,
+    sans-serif;
+  color: #5d6656;
+}

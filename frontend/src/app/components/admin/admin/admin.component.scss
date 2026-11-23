@@ -141,40 +141,16 @@
   min-width: 0;
   padding: 12px clamp(16px, 2.5vw, 32px) clamp(16px, 2.5vw, 32px);
 }
-.menu-toggle,
-.drawer-backdrop {
-  display: none;
+.drawer-backdrop { display: none; }
+.drawer-close { position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; justify-content: center; }
+@media (max-width: 1024px) {
+  .admin-shell { padding-inline-start: 0; }
+  .content { padding-top: 12px; }
+  .sidebar { width: min(85vw, 320px); animation: admin-drawer-enter 200ms ease-out; box-shadow: 8px 0 28px #20271b33; }
+  .drawer-backdrop { position: fixed; display: block; inset: 0; z-index: 19; background: #20271b80; border: 0; }
 }
-@media (max-width: 900px) {
-  .admin-shell {
-    padding-inline-start: 0;
-  }
-  .content { padding-top: 76px; }
-  .sidebar:not(.open) {
-    display: none;
-  }
-  .sidebar {
-    width: min(var(--sidebar-width), 88vw);
-  }
-  .menu-toggle {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    color: inherit;
-    background: var(--surface);
-  }
-  .drawer-backdrop {
-    position: fixed;
-    display: block;
-    inset: 0;
-    z-index: 19;
-    background: #20271b68;
-    border: 0;
-  }
-}
+@keyframes admin-drawer-enter { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .sidebar { animation: none; } }
 .sidebar nav {
   border-top: 1px solid #ffffff26;
   padding-top: 8px;
@@ -194,15 +170,6 @@
 }
 
 .content > app-admin-page-header { margin-bottom: var(--admin-section-gap, 12px); }
-@media (max-width: 900px) {
-  .promotions-menu-toggle {
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    z-index: 21;
-  }
-}
-
 @media (max-height: 650px) {
   .sidebar { gap: 8px; padding-block: 10px; }
   .logo { height: 72px; width: 120px; }

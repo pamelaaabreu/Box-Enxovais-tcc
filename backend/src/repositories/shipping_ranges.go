@@ -50,8 +50,17 @@ ORDER BY
 
 func CreateShippingRange(ctx context.Context, database *sql.DB, item *models.ShippingRange, startCEP, endCEP int) error {
 	return database.QueryRowContext(ctx, `
-INSERT INTO shipping_ranges (name, start_cep, end_cep, price_cents, min_days, max_days, active)
-VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id
+INSERT INTO shipping_ranges (
+    name,
+    start_cep,
+    end_cep,
+    price_cents,
+    min_days,
+    max_days,
+    active
+)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING id
 `,
 		item.Name,
 		startCEP,

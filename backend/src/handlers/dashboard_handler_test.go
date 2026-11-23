@@ -10,6 +10,13 @@ func TestDashboardPeriod(t *testing.T) {
 	now := time.Date(2026, 11, 22, 1, 0, 0, 0, time.UTC)
 	for _, test := range []struct{ query, from, until, group string }{
 		{"", "2026-10-23", "2026-11-22", "day"}, {"period=today", "2026-11-21", "2026-11-22", "day"}, {"period=7d", "2026-11-15", "2026-11-22", "day"}, {"period=month", "2026-11-01", "2026-11-22", "day"}, {"period=last_month", "2026-10-01", "2026-11-01", "day"}, {"period=custom&dateFrom=2026-01-01&dateTo=2026-06-30", "2026-01-01", "2026-07-01", "month"}, {"period=30d&group=month", "2026-10-23", "2026-11-22", "month"},
+
+		{"period=7d&group=day", "2026-11-15", "2026-11-22", "day"},
+		{"period=30d&group=auto", "2026-10-23", "2026-11-22", "day"},
+		{"period=30d&group=day", "2026-10-23", "2026-11-22", "day"},
+		{"period=month&group=month", "2026-11-01", "2026-11-22", "month"},
+		{"period=custom&dateFrom=2025-12-31&dateTo=2026-01-02&group=day", "2025-12-31", "2026-01-03", "day"},
+		{"period=custom&dateFrom=2026-01-30&dateTo=2026-02-02&group=day", "2026-01-30", "2026-02-03", "day"},
 	} {
 		t.Run(test.query, func(t *testing.T) {
 			p, e := dashboardPeriod(httptest.NewRequest("GET", "/admin/dashboard?"+test.query, nil), now)

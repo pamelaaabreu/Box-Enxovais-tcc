@@ -61,8 +61,8 @@ ORDER BY
 func (repo HomeRepository) OrderReview(ctx context.Context, userID int, orderID int64) (*models.ExperienceReview, error) {
 	var eligible bool
 	err := repo.DB.QueryRowContext(ctx, `
-SELECT status = 'simulated_approved'
-AND stock_debited
+SELECT
+    status = 'simulated_approved' AND stock_debited
 FROM checkout_orders
 WHERE id = $1
     AND user_id = $2
@@ -107,13 +107,12 @@ func (repo HomeRepository) CreateReview(ctx context.Context, userID int, orderID
 	defer tx.Rollback()
 	var eligible bool
 	err = tx.QueryRowContext(ctx, `
-SELECT status = 'simulated_approved'
-AND stock_debited
+SELECT
+    status = 'simulated_approved' AND stock_debited
 FROM checkout_orders
 WHERE id = $1
     AND user_id = $2
-    FOR
-    UPDATE
+FOR UPDATE
 `, orderID, userID).Scan(&eligible)
 	if err != nil {
 		return err
@@ -122,8 +121,18 @@ WHERE id = $1
 		return sql.ErrNoRows
 	}
 	result, err := tx.ExecContext(ctx, `
-INSERT INTO purchase_experience_reviews (order_id, user_id, overall, navigation, service, experience, comment, publication_consent)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (order_id) DO NOTHING
+INSERT INTO purchase_experience_reviews (
+    order_id,
+    user_id,
+    overall,
+    navigation,
+    service,
+    experience,
+    comment,
+    publication_consent
+)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+ON CONFLICT (order_id) DO NOTHING
 `, orderID, userID, review.Overall, review.Navigation, review.Service, review.Experience, review.Comment, review.Consent)
 	if err != nil {
 		return err

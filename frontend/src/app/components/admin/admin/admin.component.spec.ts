@@ -1,10 +1,12 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { of } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { AuthService } from '../../../core/services/auth.service';
 
 describe('Administrative page headers', () => {
-  beforeEach(() => TestBed.configureTestingModule({ imports: [AdminComponent], providers: [provideRouter([]), { provide: AuthService, useValue: { getUserName: () => 'Administrador', getUserEmail: () => 'admin@example.test', logout: () => {} } }] }));
+  beforeEach(() => TestBed.configureTestingModule({ imports: [AdminComponent], providers: [provideRouter([]), { provide: BreakpointObserver, useValue: { observe: () => of({matches:false}) } }, { provide: AuthService, useValue: { getUserName: () => 'Administrador', getUserEmail: () => 'admin@example.test', logout: () => {} } }] }));
   function render(url: string) {
     spyOnProperty(TestBed.inject(Router), 'url', 'get').and.returnValue(url);
     const fixture = TestBed.createComponent(AdminComponent);
@@ -15,14 +17,14 @@ describe('Administrative page headers', () => {
     const host = render('/admin/promotions/new');
     expect(host.querySelector('.admin-header')).toBeNull();
     expect(host.querySelector('.admin-search')).toBeNull();
-    expect(host.querySelector('.promotions-menu-toggle')).not.toBeNull();
+    expect(host.querySelector('.promotions-menu-toggle')).toBeNull();
     expect(host.querySelector('app-admin-page-header')).toBeNull();
   });
   it('lets product listings own their header and keeps generic search removed', () => {
     const host = render('/admin/products');
     expect(host.querySelector('app-admin-page-header')).toBeNull();
     expect(host.querySelector('.admin-search')).toBeNull();
-    expect(host.querySelector('.promotions-menu-toggle')).not.toBeNull();
+    expect(host.querySelector('.promotions-menu-toggle')).toBeNull();
   });
   it('uses a compact shared header with breadcrumb when creating a product', () => {
     const host = render('/admin/products/manage');
@@ -46,5 +48,16 @@ describe('Administrative page headers', () => {
     expect(summary?.parentElement?.hasAttribute('open')).toBeTrue();
     expect(host.querySelector('nav a[routerlink="/admin/catalog/categories"]')).not.toBeNull();
     expect(host.querySelector('app-admin-page-header')).toBeNull();
+  });
+  it('opens a mobile dialog with a close control and removes hidden navigation',()=>{
+    const fixture=TestBed.createComponent(AdminComponent);fixture.componentInstance.mobile.set(true);fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('#admin-sidebar')).toBeNull();
+    const trigger=fixture.nativeElement.querySelector('button[aria-label="Abrir menu"]') as HTMLButtonElement;
+    trigger.click();fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[role="dialog"][aria-modal="true"]')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('main').hasAttribute('inert')).toBeTrue();
+    (fixture.nativeElement.querySelector('button[aria-label="Fechar menu"]') as HTMLButtonElement).click();fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('#admin-sidebar')).toBeNull();
+    expect(fixture.nativeElement.querySelector('main').hasAttribute('inert')).toBeFalse();
   });
 });

@@ -1,14 +1,19 @@
 <div class="admin-shell">
-  <button type="button" class="menu-toggle promotions-menu-toggle" aria-label="Menu administrativo" aria-controls="admin-sidebar" [attr.aria-expanded]="menuOpen()" (click)="menuOpen.set(!menuOpen())"><mat-icon aria-hidden="true">menu</mat-icon></button>
+
   @if (menuOpen()) {
     <button
       class="drawer-backdrop"
       type="button"
       aria-label="Fechar menu administrativo"
-      (click)="menuOpen.set(false)"
+      (click)="closeMenu()"
+      tabindex="-1"
     ></button>
   }
-  <aside class="sidebar" id="admin-sidebar" [class.open]="menuOpen()">
+  @if (!mobile() || menuOpen()) {
+  <aside class="sidebar" id="admin-sidebar" [class.open]="menuOpen()" [attr.role]="mobile() ? 'dialog' : null" [attr.aria-modal]="mobile() ? 'true' : null" aria-label="Menu administrativo" [cdkTrapFocus]="mobile()" [cdkTrapFocusAutoCapture]="mobile()">
+    @if (mobile()) {
+      <button type="button" class="drawer-close" aria-label="Fechar menu" cdkFocusInitial (click)="closeMenu()"><mat-icon aria-hidden="true">close</mat-icon></button>
+    }
     <img
       src="logotipo-branca-completa.png"
       alt="Box Enxovais — Casa bem vivida"
@@ -22,9 +27,9 @@
         ariaCurrentWhenActive="page"
         ><mat-icon aria-hidden="true">dashboard</mat-icon> Dashboard</a
       >
-      <a routerLink="/admin/products" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="menuOpen.set(false)"><mat-icon aria-hidden="true">inventory_2</mat-icon> Produtos</a>
-      <a routerLink="/admin/orders" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="menuOpen.set(false)"><mat-icon aria-hidden="true">receipt_long</mat-icon> Pedidos</a>
-      <a routerLink="/admin/customers" routerLinkActive="active" ariaCurrentWhenActive="page" (click)="menuOpen.set(false)"><mat-icon aria-hidden="true">groups</mat-icon> Clientes</a>
+      <a routerLink="/admin/products" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">inventory_2</mat-icon> Produtos</a>
+      <a routerLink="/admin/orders" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">receipt_long</mat-icon> Pedidos</a>
+      <a routerLink="/admin/customers" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">groups</mat-icon> Clientes</a>
       <a routerLink="/admin/metrics" routerLinkActive="active" ariaCurrentWhenActive="page"><mat-icon aria-hidden="true">monitoring</mat-icon> Métricas analíticas</a>
       <a
         routerLink="/admin/reports"
@@ -80,7 +85,8 @@
       </div>
     </div>
   </aside>
-  <main class="content">
+  }
+  <main class="content" [attr.inert]="mobile() && menuOpen() ? '' : null">
     @if (section() !== 'customers' && section() !== 'orders' && section() !== 'promotions' && section() !== 'catalog' && section() !== 'experience-reviews' && (section() !== 'products' || isProductCreate())) {
       <app-admin-page-header [title]="title()" [description]="subtitle()" [icon]="isProductCreate() ? 'inventory_2' : section() === 'reports' ? 'description' : 'dashboard'" [compact]="isProductCreate()" [breadcrumb]="isProductCreate() ? [{label:'Produtos',url:'/admin/products'},{label:title()}] : [{label:title()}]" />
     }

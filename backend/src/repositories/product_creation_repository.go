@@ -14,8 +14,21 @@ func (repo ProductRepository) Create(ctx context.Context, p models.Product) (int
 	}
 
 	query := `
-INSERT INTO products (name, description, care_instructions, measurements, price, quantity, brand_id, product_type_id, status, purchase_summary, sku)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`
+INSERT INTO products (
+    name,
+    description,
+    care_instructions,
+    measurements,
+    price,
+    quantity,
+    brand_id,
+    product_type_id,
+    status,
+    purchase_summary,
+    sku
+)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+RETURNING id`
 
 	var productID int
 	tx, err := repo.DB.BeginTx(ctx, nil)

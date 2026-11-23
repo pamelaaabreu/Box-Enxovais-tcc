@@ -1,5 +1,10 @@
+import { DOCUMENT } from '@angular/common';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { A11yModule } from '@angular/cdk/a11y';
+import { Overlay } from '@angular/cdk/overlay';
+import { AdminNavigationService } from '../../../shared/services/admin-navigation.service';
 import { AdminPageHeaderComponent } from '../../../shared/components/admin-page-header/admin-page-header.component';
-import { Component, HostListener, inject, signal } from '@angular/core';
+import { Component, DestroyRef, HostListener, Injector, afterNextRender, effect, inject, signal } from '@angular/core';
 import {
   NavigationEnd,
   Router,
@@ -14,8 +19,10 @@ import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin',
+  providers: [AdminNavigationService],
   imports: [
     AdminPageHeaderComponent,
+    A11yModule,
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
@@ -25,9 +32,16 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './admin.component.scss',
 })
 export class AdminComponent {
+  private readonly document = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
-  readonly menuOpen = signal(false);
+  readonly navigation = inject(AdminNavigationService);
+  readonly menuOpen = this.navigation.opened;
+  readonly mobile = this.navigation.compact;
+  private readonly breakpoints = inject(BreakpointObserver);
+  private readonly scrollBlock = inject(Overlay).scrollStrategies.block();
+  private readonly destroy = inject(DestroyRef);
   readonly section = signal('');
   readonly isProductCreate = signal(false);
   readonly title = signal('Dashboard');
@@ -43,13 +57,28 @@ export class AdminComponent {
     .join('');
 
   constructor() {
+    this.breakpoints.observe('(max-width: 1024px)').pipe(takeUntilDestroyed()).subscribe(({ matches }) => {
+      this.mobile.set(matches);
+      if (!matches) this.closeMenu();
+    });
+    effect(() => {
+      if (this.mobile() && this.menuOpen()) this.scrollBlock.enable();
+      else this.scrollBlock.disable();
+    });
+    this.destroy.onDestroy(() => this.scrollBlock.disable());
     this.syncPage();
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
         takeUntilDestroyed(),
       )
-      .subscribe(() => this.syncPage());
+      .subscribe(() => {
+        const restoreFocus = this.mobile() && this.menuOpen();
+        this.syncPage();
+        if (restoreFocus) afterNextRender(() => {
+          this.document.querySelector<HTMLButtonElement>('button[aria-label="Abrir menu"]')?.focus();
+        }, { injector: this.injector });
+      });
   }
 
   private syncPage(): void {
@@ -86,7 +115,13 @@ export class AdminComponent {
   }
 
   @HostListener('keydown.escape')
-  closeMenu(): void {this.menuOpen.set(false);}
+  closeMenu(): void {
+    const restoreFocus = this.mobile() && this.menuOpen();
+    this.menuOpen.set(false);
+    if (restoreFocus) afterNextRender(() => {
+      this.document.querySelector<HTMLButtonElement>('button[aria-label="Abrir menu"]')?.focus();
+    }, { injector: this.injector });
+  }
 
   logout(): void {
     this.auth.logout();

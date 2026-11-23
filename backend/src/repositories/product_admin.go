@@ -23,8 +23,7 @@ func (repo ProductRepository) Update(ctx context.Context, id int64, product mode
 	if err = tx.QueryRowContext(ctx, `SELECT updated_at
 FROM products
 WHERE id = $1
-    FOR
-    UPDATE`, id).Scan(&updated); err != nil {
+FOR UPDATE`, id).Scan(&updated); err != nil {
 		return err
 	}
 	if !updated.Equal(product.ExpectedUpdatedAt) {
@@ -64,8 +63,7 @@ func (repo ProductRepository) Remove(ctx context.Context, id int64) (string, err
 	if err = tx.QueryRowContext(ctx, `SELECT status
 FROM products
 WHERE id = $1
-    FOR
-    UPDATE`, id).Scan(&status); err != nil {
+FOR UPDATE`, id).Scan(&status); err != nil {
 		return "", err
 	}
 	var linked bool
@@ -172,6 +170,5 @@ func imageScope(ctx context.Context, tx *sql.Tx, productID int64) error {
 	return tx.QueryRowContext(ctx, `SELECT id
 FROM products
 WHERE id = $1
-    FOR
-    UPDATE`, productID).Scan(&id)
+FOR UPDATE`, productID).Scan(&id)
 }

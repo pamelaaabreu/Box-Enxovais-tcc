@@ -31,7 +31,7 @@ func Load(envFiles ...string) (Config, error) {
 			return Config{}, errors.New("arquivo .env obrigatório não encontrado")
 		}
 		return Config{}, errors.New("não foi possível carregar o arquivo .env")
-	}
+	}  
 
 	cfg := Config{
 		HTTPAddr:   envOrDefault("HTTP_ADDR", ":8080"),

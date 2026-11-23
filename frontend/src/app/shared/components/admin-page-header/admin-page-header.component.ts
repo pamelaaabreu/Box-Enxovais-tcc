@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AdminNavigationService } from '../../services/admin-navigation.service';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -15,6 +16,8 @@ export interface AdminBreadcrumb {
   styleUrl: './admin-page-header.component.scss',
 })
 export class AdminPageHeaderComponent {
+  readonly adminNavigation = inject(AdminNavigationService, { optional: true });
+  openMenu(): void { this.adminNavigation?.opened.set(true); }
   @Input({ required: true }) title = '';
   @Input() description = '';
   @Input() breadcrumb: AdminBreadcrumb[] = [];

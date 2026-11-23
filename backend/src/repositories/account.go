@@ -120,12 +120,23 @@ func lockAccount(ctx context.Context, tx *sql.Tx, userID int) error {
 	return tx.QueryRowContext(ctx, `SELECT id
 FROM users
 WHERE id = $1
-    FOR
-    UPDATE`, userID).Scan(&userID)
+FOR UPDATE`, userID).Scan(&userID)
 }
 
 func insertAddress(ctx context.Context, tx *sql.Tx, userID int, a models.UserAddress) (models.UserAddress, error) {
-	return scanAddress(tx.QueryRowContext(ctx, `INSERT INTO user_addresses(user_id, label, recipient, zip_code, street,number,complement, neighborhood, city, state, is_default)
+	return scanAddress(tx.QueryRowContext(ctx, `INSERT INTO user_addresses (
+    user_id,
+    label,
+    recipient,
+    zip_code,
+    street,
+    number,
+    complement,
+    neighborhood,
+    city,
+    state,
+    is_default
+)
 VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,NOT EXISTS(SELECT 1 FROM user_addresses WHERE user_id = $1)) RETURNING
 `+addressColumns, userID, a.Label, a.Recipient, a.ZipCode, a.Street, a.Number, a.Complement, a.Neighborhood, a.City, a.State))
 }

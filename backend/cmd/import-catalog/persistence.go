@@ -99,8 +99,19 @@ func applyProduct(ctx context.Context, database *sql.DB, dir string, r preparedP
 	}
 	var id int
 	price := fmt.Sprintf("%d.%02d", *r.Price/100, *r.Price%100)
-	err = tx.QueryRowContext(ctx, `INSERT INTO products (name, description, care_instructions, measurements, price, quantity, brand_id, product_type_id, status)
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`,
+	err = tx.QueryRowContext(ctx, `INSERT INTO products (
+    name,
+    description,
+    care_instructions,
+    measurements,
+    price,
+    quantity,
+    brand_id,
+    product_type_id,
+    status
+)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+RETURNING id`,
 		r.Name, r.Description, optionalCareInstructions(r.Care), characteristics, price, *r.Stock, brandID, category, r.Status).Scan(&id)
 	if err != nil {
 		return false, err

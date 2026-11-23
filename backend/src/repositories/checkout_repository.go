@@ -52,8 +52,7 @@ func (repo CheckoutRepository) Create(ctx context.Context, userID int, input mod
 	err = tx.QueryRowContext(ctx, `SELECT id
 FROM carts
 WHERE user_id = $1
-    FOR
-    UPDATE`, userID).Scan(&cartID)
+FOR UPDATE`, userID).Scan(&cartID)
 	if errors.Is(err, sql.ErrNoRows) {
 		return order, ErrCheckoutConflict
 	}
@@ -137,8 +136,7 @@ UPDATE OF p`, cartID)
 FROM product_variants
 WHERE id = $1
     AND product_id = $2
-    FOR
-    UPDATE`, item.VariantID, item.ProductID).Scan(&item.UnitPrice, &item.Stock)
+FOR UPDATE`, item.VariantID, item.ProductID).Scan(&item.UnitPrice, &item.Stock)
 			if errors.Is(err, sql.ErrNoRows) || (err == nil && item.Stock < item.Quantity) {
 				return order, ErrCheckoutConflict
 			}
@@ -248,13 +246,36 @@ WHERE user_id = $1
 		return order, err
 	}
 	order.Status = "simulated_approved"
-	err = tx.QueryRowContext(ctx, `INSERT INTO checkout_orders(user_id, request_key, address, payment_method, total_cents, stock_debited, contact_phone, shipping_cents, shipping_min_days, shipping_max_days, shipping_method, products_subtotal_cents, discount_cents, installments)
-VALUES($1,$2,$3,$4,$5,true,NULLIF($6,''),$7,$8,$9,$10,$11,$12,$13) RETURNING id`, userID, input.RequestKey, string(address), input.PaymentMethod, order.Total, input.ContactPhone, shipping, quote.MinDays, quote.MaxDays, method, gross, discount, count).Scan(&order.ID)
+	err = tx.QueryRowContext(ctx, `INSERT INTO checkout_orders (
+    user_id,
+    request_key,
+    address,
+    payment_method,
+    total_cents,
+    stock_debited,
+    contact_phone,
+    shipping_cents,
+    shipping_min_days,
+    shipping_max_days,
+    shipping_method,
+    products_subtotal_cents,
+    discount_cents,
+    installments
+)
+VALUES($1,$2,$3,$4,$5,true,NULLIF($6,''),$7,$8,$9,$10,$11,$12,$13)
+RETURNING id`, userID, input.RequestKey, string(address), input.PaymentMethod, order.Total, input.ContactPhone, shipping, quote.MinDays, quote.MaxDays, method, gross, discount, count).Scan(&order.ID)
 	if err != nil {
 		return order, err
 	}
 	for _, item := range items {
-		_, err = tx.ExecContext(ctx, `INSERT INTO checkout_order_items(order_id, product_id, name, quantity, unit_price_cents, variant_id)
+		_, err = tx.ExecContext(ctx, `INSERT INTO checkout_order_items (
+    order_id,
+    product_id,
+    name,
+    quantity,
+    unit_price_cents,
+    variant_id
+)
 VALUES($1,$2,$3,$4,$5,NULLIF($6,0))`, order.ID, item.ProductID, item.Name, item.Quantity, item.UnitPrice, item.VariantID)
 		if err != nil {
 			return order, err

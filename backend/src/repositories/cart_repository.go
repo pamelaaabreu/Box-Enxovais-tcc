@@ -47,8 +47,7 @@ VALUES($1) ON CONFLICT(user_id) DO NOTHING`, userID)
 	err = tx.QueryRowContext(ctx, `SELECT id
 FROM carts
 WHERE user_id = $1
-    FOR
-    UPDATE`, userID).Scan(&cartID)
+FOR UPDATE`, userID).Scan(&cartID)
 	if err != nil {
 		return empty, err
 	}

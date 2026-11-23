@@ -5,27 +5,30 @@
 >
   <div class="dashboard__top">
     <app-period-filter [form]="filter" (applied)="apply()" />
-
     @if (status() === "loaded") {
       @if (data(); as s) {
         <p class="period-note" aria-label="Período aplicado aos indicadores">
-          <mat-icon aria-hidden="true">event</mat-icon>
-          <span>
-            De {{ s.period.from.slice(0, 10) | date: "dd/MM/yyyy" }} até
-            {{ s.period.until.slice(0, 10) | date: "dd/MM/yyyy" }}
-            · agrupamento {{ s.period.group === "day" ? "diário" : "mensal" }}.
+          <span class="period-note__icon" aria-hidden="true">
+            <mat-icon>event</mat-icon>
+          </span>
+          <span class="period-note__text">
+            @if (displayedPeriod().from === displayedPeriod().until) {
+              Dados de <strong>{{ displayedPeriod().from }}</strong>
+            } @else {
+              De <strong>{{ displayedPeriod().from }}</strong> a
+              <strong>{{ displayedPeriod().until }}</strong>
+            }
+            · visão {{ s.period.group === "day" ? "diária" : "mensal" }}
           </span>
         </p>
       }
     }
   </div>
-
   @if (status() === "loading") {
     <app-admin-state
       kind="loading"
       title="Carregando indicadores e gráficos…"
     />
-
     <div class="metrics" aria-hidden="true">
       @for (item of [1, 2, 3, 4, 5, 6]; track item) {
         <div class="panel skeleton"></div>
@@ -42,13 +45,14 @@
   } @else {
     @if (data(); as s) {
       <div class="metrics" aria-label="Resumo dos indicadores">
-        <article class="panel metric metric--featured">
+        <article
+          class="panel metric metric--featured"
+          tabindex="0"
+          appHint="Inclui o frete dos pedidos aprovados e exclui cancelamentos."
+        >
           <div class="metric__main">
-            <span class="metric__icon">
-              <mat-icon aria-hidden="true">payments</mat-icon>
-            </span>
             <div class="metric__content">
-              <h2>Faturamento simulado</h2>
+              <h2>Faturamento</h2>
               <strong class="metric__value">
                 {{
                   s.revenueCents / 100
@@ -56,33 +60,37 @@
                 }}
               </strong>
             </div>
-          </div>
-          <p class="metric__description">
-            Aprovados no período, com frete e sem cancelamentos
-          </p>
-        </article>
-
-        <article class="panel metric metric--orders">
-          <div class="metric__main">
             <span class="metric__icon">
-              <mat-icon aria-hidden="true">shopping_bag</mat-icon>
+              <mat-icon aria-hidden="true">payments</mat-icon>
             </span>
+          </div>
+          <p class="metric__description">Aprovados com frete</p>
+        </article>
+        <article
+          class="panel metric metric--orders"
+          tabindex="0"
+          appHint="Pedidos feitos no período, incluindo aprovados e cancelados."
+        >
+          <div class="metric__main">
             <div class="metric__content">
               <h2>Pedidos realizados</h2>
               <strong class="metric__value">{{ s.orders }}</strong>
             </div>
+            <span class="metric__icon">
+              <mat-icon aria-hidden="true">shopping_bag</mat-icon>
+            </span>
           </div>
           <p class="metric__description">
             {{ s.approvedOrders }} aprovados ·
             {{ s.cancelledOrders }} cancelados no período
           </p>
         </article>
-
-        <article class="panel metric metric--ticket">
+        <article
+          class="panel metric metric--ticket"
+          tabindex="0"
+          appHint="Valor médio dos pedidos aprovados no período, incluindo frete."
+        >
           <div class="metric__main">
-            <span class="metric__icon">
-              <mat-icon aria-hidden="true">receipt_long</mat-icon>
-            </span>
             <div class="metric__content">
               <h2>Ticket médio</h2>
               <strong class="metric__value">
@@ -92,77 +100,91 @@
                 }}
               </strong>
             </div>
-          </div>
-          <p class="metric__description">
-            Média dos pedidos aprovados no período
-          </p>
-        </article>
-
-        <article class="panel metric metric--customers">
-          <div class="metric__main">
             <span class="metric__icon">
-              <mat-icon aria-hidden="true">groups</mat-icon>
+              <mat-icon aria-hidden="true">receipt_long</mat-icon>
             </span>
+          </div>
+          <p class="metric__description">Média dos pedidos aprovados</p>
+        </article>
+        <article
+          class="panel metric metric--customers"
+          tabindex="0"
+          appHint="Total de clientes cadastrados e quantos chegaram no período."
+        >
+          <div class="metric__main">
             <div class="metric__content">
               <h2>Clientes cadastrados</h2>
               <strong class="metric__value">{{ s.customers }}</strong>
             </div>
+            <span class="metric__icon">
+              <mat-icon aria-hidden="true">groups</mat-icon>
+            </span>
           </div>
           <p class="metric__description">
-            Total atual · {{ s.newCustomers }}
+            {{ s.newCustomers }}
             {{ s.newCustomers === 1 ? "novo" : "novos" }} no período
           </p>
         </article>
-
-        <article class="panel metric metric--products">
+        <article
+          class="panel metric metric--products"
+          tabindex="0"
+          appHint="Produtos ativos no catálogo, em comparação com o total cadastrado."
+        >
           <div class="metric__main">
-            <span class="metric__icon">
-              <mat-icon aria-hidden="true">inventory_2</mat-icon>
-            </span>
             <div class="metric__content">
               <h2>Produtos ativos</h2>
               <strong class="metric__value">{{ s.activeProducts }}</strong>
             </div>
+            <span class="metric__icon">
+              <mat-icon aria-hidden="true">inventory_2</mat-icon>
+            </span>
           </div>
           <p class="metric__description">
-            Situação atual · {{ s.products }} cadastrados no total
+            {{ s.products }} cadastrados no total
           </p>
         </article>
-
-        <article class="panel metric metric--stock">
+        <article
+          class="panel metric metric--stock"
+          tabindex="0"
+          appHint="Produtos com 1 a 5 unidades em estoque. Os indisponíveis estão zerados."
+        >
           <div class="metric__main">
-            <span class="metric__icon">
-              <mat-icon aria-hidden="true">warning_amber</mat-icon>
-            </span>
             <div class="metric__content">
               <h2>Estoque baixo</h2>
               <strong class="metric__value">{{ s.lowStock }}</strong>
             </div>
+            <span class="metric__icon">
+              <mat-icon aria-hidden="true">warning_amber</mat-icon>
+            </span>
           </div>
           <p class="metric__description">
-            Atual: total de 1 a 5 unidades · {{ s.outOfStock }}
+            1 a 5 unidades · {{ s.outOfStock }}
             {{ s.outOfStock === 1 ? "indisponível" : "indisponíveis" }}
           </p>
         </article>
       </div>
-
-      <div class="analytics-grid" aria-label="Análises principais">
-        <section class="panel chart-panel analytics-grid__revenue">
-          <div class="panel__heading">
-            <span class="panel__icon" aria-hidden="true">
-              <mat-icon>bar_chart</mat-icon>
-            </span>
-            <h2>Faturamento por período</h2>
-            <span class="panel__tag">
+      <div class="charts-grid" aria-label="Análises e informações da loja">
+        <section class="panel chart-panel charts-grid__revenue">
+          <div class="panel__heading panel__heading--stacked">
+            <h2>
+              Faturamento
               {{ s.period.group === "day" ? "Diário" : "Mensal" }}
-            </span>
+            </h2>
+            <p class="chart-panel__total">
+              {{
+                s.revenueCents / 100
+                  | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+              }}
+            </p>
           </div>
-
           @if (s.series.length) {
-            <app-dashboard-trend
-              title="Faturamento"
-              [series]="s.series"
-              field="revenueCents"
+            <app-echart
+              [option]="revenueOption()"
+              [ariaLabel]="
+                'Faturamento por período ' +
+                (s.period.group === 'day' ? 'diário' : 'mensal') +
+                ', em reais'
+              "
             />
           } @else {
             <app-admin-state
@@ -172,15 +194,10 @@
             />
           }
         </section>
-
-        <section class="panel chart-panel analytics-grid__status">
+        <section class="panel chart-panel charts-grid__status">
           <div class="panel__heading">
-            <span class="panel__icon" aria-hidden="true">
-              <mat-icon>donut_large</mat-icon>
-            </span>
             <h2>Pedidos por status</h2>
           </div>
-
           @if (s.orders) {
             <p class="chart-panel__summary">
               {{ s.orders }} {{ s.orders === 1 ? "pedido" : "pedidos" }} no
@@ -189,38 +206,10 @@
               {{ s.approvedOrders }}
               {{ s.approvedOrders === 1 ? "aprovado" : "aprovados" }}
             </p>
-
-            <div class="status-chart status-chart--stacked">
-              <div
-                class="status-chart__visual"
-                role="img"
-                [attr.aria-label]="statusChartDescription()"
-                [style.background]="statusDonutBackground()"
-              >
-                <div class="status-chart__center" aria-hidden="true">
-                  <strong>{{ s.orders }}</strong>
-                  <span>{{ s.orders === 1 ? "pedido" : "pedidos" }}</span>
-                </div>
-              </div>
-
-              <ul class="status-chart__legend" aria-label="Totais por status">
-                @for (item of statusSegments(); track item.name) {
-                  <li>
-                    <span class="status-chart__label">
-                      <span
-                        class="status-chart__dot"
-                        [style.backgroundColor]="item.color"
-                      ></span>
-                      {{ item.name }}
-                    </span>
-                    <strong>{{ item.value }}</strong>
-                    <span class="status-chart__percentage"
-                      >{{ item.percent }}%</span
-                    >
-                  </li>
-                }
-              </ul>
-            </div>
+            <app-echart
+              [option]="statusOption()"
+              [ariaLabel]="statusChartDescription()"
+            />
           } @else {
             <app-admin-state
               title="Nenhum pedido registrado"
@@ -228,20 +217,30 @@
             />
           }
         </section>
-
-        <section class="panel chart-panel analytics-grid__evolution">
+        <section class="panel chart-panel charts-grid__customers">
           <div class="panel__heading">
-            <span class="panel__icon" aria-hidden="true">
-              <mat-icon>show_chart</mat-icon>
-            </span>
+            <h2>Evolução de clientes</h2>
+          </div>
+          @if (s.series.length) {
+            <app-echart
+              [option]="customersOption()"
+              ariaLabel="Evolução de novos clientes cadastrados por período"
+            />
+          } @else {
+            <app-admin-state
+              icon="groups"
+              title="Sem novos clientes no período"
+            />
+          }
+        </section>
+        <section class="panel chart-panel charts-grid__orders">
+          <div class="panel__heading">
             <h2>Evolução dos pedidos</h2>
           </div>
-
           @if (s.series.length) {
-            <app-dashboard-trend
-              title="Pedidos"
-              [series]="s.series"
-              field="orders"
+            <app-echart
+              [option]="ordersOption()"
+              ariaLabel="Evolução dos pedidos por período"
             />
           } @else {
             <app-admin-state
@@ -250,49 +249,19 @@
             />
           }
         </section>
-      </div>
-
-      <div class="support-grid" aria-label="Informações complementares">
-        <section class="panel chart-panel support-grid__products">
+        <section class="panel chart-panel charts-grid__products">
           <div class="panel__heading">
-            <span class="panel__icon" aria-hidden="true">
-              <mat-icon>workspace_premium</mat-icon>
-            </span>
             <h2>Produtos mais vendidos</h2>
           </div>
           <p class="chart-panel__summary">
             {{ productChartItems().length }} grupos ·
             {{ totalTopProductUnits() }} unidades
           </p>
-
           @if (productChartItems().length) {
-            <div
-              class="vertical-bars"
-              role="img"
-              aria-label="Produtos mais vendidos em gráfico de barras verticais"
-            >
-              @for (product of productChartItems(); track product.productId) {
-                <div
-                  class="vertical-bars__item"
-                  [attr.title]="
-                    product.fullName + ': ' + product.units + ' unidades'
-                  "
-                >
-                  <div class="vertical-bars__column">
-                    <div
-                      class="vertical-bars__bar"
-                      [style.height.%]="product.percent"
-                    ></div>
-                  </div>
-                  <strong class="vertical-bars__value">{{
-                    product.units
-                  }}</strong>
-                  <span class="vertical-bars__label">{{
-                    product.shortName
-                  }}</span>
-                </div>
-              }
-            </div>
+            <app-echart
+              [option]="productsOption()"
+              ariaLabel="Produtos mais vendidos, em unidades"
+            />
           } @else {
             <app-admin-state
               icon="inventory_2"
@@ -300,15 +269,30 @@
             />
           }
         </section>
-
-        <section class="panel chart-panel support-grid__orders">
+        <section class="panel chart-panel charts-grid__categories">
           <div class="panel__heading">
-            <span class="panel__icon" aria-hidden="true">
-              <mat-icon>receipt_long</mat-icon>
-            </span>
+            <h2>Categorias mais vendidas</h2>
+          </div>
+          <p class="chart-panel__summary">
+            {{ categoryChartItems().length }} grupos ·
+            {{ totalCategoryUnits() }} unidades
+          </p>
+          @if (categoryChartItems().length) {
+            <app-echart
+              [option]="categoriesOption()"
+              ariaLabel="Categorias mais vendidas, em unidades"
+            />
+          } @else {
+            <app-admin-state
+              icon="category"
+              title="Nenhuma venda por categoria"
+            />
+          }
+        </section>
+        <section class="panel chart-panel charts-grid__recent">
+          <div class="panel__heading">
             <h2>Pedidos recentes</h2>
           </div>
-
           @if (s.recentOrders.length) {
             <ul class="compact-list recent-orders">
               @for (order of s.recentOrders; track order.id) {
@@ -324,10 +308,10 @@
                       }}
                     </strong>
                   </div>
-                  <span>
-                    {{ order.customer }} ·
-                    {{ order.createdAt | date: "dd/MM/yyyy HH:mm" : "-0300" }}
-                  </span>
+                  <span class="recent-orders__customer">{{ order.customer }}</span>
+                  <time class="recent-orders__date" [attr.datetime]="order.createdAt">
+                    {{ order.createdAt | date: "dd/MM/yyyy 'às' HH:mm" : "-0300" }}
+                  </time>
                   <span
                     class="order-status"
                     [class.order-status--cancelled]="
@@ -335,9 +319,7 @@
                     "
                   >
                     {{
-                      order.status === "cancelled"
-                        ? "Cancelado"
-                        : "Aprovado em simulação"
+                      order.status === "cancelled" ? "Cancelado" : "Aprovado"
                     }}
                   </span>
                 </li>
@@ -347,135 +329,114 @@
             <app-admin-state title="Nenhum pedido recente neste período" />
           }
         </section>
-
-        <section class="panel chart-panel support-grid__categories">
+        <section
+          class="panel chart-panel chart-panel--table charts-grid__stock"
+          aria-label="Tabela de estoque atual"
+        >
           <div class="panel__heading">
-            <span class="panel__icon" aria-hidden="true">
-              <mat-icon>category</mat-icon>
-            </span>
-            <h2>Categorias mais vendidas</h2>
+            <h2>Estoque atual</h2>
           </div>
-          <p class="chart-panel__summary">
-            {{ categoryChartItems().length }} grupos ·
-            {{ totalCategoryUnits() }} unidades
+          <p class="panel__description">
+            Produtos ativos e variações com até 5 unidades. O total do produto é
+            a soma das variações.
           </p>
-
-          @if (categoryChartItems().length) {
+          @if (s.stock.length) {
             <div
-              class="mini-bars"
-              role="img"
-              aria-label="Categorias mais vendidas em gráfico de barras"
+              class="stock-table"
+              tabindex="0"
+              role="region"
+              aria-label="Tabela de estoque atual"
             >
-              @for (category of categoryChartItems(); track category.name) {
-                <div
-                  class="mini-bars__row"
-                  [attr.title]="
-                    category.fullName + ': ' + category.units + ' unidades'
-                  "
-                >
-                  <div class="mini-bars__topline">
-                    <span class="mini-bars__label">{{
-                      category.shortName
-                    }}</span>
-                    <strong>{{ category.units }}</strong>
-                  </div>
-                  <div class="mini-bars__track">
-                    <div
-                      class="mini-bars__bar"
-                      [style.width.%]="category.percent"
-                    ></div>
-                  </div>
-                </div>
-              }
+              <table>
+                <caption class="visually-hidden">
+                  Estoque atual
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Tam.</th>
+                    <th scope="col">Qtd.</th>
+                    <th scope="col" class="stock-table__total" appHint="Soma do estoque de todos os tamanhos do produto">Total geral</th>
+                    <th scope="col">Situação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (group of stockGroups(); track group.productId) {
+                    @for (
+                      product of group.variants;
+                      track product.variantId;
+                      let first = $first
+                    ) {
+                      <tr>
+                        @if (first) {
+                          <td [attr.rowspan]="group.variants.length">
+                            <a
+                              class="stock-table__name"
+                              [routerLink]="[
+                                '/admin/products',
+                                group.productId,
+                                'edit',
+                              ]"
+                              [appHint]="group.name"
+                              >{{ group.name }}</a
+                            >
+                          </td>
+                        }
+                        <td>{{ product.size || "—" }}</td>
+                        <td>{{ product.quantity }}</td>
+                        @if (first) {
+                          <td class="stock-table__total" [attr.rowspan]="group.variants.length">
+                            {{ group.totalQuantity }}
+                          </td>
+                        }
+                        <td>
+                          <span
+                            class="table-status"
+                            [class.table-status--critical]="
+                              product.quantity === 0
+                            "
+                          >
+                            {{
+                              product.quantity === 0
+                                ? "Indisponível"
+                                : product.quantity === 1
+                                  ? "Última unidade"
+                                  : "Baixo estoque"
+                            }}
+                          </span>
+                        </td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
             </div>
+            <ul class="stock-cards" aria-label="Estoque atual por produto">
+              @for (group of stockGroups(); track group.productId) {
+                <li class="stock-card">
+                  <a [routerLink]="['/admin/products', group.productId, 'edit']">{{ group.name }}</a>
+                  <p class="stock-card__total">Total geral: <strong>{{ group.totalQuantity }}</strong></p>
+                  <ul>
+                    @for (product of group.variants; track product.variantId) {
+                      <li class="stock-card__variant">
+                        <dl>
+                          <div><dt>Tamanho</dt><dd>{{ product.size || 'Único' }}</dd></div>
+                          <div><dt>Quantidade</dt><dd>{{ product.quantity }}</dd></div>
+                        </dl>
+                        <span class="table-status" [class.table-status--critical]="product.quantity === 0">
+                          {{ product.quantity === 0 ? 'Indisponível' : product.quantity === 1 ? 'Última unidade' : 'Baixo estoque' }}
+                        </span>
+                      </li>
+                    }
+                  </ul>
+                </li>
+              }
+            </ul>
           } @else {
-            <app-admin-state
-              icon="category"
-              title="Nenhuma venda por categoria"
-            />
+            <app-admin-state title="Nenhum alerta de estoque" />
           }
         </section>
       </div>
-
-      <section
-        class="panel chart-panel chart-panel--table"
-        aria-label="Tabela de estoque atual"
-      >
-        <div class="panel__heading">
-          <span class="panel__icon panel__icon--warning" aria-hidden="true">
-            <mat-icon>inventory</mat-icon>
-          </span>
-          <h2>Estoque atual</h2>
-        </div>
-        <p class="panel__description">
-          Produtos ativos e variações com até 5 unidades. O total do produto é a
-          soma das variações.
-        </p>
-
-        @if (s.stock.length) {
-          <div
-            class="stock-table"
-            tabindex="0"
-            role="region"
-            aria-label="Tabela de estoque atual"
-          >
-            <table>
-              <caption class="visually-hidden">
-                Estoque atual
-              </caption>
-              <thead>
-                <tr>
-                  <th>Produto</th>
-                  <th>Tamanho</th>
-                  <th>Quantidade</th>
-                  <th>Total do produto</th>
-                  <th>Situação</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (
-                  product of s.stock;
-                  track product.productId + "-" + product.variantId
-                ) {
-                  <tr>
-                    <td>
-                      <a
-                        [routerLink]="[
-                          '/admin/products',
-                          product.productId,
-                          'edit',
-                        ]"
-                      >
-                        {{ product.name }}
-                      </a>
-                    </td>
-                    <td>{{ product.size || "—" }}</td>
-                    <td>{{ product.quantity }}</td>
-                    <td>{{ product.totalQuantity }}</td>
-                    <td>
-                      <span
-                        class="table-status"
-                        [class.table-status--critical]="product.quantity === 0"
-                      >
-                        {{
-                          product.quantity === 0
-                            ? "Indisponível"
-                            : product.quantity === 1
-                              ? "Última unidade"
-                              : "Baixo estoque"
-                        }}
-                      </span>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        } @else {
-          <app-admin-state title="Nenhum alerta de estoque" />
-        }
-      </section>
-
       @if (!s.products) {
         <app-admin-state
           icon="inventory_2"

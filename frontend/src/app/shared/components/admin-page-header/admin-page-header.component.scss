@@ -166,3 +166,11 @@ p {
   font-size: 18px;
   flex: 0 0 18px;
 }
+
+.admin-menu-button { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; border: 1px solid #c4cbb9; border-radius: 10px; color: #3d4836; background: #fffdf8; cursor: pointer; }
+@media (max-width: 1024px) {
+  header { position: relative; }
+  .actions:has(> .admin-menu-button:only-child) { display: contents; }
+  .heading { padding-right: 56px; }
+  .admin-menu-button { position: absolute; top: 12px; right: 0; }
+}

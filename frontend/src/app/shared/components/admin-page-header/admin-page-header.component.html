@@ -32,6 +32,11 @@
     </div>
   </div>
   <div class="actions">
+    @if (adminNavigation?.compact()) {
+      <button type="button" class="admin-menu-button" aria-label="Abrir menu" aria-controls="admin-sidebar" [attr.aria-expanded]="adminNavigation?.opened()" (click)="openMenu()">
+        <mat-icon aria-hidden="true">menu</mat-icon>
+      </button>
+    }
     @if (actionLabel) {
       @if (actionLink) {
         <a class="primary-action" [routerLink]="actionLink">

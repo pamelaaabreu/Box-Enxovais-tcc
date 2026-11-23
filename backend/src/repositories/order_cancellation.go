@@ -34,8 +34,7 @@ FROM checkout_orders
 WHERE id = $1
     AND ($2 = 0
          OR user_id = $2)
-    FOR
-    UPDATE`, id, ownerID).Scan(&status, &debited, &userID)
+FOR UPDATE`, id, ownerID).Scan(&status, &debited, &userID)
 	if err != nil {
 		return order, false, err
 	}
