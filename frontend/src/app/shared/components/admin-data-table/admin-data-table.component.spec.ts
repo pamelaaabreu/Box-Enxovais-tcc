@@ -1,0 +1,5 @@
+import { Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { AdminDataTableComponent } from './admin-data-table.component';
+@Component({standalone:true,imports:[AdminDataTableComponent],template:'<app-admin-data-table label="Clientes" [empty]="empty"><table><thead><tr><th scope="col">Nome</th></tr></thead><tbody><tr><td data-label="Nome">Ana</td></tr></tbody></table></app-admin-data-table>'}) class Host {empty=false;}
+describe('AdminDataTableComponent',()=>{it('projects the native table without replacing its semantics',()=>{const f=TestBed.createComponent(Host);f.detectChanges();expect(f.nativeElement.querySelector('[role=region]').getAttribute('aria-label')).toBe('Clientes');expect(f.nativeElement.querySelector('th').getAttribute('scope')).toBe('col');expect(f.nativeElement.textContent).toContain('Ana');});it('reuses the shared empty state',()=>{const f=TestBed.createComponent(Host);f.componentInstance.empty=true;f.detectChanges();expect(f.nativeElement.querySelector('app-admin-state')).not.toBeNull();expect(f.nativeElement.querySelector('table')).toBeNull();});});

@@ -1,3 +1,4 @@
+import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { AdminKpiCardComponent } from '../../../shared/components/admin-kpi-card/admin-kpi-card.component';
 import { CurrencyPipe, DatePipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
@@ -23,7 +24,7 @@ import type { Dashboard, DashboardPoint } from './models/dashboard.models';
 registerLocaleData(localePt, 'pt-BR');
 @Component({
   selector: 'app-dashboard',
-  imports: [
+  imports: [StatusBadgeComponent,
     AdminStateComponent,
     AdminKpiCardComponent,
     CurrencyPipe,

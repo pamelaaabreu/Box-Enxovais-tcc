@@ -1,7 +1,7 @@
 import { AdminStateComponent } from '../../../../shared/components/admin-state/admin-state.component';
 import { CustomAlertService } from '../../../../core/services/custom-alert.service';
 import { CAMA_GROUP } from '../../data/categories';
-import { ShippingQuoteComponent } from './shipping-quote.component';
+import { ShippingQuoteComponent } from './shipping-quote/shipping-quote.component';
 import { FavoriteButtonComponent } from '../../../../shared/favorite-button/favorite-button.component';
 import { CartService } from '../../../../core/services/cart.service';
 import { CurrencyPipe } from '@angular/common';

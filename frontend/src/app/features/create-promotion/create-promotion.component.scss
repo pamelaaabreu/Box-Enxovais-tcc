@@ -198,11 +198,6 @@ td input {
   display: flex;
   gap: 6px;
 }
-.status-label {
-  font-size: 13px;
-  font-weight: 550;
-  color: #526047;
-}
 .sku {
   display: block;
   font-size: 13px;
@@ -936,13 +931,6 @@ mat-button-toggle {
   text-transform: uppercase;
   letter-spacing: .06em;
   font-size: 12px;
-}
-.campaign-table .status-label {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: #e8eddf;
-  color: #394735;
 }
 .table-meta {
   display: block;

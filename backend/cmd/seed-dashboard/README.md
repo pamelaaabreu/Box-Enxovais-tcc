@@ -12,7 +12,7 @@ Sem `-apply`, executa dentro de uma transação revertida; as sequências de IDs
 
 No schema `public`, a aplicação exige `pg_dump` e `pg_restore` no PATH, cria backup customizado em `db/backups`, valida listagem e leitura integral e informa SHA-256 antes de gravar. Credenciais não são impressas. O nome do banco informado precisa coincidir com o configurado.
 
-Cria 20 clientes `dashboard-202611-XX@example.invalid`, sem login habilitado, e 35 pedidos identificados por `request_key = dashboard-demo-202611-N`, entre 24/10 e 22/11/2026. Usa preços e variantes reais e a primeira faixa ativa de frete; descontos seguem as campanhas aplicáveis à data. Endereços são explicitamente demonstrativos, não destinados a entregas reais.
+Cria 20 clientes fictícios com nomes brasileiros, e-mails reservados `@example.test` e telefones sintéticos, sem login habilitado, e 35 pedidos identificados por `request_key = dashboard-demo-202611-N`, entre 24/10 e 22/11/2026. Usa preços e variantes reais e a primeira faixa ativa de frete; descontos seguem as campanhas aplicáveis à data. Endereços são explicitamente demonstrativos, não destinados a entregas reais.
 
 São 30 pedidos aprovados e 5 cancelados. Cada item possui uma unidade: são consumidas 30 unidades disponíveis, sem estoque negativo. Cancelados têm registro de cancelamento e efeito líquido zero no estoque, como após reposição. Preços, SKUs e pedidos anteriores são preservados. Os horários e clientes são consistentes com a data de cada pedido.
 
@@ -24,3 +24,12 @@ Teste direcionado com PostgreSQL local e schema temporário automaticamente remo
 $env:CART_TEST_LOCAL='1'
 go test ./src/routes -run '^TestDashboardSeedPostgres$' -count=1
 ```
+
+
+Para atualizar somente os 20 perfis deste seed já existentes, inclusive identificadores antigos, sem criar pedidos nem consumir estoque:
+
+```powershell
+go run ./cmd/seed-dashboard -development -database bd_box -refresh-customers -apply
+```
+
+O modo exige o conjunto completo e reconhecido de 20 perfis; preserva IDs, datas, autenticação desabilitada e snapshots históricos dos pedidos. Colisões com contas de outro tipo são rejeitadas e revertidas. O backup continua obrigatório para aplicação em public. Sem `-apply`, a transação é revertida. Os endereços e demais dados comerciais existentes não são modificados.

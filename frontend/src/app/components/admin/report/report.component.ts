@@ -1,3 +1,4 @@
+import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { AdminFiltersComponent, AdminFilterField } from '../../../shared/components/admin-filters/admin-filters.component';
 import { AdminKpiCardComponent } from '../../../shared/components/admin-kpi-card/admin-kpi-card.component';
 import { CurrencyPipe, DecimalPipe, registerLocaleData } from '@angular/common';
@@ -12,9 +13,9 @@ import { Subscription } from 'rxjs';
 import { AdminStateComponent } from '../../../shared/components/admin-state/admin-state.component';
 import { PeriodFilterComponent } from '../../../shared/components/period-filter/period-filter.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-import { ReportData, ReportKind } from './report.models';
+import { ReportData, ReportKind } from './models/report.models';
 registerLocaleData(localePt,'pt-BR');
-@Component({selector:'app-report',imports:[AdminFiltersComponent,AdminKpiCardComponent,CurrencyPipe,DecimalPipe,RouterLink,MatIconModule,AdminStateComponent,PeriodFilterComponent,PaginationComponent],templateUrl:'./report.component.html',styleUrl:'./report.component.scss'})
+@Component({selector:'app-report',imports: [StatusBadgeComponent,AdminFiltersComponent,AdminKpiCardComponent,CurrencyPipe,DecimalPipe,RouterLink,MatIconModule,AdminStateComponent,PeriodFilterComponent,PaginationComponent],templateUrl:'./report.component.html',styleUrl:'./report.component.scss'})
 export class ReportComponent {
  private readonly http=inject(HttpClient);
  private readonly route=inject(ActivatedRoute);

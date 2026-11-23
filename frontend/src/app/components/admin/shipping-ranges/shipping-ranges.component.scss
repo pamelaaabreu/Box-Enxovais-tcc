@@ -13,12 +13,6 @@ button.primary { background: #3d4836; border-color: #3d4836; color: #fffdf8; }
 button.primary:hover:not(:disabled) { background: #526246; }
 .icon-button { width: 44px; height: 44px; padding: 0; flex-shrink: 0; }
 mat-icon { font-size: 20px; width: 20px; height: 20px; }
-.table-scroll { overflow-x: auto; border: 1px solid #deddd0; border-radius: 18px; background: #fffdf8; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.5; }
-th, td { text-align: left; padding: 12px 14px; vertical-align: middle; border-bottom: 1px solid #e8e5db; }
-thead th { background: #f8f7f0; color: #667255; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .035em; }
-tr:last-child > * { border-bottom: 0; }
-tr > th[scope="row"] { font-weight: 600; min-width: 150px; }
 .cep-cell, .price-cell, .days-cell { white-space: nowrap; }
 .price-cell { font-weight: 600; }
 .row-actions { display: flex; gap: 8px; }
@@ -45,8 +39,7 @@ h3 { margin: 0 0 10px; font: 600 15px/1.4 Montserrat, sans-serif; }
 .active-setting { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px; border-radius: 14px; background: #f3f2e9; }
 .active-setting strong { font-size: 14px; font-weight: 600; }
 .drawer-actions { flex-shrink: 0; display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; border-top: 1px solid #deddd0; }
-button:focus-visible, input:focus-visible, .table-scroll:focus-visible { outline: 2px solid #667255; outline-offset: 3px; }
-@media (max-width: 1100px) { th, td { padding-inline: 10px; } }
+button:focus-visible, input:focus-visible { outline: 2px solid #667255; outline-offset: 3px; }
 @media (max-width: 650px) { .range-filters { grid-template-columns: minmax(0, 1fr); gap: 10px; } }
 @media (max-width: 390px) { .drawer-heading, .drawer-actions { padding: 14px 16px; } .drawer-body { padding: 18px 16px; } h2 { font-size: 18px; } .active-setting { align-items: start; flex-direction: column; gap: 4px; } }
 @media (max-width: 359px) { .field-pair { grid-template-columns: minmax(0, 1fr); } .drawer-actions button { padding-inline: 14px; flex: 1; } }

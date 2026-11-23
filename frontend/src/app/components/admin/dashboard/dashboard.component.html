@@ -258,16 +258,7 @@
                       order.createdAt | date: "dd/MM/yyyy 'às' HH:mm" : "-0300"
                     }}
                   </time>
-                  <span
-                    class="order-status"
-                    [class.order-status--cancelled]="
-                      order.status === 'cancelled'
-                    "
-                  >
-                    {{
-                      order.status === "cancelled" ? "Cancelado" : "Aprovado"
-                    }}
-                  </span>
+                  <app-status-badge [tone]="order.status === 'cancelled' ? 'danger' : 'success'">{{ order.status === "cancelled" ? "Cancelado" : "Aprovado" }}</app-status-badge>
                 </li>
               }
             </ul>
@@ -345,20 +336,7 @@
                           </td>
                         }
                         <td>
-                          <span
-                            class="table-status"
-                            [class.table-status--critical]="
-                              product.quantity === 0
-                            "
-                          >
-                            {{
-                              product.quantity === 0
-                                ? "Indisponível"
-                                : product.quantity === 1
-                                  ? "Última unidade"
-                                  : "Baixo estoque"
-                            }}
-                          </span>
+                          <app-status-badge [tone]="product.quantity === 0 ? 'danger' : 'warning'">{{ product.quantity === 0 ? "Indisponível" : product.quantity === 1 ? "Última unidade" : "Baixo estoque" }}</app-status-badge>
                         </td>
                       </tr>
                     }
@@ -389,20 +367,7 @@
                             <dd>{{ product.quantity }}</dd>
                           </div>
                         </dl>
-                        <span
-                          class="table-status"
-                          [class.table-status--critical]="
-                            product.quantity === 0
-                          "
-                        >
-                          {{
-                            product.quantity === 0
-                              ? "Indisponível"
-                              : product.quantity === 1
-                                ? "Última unidade"
-                                : "Baixo estoque"
-                          }}
-                        </span>
+                        <app-status-badge [tone]="product.quantity === 0 ? 'danger' : 'warning'">{{ product.quantity === 0 ? "Indisponível" : product.quantity === 1 ? "Última unidade" : "Baixo estoque" }}</app-status-badge>
                       </li>
                     }
                   </ul>

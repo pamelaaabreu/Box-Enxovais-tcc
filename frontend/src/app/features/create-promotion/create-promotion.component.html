@@ -115,7 +115,7 @@
                 </td>
 
                 <td>
-                  <span class="status-label" [class.status-active]="statusLabel(campaign) === 'Ativa'" [class.status-ended]="statusLabel(campaign) === 'Encerrada'">{{ statusLabel(campaign) }}</span>
+                  <app-status-badge [tone]="statusLabel(campaign) === 'Ativa' ? 'success' : statusLabel(campaign) === 'Pausada' || statusLabel(campaign) === 'Encerrada' ? 'danger' : 'neutral'">{{ statusLabel(campaign) }}</app-status-badge>
                 </td>
 
                 <td class="campaign-period">

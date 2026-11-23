@@ -1,6 +1,6 @@
 :host { display: block; min-width: 0; font-family: Montserrat, sans-serif; color: #3d4836; }
 .variant-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-h2 { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.4; }
+h2 { margin: 0; font-size: 20px; font-weight: 600; line-height: 1.4; }
 h2 small { color: #667255; font-size: 12px; font-weight: 500; white-space: nowrap; }
 button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 9px 14px; border: 1px solid #a4af98; border-radius: 12px; background: transparent; color: #3d4836; font: 500 13px/1.4 Montserrat, sans-serif; cursor: pointer; }
 button:hover:not(:disabled) { background: #eef1e9; }
@@ -28,3 +28,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid #667255; outline-
   .variant-row { grid-column: 1; }
 }
 @media (max-width: 359px) { .variant-row { grid-template-columns: minmax(0, 1fr); } }
+
+.variant-description { margin: 4px 0 0; color: #667255; font-size: 12px; line-height: 1.5; }
+.variant-card { border-inline-color: #e2dfd2; }
+.variant-card.first { border-top-color: #e2dfd2; border-top-left-radius: 12px; border-top-right-radius: 12px; }
+.variant-card:last-of-type { border-bottom-color: #e2dfd2; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }

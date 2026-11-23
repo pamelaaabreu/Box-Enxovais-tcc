@@ -1,3 +1,4 @@
+import { AdminDataTableComponent } from '../../../shared/components/admin-data-table/admin-data-table.component';
 import { MatSelectModule } from '@angular/material/select';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { AdminStateComponent } from '../../../shared/components/admin-state/admin-state.component';
@@ -31,7 +32,7 @@ interface ShippingRange {
 @Component({
   providers: [provideNgxMask()],
   selector: 'app-shipping-ranges',
-  imports: [
+  imports: [AdminDataTableComponent,
     MatDialogModule, MatIconModule, MatMenuModule,
     PaginationComponent,
     MatSelectModule,

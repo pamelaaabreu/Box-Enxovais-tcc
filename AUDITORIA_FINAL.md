@@ -1681,3 +1681,13 @@ Principal confirmado por leitura: bd_box, 53, dirty=false, cinco pedidos. Uso si
 Candidatos novos a desuso foram somente registrados, sem exclusão, após consultar o histórico de limpeza. Permanece aviso de CSS de Promoções abaixo do limite de erro; budgets preservados. Detalhamento, arquivos, evidências, revisão visual e limitações: [PADRONIZACAO_UI_FINAL.md](docs/GUIA_COMPLETO_TCC/PADRONIZACAO_UI_FINAL.md).
 
 Limpeza desta entrega: 229 temporários removidos (22.562.488 bytes); candidatos de código preservados. Última sessão isolada: PASS, schema removido, principal comercial inalterado nesse intervalo.
+
+## Variações, Faixas de CEP e Clientes — 23/11/2026
+
+Executados os dois pacotes em sequência. Faixas de CEP recebeu tabela compacta, menu Material e drawer acessível com confirmação de descarte; preservados endpoints e validações. Na etapa seguinte foram criados StatusBadge e AdminDataTable reutilizáveis, aplicados em Clientes/histórico, Pedidos e CEP; badges também integrados nos demais pontos administrativos. Componentes de Clientes organizados em pastas próprias. Resumo de compras verde e endereços vazios sem card externo. Variações preserva lógica e recebeu acabamento compacto, bordas e título/subtítulo.
+
+Angular: 78 testes direcionados e rechecagens de 63/32 aprovados (sobrepostos). Build final aprovado; aviso preexistente de Promoções 15,79 kB/14 kB mantido. Chrome real em seis larguras, capturas inspecionadas e conferência interativa adicional. Testes do seed PostgreSQL isolado aprovados, inclusive idempotência, IDs, snapshots e estoque.
+
+Atualizados somente os 20 perfis fictícios reconhecidos no bd_box com nomes brasileiros, telefones sintéticos e e-mails @example.test. Backup validado db/backups/before-dashboard-seed-20261123-162457.dump (185.393 bytes), SHA-256 519381ebc47ffec3ffffb336b60a8abfad6665802c57c29bf5f50b2e8a900949. Comparação antes/depois confirmou as 61 tabelas protegidas e demais usuários idênticos, mesmos IDs do seed, versão 53 e dirty=false. Sem alteração de pedidos, preços, estoque, migrations ou contratos HTTP. Frontend/API principais HTTP 200, sem reinício.
+
+Evidências, arquivos, verificações funcionais/visuais e limites: [Variações e CEP](docs/validacao-visual/variacoes-faixas-cep/VALIDACAO.md) e [Clientes, badges e tabelas](docs/validacao-visual/clientes-badges-tabelas/VALIDACAO.md). As referências originais estão em referencias/ junto de cada relatório. Runtime e helpers temporários removidos após os testes; backup preservado.

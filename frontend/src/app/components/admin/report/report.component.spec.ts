@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute,Router,convertToParamMap,provideRouter } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ReportComponent } from './report.component';
-import { ReportData } from './report.models';
+import { ReportData } from './models/report.models';
 describe('ReportComponent',()=>{
  let query:BehaviorSubject<ReturnType<typeof convertToParamMap>>;
  const url='http://localhost:8080/admin/reports/';

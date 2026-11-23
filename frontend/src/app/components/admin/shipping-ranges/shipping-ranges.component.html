@@ -18,7 +18,7 @@
   } @else if (failed()) {
     <app-admin-state kind="error" title="Não foi possível carregar as faixas." actionLabel="Tentar novamente" (action)="load()" />
   } @else if (filtered().length) {
-    <div class="table-scroll" tabindex="0" role="region" aria-label="Faixas de CEP, tabela rolável">
+    <app-admin-data-table label="Faixas de CEP" responsive="scroll">
       <table>
         <thead><tr><th scope="col">Região</th><th scope="col">Faixa de CEP</th><th scope="col">Frete</th><th scope="col">Prazo</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
         <tbody>
@@ -41,7 +41,7 @@
           }
         </tbody>
       </table>
-    </div>
+    </app-admin-data-table>
     <p class="range-count" role="status">{{ filtered().length }} {{ filtered().length === 1 ? 'faixa encontrada' : 'faixas encontradas' }}</p>
     <app-pagination [page]="currentPage()" [total]="filtered().length" [pageSize]="pageSize" (pageChange)="page.set($event)" label="Paginação de faixas de CEP" />
   } @else {

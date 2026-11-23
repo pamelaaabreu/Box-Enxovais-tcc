@@ -208,16 +208,7 @@
     border-bottom-color: rgba(255, 255, 255, 0.18);
   }
 
-  .recent-orders .order-status {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.14);
-  }
-
-  .recent-orders .order-status--cancelled {
-    background: #825247;
-  }
-
-  .compact-list a:focus-visible {
+.compact-list a:focus-visible {
     outline-color: #f5e8d4;
   }
 }
@@ -351,19 +342,6 @@
   font-size: 13px;
   line-height: 1.5;
 }
-.recent-orders .order-status {
-  justify-self: start;
-  padding: 4px 9px;
-  border-radius: 999px;
-  background: #eaf0e6;
-  color: #3c5e35;
-  font-size: 13px;
-  font-weight: 600;
-}
-.recent-orders .order-status--cancelled {
-  background: #f8ece7;
-  color: #914631;
-}
 .stock-table {
   margin-top: 6px;
   max-width: 100%;
@@ -408,21 +386,6 @@
 }
 .stock-table tbody tr:last-child td {
   border-bottom: 0;
-}
-.table-status {
-  display: inline-flex;
-  align-items: center;
-  min-height: 24px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: #f0f2ea;
-  color: #4f6246;
-  font-size: 12px;
-  font-weight: 650;
-}
-.table-status--critical {
-  background: #f8ece7;
-  color: #944833;
 }
 .skeleton {
   min-height: 120px;
@@ -491,10 +454,6 @@
 .stock-table .stock-table__name:focus-visible {
   outline: 2px solid #536b45;
   outline-offset: -2px;
-}
-
-.table-status {
-  white-space: normal;
 }
 
 @container dashboard-layout (min-width: 1160px) {
@@ -695,7 +654,7 @@
     color: var(--dash-ink);
     font-weight: 600;
   }
-  .stock-card .table-status {
+  .stock-card app-status-badge {
     font-size: 11px;
     padding: 4px 7px;
   }

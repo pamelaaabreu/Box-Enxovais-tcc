@@ -185,28 +185,6 @@ tbody tr:hover {
   padding: 3px 6px;
   white-space: nowrap;
 }
-.status {
-  display: inline-flex;
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  white-space: nowrap;
-  background: #edf0f2;
-  color: #5e6657;
-}
-.status-active {
-  background: #e9f5ed;
-  color: #287947;
-}
-.status-inactive {
-  background: #fff4dc;
-  color: #986618;
-}
-.status-archived {
-  background: #edf0f2;
-  color: #69727d;
-}
 .store-link {
   display: inline-flex;
   align-items: center;
@@ -289,7 +267,7 @@ tbody tr:hover {
 
 
 tr.new-product td { background: #edf1e7; }
-.new-product .product-identity .status { display: inline-block; margin-bottom: 5px; }
+.new-product .product-identity app-status-badge { display: inline-block; margin-bottom: 5px; }
 
 .product-actions { display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; }
 button.store-link {cursor:pointer;}

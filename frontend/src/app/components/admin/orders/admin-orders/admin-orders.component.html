@@ -1,0 +1,108 @@
+<app-admin-page-header
+  title="Pedidos"
+  description="Acompanhe as compras e o andamento dos pedidos da loja."
+  icon="receipt_long"
+  [breadcrumb]="[{ label: 'Pedidos' }]"
+/>
+<section aria-label="Gerenciamento de pedidos">
+  <div class="metrics" aria-live="polite">
+    <app-admin-kpi-card
+      title="Total de pedidos"
+      [value]="data().total"
+      [loading]="loading()"
+      [compact]="true"
+      icon="receipt_long"
+    />
+    <app-admin-kpi-card
+      title="Aprovados"
+      [value]="data().approved"
+      [loading]="loading()"
+      [compact]="true"
+      variant="success"
+      icon="check_circle"
+    />
+    <app-admin-kpi-card
+      title="Cancelados"
+      [value]="data().cancelled"
+      [loading]="loading()"
+      [compact]="true"
+      variant="warning"
+      icon="cancel"
+    />
+  </div>
+  <app-admin-filters
+    [fields]="filterFields"
+    (applied)="apply()"
+    (cleared)="clear()"
+    label="Filtros de pedidos"
+  />
+  @if (loading()) {
+    <app-admin-state kind="loading" title="Carregando pedidos" />
+  } @else if (error()) {
+    <app-admin-state
+      kind="error"
+      title="Não foi possível carregar os pedidos"
+      [description]="error()"
+      actionLabel="Tentar novamente"
+      (action)="load()"
+    />
+  } @else if (!data().orders.length) {
+    <app-admin-state
+      title="Nenhum pedido encontrado"
+      description="Os pedidos serão exibidos aqui quando estiverem disponíveis. Revise os filtros selecionados."
+      actionLabel="Limpar filtros"
+      (action)="clear()"
+    />
+  } @else {
+    <app-admin-data-table label="Pedidos">
+      <table>
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Cliente</th>
+            <th>Data</th>
+            <th>Total</th>
+            <th>Pagamento</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of data().orders; track order.id) {
+            <tr>
+              <td data-label="Pedido">
+                <strong>#{{ order.id }}</strong>
+              </td>
+              <td data-label="Cliente">{{ order.customer }}</td>
+              <td data-label="Data">
+                {{ order.createdAt | date: "dd/MM/yyyy HH:mm" : "-0300" }}
+              </td>
+              <td data-label="Total">{{ order.total | currency: "BRL" }}</td>
+              <td data-label="Pagamento">
+                {{ paymentLabel(order.paymentMethod) }}
+              </td>
+              <td data-label="Status">
+                <app-status-badge [tone]="order.status === 'cancelled' ? 'danger' : 'success'">{{ statusLabel(order.status) }}</app-status-badge>
+              </td>
+              <td>
+                <a
+                  class="action"
+                  [routerLink]="['/admin/orders', order.id]"
+                  [attr.aria-label]="'Visualizar pedido ' + order.id"
+                  >Visualizar</a
+                >
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </app-admin-data-table>
+    <app-pagination
+      [page]="page()"
+      [total]="data().total"
+      [pageSize]="10"
+      (pageChange)="apply($event)"
+      label="Paginação de pedidos"
+    />
+  }
+</section>

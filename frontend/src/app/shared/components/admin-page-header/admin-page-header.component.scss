@@ -119,18 +119,6 @@ p {
   opacity: 0.55;
   cursor: default;
 }
-.status {
-  border: 1px solid #cbd2c1;
-  color: var(--olive, #3d4836);
-  border-radius: 20px;
-  padding: 5px 10px;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
 @media (max-width: 1100px) {
   header {
     flex-wrap: wrap;

@@ -2,7 +2,7 @@
   @if (variants.length) {
   <div class="variant-heading">
     <div>
-      <h2>Variações do produto <small>· {{ variants.length }}</small></h2>
+      <h2>Variações do produto <small>· {{ variants.length }}</small></h2><p class="variant-description">Gerencie tamanhos, preços e estoques.</p>
     </div>
     <button type="button" (click)="add()" [disabled]="variants.length >= 50">
       <mat-icon aria-hidden="true">add</mat-icon>Adicionar variação
@@ -11,7 +11,7 @@
   }
   @for (row of variants.controls; track row; let index = $index) {
     <div
-      class="variant-card" [class.invalid]="row.invalid && row.touched"
+      class="variant-card" [class.first]="index === 0" [class.invalid]="row.invalid && row.touched"
       [formGroup]="row"
       role="group"
       [attr.aria-label]="

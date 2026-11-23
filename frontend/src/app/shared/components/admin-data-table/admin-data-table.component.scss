@@ -1,0 +1,20 @@
+app-admin-data-table { display: block; min-width: 0; }
+.box-admin-data-table { width: 100%; min-width: 0; box-sizing: border-box; border: 1px solid #deddd0; border-radius: 16px; overflow-x: auto; background: #fffdf8; color: #3d4836; font-family: Montserrat, sans-serif; container-type: inline-size; }
+.box-admin-data-table table { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.5; }
+.box-admin-data-table th, .box-admin-data-table td { padding: 13px 14px; border-bottom: 1px solid #e5e1d5; text-align: left; vertical-align: middle; }
+.box-admin-data-table thead th { background: #f4f2e9; color: #66624e; font-size: 12px; font-weight: 600; letter-spacing: .035em; }
+.box-admin-data-table tbody tr:last-child > * { border-bottom: 0; }
+.box-admin-data-table tbody tr:hover { background: #faf9f3; }
+.box-admin-data-table td strong, .box-admin-data-table th[scope="row"] { font-weight: 600; }
+.box-admin-data-table .action { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 9px 16px; box-sizing: border-box; border: 1px solid #8c977f; border-radius: 24px; background: transparent; color: #3d4836; font: 600 13px/1.4 Montserrat, sans-serif; text-decoration: none; white-space: nowrap; }
+.box-admin-data-table .action:hover { background: #eef1e7; }
+.box-admin-data-table:focus-visible { outline: 2px solid #667255; outline-offset: 3px; }
+@container (max-width: 760px) {
+ .box-admin-data-table--cards table, .box-admin-data-table--cards tbody { display: block; }
+ .box-admin-data-table--cards thead { display: none; }
+ .box-admin-data-table--cards tbody tr { display: block; margin: 12px; padding: 8px 12px; border: 1px solid #deddd0; border-radius: 12px; background: #fffdf8; }
+ .box-admin-data-table--cards td { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; border: 0; text-align: right; overflow-wrap: anywhere; }
+ .box-admin-data-table--cards td::before { content: attr(data-label); flex-shrink: 0; max-width: 40%; color: #68624f; font-size: 12px; text-align: left; }
+ .box-admin-data-table--cards td:not([data-label])::before { display: none; }
+ .box-admin-data-table--cards td:last-child .action { width: 100%; }
+}

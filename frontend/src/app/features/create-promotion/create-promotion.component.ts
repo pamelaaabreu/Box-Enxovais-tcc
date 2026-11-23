@@ -1,4 +1,5 @@
-import { CampaignSummaryComponent } from './campaign-summary.component';
+import { StatusBadgeComponent } from '../../shared/components/status-badge/status-badge.component';
+import { CampaignSummaryComponent } from './campaign-summary/campaign-summary.component';
 import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { AdminPageHeaderComponent } from '../../shared/components/admin-page-header/admin-page-header.component';
 
@@ -50,7 +51,7 @@ import { MatIconModule } from '@angular/material/icon';
 
   standalone: true,
 
-  imports: [CampaignSummaryComponent, AdminStateComponent,
+  imports: [StatusBadgeComponent,CampaignSummaryComponent, AdminStateComponent,
     AdminPageHeaderComponent,
 
     MatButtonToggleModule,

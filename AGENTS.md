@@ -30,3 +30,14 @@ Projeto: e-commerce Angular (frontend), Go + net/http (backend), PostgreSQL. Pre
 - Para excluir, use `variant: 'danger'` e passe a operação em `execute` para manter o diálogo aberto durante a requisição.
 - Para descartar alterações, use `variant: 'warning'` e `confirmAction: 'secondary'` quando continuar editando for a ação visual principal.
 - Para outra ação perigosa, use `variant: 'danger'`, `disableClose: true` e prossiga apenas quando `afterClosed()` retornar `true`.
+
+
+## Organização Angular obrigatória
+
+- Cada componente Angular deve ter uma pasta própria, com `nome.component.ts`, `nome.component.html`, `nome.component.scss` e o spec correspondente juntos. Não misture arquivos de componentes diferentes no mesmo nível.
+- Antes de criar um componente: procure o existente, avalie reutilização, defina a feature e a pasta correta, crie os arquivos relacionados nela e atualize imports/rotas. Não crie componentes apenas para organizar código.
+- Componentes específicos pertencem à sua funcionalidade; os reutilizáveis ficam em `shared/components/`. Não crie outra pasta global `components/` para funcionalidades específicas.
+- Serviços locais ficam em `services/` e modelos/interfaces compartilhados da feature em `models/`, quando aplicável. Estilos efetivamente compartilhados podem ficar em `styles/`, com uma única origem; cada componente mantém sua entrada `.component.scss`.
+- Componentes que já possuem pasta própria podem conter subpastas de componentes filhos; os arquivos de cada filho ficam exclusivamente na respectiva subpasta.
+- Ao mover ou renomear arquivos, atualize imports estáticos/dinâmicos, rotas lazy, templateUrl/styleUrl, dependências SCSS e specs. Preserve seletores, bindings, comportamento e regras visuais.
+- Valide build e testes direcionados; confirme que os recursos locais existem e que não restaram caminhos antigos ou componentes duplicados. A organização registrada em `docs/ESTRUTURA_ANGULAR.md` é a referência atual.

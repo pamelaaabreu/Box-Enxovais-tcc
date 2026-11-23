@@ -1,3 +1,4 @@
+import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
@@ -39,7 +40,7 @@ registerLocaleData(localePt);
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [MatMenuModule, MatIconModule, MatSelectModule, AdminFiltersComponent, AdminStateComponent, AdminPageHeaderComponent, PaginationComponent,
+  imports: [StatusBadgeComponent,MatMenuModule, MatIconModule, MatSelectModule, AdminFiltersComponent, AdminStateComponent, AdminPageHeaderComponent, PaginationComponent,
     CurrencyPipe,
     DecimalPipe,
     ReactiveFormsModule,

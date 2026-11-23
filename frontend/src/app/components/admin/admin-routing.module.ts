@@ -1,4 +1,4 @@
-import { ProductVariantsPageComponent } from '../../features/product-manage/product-variants-page.component';
+import { ProductVariantsPageComponent } from '../../features/product-manage/product-variants-page/product-variants-page.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { AdminGuard } from '../../core/guards/admin.guard';
 import { ProductManageComponent } from '../../features/product-manage/product-manage.component';
 import { CreatePromotionComponent } from '../../features/create-promotion/create-promotion.component';
 
-import { CatalogRegistrationComponent } from './catalog-registration.component';
+import { CatalogRegistrationComponent } from './catalog-registration/catalog-registration.component';
 
 const routes: Routes = [
   {
@@ -22,11 +22,11 @@ const routes: Routes = [
     canActivate: [AdminGuard],
 
     children: [
- {path:'customers',loadComponent:()=>import('./customers/admin-customers.component').then(m=>m.AdminCustomersComponent)},
- {path:'customers/:id',loadComponent:()=>import('./customers/admin-customer-detail.component').then(m=>m.AdminCustomerDetailComponent)},
- {path:'orders',loadComponent:()=>import('./orders/admin-orders.component').then(m=>m.AdminOrdersComponent)},
- {path:'orders/:id',loadComponent:()=>import('./orders/admin-order-detail.component').then(m=>m.AdminOrderDetailComponent)},
- {path:"experience-reviews",loadComponent:()=>import("./experience-reviews.component").then(m=>m.ExperienceReviewsComponent)},
+ {path:'customers',loadComponent:()=>import('./customers/admin-customers/admin-customers.component').then(m=>m.AdminCustomersComponent)},
+ {path:'customers/:id',loadComponent:()=>import('./customers/admin-customer-detail/admin-customer-detail.component').then(m=>m.AdminCustomerDetailComponent)},
+ {path:'orders',loadComponent:()=>import('./orders/admin-orders/admin-orders.component').then(m=>m.AdminOrdersComponent)},
+ {path:'orders/:id',loadComponent:()=>import('./orders/admin-order-detail/admin-order-detail.component').then(m=>m.AdminOrderDetailComponent)},
+ {path:"experience-reviews",loadComponent:()=>import("./experience-reviews/experience-reviews.component").then(m=>m.ExperienceReviewsComponent)},
       {
         path: '',
         redirectTo: 'dashboard',

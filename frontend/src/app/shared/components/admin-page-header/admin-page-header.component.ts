@@ -1,3 +1,4 @@
+import { StatusBadgeComponent } from '../status-badge/status-badge.component';
 import { AdminNavigationService } from '../../services/admin-navigation.service';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -11,7 +12,7 @@ export interface AdminBreadcrumb {
 @Component({
   selector: 'app-admin-page-header',
   standalone: true,
-  imports: [RouterLink, MatIconModule],
+  imports: [StatusBadgeComponent, RouterLink, MatIconModule],
   templateUrl: './admin-page-header.component.html',
   styleUrl: './admin-page-header.component.scss',
 })

@@ -20,7 +20,7 @@ const calls=[], errors=[];
 const product=()=>({id:12,name:'Jogo de Cama Essência Floral Verde Oliva 100% Algodão',sku:'BX-CAM-001',description:'Produto de teste isolado.',price:239.9,quantity:8,status:'active',product_type_id:1,brand_id:1,measurements:{Material:'Algodão',Cor:'Verde oliva'},care_instructions:'Lavar com cuidado.',image_paths:[],variants:[{id:21,size:'Casal',dimensions:'190 × 240 cm',price:239.9,stock:3},{id:22,size:'Queen',dimensions:'220 × 240 cm',price:259.9,stock:5},{id:23,size:'King',dimensions:'240 × 260 cm',price:279.9,stock:0}].slice(0,countVariants)});
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.png':'image/png','.svg':'image/svg+xml','.webp':'image/webp','.woff2':'font/woff2','.jpg':'image/jpeg','.ico':'image/x-icon'};
 const server=http.createServer(async(req,res)=>{try{const relative=decodeURIComponent(new URL(req.url,base).pathname);let file=path.resolve(dist,'.'+relative);if(!file.startsWith(dist+path.sep)&&file!==dist)throw Error('path');try{if(!(await fs.stat(file)).isFile())file=path.join(dist,'index.html');}catch{file=path.join(dist,'index.html');}res.setHeader('Content-Type',mime[path.extname(file)]||'application/octet-stream');res.end(await fs.readFile(file));}catch{res.statusCode=404;res.end();}});
-let browser;
+let browser, page;
 async function screenshot(page,name){await page.screenshot({path:path.join(evidence,name+'.png'),fullPage:true,animations:'disabled'});}
 async function noOverflow(page){assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'page overflow');}
 async function closeDrawer(page){await page.getByRole('button',{name:'Fechar faixa de CEP'}).click();await page.getByRole('dialog',{name:/faixa de CEP/}).waitFor({state:'detached'});}
@@ -50,8 +50,18 @@ async function closeDrawer(page){await page.getByRole('button',{name:'Fechar fai
   if(pathname==='/admin/products/12'||pathname==='/products/12')return json(product());
   return json([]);
  });
- const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(10000);
- for(const width of [320,390,768,1024,1440,1920]){
+ page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(10000);
+ if(process.argv.includes('--manual')) {
+  await page.setViewportSize({width:1440,height:1000}); await page.goto(base+routePath);
+  await page.getByRole('rowheader',{name:'Umuarama / PR'}).waitFor();
+  await page.evaluate(()=>document.title='Box Enxovais — Faixas de CEP isoladas');
+  console.log('READY manual isolated UI');
+  const stop=path.join(root,'.artifacts/cep-layout/stop');
+  const end=Date.now()+300000;
+  while(Date.now()<end){try{await fs.access(stop);break;}catch{}await new Promise(resolve=>setTimeout(resolve,1000));}
+  return;
+ }
+ for(const width of (process.argv.includes('--functional-only') ? [1440] : [320,390,768,1024,1440,1920])){
   await page.setViewportSize({width,height:1000});await page.goto(base+routePath);await page.getByRole('rowheader',{name:'Umuarama / PR'}).waitFor();await noOverflow(page);await screenshot(page,'listagem-'+width);
   await page.getByRole('button',{name:'Nova faixa de CEP',exact:true}).click();
   const drawer=page.getByRole('dialog',{name:'Nova faixa de CEP',exact:true});await drawer.waitFor();await page.waitForFunction(()=>document.activeElement?.id==='shipping-name');
@@ -66,6 +76,7 @@ async function closeDrawer(page){await page.getByRole('button',{name:'Fechar fai
   console.log('PASS listagem, drawer, edição, foco e Escape '+width);
  }
  await page.setViewportSize({width:1440,height:1000});
+ await page.goto(base+routePath); await page.getByRole('rowheader',{name:'Umuarama / PR'}).waitFor();
  await page.getByRole('searchbox',{name:'Buscar por nome ou CEP'}).fill('87500-001');assert.equal(await page.locator('tbody tr').count(),1);
  await page.getByRole('searchbox').fill('');await page.getByRole('combobox',{name:'Status',exact:true}).click();await page.getByRole('option',{name:'Inativas',exact:true}).click();assert.equal(await page.locator('tbody tr').count(),1);
  await page.getByRole('combobox',{name:'Status',exact:true}).click();await page.getByRole('option',{name:'Todos os status',exact:true}).click();
@@ -86,7 +97,7 @@ async function closeDrawer(page){await page.getByRole('button',{name:'Fechar fai
  await page.getByRole('searchbox').fill('sem resultado');await page.getByRole('heading',{name:'Nenhuma faixa encontrada para os filtros.'}).waitFor();await screenshot(page,'vazio-1440');await page.getByRole('searchbox').fill('');
  listFailure=true;await page.reload();await page.getByRole('button',{name:'Tentar novamente',exact:true}).waitFor();await screenshot(page,'erro-1440');listFailure=false;await page.getByRole('button',{name:'Tentar novamente',exact:true}).click();await page.getByRole('rowheader',{name:'Umuarama / PR'}).waitFor();
  console.log('PASS validação, conflito, CRUD isolado, descarte, vazio e recuperação de erro');
- for(const width of [320,390,768,1024,1440,1920]){
+ for(const width of (process.argv.includes('--functional-only') ? [1440] : [320,390,768,1024,1440,1920])){
   await page.setViewportSize({width,height:1000});countVariants=3;await page.goto(base+'/admin/products/12/edit');await page.getByRole('tab',{name:'Variações',exact:true}).click();await page.locator('.variant-card').first().waitFor();await noOverflow(page);await screenshot(page,'variacoes-'+width);
   const variant=page.locator('app-product-variants');await variant.getByRole('button',{name:'Adicionar variação',exact:true}).click();await variant.locator('[formcontrolname=size]').last().fill('Nome longo para conferir alinhamento');await variant.locator('[formcontrolname=dimensions]').last().focus();await page.keyboard.press('Tab');await variant.locator('.error').first().waitFor();await noOverflow(page);await screenshot(page,'variacoes-erro-'+width);
   const controls=await variant.locator('input').evaluateAll(inputs=>inputs.map(i=>({width:i.getBoundingClientRect().width,height:i.getBoundingClientRect().height})));assert.ok(controls.every(c=>c.width>70&&c.height>=42));
@@ -94,4 +105,4 @@ async function closeDrawer(page){await page.getByRole('button',{name:'Fechar fai
  }
  for(const count of [0,1]){countVariants=count;await page.goto(base+'/admin/products/12/edit');await page.getByRole('tab',{name:'Variações',exact:true}).click();if(count===0){await page.getByRole('button',{name:'Adicionar primeira variação',exact:false}).click();assert.equal(await page.locator('.variant-card').count(),1);assert.equal(await page.locator('.variant-card .error').count(),0);}else{await page.locator('.variant-card').waitFor();await page.locator('[formcontrolname=stock]').fill('0');await page.locator('[formcontrolname=price]').fill('24990');assert.equal(await page.locator('[formcontrolname=price]').inputValue(),'249,90');await page.locator('.remove').click();await page.getByRole('heading',{name:'Nenhuma variação cadastrada'}).waitFor();}}
  assert.deepEqual(errors,[]);console.log('PASS zero/uma variação, máscara, estoque zero, remoção; nenhum erro JavaScript');
-})().catch(error=>{console.error(error.stack);process.exitCode=1;}).finally(async()=>{await browser?.close();await new Promise(resolve=>server.close(resolve));});
+})().catch(async error=>{console.error(error.stack);if(page)await screenshot(page,'falha-diagnostico').catch(()=>{});process.exitCode=1;}).finally(async()=>{await browser?.close();await new Promise(resolve=>server.close(resolve));});

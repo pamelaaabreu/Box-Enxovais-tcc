@@ -67,7 +67,7 @@
                         />
                       </div>
                       <div>
-                        @if (product.id === createdId()) { <span class="status status-active">Recém-cadastrado</span> }
+                        @if (product.id === createdId()) { <app-status-badge tone="success">Recém-cadastrado</app-status-badge> }
                         <strong [title]="product.name">{{ product.name }}</strong
                         ><span class="product-id">SKU: {{ product.sku || "Não informado" }}</span>
                       </div>
@@ -91,13 +91,7 @@
                     }
                   </span></td>
                   <td data-label="Status">
-                    <span
-                      class="status"
-                      [class.status-active]="product.status === 'active'"
-                      [class.status-inactive]="product.status === 'inactive'"
-                      [class.status-archived]="product.status === 'archived'"
-                      >{{ statusLabel(product.status) }}</span
-                    >
+                    <app-status-badge [tone]="product.status === 'active' ? 'success' : product.status === 'inactive' ? 'danger' : 'neutral'">{{ statusLabel(product.status) }}</app-status-badge>
                   </td>
                   <td data-label="Ações">
                     <div class="product-actions">

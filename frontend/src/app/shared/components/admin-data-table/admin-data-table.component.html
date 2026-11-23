@@ -1,0 +1,2 @@
+@if (empty) { <app-admin-state [title]="emptyTitle" [description]="emptyDescription" layout="compact" /> }
+@else { <div class="box-admin-data-table" [class.box-admin-data-table--cards]="responsive === 'cards'" role="region" [attr.aria-label]="label" tabindex="0"><ng-content select="table" /></div> }
