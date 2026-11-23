@@ -26,11 +26,10 @@ describe('Administrative page headers', () => {
     expect(host.querySelector('.admin-search')).toBeNull();
     expect(host.querySelector('.promotions-menu-toggle')).toBeNull();
   });
-  it('uses a compact shared header with breadcrumb when creating a product', () => {
+  it('lets the product editor own its header without duplicating it in the shell', () => {
     const host = render('/admin/products/manage');
-    expect(host.querySelector('app-admin-page-header h1')?.textContent).toBe('Cadastrar produto');
-    expect(host.querySelector('app-admin-page-header header.compact')).not.toBeNull();
-    expect(host.querySelector('app-admin-page-header nav a')?.getAttribute('href')).toBe('/admin/products');
+    expect(host.querySelector('app-admin-page-header')).toBeNull();
+    expect(host.querySelector('router-outlet')).not.toBeNull();
     expect(host.querySelector('.admin-search')).toBeNull();
   });
   it('links Products directly to its listing without a duplicate creation submenu', () => {

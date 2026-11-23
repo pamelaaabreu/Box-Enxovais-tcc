@@ -1,3 +1,4 @@
+import { reflectComponentType, Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { AdminRoutingModule } from './admin-routing.module';
@@ -27,6 +28,31 @@ describe('Promotion management routes', () => {
     expect(children.find(route => route.path === 'metrics')?.redirectTo).toBe('dashboard');
     expect(children.find(route => route.path === 'metrics')?.pathMatch).toBe('full');
     expect(children.find(route => route.path === 'dashboard')?.component).toBeDefined();
+  });
+
+  it('resolves the reorganized lazy components without changing their route addresses', async () => {
+    TestBed.configureTestingModule({ imports: [AdminRoutingModule], providers: [provideRouter([])] });
+    const children = TestBed.inject(Router).config.find(route => route.children)?.children ?? [];
+    const expected: Record<string, string> = {
+      orders: 'app-admin-orders', 'orders/:id': 'app-admin-order-detail',
+      customers: 'app-admin-customers', 'customers/:id': 'app-admin-customer-detail',
+      'experience-reviews': 'app-experience-reviews',
+    };
+    for (const [path, selector] of Object.entries(expected)) {
+      const route = children.find(route => route.path === path);
+      expect(route?.loadComponent).withContext(path).toBeDefined();
+      const component = await route!.loadComponent!();
+      expect(reflectComponentType(component as Type<unknown>)?.selector).withContext(path).toBe(selector);
+    }
+    const registrations = children.find(route => route.path === 'catalog')?.children ?? [];
+    const shipping = await registrations.find(route => route.path === 'shipping-ranges')!.loadComponent!();
+    expect(reflectComponentType(shipping as Type<unknown>)?.selector).toBe('app-shipping-ranges');
+    for (const path of ['categories', 'brands']) {
+      expect(reflectComponentType(registrations.find(route => route.path === path)!.component!)?.selector).toBe('app-catalog-registration');
+    }
+    const products = children.find(route => route.path === 'products')?.children ?? [];
+    expect(reflectComponentType(products.find(route => route.path === ':id/variants')!.component!)?.selector).toBe('app-product-variants-page');
+    expect(products.find(route => route.path === ':id/edit')?.canDeactivate?.length).toBe(1);
   });
 
 });

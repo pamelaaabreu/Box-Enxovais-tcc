@@ -45,6 +45,9 @@ describe('Product creation navigation', () => {
     const component = fixture.componentInstance;
     const form = component.createForm()!;
     const variants = form.fields.variants;
+    expect(fixture.nativeElement.querySelectorAll('app-admin-page-header').length).toBe(1);
+    expect(fixture.nativeElement.querySelector('app-admin-page-header h1')?.textContent).toBe('Editar produto');
+    expect(fixture.nativeElement.querySelector('app-admin-page-header nav a')?.getAttribute('href')).toBe('/admin/products');
     expect(fixture.nativeElement.querySelectorAll('[role="tab"]').length).toBe(3);
     component.selectedTabIndex = 2; fixture.detectChanges(); await fixture.whenStable(); fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll('app-product-variants').length).toBe(1);

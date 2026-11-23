@@ -90,4 +90,12 @@ Métricas Analíticas continua como redirecionamento para Dashboard, sem compone
 
 ## Validação
 
-Aguardando execução do build e dos testes direcionados.
+- Build Angular de produção: aprovado. Permanece o aviso preexistente do SCSS de Promoções (15,79 kB ante orçamento de aviso de 14 kB); orçamento e regras visuais não foram alterados.
+- Testes Angular direcionados: **168/168 aprovados** em ChromeHeadless. Incluídos Admin, Pedidos/serviços, Clientes/serviços, Cadastros, Promoções, gerenciamento de produtos, detalhe do produto/cálculo de frete e utilitários de gráficos.
+- Novo teste resolve os componentes lazy de Pedidos, detalhe do pedido, Clientes, detalhe do cliente, Avaliações e Faixas de CEP. Também verifica Categorias/Marcas, Variações e guarda do editor; preservados os endereços e o redirecionamento de Métricas para Dashboard.
+- Duas expectativas anteriores estavam desatualizadas: cor fixa de tooltip e cabeçalho duplicado no painel externo. Ajustados somente os specs ao tema e à responsabilidade atuais; cor e cabeçalho da aplicação permaneceram inalterados. O spec do editor verifica o cabeçalho real e breadcrumb.
+- Inventário completo: 79 componentes, nenhuma pasta com múltiplos componentes de produção e nenhum seletor duplicado. 548 imports relativos e 8 dependências Sass verificados, sem referências ausentes. Todos os templateUrl/styleUrl locais existem.
+- Os templates movidos foram comparados byte a byte durante o movimento e permaneceram idênticos. Regras SCSS preservadas, com atualização apenas de caminhos e uma entrada @use para a listagem de Pedidos; ordem das folhas do detalhe mantida.
+- Caminhos antigos dos componentes movidos removidos, sem cópias duplicadas. git diff --check aprovado.
+- Sem alterações de banco, backend, URLs públicas, regras comerciais ou estilos nesta tarefa. Não foi realizada nova auditoria visual geral; o escopo foi organização e validação direcionada. O aviso 404 de queen.webp no Karma pertence à imagem fictícia de teste e não impediu as 168 verificações.
+- Processo de testes encerrado ao finalizar; nenhum servidor do usuário foi iniciado, reiniciado ou encerrado.

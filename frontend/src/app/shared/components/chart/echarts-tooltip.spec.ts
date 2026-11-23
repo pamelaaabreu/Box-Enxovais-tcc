@@ -9,7 +9,7 @@ describe('Shared ECharts tooltip', () => {
     for (const trigger of ['axis','item'] as const) {
       const option=chartTooltipOptions(String,undefined,trigger);
       expect(option.textStyle).toEqual(echartsTooltipTheme.textStyle);
-      expect(option.borderColor).toBe('#e3e5dc');
+      expect(option.borderColor).toBe(echartsTooltipTheme.borderColor);
       expect(option.appendTo).toBe('body');
       expect(option.confine).toBeTrue();
     }
