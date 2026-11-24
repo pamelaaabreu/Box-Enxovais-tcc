@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/src/handlers"
 	"backend/src/models"
 	"encoding/json"
 	"fmt"
@@ -22,7 +23,7 @@ func TestShippingRangesPostgres(t *testing.T) {
 	}
 	exec(string(migration))
 	mux := http.NewServeMux()
-	InitRoutesShipping(mux, db)
+	InitRoutesShipping(mux, handlers.QuoteShipping(db), handlers.ListShippingRanges(db), handlers.SaveShippingRange(db), handlers.DeleteShippingRange(db))
 	const secret = "shipping-test-secret"
 	const path = "/admin/catalog/shipping-ranges"
 	t.Setenv("JWT_SECRET", secret)
@@ -47,7 +48,7 @@ func TestShippingRangesPostgres(t *testing.T) {
 	call("GET", path, "", "", 401)
 	call("POST", path, "customer", active, 403)
 	call("POST", path, "admin", strings.Replace(active, "1590", "-1", 1), 400)
-	var item shippingRange
+	var item models.ShippingRange
 	if err = json.Unmarshal(call("POST", path, "admin", active, 201), &item); err != nil || item.ID <= 0 {
 		t.Fatal(item, err)
 	}

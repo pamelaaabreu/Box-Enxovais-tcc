@@ -23,15 +23,18 @@ func TestDashboardSeedPostgres(t *testing.T) {
  UPDATE users SET email='existing-' || id || '@example.invalid',created_at='2020-01-01T00:00:00Z';
  ALTER TABLE users ADD CONSTRAINT seed_email_unique UNIQUE(email);
  CREATE TABLE product_types(id integer PRIMARY KEY,name text);
- INSERT INTO product_types SELECT id,name FROM public.product_types;
+ -- Fixture própria: não depende do catálogo cadastrado no banco da aplicação.
+ INSERT INTO product_types VALUES(1,'Cama'),(2,'Toalhas');
  ALTER TABLE products ADD COLUMN product_type_id integer;
  DELETE FROM cart_items;
  DELETE FROM product_variants;
  DELETE FROM products;
- INSERT INTO products(id,name,price,quantity,status,product_type_id)
- SELECT id,name,price,quantity,status,product_type_id FROM public.products;
- INSERT INTO product_variants(id,product_id,size,price,quantity,dimensions)
- SELECT id,product_id,size,price,quantity,dimensions FROM public.product_variants;`)
+ INSERT INTO products(id,name,price,quantity,status,product_type_id) VALUES
+ (1,'Produto simples da fixture',129.90,100,'active',1),
+ (2,'Produto com variantes da fixture',249.90,100,'active',1),
+ (3,'Toalha da fixture',49.90,100,'active',2);
+ INSERT INTO product_variants(product_id,size,price,quantity,dimensions) VALUES
+ (2,'Casal',249.90,50,'220 x 240 cm'),(2,'Queen',289.90,50,'240 x 260 cm');`)
 	sql, err := os.ReadFile("../../cmd/seed-dashboard/seed.sql")
 	if err != nil {
 		t.Fatal(err)
@@ -128,7 +131,7 @@ func TestDashboardSeedPostgres(t *testing.T) {
 	t.Setenv("JWT_SECRET", "dashboard-date-test-only")
 	handler := handlers.ProductHandler{Service: services.ProductService{Store: repositories.ProductRepository{DB: database}}}
 	mux := http.NewServeMux()
-	adminRoute(mux, http.MethodGet, "GET /admin/dashboard", handler.GetDashboard)
+	InitRoutesDashboard(mux, handler)
 	server := http.Server{ReadHeaderTimeout: 5 * time.Second, Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:4287")
 		w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")

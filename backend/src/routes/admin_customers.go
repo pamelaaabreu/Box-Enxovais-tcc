@@ -5,8 +5,12 @@ import (
 	"net/http"
 )
 
-func InitRoutesAdminCustomers(mux *http.ServeMux, h handlers.AdminCustomerHandler) {
-	adminRoute(mux, http.MethodGet, "GET /admin/customers", h.ServeHTTP)
-	adminRoute(mux, http.MethodGet, "GET /admin/customers/{id}", h.ServeHTTP)
-	adminRoute(mux, http.MethodGet, "GET /admin/customers/{id}/orders", h.ServeHTTP)
+func InitRoutesAdminCustomers(mux *http.ServeMux, adminCustomers handlers.AdminCustomerHandler) {
+	for _, pattern := range []string{
+		"GET /admin/customers",
+		"GET /admin/customers/{id}",
+		"GET /admin/customers/{id}/orders",
+	} {
+		adminRoute(mux, pattern, adminCustomers.ServeHTTP)
+	}
 }

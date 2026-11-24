@@ -17,11 +17,12 @@ type contextKey string
 const (
 	contextKeyUserID contextKey = "userID"
 	contextKeyRole   contextKey = "role"
-	jwtIssuer                   = "box-enxovais-api"
+	jwtIssuer                   = "box-enxovais-api" // emissor esperado pelo JWT.
 )
 
 func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// extrai o token JWT do cabeçalho Authorization.
 		tokenString, ok := extractBearerToken(r)
 		if !ok {
 			response.Error(w, http.StatusUnauthorized, "Token de autenticação não fornecido ou inválido")
@@ -29,11 +30,13 @@ func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		jwtSecret := strings.TrimSpace(os.Getenv("JWT_SECRET"))
+
 		if jwtSecret == "" {
 			response.Error(w, http.StatusInternalServerError, "Configuração de autenticação inválida")
 			return
 		}
 
+		// informações contidas dentro do JWT
 		claims := &models.Claims{}
 
 		token, err := jwt.ParseWithClaims(
@@ -42,6 +45,7 @@ func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			func(token *jwt.Token) (any, error) {
 				return []byte(jwtSecret), nil
 			},
+			// apenas tokens assinados por HS256 serão aceitos
 			jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}),
 			jwt.WithIssuer(jwtIssuer),
 		)
@@ -66,6 +70,7 @@ func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
+		// cada chamada do WithValue cria um contexto derivado do anterior.
 		ctx := context.WithValue(r.Context(), contextKeyUserID, claims.UserID)
 		ctx = context.WithValue(ctx, contextKeyRole, claims.Role)
 
@@ -79,15 +84,18 @@ func extractBearerToken(r *http.Request) (string, bool) {
 		return "", false
 	}
 
+	// divide o cabeçalho em um slice de strings a partir de espaços vazios
 	parts := strings.Fields(authHeader)
 	if len(parts) != 2 {
 		return "", false
 	}
 
+	// valida o esquema Bearer, ignorando maiúsculas e minúsculas.
 	if !strings.EqualFold(parts[0], "Bearer") {
 		return "", false
 	}
 
+	
 	tokenString := strings.TrimSpace(parts[1])
 	if tokenString == "" {
 		return "", false
@@ -105,6 +113,8 @@ func handleTokenError(w http.ResponseWriter, err error) {
 	response.Error(w, http.StatusUnauthorized, "Token inválido")
 }
 
+// Recupera o ID do usuário autenticado armazenado no contexto,
+// permitindo que os handlers identifiquem o usuário da requisição
 func GetUserIDFromContext(ctx context.Context) (int, bool) {
 	userID, ok := ctx.Value(contextKeyUserID).(int)
 	return userID, ok

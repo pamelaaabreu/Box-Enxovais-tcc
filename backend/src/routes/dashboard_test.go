@@ -20,6 +20,7 @@ func TestDashboardPostgres(t *testing.T) {
 	repo := repositories.ProductRepository{DB: db}
 	mux := http.NewServeMux()
 	InitRoutesProducts(mux, handlers.ProductHandler{Service: services.ProductService{Store: repo}}, handlers.ProductImageHandler{})
+	InitRoutesDashboard(mux, handlers.ProductHandler{Service: services.ProductService{Store: repo}})
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/admin/dashboard", nil))
 	if w.Code != http.StatusUnauthorized {

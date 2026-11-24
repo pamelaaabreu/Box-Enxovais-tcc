@@ -43,6 +43,7 @@ func TestPurchaseReviewPostgres(t *testing.T) {
 	exec("INSERT INTO checkout_orders(user_id,request_key,address,payment_method,total_cents,stock_debited,status) VALUES(2,'foreign','{}','pix',1000,true,'simulated_approved'),(1,'unconfirmed','{}','pix',1000,false,'simulated_approved'),(1,'cancelled','{}','pix',1000,false,'cancelled'),(1,'concurrent','{}','pix',1000,true,'simulated_approved')")
 	mux := http.NewServeMux()
 	InitRoutesHome(mux, handlers.HomeHandler{Store: repositories.HomeRepository{DB: d}})
+	InitRoutesReviews(mux, handlers.HomeHandler{Store: repositories.HomeRepository{DB: d}})
 	t.Setenv("JWT_SECRET", "purchase-review-tests-only")
 	token := func(id int, role string) string {
 		v, e := jwt.NewWithClaims(jwt.SigningMethodHS256, models.Claims{UserID: id, Role: role, RegisteredClaims: jwt.RegisteredClaims{Issuer: "box-enxovais-api", ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour))}}).SignedString([]byte("purchase-review-tests-only"))

@@ -23,6 +23,7 @@ type Config struct {
 	ConnectTimeout time.Duration
 }
 
+// context define prazo máx. para conexão; itoa: converte int p/ string
 func Open(ctx context.Context, cfg Config) (*sql.DB, error) {
 	address := url.URL{
 		Scheme: "postgres",
@@ -42,8 +43,10 @@ func Open(ctx context.Context, cfg Config) (*sql.DB, error) {
 	if err != nil {
 		return nil, errors.New("could not configure PostgreSQL connection")
 	}
+	
 	connectContext, cancel := context.WithTimeout(ctx, cfg.ConnectTimeout)
 	defer cancel()
+
 	if err := database.PingContext(connectContext); err != nil {
 		database.Close()
 		if connectContext.Err() != nil {

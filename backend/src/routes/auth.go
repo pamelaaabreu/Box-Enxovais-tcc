@@ -6,10 +6,10 @@ import (
 )
 
 func InitRoutesAuth(mux *http.ServeMux, auth handlers.AuthHandler, users handlers.UserHandler) {
-	publicRoute(mux, http.MethodPost, "/register", users.CreateUser)
-	publicRoute(mux, http.MethodPost, "/login", auth.LoginUser)
-	publicRoute(mux, http.MethodPost, "/send-reset-token", auth.SendVerificationCode)
-	publicRoute(mux, http.MethodPost, "/validate-reset-code", auth.ValidateVerificationCode)
-	publicRoute(mux, http.MethodPost, "/validate-reset-token", auth.ValidateResetToken)
-	publicRoute(mux, http.MethodPost, "/reset-password", auth.ResetPassword)
+	publicRoute(mux, "POST /register", users.CreateUser)
+	publicRoute(mux, "POST /login", auth.LoginUser)
+	publicRoute(mux, "POST /send-reset-token", auth.SendVerificationCode)
+	publicRoute(mux, "POST /validate-reset-code", auth.ValidateVerificationCode)
+	publicRoute(mux, "POST /validate-reset-token", auth.ValidateResetToken)
+	publicRoute(mux, "POST /reset-password", auth.ResetPassword)
 }

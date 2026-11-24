@@ -58,7 +58,7 @@ func TestDashboardDateFiltersPostgres(t *testing.T) {
 	}
 	handler := handlers.ProductHandler{Service: services.ProductService{Store: repositories.ProductRepository{DB: database}}}
 	mux := http.NewServeMux()
-	adminRoute(mux, http.MethodGet, "GET /admin/dashboard", handler.GetDashboard)
+	InitRoutesDashboard(mux, handler)
 	queries := []string{
 		"period=7d&group=day", "period=30d&group=auto", "period=30d&group=day", "period=month&group=month",
 		"period=custom&dateFrom=2026-01-01&dateTo=2026-01-01&group=day",

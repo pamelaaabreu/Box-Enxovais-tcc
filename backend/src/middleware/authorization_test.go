@@ -52,23 +52,6 @@ func TestAdminAuthorization(t *testing.T) {
 	}
 }
 
-func TestMethodMiddleware(t *testing.T) {
-	handler := Method(http.MethodPost, func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusNoContent)
-	})
-
-	req := httptest.NewRequest(http.MethodGet, "/resource", nil)
-	res := httptest.NewRecorder()
-	handler(res, req)
-
-	if res.Code != http.StatusMethodNotAllowed {
-		t.Fatalf("status = %d; want %d", res.Code, http.StatusMethodNotAllowed)
-	}
-	if allow := res.Header().Get("Allow"); allow != http.MethodPost {
-		t.Fatalf("Allow header = %q; want %q", allow, http.MethodPost)
-	}
-}
-
 func signedTestToken(t *testing.T, role string, expiresAt time.Time) string {
 	return signedTestTokenWithUser(t, 1, role, expiresAt)
 }

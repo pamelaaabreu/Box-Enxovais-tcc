@@ -23,7 +23,7 @@ func AdminMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			response.Error(w, http.StatusForbidden, "Acesso permitido apenas para administradores")
 			return
 		}
-
+		// encaminha ao handler.
 		next.ServeHTTP(w, r)
 	}
 }

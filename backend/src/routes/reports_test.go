@@ -132,6 +132,7 @@ func TestReportsPostgres(t *testing.T) {
 	t.Setenv("JWT_SECRET", "reports-test-only")
 	mux := http.NewServeMux()
 	InitRoutesProducts(mux, handlers.ProductHandler{Service: services.ProductService{Store: repo}}, handlers.ProductImageHandler{})
+	InitRoutesReports(mux, handlers.ProductHandler{Service: services.ProductService{Store: repo}})
 	token := func(role string) string {
 		v, e := jwt.NewWithClaims(jwt.SigningMethodHS256, models.Claims{UserID: 1, Role: role, RegisteredClaims: jwt.RegisteredClaims{Issuer: "box-enxovais-api", ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute))}}).SignedString([]byte("reports-test-only"))
 		if e != nil {

@@ -18,11 +18,16 @@ type Config struct {
 	CORSOrigin        string
 	UploadDir         string
 	JWTSecret         string
+	// Tempo máx. para receber os cabeçalhos da requisição HTTP.
 	ReadHeaderTimeout time.Duration
-	ReadTimeout       time.Duration
+	// Tempo máx. para ler a requisição HTTP completa.
+	ReadTimeout       time.Duration 
+	// Prazo máx. para escrever a resposta HTTP.
 	WriteTimeout      time.Duration
-	IdleTimeout       time.Duration
-	ShutdownTimeout   time.Duration
+	// Tempo máx. que uma conexão pode ficar sem atividade.
+	IdleTimeout       time.Duration 
+	// Tempo máx. de espera p/ finalizar req. durante o desligamento.
+	ShutdownTimeout   time.Duration 
 }
 
 func Load(envFiles ...string) (Config, error) {
@@ -46,7 +51,9 @@ func Load(envFiles ...string) (Config, error) {
 			SSLMode:  envOrDefault("DB_SSLMODE", "disable"),
 		},
 	}
+
 	missing := []string{}
+	// _ ignora índice da posição; range percorre os elementos do slice.
 	for _, field := range []struct{ name, value string }{
 		{"DB_HOST", cfg.Database.Host},
 		{"DB_PORT", os.Getenv("DB_PORT")},
@@ -61,10 +68,14 @@ func Load(envFiles ...string) (Config, error) {
 	if len(missing) > 0 {
 		return Config{}, fmt.Errorf("configure os campos obrigatórios do banco: %s", strings.Join(missing, ", "))
 	}
+
+	// converte texto p/ inteiro
 	port, err := strconv.Atoi(os.Getenv("DB_PORT"))
+
 	if err != nil || port < 1 || port > 65535 {
 		return Config{}, errors.New("DB_PORT deve ser um inteiro entre 1 e 65535")
 	}
+
 	cfg.Database.Port = port
 	switch cfg.Database.SSLMode {
 	case "disable", "require", "verify-ca", "verify-full":
@@ -75,7 +86,8 @@ func Load(envFiles ...string) (Config, error) {
 	for _, timeout := range []struct {
 		name     string
 		fallback time.Duration
-		target   *time.Duration
+		// * armazena o endereço da variável e obtém o endereço de memória do campo
+		target   *time.Duration 
 	}{
 		{"HTTP_READ_HEADER_TIMEOUT", 5 * time.Second, &cfg.ReadHeaderTimeout},
 		{"HTTP_READ_TIMEOUT", 30 * time.Second, &cfg.ReadTimeout},

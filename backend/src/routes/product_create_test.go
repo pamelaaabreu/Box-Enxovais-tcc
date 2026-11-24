@@ -31,11 +31,6 @@ func TestProductCreatePostgres(t *testing.T) {
 	if err = conn.Ping(); err != nil {
 		t.Fatal("test PostgreSQL unavailable")
 	}
-	var negativeCount int
-	if err := conn.QueryRow(`SELECT count(*) FROM public.products WHERE quantity < 0`).Scan(&negativeCount); err != nil {
-		t.Fatal(err)
-	}
-	t.Logf("Read-only preflight: public.products negative quantities = %d (not modified)", negativeCount)
 	schema := fmt.Sprintf("product_create_test_%d", time.Now().UnixNano())
 	if _, err = conn.Exec(`CREATE SCHEMA ` + schema); err != nil {
 		t.Fatal(err)
@@ -52,6 +47,15 @@ func TestProductCreatePostgres(t *testing.T) {
 		if _, err = conn.Exec(string(migration)); err != nil {
 			t.Fatal(err)
 		}
+	}
+
+	// A verificação de estoque usa somente a fixture criada no schema isolado.
+	var negativeCount int
+	if err := conn.QueryRow(`SELECT count(*) FROM products WHERE quantity < 0`).Scan(&negativeCount); err != nil {
+		t.Fatal(err)
+	}
+	if negativeCount != 0 {
+		t.Fatal("unexpected negative quantity in isolated fixture")
 	}
 
 	migration, err := os.ReadFile("../../migrations/000004_products_quantity_nonnegative.up.sql")

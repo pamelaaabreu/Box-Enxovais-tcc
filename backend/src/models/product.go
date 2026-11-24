@@ -17,6 +17,7 @@ type ProductVariant struct {
 	IncludedItems []string `json:"included_items,omitempty"`
 	Simulated     bool     `json:"simulated,omitempty"`
 }
+
 type Product struct {
 	SKU              string            `json:"sku"`
 	Variants         []ProductVariant  `json:"variants,omitempty"`

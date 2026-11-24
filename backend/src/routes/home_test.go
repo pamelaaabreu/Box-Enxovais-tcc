@@ -81,6 +81,7 @@ func TestHomePostgres(t *testing.T) {
 	file.Close()
 	mux := http.NewServeMux()
 	InitRoutesHome(mux, handlers.HomeHandler{Store: repo})
+	InitRoutesReviews(mux, handlers.HomeHandler{Store: repo})
 	InitRoutesPromotions(mux, handlers.PromotionHandler{Service: services.PromotionService{Store: repositories.PromotionRepository{DB: d}, UploadDir: assetDir}}, handlers.ProductHandler{})
 	t.Setenv("JWT_SECRET", "favorites-tests-only")
 	token := func(id int, role string) string {
@@ -316,6 +317,7 @@ func TestHomeFeaturedPostgres(t *testing.T) {
 	check([]int64{101, 104, 107, 108})
 	mux := http.NewServeMux()
 	InitRoutesHome(mux, handlers.HomeHandler{Store: repo})
+	InitRoutesReviews(mux, handlers.HomeHandler{Store: repo})
 	response := httptest.NewRecorder()
 	mux.ServeHTTP(response, httptest.NewRequest("GET", "/home/featured", nil))
 	var payload struct {

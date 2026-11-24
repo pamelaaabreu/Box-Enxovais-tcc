@@ -1,9 +1,8 @@
 package main
 
 import (
-	"backend/src/config"
-	"backend/src/db"
 	"context"
+	"database/sql"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -49,22 +48,23 @@ func TestDecodeAndPrepare(t *testing.T) {
 }
 
 func TestImportIsolatedPostgres(t *testing.T) {
-	if os.Getenv("CART_TEST_LOCAL") != "1" {
-		t.Skip("set CART_TEST_LOCAL=1")
-	}
-	cfg, err := config.Load("../../.env")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if cfg.Database.Name != "bd_box" || cfg.Database.Host != "localhost" && cfg.Database.Host != "127.0.0.1" && cfg.Database.Host != "::1" {
-		t.Fatal("expected local test server")
+	dsn := os.Getenv("CART_TEST_DATABASE_URL")
+	if dsn == "" {
+		t.Skip("set CART_TEST_DATABASE_URL to an isolated test database")
 	}
 	ctx := context.Background()
-	database, err := db.Open(ctx, cfg.Database)
+	database, err := sql.Open("postgres", dsn)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatal("test database connection unavailable")
 	}
 	defer database.Close()
+	var databaseName string
+	if err = database.QueryRowContext(ctx, "SELECT current_database()").Scan(&databaseName); err != nil {
+		t.Fatal("test database unavailable")
+	}
+	if databaseName == "bd_box" || databaseName == "postgres" || strings.HasPrefix(databaseName, "template") {
+		t.Fatal("import test requires a dedicated test database")
+	}
 	schema := fmt.Sprintf("catalog_import_test_%d", time.Now().UnixNano())
 	quoted := pq.QuoteIdentifier(schema)
 	if _, err = database.Exec("CREATE SCHEMA " + quoted); err != nil {

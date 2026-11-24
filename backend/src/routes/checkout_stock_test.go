@@ -473,8 +473,7 @@ func TestAccountProfilePatchPostgres(t *testing.T) {
 	t.Setenv("JWT_SECRET", "favorites-tests-only")
 	mux := http.NewServeMux()
 	handler := handlers.AccountHandler{Store: repositories.AccountRepository{DB: db}}
-	mux.HandleFunc("GET /me", middlewares.AuthMiddleware(handler.ServeHTTP))
-	mux.HandleFunc("PATCH /me", middlewares.AuthMiddleware(handler.ServeHTTP))
+	InitRoutesAccount(mux, handler)
 	call := func(method string, user int, body string, want int) string {
 		t.Helper()
 		r := httptest.NewRequest(method, "/me", strings.NewReader(body))
@@ -487,6 +486,13 @@ func TestAccountProfilePatchPostgres(t *testing.T) {
 		return w.Body.String()
 	}
 	profileJSON := call("GET", 1, "", 200)
+	t.Run("head_reads_profile_without_applying_patch_body", func(t *testing.T) {
+		call("HEAD", 1, "", 200)
+		call("HEAD", 1, `{"name":"Não deve alterar o perfil"}`, 200)
+		if call("GET", 1, "", 200) != profileJSON {
+			t.Fatal("HEAD changed the stored profile")
+		}
+	})
 	if strings.Contains(profileJSON, "\"cnpj\"") || strings.Contains(profileJSON, "\"businessPhone\"") {
 		t.Fatal("profile exposed removed fields")
 	}

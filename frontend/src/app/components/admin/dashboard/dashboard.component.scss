@@ -1,36 +1,56 @@
 :host {
   display: block;
+
   min-width: 0;
+
   padding-bottom: 20px;
+
   font-family: "Montserrat", Arial, sans-serif;
+
   color: #303b2d;
 }
 
 .dashboard {
   --dash-olive: #3d4836;
+
   --dash-sage: #667255;
+
   --dash-ink: #303b2d;
+
   --dash-text: #4e5e49;
+
   --dash-muted: #66705f;
+
   --dash-border: #e0e2d8;
+
   --dash-surface: #fffdf8;
+
   --dash-soft: #f5f5ef;
 
   display: grid;
+
   min-width: 0;
+
   gap: 14px;
+
   container: dashboard-layout / inline-size;
+
   position: relative;
+
   isolation: isolate;
+
   padding: 1px;
+
   background:
     radial-gradient(
       ellipse 65% 28% at 100% 8%,
+
       rgba(102, 114, 85, 0.075),
       transparent 80%
     ),
     radial-gradient(
       ellipse 60% 22% at 5% 86%,
+
       rgba(215, 207, 186, 0.1),
       transparent 85%
     );
@@ -39,51 +59,73 @@
 .dashboard::before,
 .dashboard::after {
   content: "";
+
   position: absolute;
+
   z-index: 0;
+
   pointer-events: none;
+
   border: 1px solid rgba(102, 114, 85, 0.13);
+
   border-radius: 30px;
+
   background: rgba(255, 253, 248, 0.16);
+
   box-shadow: 18px 18px 0 rgba(102, 114, 85, 0.025);
 }
 
 .dashboard::before {
   top: -15px;
+
   right: 4%;
+
   width: min(38%, 390px);
+
   height: 136px;
+
   transform: rotate(-7deg);
 }
 
 .dashboard::after {
   bottom: 180px;
+
   left: 2%;
+
   width: min(34%, 340px);
+
   height: 195px;
+
   transform: rotate(5deg);
 }
 
 .dashboard > * {
   position: relative;
+
   z-index: 1;
 }
 
 .dashboard__top {
   display: flex;
+
   flex-wrap: wrap;
+
   align-items: flex-end;
+
   gap: 8px 18px;
+
   min-width: 0;
 }
 
 .dashboard__top > app-period-filter {
   display: block;
+
   --admin-filters-margin: 0;
+
   flex: 0 1 520px;
+
   min-width: min(100%, 460px);
 }
-
 
 .dashboard__top:has(input[type="date"]) > app-period-filter {
   flex-basis: 100%;
@@ -91,108 +133,161 @@
 
 .period-note {
   display: inline-flex;
+
   flex: 0 1 auto;
+
   align-items: center;
+
   gap: 9px;
+
   width: fit-content;
+
   max-width: 100%;
+
   min-width: 0;
+
   margin: 0;
+
   padding: 9px 13px;
+
   border: 1px solid #e2e7da;
+
   border-radius: 12px;
+
   background: linear-gradient(
     120deg,
     rgba(245, 247, 239, 0.96),
     rgba(253, 252, 246, 0.96)
   );
+
   color: #52644d;
+
   font-size: 13px;
+
   font-weight: 500;
+
   line-height: 1.5;
+
   box-shadow: 0 2px 8px rgba(52, 69, 47, 0.025);
 }
 
 .period-note__icon {
   display: grid;
+
   flex: 0 0 27px;
+
   place-items: center;
+
   width: 27px;
+
   height: 27px;
+
   border: 1px solid #d9e0d1;
+
   border-radius: 50%;
+
   color: #3d4836;
+
   background: #fffdf8;
 }
 
 .period-note__icon mat-icon {
   display: block;
+
   width: 16px;
+
   height: 16px;
+
   font-size: 16px;
+
   line-height: 16px;
 }
 
 .period-note__text {
   min-width: 0;
+
   overflow-wrap: anywhere;
 }
 
 .period-note__text strong {
   color: #354a33;
+
   font-weight: 650;
 }
 
 .panel {
   min-width: 0;
+
   border: 1px solid var(--dash-border);
+
   border-radius: 18px;
+
   background: var(--dash-surface);
+
   box-shadow: 0 3px 12px rgb(44 56 39 / 5%);
 }
 
 .metrics {
   display: grid;
+
   grid-template-columns: repeat(3, minmax(0, 1fr));
+
   align-items: stretch;
+
   gap: 12px;
 }
 
 .charts-grid {
   display: grid;
+
   grid-template-columns: repeat(12, minmax(0, 1fr));
+
   grid-template-areas:
     "revenue revenue revenue revenue revenue revenue revenue revenue status status status status"
     "customers customers customers customers customers customers orders orders orders orders orders orders"
     "products products products products products products categories categories categories categories categories categories"
     "recent recent recent recent stock stock stock stock stock stock stock stock";
+
   gap: 14px;
+
   align-items: stretch;
 }
+
 .charts-grid__revenue {
   grid-area: revenue;
 }
+
 .charts-grid__status {
   grid-area: status;
 }
+
 .charts-grid__customers {
   grid-area: customers;
 }
+
 .charts-grid__products {
   grid-area: products;
 }
+
 .charts-grid__categories {
   grid-area: categories;
 }
+
 .charts-grid__orders {
   grid-area: orders;
 }
+
 .charts-grid__recent {
   --dash-ink: #fff;
+
   --dash-text: #fff;
+
   grid-area: recent;
+
   background: var(--dash-olive);
+
   border-color: var(--dash-olive);
+
   color: #fff;
 
   .compact-list a,
@@ -208,202 +303,324 @@
     border-bottom-color: rgba(255, 255, 255, 0.18);
   }
 
-.compact-list a:focus-visible {
+  .compact-list a:focus-visible {
     outline-color: #f5e8d4;
   }
 }
+
 .charts-grid__stock {
   grid-area: stock;
 }
+
 .chart-panel {
   display: flex;
+
   flex-direction: column;
+
   min-width: 0;
+
   padding: 16px 18px 15px;
 }
+
 .chart-panel--table {
   padding-bottom: 18px;
 }
+
 .panel__heading {
   display: flex;
+
   align-items: center;
+
   gap: 10px;
+
   min-width: 0;
+
   margin-bottom: 4px;
 }
+
 .panel__icon {
   display: grid;
+
   place-items: center;
+
   width: 36px;
+
   height: 36px;
+
   border-radius: 12px;
+
   color: #5b7249;
+
   background: #edf1e5;
 }
+
 .panel__icon mat-icon {
   width: 20px;
+
   height: 20px;
+
   font-size: 20px;
+
   line-height: 20px;
 }
+
 .panel__icon--warning {
   color: #985540;
+
   background: #f7ebe5;
 }
+
 .panel__heading h2 {
   flex: 1;
+
   min-width: 0;
+
   margin: 0;
+
   color: var(--dash-ink);
+
   font-size: 15px;
+
   font-weight: 700;
+
   line-height: 1.4;
 }
+
 .panel__heading--stacked {
   display: block;
+
   margin-bottom: 8px;
 }
 
 .panel__heading--stacked h2 {
   margin-bottom: 6px;
+
   font-size: 13.7px;
+
   font-weight: 480;
 }
 
 .chart-panel__total {
   margin: 4px 0 4px;
+
   color: #2d3a2d;
+
   font-size: 30px;
+
   font-weight: 750;
+
   line-height: 1.05;
+
   letter-spacing: -0.03em;
+
   font-variant-numeric: tabular-nums;
 }
+
 .panel__tag {
   flex-shrink: 0;
+
   padding: 4px 10px;
+
   border: 1px solid #e3e9da;
+
   border-radius: 999px;
+
   background: #eff2e7;
+
   color: #43583a;
+
   font-size: 12px;
+
   font-weight: 650;
 }
+
 .chart-panel__summary,
 .panel__description {
   margin: 2px 0 8px;
+
   color: var(--dash-text);
+
   font-size: 13.7px;
+
   line-height: 1.5;
 }
+
 .compact-list {
   display: grid;
+
   gap: 0;
+
   margin: 8px 0 0;
+
   padding: 0;
+
   list-style: none;
 }
+
 .compact-list li {
   display: grid;
+
   gap: 5px;
+
   padding: 11px 0;
+
   border-bottom: 1px solid #e9e8df;
 }
+
 .compact-list li:last-child {
   border-bottom: 0;
+
   padding-bottom: 0;
 }
+
 .compact-list__primary {
   display: flex;
+
   flex-wrap: wrap;
+
   align-items: baseline;
+
   justify-content: space-between;
+
   gap: 6px 10px;
 }
+
 .compact-list a,
 .stock-table a {
   color: #36522f;
+
   font-weight: 700;
+
   text-decoration: underline;
+
   text-decoration-color: transparent;
+
   text-underline-offset: 3px;
 }
+
 .compact-list a:hover,
 .stock-table a:hover {
   text-decoration-color: currentColor;
 }
+
 .compact-list strong {
   color: var(--dash-ink);
+
   font-size: 13px;
+
   font-weight: 700;
 }
+
 .compact-list span {
   color: var(--dash-text);
+
   font-size: 13px;
+
   line-height: 1.5;
 }
+
 .stock-table {
   margin-top: 6px;
+
   max-width: 100%;
+
   overflow: auto;
+
   border: 1px solid #ebeae1;
+
   border-radius: 14px;
 }
+
 .stock-table table {
   width: 100%;
+
   border-collapse: collapse;
 }
+
 .stock-table th,
 .stock-table td {
   padding: 8px 10px;
+
   border-bottom: 1px solid #ebeae1;
+
   text-align: left;
+
   color: var(--dash-text);
+
   font-size: 13px;
+
   line-height: 1.45;
 }
+
 .stock-table td[rowspan] {
   vertical-align: top;
 }
+
 .stock-table th.stock-table__total,
 .stock-table td.stock-table__total[rowspan] {
   vertical-align: middle;
+
   text-align: center;
 }
+
 .stock-table td a {
   font-size: 13px;
+
   font-weight: 500;
+
   line-height: 1.45;
 }
+
 .stock-table th {
   font-size: 12px;
+
   position: sticky;
+
   top: 0;
+
   background: #f8f8f2;
+
   color: var(--dash-ink);
+
   font-weight: 700;
+
   z-index: 1;
 }
+
 .stock-table tbody tr:last-child td {
   border-bottom: 0;
 }
+
 .skeleton {
   min-height: 120px;
+
   background: linear-gradient(110deg, #e8ece3 8%, #f9fbf7 18%, #e8ece3 33%);
+
   background-size: 240% 100%;
+
   animation: dashboard-shimmer 1.5s linear infinite;
 }
+
 .visually-hidden {
   position: absolute;
+
   width: 1px;
+
   height: 1px;
+
   padding: 0;
+
   margin: -1px;
+
   overflow: hidden;
+
   clip: rect(0, 0, 0, 0);
+
   white-space: nowrap;
+
   border: 0;
 }
+
 @keyframes dashboard-shimmer {
   to {
     background-position-x: -240%;
@@ -417,42 +634,55 @@
 
 .stock-table {
   width: 100%;
+
   max-width: 100%;
 }
 
 .stock-table table {
   width: 100%;
+
   table-layout: fixed;
 }
 
 .stock-table th:nth-child(1) {
   width: 40%;
 }
+
 .stock-table th:nth-child(2) {
   width: 10%;
 }
+
 .stock-table th:nth-child(3) {
   width: 10%;
 }
+
 .stock-table th:nth-child(4) {
   width: 16%;
 }
+
 .stock-table th:nth-child(5) {
   width: 24%;
 }
 
 .stock-table .stock-table__name {
   display: block;
+
   min-width: 0;
+
   max-width: min(100%, 26ch);
+
   white-space: normal;
+
   overflow-wrap: anywhere;
+
   font-weight: 600;
+
   color: #303e2c;
 }
 
 .stock-table .stock-table__name:focus-visible {
   outline: 2px solid #536b45;
+
   outline-offset: -2px;
 }
 
@@ -460,11 +690,16 @@
   .metrics {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
+
   .metrics {
     --admin-kpi-min-height: 136px;
+
     --admin-kpi-padding: 14px 12px 11px;
+
     --admin-kpi-value-size: clamp(22px, 1.52vw, 29px);
+
     --admin-kpi-title-size: 13px;
+
     --admin-kpi-description-size: 12.5px;
   }
 }
@@ -484,6 +719,7 @@
 @container dashboard-layout (min-width: 901px) and (max-width: 1100px) {
   .charts-grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+
     grid-template-areas:
       "revenue revenue"
       "status status"
@@ -504,6 +740,7 @@
 @container dashboard-layout (max-width: 900px) {
   .charts-grid {
     grid-template-columns: minmax(0, 1fr);
+
     grid-template-areas: "revenue" "status" "customers" "orders" "products" "categories" "recent" "stock";
   }
 }
@@ -511,7 +748,9 @@
 @container dashboard-layout (max-width: 840px) {
   .period-note {
     flex-basis: auto;
+
     max-width: 100%;
+
     padding: 9px 12px;
   }
 }
@@ -520,9 +759,11 @@
   .metrics {
     grid-template-columns: minmax(0, 1fr);
   }
+
   .metrics {
     --admin-kpi-min-height: 126px;
   }
+
   .chart-panel {
     padding-inline: 14px;
   }
@@ -531,11 +772,14 @@
 @container dashboard-layout (max-width: 479px) {
   .metrics {
     --admin-kpi-value-size: 29px;
+
     --admin-kpi-title-size: 14px;
   }
+
   .panel__heading h2 {
     font-size: 15px;
   }
+
   .chart-panel__total {
     font-size: 27px;
   }
@@ -555,7 +799,9 @@
 
   .period-note {
     width: 100%;
+
     box-sizing: border-box;
+
     font-size: 12px;
   }
 }
@@ -563,99 +809,239 @@
 @media (prefers-contrast: more) {
   .period-note {
     border-color: #667255;
+
     color: #303b2d;
+
     background: #fffdf8;
   }
 }
 
 .recent-orders li {
   gap: 3px;
+
   padding-block: 8px;
 }
+
 .recent-orders .recent-orders__customer {
   color: #3d4836;
+
   font-weight: 510;
 }
+
 .recent-orders__date {
   color: #626c5c;
+
   font-size: 12px;
+
   font-weight: 460;
+
   line-height: 1.5;
 }
 
 .stock-cards {
   display: none;
 }
+
 @container dashboard-layout (max-width: 639px) {
   .stock-table {
     display: none;
   }
+
   .stock-cards {
     display: grid;
+
     gap: 12px;
+
     list-style: none;
+
     padding: 0;
+
     margin: 8px 0 0;
   }
+
   .stock-card {
     border: 1px solid var(--dash-border);
+
     border-radius: 14px;
+
     padding: 14px;
+
     min-width: 0;
+
     background: var(--dash-surface);
   }
+
   .stock-card > a {
     color: #303e2c;
+
     font-size: 13px;
+
     font-weight: 600;
+
     line-height: 1.5;
+
     overflow-wrap: anywhere;
   }
+
   .stock-card__total {
     margin: 8px 0;
+
     color: var(--dash-text);
+
     font-size: 12px;
   }
+
   .stock-card > ul {
     list-style: none;
+
     margin: 0;
+
     padding: 0;
   }
+
   .stock-card__variant {
     display: flex;
+
     flex-wrap: wrap;
+
     align-items: center;
+
     gap: 6px;
+
     padding: 10px 0 0;
+
     margin-top: 10px;
+
     border-top: 1px solid var(--dash-border);
   }
+
   .stock-card dl {
     display: flex;
+
     flex-wrap: wrap;
+
     gap: 6px;
+
     margin: 0;
   }
+
   .stock-card__badge {
     display: inline-flex;
+
     align-items: baseline;
+
     gap: 4px;
+
     padding: 4px 7px;
+
     border-radius: 999px;
+
     background: var(--dash-soft);
+
     font-size: 11px;
+
     line-height: 1.45;
   }
+
   .stock-card dt {
     color: var(--dash-text);
   }
+
   .stock-card dd {
     margin: 0;
+
     color: var(--dash-ink);
+
     font-weight: 600;
   }
+
   .stock-card app-status-badge {
     font-size: 11px;
+
     padding: 4px 7px;
+  }
+}
+
+/* Estados vazios compactos SOMENTE nos paineis da dashboard.
+   O componente app-admin-state tem as classes .state e .state-icon.
+   ::ng-deep permite estilizar o conteudo do componente filho com
+   encapsulamento Angular; o escopo fica limitado a este dashboard. */
+.dashboard .chart-panel app-admin-state {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin-block: auto;
+}
+
+:host ::ng-deep .dashboard .chart-panel app-admin-state {
+  .state {
+    min-height: 0;
+    padding: 12px 8px;
+    color: #354433;
+  }
+
+  .state-icon {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 10px;
+    color: #526748;
+  }
+
+  .state-icon::before {
+    inset: 0;
+    border-radius: 50%;
+    transform: none;
+    background: #edf1e8;
+  }
+
+  /* O Lucide recebe tamanho 36 pelo template compartilhado.
+     A escala evita alterar seu tamanho nas demais paginas. */
+  .state-icon > lucide-icon,
+  .state-icon > svg {
+    transform: scale(0.67);
+    transform-origin: center;
+  }
+
+  .state > h2 {
+    max-width: 33ch;
+    margin: 0 auto 5px;
+    color: #354433;
+    font-size: 15px;
+    font-weight: 650;
+    line-height: 1.4;
+    text-wrap: balance;
+  }
+
+  .state > p {
+    max-width: 43ch;
+    margin: 0 auto;
+    color: #66705f;
+    font-size: 12.5px;
+    font-weight: 450;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+}
+
+/* Pedidos recentes: contraste claro no estado vazio sobre fundo verde. */
+:host ::ng-deep .dashboard .charts-grid__recent app-admin-state {
+  .state,
+  .state > h2 {
+    color: #fffdf8;
+  }
+
+  .state > p {
+    color: #e7ede4;
+  }
+
+  .state-icon {
+    color: #fffdf8;
+  }
+
+  .state-icon::before {
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
   }
 }

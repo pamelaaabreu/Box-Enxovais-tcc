@@ -1,6 +1,7 @@
 package models
 
 type AccountProfilePatch struct {
+// Utiliza ponteiros para diferenciar campos não informados  de campos informados com valores vazios.
 	Name       *string `json:"name"`
 	Phone      *string `json:"phone"`
 	NationalID *string `json:"nationalId"`

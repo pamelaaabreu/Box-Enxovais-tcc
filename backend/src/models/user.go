@@ -3,6 +3,7 @@ package models
 import "github.com/golang-jwt/jwt/v5"
 
 type User struct {
+	// omitempty -> não inclui o campo ID no JSON caso seu valor seja zero.
 	ID           int    `json:"id,omitempty"`
 	Name         string `json:"name"`
 	Email        string `json:"email"`
@@ -19,6 +20,7 @@ type User struct {
 	Role         string `json:"role"`
 }
 
+// DTO de entrada -> apenas o necessário
 type Credentials struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -27,9 +29,11 @@ type Credentials struct {
 type Claims struct {
 	UserID int    `json:"userId"`
 	Role   string `json:"role"`
+	// incorpora os campos padronizados da biblioteca JWT.
 	jwt.RegisteredClaims
 }
 
+// DTO de saída.
 type LoginResponse struct {
 	Token string `json:"token"`
 	Name  string `json:"name"`
@@ -37,6 +41,7 @@ type LoginResponse struct {
 	Role  string `json:"role"`
 }
 
+// DTO de entrada p/ cadastro.
 type CreateUserRequest struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`

@@ -1,6 +1,14 @@
 import { StateKind } from '../../types/ui/feedback';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { LucideAngularModule, SearchX, CloudOff, LoaderCircle, CheckCircle2, Heart, PackageOpen } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  SearchX,
+  CloudOff,
+  LoaderCircle,
+  CheckCircle2,
+  Heart,
+  PackageOpen,
+} from 'lucide-angular';
 import { RouterLink } from '@angular/router';
 
 @Component({

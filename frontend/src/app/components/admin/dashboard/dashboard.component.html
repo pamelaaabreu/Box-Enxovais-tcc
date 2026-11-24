@@ -116,7 +116,7 @@
               }}
             </p>
           </div>
-          @if (s.series.length) {
+          @if (s.series.length > 0 && s.revenueCents > 0) {
             <app-echart
               [option]="revenueOption()"
               [ariaLabel]="
@@ -127,6 +127,7 @@
             />
           } @else {
             <app-admin-state
+              layout="compact"
               icon="show_chart"
               title="Sem faturamento aprovado"
               description="Não há valores aprovados no período selecionado."
@@ -151,6 +152,7 @@
             />
           } @else {
             <app-admin-state
+              layout="compact"
               title="Nenhum pedido registrado"
               description="Não há pedidos no período selecionado."
             />
@@ -160,15 +162,17 @@
           <div class="panel__heading">
             <h2>Evolução de clientes</h2>
           </div>
-          @if (s.series.length) {
+          @if (s.series.length > 0 && s.newCustomers > 0) {
             <app-echart
               [option]="customersOption()"
               ariaLabel="Evolução de novos clientes cadastrados por período"
             />
           } @else {
             <app-admin-state
+              layout="compact"
               icon="groups"
               title="Sem novos clientes no período"
+              description="Não houve novos cadastros neste período."
             />
           }
         </section>
@@ -176,15 +180,17 @@
           <div class="panel__heading">
             <h2>Evolução dos pedidos</h2>
           </div>
-          @if (s.series.length) {
+          @if (s.series.length > 0 && s.orders > 0) {
             <app-echart
               [option]="ordersOption()"
               ariaLabel="Evolução dos pedidos por período"
             />
           } @else {
             <app-admin-state
+              layout="compact"
               icon="show_chart"
-              title="Sem evolução no período"
+              title="Nenhum pedido no período"
+              description="Não houve pedidos no período selecionado."
             />
           }
         </section>
@@ -203,6 +209,7 @@
             />
           } @else {
             <app-admin-state
+              layout="compact"
               icon="inventory_2"
               title="Nenhum produto vendido no período"
             />
@@ -223,6 +230,7 @@
             />
           } @else {
             <app-admin-state
+              layout="compact"
               icon="category"
               title="Nenhuma venda por categoria"
             />
@@ -258,12 +266,20 @@
                       order.createdAt | date: "dd/MM/yyyy 'às' HH:mm" : "-0300"
                     }}
                   </time>
-                  <app-status-badge [tone]="order.status === 'cancelled' ? 'danger' : 'success'">{{ order.status === "cancelled" ? "Cancelado" : "Aprovado" }}</app-status-badge>
+                  <app-status-badge
+                    [tone]="order.status === 'cancelled' ? 'danger' : 'success'"
+                    >{{
+                      order.status === "cancelled" ? "Cancelado" : "Aprovado"
+                    }}</app-status-badge
+                  >
                 </li>
               }
             </ul>
           } @else {
-            <app-admin-state title="Nenhum pedido recente neste período" />
+            <app-admin-state
+              layout="compact"
+              title="Nenhum pedido recente neste período"
+            />
           }
         </section>
         <section
@@ -336,7 +352,18 @@
                           </td>
                         }
                         <td>
-                          <app-status-badge [tone]="product.quantity === 0 ? 'danger' : 'warning'">{{ product.quantity === 0 ? "Indisponível" : product.quantity === 1 ? "Última unidade" : "Baixo estoque" }}</app-status-badge>
+                          <app-status-badge
+                            [tone]="
+                              product.quantity === 0 ? 'danger' : 'warning'
+                            "
+                            >{{
+                              product.quantity === 0
+                                ? "Indisponível"
+                                : product.quantity === 1
+                                  ? "Última unidade"
+                                  : "Baixo estoque"
+                            }}</app-status-badge
+                          >
                         </td>
                       </tr>
                     }
@@ -367,7 +394,16 @@
                             <dd>{{ product.quantity }}</dd>
                           </div>
                         </dl>
-                        <app-status-badge [tone]="product.quantity === 0 ? 'danger' : 'warning'">{{ product.quantity === 0 ? "Indisponível" : product.quantity === 1 ? "Última unidade" : "Baixo estoque" }}</app-status-badge>
+                        <app-status-badge
+                          [tone]="product.quantity === 0 ? 'danger' : 'warning'"
+                          >{{
+                            product.quantity === 0
+                              ? "Indisponível"
+                              : product.quantity === 1
+                                ? "Última unidade"
+                                : "Baixo estoque"
+                          }}</app-status-badge
+                        >
                       </li>
                     }
                   </ul>
@@ -375,7 +411,10 @@
               }
             </ul>
           } @else {
-            <app-admin-state title="Nenhum alerta de estoque" />
+            <app-admin-state
+              layout="compact"
+              title="Nenhum alerta de estoque"
+            />
           }
         </section>
       </div>

@@ -1,5 +1,6 @@
 package models
 
+// DTO redef. de senha
 type ValidateResetTokenRequest struct {
 	ResetToken string `json:"resetToken"`
 }

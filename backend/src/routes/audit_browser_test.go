@@ -4,7 +4,6 @@ import (
 	"backend/src/config"
 	"backend/src/db"
 	"backend/src/handlers"
-	middlewares "backend/src/middleware"
 	"backend/src/repositories"
 	"backend/src/services"
 	"context"
@@ -217,25 +216,22 @@ func TestBrowserAuditServer(t *testing.T) {
 		return os.WriteFile("../../audit-browser.otp", []byte(code), 0600)
 	}}}, handlers.UserHandler{Service: services.UserService{Store: userRepo}})
 	InitRoutesProducts(mux, products, handlers.ProductImageHandler{Service: services.ProductImageService{Store: repositories.ProductImageRepository{DB: database}, Directory: assets}})
+	InitRoutesDashboard(mux, products)
+	InitRoutesReports(mux, products)
 	InitRoutesCart(mux, handlers.CartHandler{Store: repositories.CartRepository{DB: database}})
 	InitRoutesFavorites(mux, handlers.FavoritesHandler{Service: services.FavoritesService{Store: repositories.FavoritesRepository{DB: database}}})
 	InitRoutesHome(mux, handlers.HomeHandler{Store: repositories.HomeRepository{DB: database}})
-	InitRoutesShipping(mux, database)
+	InitRoutesReviews(mux, handlers.HomeHandler{Store: repositories.HomeRepository{DB: database}})
+	InitRoutesShipping(mux, handlers.QuoteShipping(database), handlers.ListShippingRanges(database), handlers.SaveShippingRange(database), handlers.DeleteShippingRange(database))
 	InitRoutesPromotions(mux, handlers.PromotionHandler{Service: services.PromotionService{Store: repositories.PromotionRepository{DB: database}, UploadDir: assets}}, products)
 	orders := handlers.OrderHistoryHandler{Store: repositories.CheckoutRepository{DB: database}}
 	InitRoutesAdminCustomers(mux, handlers.AdminCustomerHandler{Service: services.AdminCustomerService{Store: repositories.AdminCustomerRepository{DB: database}}})
 	InitRoutesAdminOrders(mux, handlers.AdminOrdersHandler{Store: repositories.CheckoutRepository{DB: database}})
-	for _, pattern := range []string{"GET /orders", "GET /orders/{id}", "POST /orders/{id}/cancel"} {
-		mux.HandleFunc(pattern, middlewares.AuthMiddleware(orders.ServeHTTP))
-	}
+	InitRoutesOrders(mux, orders)
 	checkout := handlers.CheckoutHandler{Store: repositories.CheckoutRepository{DB: database}}
-	for _, pattern := range []string{"POST /checkout", "GET /checkout/success/{id}"} {
-		mux.HandleFunc(pattern, middlewares.AuthMiddleware(checkout.ServeHTTP))
-	}
-	account := middlewares.AuthMiddleware(handlers.AccountHandler{Store: repositories.AccountRepository{DB: database}}.ServeHTTP)
-	for _, pattern := range []string{"GET /me", "PATCH /me", "GET /me/addresses", "POST /me/addresses", "PATCH /me/addresses/{id}", "DELETE /me/addresses/{id}", "PUT /me/addresses/{id}/default"} {
-		mux.HandleFunc(pattern, account)
-	}
+	InitRoutesCheckout(mux, checkout)
+	account := handlers.AccountHandler{Store: repositories.AccountRepository{DB: database}}
+	InitRoutesAccount(mux, account)
 	mux.Handle("/uploads/", http.StripPrefix("/uploads/", http.FileServer(http.Dir(assets))))
 	server := http.Server{Addr: "127.0.0.1:8086", Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if origin := r.Header.Get("Origin"); origin == "http://localhost:4200" || origin == "http://127.0.0.1:4206" {

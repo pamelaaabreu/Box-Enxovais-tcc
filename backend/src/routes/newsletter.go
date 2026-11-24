@@ -6,5 +6,5 @@ import (
 )
 
 func InitRoutesNewsletter(mux *http.ServeMux, newsletter handlers.NewsletterHandler) {
-	publicRoute(mux, http.MethodPost, "/api/newsletter/subscribe", newsletter.SubscribeNewsletter)
+	publicRoute(mux, "POST /api/newsletter/subscribe", newsletter.SubscribeNewsletter)
 }
