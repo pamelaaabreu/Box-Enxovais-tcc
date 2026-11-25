@@ -12,3 +12,9 @@ export interface ExperienceReview {
   status: ReviewModerationStatus;
   createdAt: string;
 }
+
+export interface PurchaseReviewInput {
+  overall: number;
+  comment: string;
+  publicationConsent: boolean;
+}

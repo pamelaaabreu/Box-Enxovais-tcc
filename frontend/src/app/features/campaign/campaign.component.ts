@@ -19,7 +19,7 @@ import { CatalogService } from '../catalog/services/catalog.service';
 import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/catalog-layout.component';
 import { ProductCardComponent } from '../catalog/components/product-card/product-card.component';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
-import { HomeCampaign } from '../../shared/models';
+import type { HomeCampaign } from '../../shared/types/promotions/promotion';
 @Component({
   selector: 'app-campaign',
   standalone: true,
@@ -43,7 +43,11 @@ export class CampaignComponent {
   readonly fullPage = !!this.route.snapshot.paramMap.get('id');
   readonly search = signal('');
   readonly sort = signal('name');
-  readonly sortOptions = [{value:'name',label:'Nome'},{value:'price_asc',label:'Menor preço'},{value:'price_desc',label:'Maior preço'}];
+  readonly sortOptions = [
+    { value: 'name', label: 'Nome' },
+    { value: 'price_asc', label: 'Menor preço' },
+    { value: 'price_desc', label: 'Maior preço' },
+  ];
   readonly page = signal(1);
   readonly pageSize = 12;
   private readonly state = toSignal(
@@ -91,7 +95,7 @@ export class CampaignComponent {
     const price = (p: (typeof products)[number]) =>
       p.promotion_active ? p.promotional_price : p.price;
     return products.sort((a, b) =>
-      (this.sort() === 'price' || this.sort() === 'price_asc')
+      this.sort() === 'price' || this.sort() === 'price_asc'
         ? price(a) - price(b)
         : this.sort() === 'price_desc'
           ? price(b) - price(a)

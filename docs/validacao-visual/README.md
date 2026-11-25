@@ -21,13 +21,15 @@ Use Node compatível com o projeto, Playwright disponível no ambiente e Chromiu
 Para cenários administrativos, inicie o servidor de testes em outro terminal, a partir de `backend`:
 
 ```powershell
-$env:CART_TEST_LOCAL='1'
+$env:DB_NAME='box_frontend_audit_SEU_BANCO_DESCARTAVEL'
+$env:AUDIT_ISOLATED_DATABASE=$env:DB_NAME
+# Configure CART_TEST_DATABASE_URL para essa base, sem imprimir credenciais.
 $env:AUDIT_BROWSER='1'
 $env:ADMIN_CUSTOMERS_BROWSER='1'
 go test ./src/routes -run '^TestBrowserAuditServer$' -count=1 -v -timeout=40m
 ```
 
-Escolha somente a fixture do cenário: `ADMIN_CUSTOMERS_BROWSER`, `ADMIN_ORDERS_BROWSER`, `PRODUCT_CRUD_BROWSER` ou `DASHBOARD_BROWSER`. Não combine fixtures de módulos diferentes. O servidor cria e remove schema exclusivo, na porta 8086, e compara a integridade do principal. A automação redireciona a API para esse ambiente. Não use pedidos/clientes do principal para testes de gravação.
+Escolha somente a fixture do cenário: `ADMIN_CUSTOMERS_BROWSER`, `ADMIN_ORDERS_BROWSER`, `PRODUCT_CRUD_BROWSER` ou `DASHBOARD_BROWSER`. Confira o preparo de cada fixture no harness antes de combinar cenários. O servidor exige o banco descartável confirmado, cria e remove schema exclusivo na porta 8086. A comparação do principal deve ser feita separadamente e somente por leitura. A automação redireciona a API para esse ambiente. Não use pedidos/clientes do principal para testes de gravação.
 
 Se Playwright não estiver disponível, instale-o em um diretório temporário exclusivo do repositório e limpe-o com try/finally, sem alterar package.json/package-lock da aplicação:
 
@@ -75,3 +77,7 @@ node --test frontend/e2e/artifacts.test.cjs
 ```
 
 `catalogo.cjs` é uma alternativa de comparação visual via Chrome/CDP e baseline explícita. Por padrão também usa saída temporária limpa. Uma pasta de saída passada como argumento é uma retenção deliberada, administrada pelo operador; mantenha-a dentro do repositório e apenas se necessária. Esse roteiro precisa de uma instância de teste do Chrome com endpoint CDP em 9228.
+
+## Rodada Angular atual
+
+`angular-2026-11-25/` preserva 29 capturas selecionadas de navegação real com dados isolados. Matriz de telas efetivamente inspecionadas e limites estão no AUDITORIA_FINAL.md. Imagens sintéticas do fixture não comprovam o catálogo comercial; captura sem overflow não equivale a aprovação visual. Use frontend/e2e/frontend-audit.cjs para smoke de leitura, aliases, erro/retry e teclado. Encerre o harness via backend/audit-browser.stop e o preview pelo PID criado por você.

@@ -36,7 +36,12 @@ func (h NewsletterHandler) SubscribeNewsletter(
 	}
 
 	// Encaminha o e-mail ao service.
-	if err := h.Service.Subscribe(r.Context(), subReq.Email); err != nil {
+	err := h.Service.Subscribe(r.Context(), subReq.Email)
+	if errors.Is(err, services.ErrNewsletterDelivery) {
+		log.Println("Newsletter: confirmação pendente de recuperação controlada")
+		err = nil
+	}
+	if err != nil {
 
 		switch {
 
@@ -84,6 +89,6 @@ func (h NewsletterHandler) SubscribeNewsletter(
 
 	// Confirma a inscrição.
 	response.JSON(w, http.StatusOK, map[string]string{
-		"message": "Inscrição realizada com sucesso!",
+		"message": "Solicitação recebida. Se for uma nova inscrição, enviaremos a confirmação.",
 	})
 }

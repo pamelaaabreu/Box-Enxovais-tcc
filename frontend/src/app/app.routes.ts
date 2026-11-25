@@ -3,9 +3,24 @@ import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 import { AdminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
+  { path: 'account', redirectTo: 'minha-conta', pathMatch: 'full' },
+  {
+    path: 'checkout/success/:id',
+    redirectTo: 'finalizar-compra/sucesso/:id',
+    pathMatch: 'full',
+  },
+  { path: 'checkout', redirectTo: 'finalizar-compra', pathMatch: 'full' },
+  { path: 'favorites', redirectTo: 'favoritos', pathMatch: 'full' },
+  { path: 'cart', redirectTo: 'carrinho', pathMatch: 'full' },
+  { path: 'home', redirectTo: 'inicio', pathMatch: 'full' },
+  { path: 'forgot-password', redirectTo: 'recuperar-senha', pathMatch: 'full' },
+  { path: 'verify-code', redirectTo: 'verificar-codigo', pathMatch: 'full' },
+  { path: 'reset-password', redirectTo: 'redefinir-senha', pathMatch: 'full' },
+  { path: 'register', redirectTo: 'cadastro', pathMatch: 'full' },
+
   // Rotas que exigem autenticação.
   {
-    path: 'account',
+    path: 'minha-conta',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/account/account.component').then(
@@ -29,15 +44,15 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'checkout/success/:id',
+    path: 'finalizar-compra/sucesso/:id',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/checkout/checkout-success/checkout-success.component').then(
-        (m) => m.CheckoutSuccessComponent,
-      ),
+      import(
+        './features/checkout/checkout-success/checkout-success.component'
+      ).then((m) => m.CheckoutSuccessComponent),
   },
   {
-    path: 'checkout',
+    path: 'finalizar-compra',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/checkout/checkout.component').then(
@@ -45,7 +60,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'favorites',
+    path: 'favoritos',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/favorites/favorites.component').then(
@@ -53,7 +68,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'cart',
+    path: 'carrinho',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/cart/cart.component').then((m) => m.CartComponent),
@@ -62,13 +77,13 @@ export const routes: Routes = [
   // Redireciona a URL inicial para a Home.
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'inicio',
     pathMatch: 'full',
   },
 
   // Rotas públicas.
   {
-    path: 'home',
+    path: 'inicio',
     loadComponent: () =>
       import('./features/home/home.component').then((m) => m.HomeComponent),
   },
@@ -89,98 +104,84 @@ export const routes: Routes = [
   {
     path: 'produto/:slug',
     loadComponent: () =>
-      import('./features/catalog/pages/product-detail/product-detail.component').then(
-        (m) => m.ProductDetailComponent,
-      ),
+      import(
+        './features/catalog/pages/product-detail/product-detail.component'
+      ).then((m) => m.ProductDetailComponent),
   },
 
   // Utiliza a mesma configuração de rota para login e cadastro.
   {
     matcher: (segments) =>
-      segments.length === 1 && ['login', 'register'].includes(segments[0].path)
+      segments.length === 1 && ['login', 'cadastro'].includes(segments[0].path)
         ? { consumed: segments, posParams: { authPage: segments[0] } }
         : null,
 
     // Define a aba correspondente à URL.
     resolve: {
       selectedTab: (route: ActivatedRouteSnapshot) =>
-        route.paramMap.get('authPage') === 'register' ? 1 : 0,
+        route.paramMap.get('authPage') === 'cadastro' ? 1 : 0,
     },
 
     loadComponent: () =>
-      import('./features/authorization/register/register.component').then(
+      import('./features/authentication/auth/auth.component').then(
         (m) => m.AuthComponent,
       ),
   },
 
   // Etapas de recuperação de senha.
   {
-    path: 'forgot-password',
+    path: 'recuperar-senha',
     data: { recoveryStep: 'email' },
     loadComponent: () =>
-      import('./shared/forgot-password/forgot-password.component').then(
-        ({ ForgotPasswordComponent }) => ForgotPasswordComponent,
-      ),
+      import(
+        './features/authentication/forgot-password/forgot-password.component'
+      ).then(({ ForgotPasswordComponent }) => ForgotPasswordComponent),
   },
   {
-    path: 'verify-code',
+    path: 'verificar-codigo',
     data: { recoveryStep: 'otp' },
     loadComponent: () =>
-      import('./shared/forgot-password/forgot-password.component').then(
-        ({ ForgotPasswordComponent }) => ForgotPasswordComponent,
-      ),
+      import(
+        './features/authentication/forgot-password/forgot-password.component'
+      ).then(({ ForgotPasswordComponent }) => ForgotPasswordComponent),
   },
   {
-    path: 'reset-password',
+    path: 'redefinir-senha',
     loadComponent: () =>
-      import('./shared/reset-password/reset-password.component').then(
-        (m) => m.ResetPasswordComponent,
-      ),
+      import(
+        './features/authentication/reset-password/reset-password.component'
+      ).then((m) => m.ResetPasswordComponent),
   },
 
   // Rotas administrativas.
   {
     path: 'image-upload/:id',
-    canMatch: [AdminGuard],
-    loadComponent: () =>
-      import('./features/product-manage/images/product-image-upload/product-image-upload.component').then(
-        (m) => m.ProductImageUploadComponent,
-      ),
+    redirectTo: 'admin/produtos/:id/imagens',
+    pathMatch: 'full',
   },
   {
     path: 'product-register',
-
-    // Verifica se o administrador pode abandonar o formulário.
-    canDeactivate: [
-      (
-        page: import('./features/product-manage/register/product-create/product-create.component').ProductCreateComponent,
-      ) => page.canLeave(),
-    ],
-
-    canMatch: [AdminGuard],
-    loadComponent: () =>
-      import('./features/product-manage/register/product-create/product-create.component').then(
-        (m) => m.ProductCreateComponent,
-      ),
+    redirectTo: 'admin/produtos/novo',
+    pathMatch: 'full',
   },
 
   // Redirecionamentos para as rotas administrativas atuais.
   {
     path: 'promotion-register',
     pathMatch: 'full',
-    redirectTo: 'admin/promotions/new',
+    redirectTo: 'admin/promocoes/nova',
   },
   {
     path: 'add-to-promotion',
     pathMatch: 'full',
-    redirectTo: 'admin/promotions',
+    redirectTo: 'admin/promocoes',
   },
 
   {
     path: 'admin',
     canMatch: [AdminGuard],
     loadChildren: () =>
-      import('./components/admin/admin.module').then((m) => m.AdminModule),
+      import('./features/admin/admin.routes').then((m) => m.adminRoutes),
   },
 
   // Página não encontrada.

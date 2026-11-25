@@ -1,4 +1,37 @@
-import {TestBed} from '@angular/core/testing';
-import {ProductCommerceSummaryComponent} from './product-commerce-summary.component';
-import {variantForm,variantsArray} from '../product-variants/product-variants.component';
-describe('ProductCommerceSummaryComponent',()=>{it('updates actual totals without changing variant data',()=>{const f=TestBed.createComponent(ProductCommerceSummaryComponent),v=variantsArray();v.push(variantForm({id:1,size:'Casal',dimensions:'220 × 240 cm',price:249.90,stock:3}));v.push(variantForm({id:2,size:'Queen',dimensions:'240 × 260 cm',price:289.90,stock:5}));f.componentRef.setInput('variants',v);f.detectChanges();expect(f.componentInstance.totalStock).toBe(8);expect(f.componentInstance.startingPrice).toContain('249,90');expect(f.nativeElement.querySelectorAll('dl > div').length).toBe(3);v.at(0).controls.price.setValue('329,90');v.removeAt(1);f.detectChanges();expect(f.componentInstance.startingPrice).toContain('329,90');expect(v.at(0).controls.stock.value).toBe(3)})});
+import { TestBed } from '@angular/core/testing';
+import { ProductCommerceSummaryComponent } from './product-commerce-summary.component';
+import { variantForm, variantsArray } from '../../forms/product-variants';
+describe('ProductCommerceSummaryComponent', () => {
+  it('updates actual totals without changing variant data', () => {
+    const f = TestBed.createComponent(ProductCommerceSummaryComponent),
+      v = variantsArray();
+    v.push(
+      variantForm({
+        id: 1,
+        size: 'Casal',
+        dimensions: '220 × 240 cm',
+        price: 249.9,
+        stock: 3,
+      }),
+    );
+    v.push(
+      variantForm({
+        id: 2,
+        size: 'Queen',
+        dimensions: '240 × 260 cm',
+        price: 289.9,
+        stock: 5,
+      }),
+    );
+    f.componentRef.setInput('variants', v);
+    f.detectChanges();
+    expect(f.componentInstance.totalStock).toBe(8);
+    expect(f.componentInstance.startingPrice).toContain('249,90');
+    expect(f.nativeElement.querySelectorAll('dl > div').length).toBe(3);
+    v.at(0).controls.price.setValue('329,90');
+    v.removeAt(1);
+    f.detectChanges();
+    expect(f.componentInstance.startingPrice).toContain('329,90');
+    expect(v.at(0).controls.stock.value).toBe(3);
+  });
+});

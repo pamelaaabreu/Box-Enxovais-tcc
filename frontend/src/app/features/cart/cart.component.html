@@ -9,7 +9,7 @@
     <header class="cart-heading">
       <h1 id="cart-title">Meu Carrinho</h1>
       @if (!cart.loading() && cart.cart().items.length > 0) {
-        <a routerLink="/home" class="continue-link">
+        <a routerLink="/inicio" class="continue-link">
           <span aria-hidden="true">←</span>
           Continuar comprando
         </a>
@@ -33,9 +33,15 @@
     @if (cart.loading()) {
       <app-admin-state kind="loading" title="Carregando seu carrinho…" />
     } @else if (!cart.cart().items.length && !cart.error()) {
-      <app-admin-state class="empty" layout="page" icon="shopping_bag" title="Seu carrinho está vazio"
+      <app-admin-state
+        class="empty"
+        layout="page"
+        icon="shopping_bag"
+        title="Seu carrinho está vazio"
         description="Que tal explorar nossa coleção e encontrar peças especiais para sua casa?"
-        actionLabel="Explorar produtos" actionLink="/home" />
+        actionLabel="Explorar produtos"
+        actionLink="/inicio"
+      />
     } @else if (cart.cart().items.length) {
       <div class="cart-grid">
         <section class="cart-products" aria-label="Produtos do carrinho">
@@ -173,7 +179,7 @@
             }}</strong>
           </div>
           @if (canCheckout()) {
-            <a routerLink="/checkout" class="primary"
+            <a routerLink="/finalizar-compra" class="primary"
               >Finalizar compra <span aria-hidden="true">→</span></a
             >
           } @else {

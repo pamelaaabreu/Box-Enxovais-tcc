@@ -4,7 +4,7 @@
 
 Testes unitários Angular verificam controles, mensagens, estados e chamadas HTTP com respostas controladas. São rápidos, mas não provam que a API e o banco realmente trabalham juntos. Testes Go exercitam validação, modelos, serviços e handlers; os testes de integração abrem PostgreSQL isolado, aplicam migrations e verificam transações/constraints. Playwright navega em Chrome real e interage com formulários, radios, uploads, modais e URLs. Build confirma que o código produz artefatos de distribuição, não que todos os fluxos funcionam.
 
-## Resultados desta finalização — 22/11/2026
+## Resultados históricos — 22/11/2026
 
 | Verificação executada | Resultado real |
 |---|---|
@@ -45,10 +45,18 @@ A automação verificou ausência de overflow horizontal, elementos visíveis, t
 
 ## Reprodução segura
 
-Na raiz do frontend, use Node compatível com `.nvmrc`: `npm test -- --watch=false --browsers=ChromeHeadless`, `npm run lint` e `npm run build`. No backend, `go test ./...` e `go vet ./...`. Integração local exige `CART_TEST_LOCAL=1` e PostgreSQL de testes acessível. Confira os helpers antes de executar: eles criam schemas e não aplicam a sequência ao public.
+Na raiz do frontend, use Node compatível com `.nvmrc`: `npm test -- --watch=false --browsers=ChromeHeadless`, `npm run lint` e `npm run build`. No backend, `go test ./...` e `go vet ./...`. Integração exige CART_TEST_DATABASE_URL e REVIEW_TEST_DATABASE_URL apontando explicitamente a um banco descartável. Evite o fallback local quando o objetivo é preservar integralmente o principal. Confira os helpers antes de executar: eles criam schemas e não aplicam a sequência ao public.
 
 Para E2E, é necessário Playwright disponível na ferramenta de testes, Chrome/Chromium instalado, build servido por `frontend/e2e/serve.cjs` em 4206 e porta 8086 livre. `regression.cjs` gerencia a API isolada e exige `AUDIT_BROWSER=1`/flags internos no processo de teste. Não desative sandbox do Chromium nem segurança do navegador para fazê-lo funcionar. Ferramentas temporárias usadas nesta execução não são dependência comercial instalada no projeto.
 
 ## Limites da evidência
 
-Não houve pagamento bancário, envio real de newsletter/recibo, certificação WCAG completa ou nova varredura online de vulnerabilidades nesta rodada. O histórico anterior de segurança está em [AUDITORIA_FINAL.md](../../AUDITORIA_FINAL.md). Ausência de erro nos cenários executados não comprova ausência de todos os defeitos possíveis. As migrations 52/53 continuam pendentes no principal; aprovação isolada não equivale a ativação em localhost principal.
+Não houve pagamento bancário, envio real de newsletter/recibo, certificação WCAG completa ou nova varredura online de vulnerabilidades nesta rodada. O histórico anterior de segurança está em [AUDITORIA_FINAL.md](../../AUDITORIA_FINAL.md). Ausência de erro nos cenários executados não comprova ausência de todos os defeitos possíveis. Essa situação de implantação era histórica; o estado confirmado na auditoria atual é 54, dirty=false. A 55 não foi aplicada.
+
+## Validação atual — 25/11/2026
+
+433 testes Angular aprovados; TypeScript sem emissão/noUnusedLocals, build produção, Go vet/build e go test normal/race com PostgreSQL isolado aprovados. Não somar estes resultados aos 356 históricos. Detalhes e limitações visuais estão no AUDITORIA_FINAL.md; evidências atuais em ../validacao-visual/angular-2026-11-25/.
+
+Executor atual: frontend/e2e/frontend-audit.cjs, Playwright opcional, Chrome real com sandbox. O harness TestBrowserAuditServer exige DB_NAME com prefixo box_frontend_audit_ e AUDIT_ISOLATED_DATABASE idêntico; ambos opt-ins PostgreSQL devem usar o alvo descartável. Prepare banco com migrations em ambiente isolado, build em 4206 e API de teste em 8086. Nenhum desses comandos autoriza usar bd_box. Ao terminar, crie backend/audit-browser.stop, espere o teste encerrar e remova somente o banco descartável depois de fechar conexões; encerre o preview pelo PID próprio.
+
+O driver atual cobre leitura/navegação, aliases e teclado; não substitui os cenários comerciais já executados separadamente. Scripts E2E históricos podem conter rotas antigas; aliases preservam compatibilidade, mas cada executor deve ser conferido antes de novo uso. Screenshots com fixture sintético não comprovam imagens comerciais. Build/overflow não são aprovação visual ou certificação WCAG.

@@ -7,3 +7,8 @@ description: "Revisão sob demanda de diff ou arquivos específicos do Box Enxov
 2. Leia apenas o diff e dependências indispensáveis.
 3. Verifique contratos API, validação Go, permissões, Angular guards/interceptors, casos de erro e regressões.
 4. Entregue até cinco achados com severidade, arquivo/linha e sugestão. Não reescreva o código nem faça melhorias cosméticas.
+
+## Referências atuais
+- Arquitetura: AGENTS.md, docs/ESTRUTURA_ANGULAR.md e README.md. Angular em features/admin e features/authentication/auth; API net/http em backend/src.
+- Banco principal não é alvo de teste de escrita. Preserve migrations, uploads, backups e servidores existentes. Nunca exponha DSNs/credenciais.
+- Sem delegação automática; escopo e execução seguem a autorização expressa do usuário.

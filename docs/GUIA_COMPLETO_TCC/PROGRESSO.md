@@ -1,3 +1,5 @@
+> Registro histórico de 22/11/2026. Estado atual: schema 54, dirty=false; 52/53/54 implantadas anteriormente com autorização; 55 pendente. Para resultados atuais, consulte AUDITORIA_FINAL.md. Os números abaixo não devem ser somados às rodadas posteriores.
+
 # Progresso da finalização — 22/11/2026
 
 Projeto efetivo: Box-Enxovais-tcc. A execução continuou do checkpoint anterior, sem reiniciar a auditoria ou desfazer mudanças prévias.

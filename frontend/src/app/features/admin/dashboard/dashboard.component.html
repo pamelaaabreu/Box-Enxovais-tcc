@@ -1,0 +1,435 @@
+<section
+  class="dashboard"
+  aria-label="Indicadores da loja"
+  [attr.aria-busy]="status() === 'loading'"
+>
+  <div class="dashboard__top">
+    <app-period-filter [form]="filter" (applied)="apply()" />
+    @if (status() === "loaded") {
+      @if (data(); as s) {
+        <p class="period-note" aria-label="Período aplicado aos indicadores">
+          <span class="period-note__text">
+            @if (displayedPeriod().from === displayedPeriod().until) {
+              Dados de <strong>{{ displayedPeriod().from }}</strong>
+            } @else {
+              De <strong>{{ displayedPeriod().from }}</strong> a
+              <strong>{{ displayedPeriod().until }}</strong>
+            }
+            · visão {{ s.period.group === "day" ? "diária" : "mensal" }}
+          </span>
+        </p>
+      }
+    }
+  </div>
+  @if (status() === "loading") {
+    <app-admin-state
+      kind="loading"
+      title="Carregando indicadores e gráficos…"
+    />
+    <div class="metrics" aria-hidden="true">
+      @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+        <div class="panel skeleton"></div>
+      }
+    </div>
+  } @else if (status() === "error") {
+    <app-admin-state
+      kind="error"
+      title="Não foi possível carregar os indicadores"
+      [description]="error()"
+      actionLabel="Tentar novamente"
+      (action)="load()"
+    />
+  } @else {
+    @if (data(); as s) {
+      <div class="metrics" aria-label="Resumo dos indicadores">
+        <app-admin-kpi-card
+          title="Faturamento"
+          [value]="s.revenueCents / 100"
+          format="currency"
+          variant="featured"
+          icon="payments"
+          description="Aprovados com frete"
+          tooltip="Inclui o frete dos pedidos aprovados e exclui cancelamentos."
+        />
+        <app-admin-kpi-card
+          title="Pedidos realizados"
+          [value]="s.orders"
+          icon="shopping_bag"
+          [description]="
+            s.approvedOrders +
+            ' aprovados · ' +
+            s.cancelledOrders +
+            ' cancelados no período'
+          "
+          tooltip="Pedidos feitos no período, incluindo aprovados e cancelados."
+        />
+        <app-admin-kpi-card
+          title="Ticket médio"
+          [value]="s.averageTicketCents / 100"
+          format="currency"
+          icon="receipt_long"
+          description="Média dos pedidos aprovados"
+          tooltip="Valor médio dos pedidos aprovados no período, incluindo frete."
+        />
+        <app-admin-kpi-card
+          title="Clientes cadastrados"
+          [value]="s.customers"
+          icon="groups"
+          [description]="
+            s.newCustomers +
+            (s.newCustomers === 1 ? ' novo' : ' novos') +
+            ' no período'
+          "
+          tooltip="Total de clientes cadastrados e quantos chegaram no período."
+        />
+        <app-admin-kpi-card
+          title="Produtos ativos"
+          [value]="s.activeProducts"
+          icon="inventory_2"
+          [description]="s.products + ' cadastrados no total'"
+          tooltip="Produtos ativos no catálogo, em comparação com o total cadastrado."
+        />
+        <app-admin-kpi-card
+          title="Estoque baixo"
+          [value]="s.lowStock"
+          variant="warning"
+          icon="warning_amber"
+          [description]="
+            '1 a 5 unidades · ' +
+            s.outOfStock +
+            (s.outOfStock === 1 ? ' indisponível' : ' indisponíveis')
+          "
+          tooltip="Produtos com 1 a 5 unidades em estoque. Os indisponíveis estão zerados."
+        />
+      </div>
+      <div class="charts-grid" aria-label="Análises e informações da loja">
+        <section class="panel chart-panel charts-grid__revenue">
+          <div class="panel__heading panel__heading--stacked">
+            <h2>
+              Faturamento
+              {{ s.period.group === "day" ? "Diário" : "Mensal" }}
+            </h2>
+            <p class="chart-panel__total">
+              {{
+                s.revenueCents / 100
+                  | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+              }}
+            </p>
+          </div>
+          @if (s.series.length > 0 && s.revenueCents > 0) {
+            <app-echart
+              [option]="revenueOption()"
+              [ariaLabel]="
+                'Faturamento por período ' +
+                (s.period.group === 'day' ? 'diário' : 'mensal') +
+                ', em reais'
+              "
+            />
+          } @else {
+            <app-admin-state
+              layout="compact"
+              icon="show_chart"
+              title="Sem faturamento aprovado"
+              description="Não há valores aprovados no período selecionado."
+            />
+          }
+        </section>
+        <section class="panel chart-panel charts-grid__status">
+          <div class="panel__heading">
+            <h2>Pedidos por status</h2>
+          </div>
+          @if (s.orders) {
+            <p class="chart-panel__summary">
+              {{ s.orders }} {{ s.orders === 1 ? "pedido" : "pedidos" }} no
+              período
+              <span aria-hidden="true">·</span>
+              {{ s.approvedOrders }}
+              {{ s.approvedOrders === 1 ? "aprovado" : "aprovados" }}
+            </p>
+            <app-echart
+              [option]="statusOption()"
+              [ariaLabel]="statusChartDescription()"
+            />
+          } @else {
+            <app-admin-state
+              layout="compact"
+              title="Nenhum pedido registrado"
+              description="Não há pedidos no período selecionado."
+            />
+          }
+        </section>
+        <section class="panel chart-panel charts-grid__customers">
+          <div class="panel__heading">
+            <h2>Evolução de clientes</h2>
+          </div>
+          @if (s.series.length > 0 && s.newCustomers > 0) {
+            <app-echart
+              [option]="customersOption()"
+              ariaLabel="Evolução de novos clientes cadastrados por período"
+            />
+          } @else {
+            <app-admin-state
+              layout="compact"
+              icon="groups"
+              title="Sem novos clientes no período"
+              description="Não houve novos cadastros neste período."
+            />
+          }
+        </section>
+        <section class="panel chart-panel charts-grid__orders">
+          <div class="panel__heading">
+            <h2>Evolução dos pedidos</h2>
+          </div>
+          @if (s.series.length > 0 && s.orders > 0) {
+            <app-echart
+              [option]="ordersOption()"
+              ariaLabel="Evolução dos pedidos por período"
+            />
+          } @else {
+            <app-admin-state
+              layout="compact"
+              icon="show_chart"
+              title="Nenhum pedido no período"
+              description="Não houve pedidos no período selecionado."
+            />
+          }
+        </section>
+        <section class="panel chart-panel charts-grid__products">
+          <div class="panel__heading">
+            <h2>Produtos mais vendidos</h2>
+          </div>
+          <p class="chart-panel__summary">
+            {{ productChartItems().length }} grupos ·
+            {{ totalTopProductUnits() }} unidades
+          </p>
+          @if (productChartItems().length) {
+            <app-echart
+              [option]="productsOption()"
+              ariaLabel="Produtos mais vendidos, em unidades"
+            />
+          } @else {
+            <app-admin-state
+              layout="compact"
+              icon="inventory_2"
+              title="Nenhum produto vendido no período"
+            />
+          }
+        </section>
+        <section class="panel chart-panel charts-grid__categories">
+          <div class="panel__heading">
+            <h2>Categorias mais vendidas</h2>
+          </div>
+          <p class="chart-panel__summary">
+            {{ categoryChartItems().length }} grupos ·
+            {{ totalCategoryUnits() }} unidades
+          </p>
+          @if (categoryChartItems().length) {
+            <app-echart
+              [option]="categoriesOption()"
+              ariaLabel="Categorias mais vendidas, em unidades"
+            />
+          } @else {
+            <app-admin-state
+              layout="compact"
+              icon="category"
+              title="Nenhuma venda por categoria"
+            />
+          }
+        </section>
+        <section class="panel chart-panel charts-grid__recent">
+          <div class="panel__heading">
+            <h2>Pedidos recentes</h2>
+          </div>
+          @if (s.recentOrders.length) {
+            <ul class="compact-list recent-orders">
+              @for (order of s.recentOrders; track order.id) {
+                <li>
+                  <div class="compact-list__primary">
+                    <a [routerLink]="['/admin/pedidos', order.id]"
+                      >Pedido #{{ order.id }}</a
+                    >
+                    <strong>
+                      {{
+                        order.totalCents / 100
+                          | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                      }}
+                    </strong>
+                  </div>
+                  <span class="recent-orders__customer">{{
+                    order.customer
+                  }}</span>
+                  <time
+                    class="recent-orders__date"
+                    [attr.datetime]="order.createdAt"
+                  >
+                    {{
+                      order.createdAt | date: "dd/MM/yyyy 'às' HH:mm" : "-0300"
+                    }}
+                  </time>
+                  <app-status-badge
+                    [tone]="order.status === 'cancelled' ? 'danger' : 'success'"
+                    >{{
+                      order.status === "cancelled" ? "Cancelado" : "Aprovado"
+                    }}</app-status-badge
+                  >
+                </li>
+              }
+            </ul>
+          } @else {
+            <app-admin-state
+              layout="compact"
+              title="Nenhum pedido recente neste período"
+            />
+          }
+        </section>
+        <section
+          class="panel chart-panel chart-panel--table charts-grid__stock"
+          aria-label="Tabela de estoque atual"
+        >
+          <div class="panel__heading">
+            <h2>Estoque atual</h2>
+          </div>
+          <p class="panel__description">
+            Produtos ativos e variações com até 5 unidades. O total do produto é
+            a soma das variações.
+          </p>
+          @if (s.stock.length) {
+            <div
+              class="stock-table"
+              tabindex="0"
+              role="region"
+              aria-label="Tabela de estoque atual"
+            >
+              <table>
+                <caption class="visually-hidden">
+                  Estoque atual
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Tam.</th>
+                    <th scope="col">Qtd.</th>
+                    <th
+                      scope="col"
+                      class="stock-table__total"
+                      appHint="Soma do estoque de todos os tamanhos do produto"
+                    >
+                      Total geral
+                    </th>
+                    <th scope="col">Situação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (group of stockGroups(); track group.productId) {
+                    @for (
+                      product of group.variants;
+                      track product.variantId;
+                      let first = $first
+                    ) {
+                      <tr>
+                        @if (first) {
+                          <td [attr.rowspan]="group.variants.length">
+                            <a
+                              class="stock-table__name"
+                              [routerLink]="[
+                                '/admin/produtos',
+                                group.productId,
+                                'editar',
+                              ]"
+                              [appHint]="group.name"
+                              >{{ group.name }}</a
+                            >
+                          </td>
+                        }
+                        <td>{{ product.size || "—" }}</td>
+                        <td>{{ product.quantity }}</td>
+                        @if (first) {
+                          <td
+                            class="stock-table__total"
+                            [attr.rowspan]="group.variants.length"
+                          >
+                            {{ group.totalQuantity }}
+                          </td>
+                        }
+                        <td>
+                          <app-status-badge
+                            [tone]="
+                              product.quantity === 0 ? 'danger' : 'warning'
+                            "
+                            >{{
+                              product.quantity === 0
+                                ? "Indisponível"
+                                : product.quantity === 1
+                                  ? "Última unidade"
+                                  : "Baixo estoque"
+                            }}</app-status-badge
+                          >
+                        </td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+            <ul class="stock-cards" aria-label="Estoque atual por produto">
+              @for (group of stockGroups(); track group.productId) {
+                <li class="stock-card">
+                  <a
+                    [routerLink]="[
+                      '/admin/produtos',
+                      group.productId,
+                      'editar',
+                    ]"
+                    >{{ group.name }}</a
+                  >
+                  <p class="stock-card__total">
+                    Total geral: <strong>{{ group.totalQuantity }}</strong>
+                  </p>
+                  <ul>
+                    @for (product of group.variants; track product.variantId) {
+                      <li class="stock-card__variant">
+                        <dl>
+                          <div class="stock-card__badge">
+                            <dt>Tam.</dt>
+                            <dd>{{ product.size || "Único" }}</dd>
+                          </div>
+                          <div class="stock-card__badge">
+                            <dt>Qtd.</dt>
+                            <dd>{{ product.quantity }}</dd>
+                          </div>
+                        </dl>
+                        <app-status-badge
+                          [tone]="product.quantity === 0 ? 'danger' : 'warning'"
+                          >{{
+                            product.quantity === 0
+                              ? "Indisponível"
+                              : product.quantity === 1
+                                ? "Última unidade"
+                                : "Baixo estoque"
+                          }}</app-status-badge
+                        >
+                      </li>
+                    }
+                  </ul>
+                </li>
+              }
+            </ul>
+          } @else {
+            <app-admin-state
+              layout="compact"
+              title="Nenhum alerta de estoque"
+            />
+          }
+        </section>
+      </div>
+      @if (!s.products) {
+        <app-admin-state
+          icon="inventory_2"
+          title="Nenhum produto cadastrado"
+          actionLabel="Cadastrar produto"
+          actionLink="/admin/produtos/novo"
+        />
+      }
+    }
+  }
+</section>

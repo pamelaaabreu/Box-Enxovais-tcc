@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { CatalogProduct } from '../../interfaces/product.interface';
+import { CatalogProduct } from '../../../../shared/types/catalog/catalog-product';
 import { ProductCardComponent } from '../product-card/product-card.component';
 
 @Component({

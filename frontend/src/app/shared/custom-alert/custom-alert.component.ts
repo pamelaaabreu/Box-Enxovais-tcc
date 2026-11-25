@@ -7,7 +7,7 @@ import {
   OnDestroy,
   ViewEncapsulation,
 } from '@angular/core';
-import { AlertType } from '../../shared/models';
+import type { AlertType } from '../types/ui/alert';
 
 @Component({
   selector: 'app-custom-alert',

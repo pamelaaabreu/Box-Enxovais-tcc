@@ -1,5 +1,3 @@
-
-
 .box-auth-surface .auth-tabs .mat-mdc-tab-header {
   overflow: visible;
   padding: 4px;
@@ -8,7 +6,8 @@
   border-radius: var(--auth-radius-lg);
   background: var(--page-background);
 }
-.box-auth-surface .auth-tabs
+.box-auth-surface
+  .auth-tabs
   :is(.mat-mdc-tab-label-container, .mat-mdc-tab-list) {
   overflow: visible;
 }
@@ -76,7 +75,8 @@
   transition: color 160ms ease;
 }
 
-.box-auth-surface .field-group.mat-focused
+.box-auth-surface
+  .field-group.mat-focused
   .mat-mdc-form-field-icon-prefix
   > .field-icon {
   color: var(--accent);
@@ -118,7 +118,8 @@
   font-weight: 500;
   line-height: 1.45;
 }
-.box-auth-surface .field-group
+.box-auth-surface
+  .field-group
   :is(.mat-mdc-form-field-error-wrapper, .mat-mdc-form-field-hint-wrapper) {
   position: static;
   padding: 3px 10px 0;
@@ -150,13 +151,15 @@
   border-color: var(--error);
 }
 
-.box-auth-surface .field-group.mat-form-field-disabled
+.box-auth-surface
+  .field-group.mat-form-field-disabled
   .mat-mdc-text-field-wrapper {
   background: #e9e6de;
   opacity: 0.75;
   cursor: not-allowed;
 }
-.box-auth-surface .field-group
+.box-auth-surface
+  .field-group
   :is(
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
@@ -199,13 +202,15 @@
   display: block;
 }
 
-.box-auth-surface :is(.auth-form--login, .auth-form--register)
+.box-auth-surface
+  :is(.auth-form--login, .auth-form--register)
   .field-group:not(.mat-form-field-invalid)
   .mat-mdc-form-field-subscript-wrapper {
   display: none;
 }
 
-.box-auth-surface :is(.auth-form--login, .auth-form--register)
+.box-auth-surface
+  :is(.auth-form--login, .auth-form--register)
   .field-group.mat-form-field-invalid
   .mat-mdc-form-field-subscript-wrapper {
   display: block;
@@ -213,7 +218,8 @@
   margin: 0;
 }
 
-.box-auth-surface .auth-form--login
+.box-auth-surface
+  .auth-form--login
   .field-group.mat-form-field-invalid
   .mat-mdc-form-field-error-wrapper {
   padding-top: 3px;

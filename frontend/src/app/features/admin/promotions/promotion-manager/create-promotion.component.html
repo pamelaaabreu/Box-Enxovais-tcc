@@ -1,0 +1,1130 @@
+<app-admin-page-header
+  [title]="
+    view === 'list'
+      ? 'Promoções'
+      : editingId
+        ? promotionData.name || 'Campanha'
+        : 'Nova promoção'
+  "
+  [description]="
+    view === 'list'
+      ? 'Gerencie campanhas, produtos e ofertas da sua loja.'
+      : campaignMeta
+  "
+  icon="campaign"
+  [compact]="view !== 'list'"
+  [breadcrumb]="
+    view === 'list'
+      ? [{ label: 'Promoções' }]
+      : [
+          { label: 'Promoções', url: '/admin/promocoes' },
+
+          {
+            label: editingId
+              ? promotionData.name || 'Campanha'
+              : 'Nova promoção',
+          },
+        ]
+  "
+  [attr.inert]="pickerOpen || libraryOpen ? '' : null"
+  [actionLabel]="
+    view === 'list'
+      ? '+ Nova promoção'
+      : view === 'detail'
+        ? 'Editar promoção'
+        : ''
+  "
+  (action)="
+    navigate(
+      view === 'list'
+        ? '/admin/promocoes/nova'
+        : '/admin/promocoes/' + editingId + '/editar'
+    )
+  "
+  [status]="''"
+>
+  @if (view === "form") {
+    <span header-label class="editing-label">{{
+      editingId ? "Editando" : "Nova"
+    }}</span>
+  }
+
+  <div header-actions class="campaign-heading-actions">
+    @if (view !== "list") {
+      <span
+        class="campaign-status"
+        [class.paused]="promotionData.status !== 'active'"
+        >{{ promotionData.status === "active" ? "Ativa" : "Pausada" }}</span
+      >
+      <button
+        type="button"
+        class="home-preview-action"
+        aria-controls="campaign-panel-2"
+        [disabled]="
+          !promotionData.image_path ||
+          failedImages.has(promotionData.image_path!)
+        "
+        (click)="chooseTab(2)"
+      >
+        Pré-visualizar na Home
+      </button>
+    }
+  </div>
+</app-admin-page-header>
+
+<div
+  class="promotion-form-container"
+  [attr.inert]="pickerOpen || libraryOpen ? '' : null"
+>
+  @if (campaignsError) {
+    <app-admin-state
+      kind="error"
+      title="Não foi possível carregar as campanhas"
+      [description]="campaignsError"
+      actionLabel="Tentar novamente"
+      (action)="refresh()"
+    />
+  }
+
+  @if (view === "list") {
+    @if (campaignsLoading) {
+      <app-admin-state kind="loading" title="Carregando campanhas…" />
+    } @else if (!campaignsError) {
+      <div class="campaign-list-tools">
+        <div class="campaign-filters" aria-label="Filtrar campanhas">
+          @for (filter of campaignFilters; track filter) {
+            <button
+              type="button"
+              [class.active]="campaignFilter === filter"
+              [attr.aria-pressed]="campaignFilter === filter"
+              (click)="campaignFilter = filter; campaignPage = 1"
+            >
+              {{ filter }} <span>{{ campaignCount(filter) }}</span>
+            </button>
+          }
+        </div>
+        <input
+          type="search"
+          aria-label="Buscar campanha"
+          placeholder="Buscar campanha"
+          [(ngModel)]="campaignSearch"
+          (ngModelChange)="campaignPage = 1"
+        />
+      </div>
+      <div class="campaign-table">
+        @if (!pagedCampaigns.length) {
+          <app-admin-state
+            icon="campaign"
+            [title]="
+              campaigns.length
+                ? 'Nenhuma campanha encontrada.'
+                : 'Nenhuma campanha cadastrada.'
+            "
+            [description]="
+              campaigns.length
+                ? 'Revise a busca e os filtros.'
+                : 'Crie sua primeira promoção.'
+            "
+          />
+        } @else {
+          <div class="table-scroll">
+            <table aria-label="Campanhas cadastradas">
+              <thead>
+                <tr>
+                  <th>Campanha</th>
+
+                  <th>Status</th>
+
+                  <th>Vigência</th>
+
+                  <th>Produtos</th>
+
+                  <th>Home</th>
+
+                  <th>Ações</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (campaign of pagedCampaigns; track campaign.id) {
+                  <tr>
+                    <td>
+                      <strong>{{ campaign.name }}</strong>
+                      @if (campaign.created_at) {
+                        <small class="table-meta"
+                          >Criada em
+                          {{ campaign.created_at | date: "dd/MM" }}</small
+                        >
+                      }
+                    </td>
+
+                    <td>
+                      <app-status-badge
+                        [tone]="
+                          statusLabel(campaign) === 'Ativa'
+                            ? 'success'
+                            : statusLabel(campaign) === 'Pausada' ||
+                                statusLabel(campaign) === 'Encerrada'
+                              ? 'danger'
+                              : 'neutral'
+                        "
+                        >{{ statusLabel(campaign) }}</app-status-badge
+                      >
+                    </td>
+
+                    <td class="campaign-period">
+                      {{ campaign.start_date | date: "dd/MM" }} a
+                      {{ campaign.end_date | date: "dd/MM/yyyy" }}
+                    </td>
+
+                    <td>{{ campaign.products?.length || 0 }}</td>
+
+                    <td>
+                      <span class="home-state">{{ homeLabel(campaign) }}</span>
+                      @if (!campaign.products?.length) {
+                        <small class="table-meta"
+                          >Sem produtos vinculados</small
+                        >
+                      }
+                    </td>
+
+                    <td>
+                      <div class="row-actions">
+                        <button
+                          type="button"
+                          class="box-button"
+                          data-variant="outline"
+                          data-size="sm"
+                          (click)="navigate('/admin/promocoes/' + campaign.id)"
+                        >
+                          Visualizar</button
+                        ><button
+                          type="button"
+                          class="box-button"
+                          data-variant="outline"
+                          data-size="sm"
+                          (click)="
+                            navigate(
+                              '/admin/promocoes/' + campaign.id + '/editar'
+                            )
+                          "
+                        >
+                          Editar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+      <app-pagination
+        [page]="currentCampaignPage"
+        [total]="visibleCampaigns.length"
+        [pageSize]="campaignPageSize"
+        (pageChange)="campaignPage = $event"
+        label="Paginação de campanhas"
+      />
+    }
+  } @else {
+    <form #campaignForm="ngForm" (ngSubmit)="onSubmit()">
+      <div class="campaign-tabs" role="tablist" aria-label="Etapas da promoção">
+        @for (tab of tabs; track tab; let index = $index) {
+          <button
+            type="button"
+            role="tab"
+            [id]="'campaign-tab-' + index"
+            [attr.aria-selected]="activeTab === index"
+            [attr.aria-controls]="'campaign-panel-' + index"
+            [tabIndex]="activeTab === index ? 0 : -1"
+            [class.active]="activeTab === index"
+            (click)="chooseTab(index)"
+            (keydown)="moveTab($event, index)"
+          >
+            {{ tab }}
+
+            @if (index === 1) {
+              <span class="tab-count"
+                >({{ promotionData.products?.length || 0 }})</span
+              >
+            }
+
+            @if (submitted && tabError(index)) {
+              <mat-icon aria-label="Há campos a revisar"
+                >error_outline</mat-icon
+              >
+            }
+          </button>
+        }
+      </div>
+
+      <div class="campaign-workspace">
+        <fieldset
+          [disabled]="
+            saving || uploading || view === 'detail' || !!campaignsError
+          "
+        >
+          <section
+            id="campaign-panel-0"
+            role="tabpanel"
+            aria-labelledby="campaign-tab-0"
+            [hidden]="activeTab !== 0"
+            class="form-section"
+          >
+            <div class="field">
+              <label for="promo-name">Nome da promoção *</label
+              ><input
+                id="promo-name"
+                name="name"
+                maxlength="255"
+                [(ngModel)]="promotionData.name"
+                #name="ngModel"
+                required
+                [attr.aria-invalid]="
+                  (name.touched || submitted) && !promotionData.name.trim()
+                "
+                [attr.aria-describedby]="
+                  (name.touched || submitted) && !promotionData.name.trim()
+                    ? 'campaign-name-error'
+                    : null
+                "
+              />
+
+              @if ((name.touched || submitted) && !promotionData.name.trim()) {
+                <span id="campaign-name-error" class="load-error"
+                  >Informe o nome da promoção.</span
+                >
+              }
+            </div>
+
+            <div class="field">
+              <label for="campaign-description"
+                >Descrição
+
+                <small
+                  >{{ promotionData.description?.length || 0 }} / 2000</small
+                ></label
+              ><textarea
+                id="campaign-description"
+                name="description"
+                maxlength="2000"
+                rows="3"
+                [(ngModel)]="promotionData.description"
+                #description="ngModel"
+                [required]="!!promotionData.home_featured"
+                [attr.aria-describedby]="
+                  (description.touched || submitted) &&
+                  promotionData.home_featured &&
+                  !promotionData.description?.trim()
+                    ? 'campaign-description-error'
+                    : null
+                "
+              ></textarea>
+
+              @if (
+                (description.touched || submitted) &&
+                promotionData.home_featured &&
+                !promotionData.description?.trim()
+              ) {
+                <span id="campaign-description-error" class="load-error"
+                  >Informe uma descrição para apresentar a campanha na
+                  Home.</span
+                >
+              }
+            </div>
+
+            <div class="fields-row">
+              <div class="field">
+                <span class="field-label" id="campaign-status-label"
+                  >Status</span
+                ><mat-button-toggle-group
+                  name="status"
+                  [(ngModel)]="promotionData.status"
+                  [disabled]="view === 'detail' || saving || uploading"
+                  aria-labelledby="campaign-status-label"
+                  ><mat-button-toggle value="active">Ativa</mat-button-toggle
+                  ><mat-button-toggle value="inactive"
+                    >Pausada</mat-button-toggle
+                  ></mat-button-toggle-group
+                >
+              </div>
+
+              <div class="field">
+                <label for="start-date">Início *</label
+                ><input
+                  type="datetime-local"
+                  id="start-date"
+                  name="start-date"
+                  [(ngModel)]="promotionData.start_date"
+                  #start="ngModel"
+                  required
+                />
+              </div>
+
+              <div class="field">
+                <label for="end-date">Término *</label
+                ><input
+                  type="datetime-local"
+                  id="end-date"
+                  name="end-date"
+                  [(ngModel)]="promotionData.end_date"
+                  #end="ngModel"
+                  required
+                  [attr.aria-invalid]="
+                    (end.touched || submitted) && !validPeriod
+                  "
+                  [attr.aria-describedby]="
+                    (end.touched || submitted) && !validPeriod
+                      ? 'period-error'
+                      : null
+                  "
+                />
+              </div>
+            </div>
+
+            @if ((start.touched || end.touched || submitted) && !validPeriod) {
+              <p id="period-error" class="load-error">
+                Informe uma data de término posterior ao início.
+              </p>
+            }
+
+            <p class="hint">Duração: {{ duration }}</p>
+
+            <div class="home-feature-card">
+              <label class="home-visibility-control">
+                <input
+                  type="checkbox"
+                  class="home-visibility-input"
+                  name="home_featured"
+                  [(ngModel)]="promotionData.home_featured"
+                  [disabled]="view === 'detail' || saving || uploading"
+                />
+                <span class="home-visibility-switch" aria-hidden="true">
+                  <span class="home-visibility-knob"></span>
+                </span>
+                <span class="home-visibility-copy">
+                  <strong>Apresentar na Home durante a vigência</strong>
+                  <span
+                    >A vitrine só aparece com a campanha ativa, vigente e com
+                    produtos disponíveis.</span
+                  >
+                </span>
+              </label>
+            </div>
+
+            <p class="home-summary" role="status">{{ homeSummary }}</p>
+          </section>
+
+          <section
+            id="campaign-panel-1"
+            role="tabpanel"
+            aria-labelledby="campaign-tab-1"
+            [hidden]="activeTab !== 1"
+            class="form-section"
+          >
+            <div class="section-heading">
+              <div>
+                <h3>Produtos participantes</h3>
+                <p>Escolha o que entra nesta campanha.</p>
+              </div>
+
+              @if (view !== "detail") {
+                <button
+                  #pickerTrigger
+                  type="button"
+                  class="primary-action"
+                  (click)="openPicker()"
+                  aria-haspopup="dialog"
+                >
+                  <mat-icon aria-hidden="true">add</mat-icon> Adicionar produtos
+                </button>
+              }
+            </div>
+
+            @if (loading) {
+              <app-admin-state kind="loading" title="Carregando produtos…" />
+            }
+
+            @if (productsError) {
+              <app-admin-state
+                kind="error"
+                title="Não foi possível carregar os produtos"
+                [description]="productsError"
+                actionLabel="Tentar novamente"
+                (action)="loadProducts()"
+              />
+            }
+
+            @if (
+              !loading && !productsError && !promotionData.products?.length
+            ) {
+              <app-admin-state
+                icon="add"
+                title="Nenhum produto nesta campanha"
+                description="Sem produtos, a vitrine não aparece na Home. Adicione os produtos que deseja incluir."
+                [actionLabel]="view !== 'detail' ? '+ Adicionar produtos' : ''"
+                (action)="openPicker()"
+              />
+            } @else {
+              <div class="selected-products">
+                @for (item of promotionData.products; track item.product_id) {
+                  @let participant = product(item.product_id);
+
+                  <article class="selected-participant">
+                    <div class="selected-details">
+                      @if (participant?.image_paths?.[0]; as image) {
+                        @if (!failedImages.has(image)) {
+                          <img
+                            [src]="assetUrl(image)"
+                            (error)="failImage(image)"
+                            [alt]="participant?.name || ''"
+                            loading="lazy"
+                          />
+                        } @else {
+                          <span class="image-empty"
+                            ><mat-icon aria-label="Imagem indisponível"
+                              >image_not_supported</mat-icon
+                            ></span
+                          >
+                        }
+                      }
+
+                      <div>
+                        <h4>
+                          {{ participant?.name || "Produto indisponível" }}
+                        </h4>
+
+                        <p>SKU: {{ participant?.sku || "Não informado" }}</p>
+
+                        <p>{{ participant?.category_name }}</p>
+
+                        <p>
+                          {{
+                            participant?.price
+                              | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                          }}
+
+                          ·
+
+                          {{
+                            participant?.status === "active"
+                              ? "Ativo"
+                              : "Indisponível"
+                          }}
+                        </p>
+                      </div>
+
+                      <span class="stock-label"
+                        >{{ participant?.quantity || 0 }} em estoque</span
+                      >
+
+                      @if (view !== "detail") {
+                        <button
+                          class="remove-participant"
+                          type="button"
+                          (click)="remove(item.product_id)"
+                          [attr.aria-label]="'Remover ' + participant?.name"
+                        >
+                          <mat-icon aria-hidden="true">close</mat-icon> Remover
+                        </button>
+                      }
+                    </div>
+                  </article>
+                }
+              </div>
+
+              @if (view !== "detail") {
+                <button type="button" class="add-more" (click)="openPicker()">
+                  + Adicionar mais produtos
+                </button>
+              }
+            }
+          </section>
+
+          <section
+            id="campaign-panel-2"
+            role="tabpanel"
+            aria-labelledby="campaign-tab-2"
+            [hidden]="activeTab !== 2"
+            class="form-section"
+          >
+            <div class="image-section-heading">
+              <div>
+                <h3>Imagem de destaque</h3>
+                <p class="hint">
+                  É o banner da campanha na Home. JPEG, PNG ou WebP, até 10 MB.
+                </p>
+              </div>
+              <div class="preview-devices" aria-label="Formato da prévia">
+                <button
+                  type="button"
+                  [class.active]="previewDevice === 'desktop'"
+                  [attr.aria-pressed]="previewDevice === 'desktop'"
+                  (click)="previewDevice = 'desktop'"
+                >
+                  Computador</button
+                ><button
+                  type="button"
+                  [class.active]="previewDevice === 'mobile'"
+                  [attr.aria-pressed]="previewDevice === 'mobile'"
+                  (click)="previewDevice = 'mobile'"
+                >
+                  Celular
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="campaign-banner-preview"
+              [class.mobile-preview]="previewDevice === 'mobile'"
+            >
+              @if (
+                promotionData.image_path &&
+                !failedImages.has(promotionData.image_path)
+              ) {
+                <img
+                  class="campaign-preview"
+                  [src]="assetUrl(promotionData.image_path)"
+                  (error)="failImage(promotionData.image_path!)"
+                  alt="Prévia da imagem da campanha"
+                />
+
+                <div class="banner-copy">
+                  <span>Campanha</span>
+
+                  <h4>{{ promotionData.name || "Nome da promoção" }}</h4>
+
+                  <p>{{ promotionData.description }}</p>
+
+                  <span class="preview-cta">Ver ofertas</span>
+                </div>
+              } @else {
+                <div class="image-placeholder">
+                  <mat-icon aria-hidden="true">add_photo_alternate</mat-icon>
+
+                  <p>
+                    {{
+                      promotionData.image_path
+                        ? "Não foi possível carregar esta imagem."
+                        : "Selecione uma imagem para visualizar a campanha."
+                    }}
+                  </p>
+                </div>
+              }
+            </div>
+
+            <div
+              class="image-upload"
+              (dragover)="$event.preventDefault()"
+              (drop)="dropImage($event)"
+            >
+              @if (view !== "detail") {
+                <div class="image-actions">
+                  <label for="campaign-upload" class="file-action"
+                    >{{
+                      promotionData.image_path
+                        ? "Trocar imagem"
+                        : "Enviar imagem"
+                    }}<input
+                      id="campaign-upload"
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      (change)="upload($event)"
+                      [disabled]="uploading" /></label
+                  ><button
+                    type="button"
+                    (click)="
+                      librarySearch = ''; libraryPage = 1; libraryOpen = true
+                    "
+                  >
+                    Escolher da biblioteca
+                  </button>
+
+                  @if (promotionData.image_path) {
+                    <button
+                      type="button"
+                      (click)="promotionData.image_path = undefined"
+                    >
+                      Remover
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+
+            <p class="image-guidance">
+              O título e a descrição vêm da aba Geral. Prefira uma foto com o
+              assunto à direita; o texto aparece à esquerda com um degradê
+              escuro suave para manter a leitura.
+            </p>
+            @if (uploading) {
+              <p role="status">Enviando imagem…</p>
+            }
+
+            @if (
+              submitted &&
+              promotionData.home_featured &&
+              !promotionData.image_path
+            ) {
+              <p class="load-error" role="alert">
+                Selecione uma imagem para apresentar a campanha na Home.
+              </p>
+            }
+          </section>
+
+          <section
+            id="campaign-panel-3"
+            role="tabpanel"
+            aria-labelledby="campaign-tab-3"
+            [hidden]="activeTab !== 3"
+            class="form-section"
+          >
+            <h3>Desconto da campanha</h3>
+            <p class="hint">
+              Defina um valor para todos ou ajuste produto a produto.
+            </p>
+
+            @if (!promotionData.products?.length) {
+              <app-admin-state
+                icon="sell"
+                title="Selecione os produtos"
+                description="Adicione produtos na aba Produtos para visualizar e configurar os descontos."
+                actionLabel="Selecionar produtos"
+                (action)="chooseTab(1)"
+              />
+            } @else {
+              <div class="discount-fields">
+                <div class="field">
+                  <span class="field-label" id="discount-mode-label"
+                    >Tipo de desconto</span
+                  ><mat-button-toggle-group
+                    name="discount-mode"
+                    [(ngModel)]="discountMode"
+                    [disabled]="view === 'detail' || saving"
+                    aria-labelledby="discount-mode-label"
+                    ><mat-button-toggle value="percentage"
+                      >Percentual (%)</mat-button-toggle
+                    ><mat-button-toggle value="amount"
+                      >Valor fixo (R$)</mat-button-toggle
+                    ></mat-button-toggle-group
+                  >
+                </div>
+
+                <div class="field">
+                  <label for="discount-value">Valor</label>
+                  <div class="discount-input">
+                    <input
+                      id="discount-value"
+                      name="discount-value"
+                      type="number"
+                      min="0"
+                      [max]="discountMode === 'percentage' ? 100 : null"
+                      step="0.01"
+                      [(ngModel)]="discountValue"
+                    /><span aria-hidden="true">{{
+                      discountMode === "percentage" ? "%" : "R$"
+                    }}</span>
+                  </div>
+                </div>
+
+                <button type="button" (click)="applyDiscount()">
+                  Aplicar a todos os produtos
+                </button>
+              </div>
+
+              <p class="hint">
+                Descontos são calculados sobre o preço original e não se
+                acumulam. Produtos com variantes preservam os preços de cada
+                tamanho.
+              </p>
+
+              <div class="table-scroll">
+                <table>
+                  <caption class="visually-hidden">
+                    Preços reais dos participantes
+                  </caption>
+
+                  <thead>
+                    <tr>
+                      <th>Produto / SKU</th>
+
+                      <th>Original</th>
+
+                      <th>Desconto</th>
+
+                      <th>Preço final</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    @for (
+                      item of promotionData.products;
+                      track item.product_id
+                    ) {
+                      @let participant = product(item.product_id);
+
+                      <tr>
+                        <td>
+                          <div class="discount-product">
+                            @if (participant?.image_paths?.[0]; as image) {
+                              @if (!failedImages.has(image)) {
+                                <img
+                                  [src]="assetUrl(image)"
+                                  (error)="failImage(image)"
+                                  alt=""
+                                  loading="lazy"
+                                />
+                              }
+                            }
+
+                            <div>
+                              {{ participant?.name
+                              }}<small class="sku">{{
+                                participant?.sku
+                              }}</small>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td class="original-price">
+                          {{
+                            participant?.price
+                              | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                          }}
+                        </td>
+
+                        <td>
+                          <label
+                            class="visually-hidden"
+                            [for]="'discount-' + item.product_id"
+                            >Desconto de {{ participant?.name }}</label
+                          >
+                          <div class="discount-input">
+                            <input
+                              [id]="'discount-' + item.product_id"
+                              [name]="'discount-' + item.product_id"
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              [max]="
+                                discountMode === 'percentage'
+                                  ? 100
+                                  : (participant?.price ?? null)
+                              "
+                              [ngModel]="rowDiscountValue(item.product_id)"
+                              (ngModelChange)="
+                                setRowDiscount(item.product_id, $event)
+                              "
+                              [disabled]="!!participant?.variants?.length"
+                              [attr.aria-invalid]="
+                                invalidPrice(item.product_id)
+                              "
+                            /><span aria-hidden="true">{{
+                              discountMode === "percentage" ? "%" : "R$"
+                            }}</span>
+                          </div>
+
+                          @if (participant?.variants?.length) {
+                            <small class="hint"
+                              >Sem desconto por variante</small
+                            >
+                          }
+
+                          @if (invalidPrice(item.product_id)) {
+                            <span class="load-error">Revise o desconto.</span>
+                          }
+                        </td>
+
+                        <td class="final-price">
+                          @if (invalidPrice(item.product_id)) {
+                            —
+                          } @else {
+                            {{
+                              finalPrice(item.product_id)
+                                | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                            }}
+                          }
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </section>
+        </fieldset>
+
+        <app-campaign-summary
+          [promotionData]="promotionData"
+          [readyForHome]="readyForHome"
+          [homeSummary]="homeSummary"
+          [hasAvailableParticipants]="hasAvailableParticipants"
+          [hasValidImage]="hasValidImage"
+          [generalError]="generalError"
+          [validPeriod]="validPeriod"
+          [hasConfiguredDiscount]="hasConfiguredDiscount"
+          [discountSummary]="discountSummary"
+          [discountedProductCount]="discountedProductCount"
+          [dirty]="dirty"
+          (tabChange)="chooseTab($event)"
+        />
+      </div>
+
+      <footer class="action-bar">
+        <span role="status" [class.unsaved]="dirty">{{
+          view === "detail"
+            ? "Visualização da campanha"
+            : dirty
+              ? "Alterações não salvas"
+              : "Nenhuma alteração pendente"
+        }}</span
+        ><button
+          type="button"
+          (click)="cancel()"
+          [disabled]="saving || uploading"
+        >
+          {{ view === "detail" ? "Voltar" : "Cancelar" }}
+        </button>
+
+        @if (view !== "detail") {
+          <button
+            type="submit"
+            class="primary-action"
+            [disabled]="saving || uploading || !!campaignsError"
+          >
+            {{
+              saving
+                ? "Salvando…"
+                : editingId
+                  ? "Salvar alterações"
+                  : "Salvar promoção"
+            }}
+          </button>
+        }
+      </footer>
+    </form>
+  }
+</div>
+
+@if (pickerOpen || libraryOpen) {
+  <div
+    class="picker-backdrop"
+    (click)="pickerOpen ? cancelPicker() : (libraryOpen = false)"
+    aria-hidden="true"
+  ></div>
+
+  <aside
+    class="product-picker"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="pickerOpen ? 'picker-heading' : 'library-heading'"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
+    (keydown.escape)="pickerOpen ? cancelPicker() : (libraryOpen = false)"
+  >
+    @if (pickerOpen) {
+      <header class="section-heading">
+        <h3 id="picker-heading">Adicionar produtos</h3>
+
+        <button
+          type="button"
+          (click)="cancelPicker()"
+          aria-label="Fechar seleção"
+        >
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      </header>
+
+      <div class="picker-filters">
+        <div class="field">
+          <label for="participant-search">Buscar por nome ou SKU</label
+          ><input
+            cdkFocusInitial
+            id="participant-search"
+            name="participant-search"
+            [(ngModel)]="search"
+            (ngModelChange)="pickerPage = 1"
+            type="search"
+            placeholder="Nome ou SKU do produto"
+          />
+        </div>
+
+        <div class="field">
+          <span class="field-label" id="participant-category-label"
+            >Categoria</span
+          ><mat-select
+            placeholder="Todas as categorias"
+            name="participant-category"
+            [(ngModel)]="categoryId"
+            (ngModelChange)="pickerPage = 1"
+            aria-labelledby="participant-category-label"
+            panelClass="box-form-options box-admin-options"
+            ><mat-option [value]="null">Todas as categorias</mat-option>
+
+            @for (category of categories; track category.id) {
+              <mat-option [value]="category.id">{{ category.name }}</mat-option>
+            }
+          </mat-select>
+        </div>
+      </div>
+
+      @if (loading) {
+        <app-admin-state kind="loading" title="Carregando produtos…" />
+      }
+
+      @if (productsError) {
+        <app-admin-state
+          kind="error"
+          title="Não foi possível carregar os produtos"
+          [description]="productsError"
+          actionLabel="Tentar novamente"
+          (action)="loadProducts()"
+        />
+      }
+
+      <div class="picker-results">
+        @for (product of matchingProducts; track product.id) {
+          <label class="picker-product"
+            ><input
+              type="checkbox"
+              [checked]="draftIds.has(product.id!)"
+              (change)="toggleDraft(product.id!, $event)"
+              [attr.aria-label]="'Selecionar ' + product.name"
+            />
+
+            @if (product.image_paths?.[0]; as image) {
+              @if (!failedImages.has(image)) {
+                <img
+                  [src]="assetUrl(image)"
+                  (error)="failImage(image)"
+                  alt=""
+                  loading="lazy"
+                />
+              } @else {
+                <span class="image-empty"
+                  ><mat-icon aria-label="Imagem indisponível"
+                    >image_not_supported</mat-icon
+                  ></span
+                >
+              }
+            } @else {
+              <span class="image-empty"
+                ><mat-icon aria-label="Sem imagem">image</mat-icon></span
+              >
+            }
+
+            <span
+              >{{ product.name
+              }}<small>SKU: {{ product.sku || "Não informado" }}</small
+              ><small
+                >{{ product.category_name }} ·
+
+                {{
+                  product.price | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                }}</small
+              ><small
+                >{{
+                  product.quantity > 0
+                    ? product.quantity + " em estoque"
+                    : "Sem estoque"
+                }}
+
+                · Ativo</small
+              ></span
+            ></label
+          >
+        } @empty {
+          @if (!loading && !productsError) {
+            <app-admin-state title="Nenhum produto encontrado nesta seleção." />
+          }
+        }
+      </div>
+
+      @if (filteredProducts.length > pickerPageSize) {
+        <app-pagination
+          [page]="pickerPage"
+          [total]="filteredProducts.length"
+          [pageSize]="pickerPageSize"
+          (pageChange)="pickerPage = $event"
+        />
+      }
+
+      <footer class="picker-actions">
+        <span role="status">{{ draftIds.size }} selecionados</span
+        ><button type="button" (click)="cancelPicker()">Cancelar</button
+        ><button
+          type="button"
+          class="primary-action"
+          [disabled]="!draftIds.size"
+          (click)="confirmSelection()"
+        >
+          Adicionar selecionados
+        </button>
+      </footer>
+    } @else {
+      <header class="section-heading">
+        <h3 id="library-heading">Biblioteca de imagens</h3>
+
+        <button
+          type="button"
+          (click)="libraryOpen = false"
+          aria-label="Fechar biblioteca"
+        >
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      </header>
+
+      <div class="field">
+        <label for="library-search">Pesquisar arquivo</label
+        ><input
+          id="library-search"
+          cdkFocusInitial
+          type="search"
+          [(ngModel)]="librarySearch"
+          (ngModelChange)="libraryPage = 1"
+        />
+      </div>
+
+      <p class="hint">
+        Arquivos já vinculados aos produtos e campanhas da loja.
+      </p>
+
+      <div class="image-library">
+        @for (
+          path of libraryImages.slice((libraryPage - 1) * 12, libraryPage * 12);
+          track path
+        ) {
+          <button
+            type="button"
+            (click)="chooseImage(path)"
+            [disabled]="failedImages.has(path)"
+            [attr.aria-label]="'Selecionar ' + path"
+          >
+            <img
+              [src]="assetUrl(path)"
+              (error)="failImage(path)"
+              alt=""
+              loading="lazy"
+            /><small>{{ path.replace("uploads/", "") }}</small>
+          </button>
+        } @empty {
+          <app-admin-state
+            icon="image_search"
+            title="Nenhuma imagem disponível nesta busca."
+          />
+        }
+      </div>
+
+      @if (libraryImages.length > 12) {
+        <app-pagination
+          [page]="libraryPage"
+          [total]="libraryImages.length"
+          [pageSize]="12"
+          (pageChange)="libraryPage = $event"
+        />
+      }
+    }
+  </aside>
+}

@@ -12,7 +12,7 @@ Projeto: e-commerce Angular (frontend), Go + net/http (backend), PostgreSQL. Pre
 - Não afirme que testes passaram sem executá-los. Não inclua segredos, tokens, senhas nem dados de clientes em logs.
 
 ## Cuidados técnicos
-- Angular: preserve Reactive Forms, Signals, guards, interceptors, rotas, responsividade e acessibilidade quando pertinentes. Login e cadastro usam `AuthComponent` em `frontend/src/app/features/authorization/register`.
+- Angular: preserve Reactive Forms, Signals, guards, interceptors, rotas, responsividade e acessibilidade quando pertinentes. Login e cadastro usam `AuthComponent` em `frontend/src/app/features/authentication/auth`.
 - Go: segurança e autorização **sempre validadas no backend**; não dependa de botões desabilitados nem de guards Angular. Preserve contratos HTTP e migrações existentes.
 - Se o pedido for só discutir ou revisar, **não edite nada**.
 
@@ -37,7 +37,25 @@ Projeto: e-commerce Angular (frontend), Go + net/http (backend), PostgreSQL. Pre
 - Cada componente Angular deve ter uma pasta própria, com `nome.component.ts`, `nome.component.html`, `nome.component.scss` e o spec correspondente juntos. Não misture arquivos de componentes diferentes no mesmo nível.
 - Antes de criar um componente: procure o existente, avalie reutilização, defina a feature e a pasta correta, crie os arquivos relacionados nela e atualize imports/rotas. Não crie componentes apenas para organizar código.
 - Componentes específicos pertencem à sua funcionalidade; os reutilizáveis ficam em `shared/components/`. Não crie outra pasta global `components/` para funcionalidades específicas.
-- Serviços locais ficam em `services/` e modelos/interfaces compartilhados da feature em `models/`, quando aplicável. Estilos efetivamente compartilhados podem ficar em `styles/`, com uma única origem; cada componente mantém sua entrada `.component.scss`.
+- Serviços locais ficam em `services/` e contratos/interfaces em `shared/types/<dominio>/`; builders de formulários em `shared/forms/`, quando aplicável. Estilos efetivamente compartilhados podem ficar em `styles/`, com uma única origem; cada componente mantém sua entrada `.component.scss`.
 - Componentes que já possuem pasta própria podem conter subpastas de componentes filhos; os arquivos de cada filho ficam exclusivamente na respectiva subpasta.
 - Ao mover ou renomear arquivos, atualize imports estáticos/dinâmicos, rotas lazy, templateUrl/styleUrl, dependências SCSS e specs. Preserve seletores, bindings, comportamento e regras visuais.
 - Valide build e testes direcionados; confirme que os recursos locais existem e que não restaram caminhos antigos ou componentes duplicados. A organização registrada em `docs/ESTRUTURA_ANGULAR.md` é a referência atual.
+
+## Arquitetura vigente
+
+- Angular 19: `core/config/api.config.ts` define `API_BASE_URL`; services compõem endpoints com `apiEndpoint`. Use `AssetUrlService` para URLs de imagens. Não espalhe localhost em componentes.
+- `features/admin/admin.routes.ts` usa Routes standalone; páginas específicas pertencem a `features/admin/<feature>/`. `shared/components` contém UI reutilizável. Componentes têm HTML/SCSS externos e pasta própria.
+- Rotas de navegação são portuguesas (`/inicio`, `/cadastro`, `/minha-conta`, `/carrinho`, `/finalizar-compra`, `/admin/produtos`). Preserve aliases antigos, IDs, query e fragmentos. Endpoints HTTP e identificadores de código continuam em inglês.
+- Use Reactive Forms, Signals derivados e Observables somente leitura; centralize HTTP em services. DTO de gravação seleciona campos aceitos e não replica timestamps de leitura. Indentação Angular: dois espaços e configuração Prettier existente. Go: gofmt.
+- Go: `src/main.go` compõe config/db, handlers, services e repositories. `routes` registra métodos/caminhos em ServeMux; `handlers` valida HTTP; `services` coordena regras/integrações; `repositories` mantém SQL parametrizado/transações; `models`, `pagination` e `response` preservam contratos. Não crie camadas vazias apenas para uniformizar.
+- Backend valida identidade do contexto, perfil e propriedade. Preserve whitelist de filtros, constraints, bloqueios, ordenação de locks, idempotência de checkout e reposição única em cancelamento. Validação Angular não substitui Go/PostgreSQL.
+- UI: Montserrat, oliva/creme e estilos existentes; reutilize AdminState, ConfirmDialogService, feedback de campo, toasts, paginação e Material. Teste funcional não é aprovação visual: inspecione screenshots reais quando o pedido exigir.
+
+## Banco e processos
+
+- Não execute testes de escrita no `bd_box`. Integrações usam banco descartável explícito e schemas próprios, com CART_TEST_DATABASE_URL e REVIEW_TEST_DATABASE_URL direcionados ao mesmo alvo isolado. Leia helpers/opt-ins antes de executar.
+- Não altere migrations aplicadas, dados comerciais, uploads ou backups. Aplicação no principal exige autorização específica, revisão, backup validado e verificação de versão/dirty. Nunca force para contornar inconsistência.
+- Não reinicie servidores do usuário sem autorização. Registre e encerre somente processos temporários que você criou; preserve frontend/API existentes. Nunca finalize todos os processos node/go por nome.
+- Newsletter: preserve SaveIfNew, resposta neutra e fila limitada de recuperação; repetições não devem reenviar boas-vindas. Fila em memória não é garantia de entrega durável.
+- Testes e resultados atuais ficam em AUDITORIA_FINAL.md; não some rodadas sobrepostas nem declare E2E, SMTP ou acessibilidade que não foram executados.

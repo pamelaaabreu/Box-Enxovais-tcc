@@ -8,7 +8,17 @@ import { FormGroup } from '@angular/forms';
 })
 export class SweetAlertService {
   private escapeHtml(value: string): string {
-    return value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char] ?? char));
+    return value.replace(
+      /[&<>"']/g,
+      (char) =>
+        ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        })[char] ?? char,
+    );
   }
 
   private baseOptions: SweetAlertOptions = {
@@ -86,7 +96,7 @@ export class SweetAlertService {
 
   showFormValidationErrors(
     form: FormGroup,
-    fieldNamesMap: Record<string, string>
+    fieldNamesMap: Record<string, string>,
   ): void {
     if (form.pristine) {
       // Usa o método de aviso que já criamos para consistência

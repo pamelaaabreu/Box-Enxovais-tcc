@@ -22,30 +22,25 @@ import {
   switchMap,
 } from 'rxjs';
 import { CatalogService } from '../../services/catalog.service';
-import { CatalogState } from '../../interfaces/catalog-state';
-import { Category } from '../../interfaces/category.interface';
-import { CatalogProduct } from '../../interfaces/product.interface';
+import { CatalogState } from '../../../../shared/types/catalog/catalog-state';
+import { Category } from '../../../../shared/types/catalog/category';
+
 import { CatalogLayoutComponent } from '../../components/catalog-layout/catalog-layout.component';
-import {
-  BreadcrumbsComponent,
-  BreadcrumbItem,
-} from '../../components/breadcrumbs/breadcrumbs.component';
+import { BreadcrumbsComponent } from '../../components/breadcrumbs/breadcrumbs.component';
+import type { BreadcrumbItem } from '../../../../shared/types/ui/breadcrumb';
 import { ProductGridComponent } from '../../components/product-grid/product-grid.component';
 
 import { CATALOG_SWATCHES } from '../../data/catalog-swatches';
 import { CAMA_GROUP } from '../../data/categories';
 
-interface CategoryData {
-  category: Category | null;
-  products: CatalogProduct[];
-  total: number;
-  hasMore: boolean;
-}
+import type { CategoryData } from '../../../../shared/types/catalog/category-data';
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [AdminStateComponent,PaginationComponent,
+  imports: [
+    AdminStateComponent,
+    PaginationComponent,
     CatalogToolbarComponent,
     MatIconModule,
     RouterLink,
@@ -60,7 +55,7 @@ interface CategoryData {
 })
 export class CategoryComponent {
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router, {optional: true});
+  private readonly router = inject(Router, { optional: true });
   private readonly catalog = inject(CatalogService);
 
   private readonly pageSize = 12;
@@ -72,7 +67,10 @@ export class CategoryComponent {
     offset: 0,
     color: '',
     size: '',
-    pattern: '', type: '', material: '', opacity: '',
+    pattern: '',
+    type: '',
+    material: '',
+    opacity: '',
     collection: '',
   });
   readonly criteria = toSignal(this.query, { requireSync: true });
@@ -135,7 +133,7 @@ export class CategoryComponent {
           ? this.catalog.getCategoryBySlug('cama').pipe(
               switchMap((group) =>
                 group?.children?.length
-                  ? this.catalog.getCamaFilterProducts(group).pipe(
+                  ? this.catalog.getBedSubcategoryProducts(group).pipe(
                       map((products) => ({ group, products })),
                       catchError(() => of({ group, products: [] })),
                     )
@@ -165,9 +163,15 @@ export class CategoryComponent {
 
   private readonly accessoryFacets = toSignal(
     this.route.paramMap.pipe(
-      switchMap(params => ['toalhas', 'almofadas', 'mesa', 'decoracao'].includes(params.get('slug') ?? '')
-        ? this.catalog.getProductsByCategory(params.get('slug')!).pipe(catchError(() => of([])))
-        : of([])),
+      switchMap((params) =>
+        ['toalhas', 'almofadas', 'mesa', 'decoracao'].includes(
+          params.get('slug') ?? '',
+        )
+          ? this.catalog
+              .getProductsByCategory(params.get('slug')!)
+              .pipe(catchError(() => of([])))
+          : of([]),
+      ),
     ),
     { initialValue: [] },
   );
@@ -177,24 +181,40 @@ export class CategoryComponent {
     const pillows = category?.slug === 'travesseiros';
     const products = pillows
       ? this.pillowFacets()
-      : ['toalhas', 'almofadas', 'mesa', 'decoracao'].includes(category?.slug ?? '') ? this.accessoryFacets()
-      : (this.cama()?.products ?? []).filter(
-          (p) =>
-            category?.slug === 'cama' || p.product_type_id === category?.id,
-        );
+      : ['toalhas', 'almofadas', 'mesa', 'decoracao'].includes(
+            category?.slug ?? '',
+          )
+        ? this.accessoryFacets()
+        : (this.cama()?.products ?? []).filter(
+            (p) =>
+              category?.slug === 'cama' || p.product_type_id === category?.id,
+          );
     const fields = pillows
       ? ([['size', 'Tamanho']] as const)
       : category?.slug === 'decoracao'
-        ? ([['type','Tipo'],['color','Cor'],['size','Tamanho'],['material','Material'],['opacity','Opacidade']] as const)
-      : category?.slug === 'almofadas'
-        ? ([['color', 'Cor'], ['type', 'Tipo'], ['size', 'Tamanho']] as const)
-      : ['toalhas', 'mesa'].includes(category?.slug ?? '')
-        ? ([['color', 'Cor'], ['type', 'Tipo']] as const)
-      : ([
-          ['color', 'Cor'],
-          ['size', 'Tamanho'],
-          ['pattern', 'Estampa'],
-        ] as const);
+        ? ([
+            ['type', 'Tipo'],
+            ['color', 'Cor'],
+            ['size', 'Tamanho'],
+            ['material', 'Material'],
+            ['opacity', 'Opacidade'],
+          ] as const)
+        : category?.slug === 'almofadas'
+          ? ([
+              ['color', 'Cor'],
+              ['type', 'Tipo'],
+              ['size', 'Tamanho'],
+            ] as const)
+          : ['toalhas', 'mesa'].includes(category?.slug ?? '')
+            ? ([
+                ['color', 'Cor'],
+                ['type', 'Tipo'],
+              ] as const)
+            : ([
+                ['color', 'Cor'],
+                ['size', 'Tamanho'],
+                ['pattern', 'Estampa'],
+              ] as const);
     return fields.map(([key, label]) => ({
       key,
       label,
@@ -209,9 +229,14 @@ export class CategoryComponent {
   });
   readonly collections = computed(() => {
     const category = this.category();
-    const products = ['toalhas', 'almofadas', 'mesa', 'decoracao'].includes(category?.slug ?? '') ? this.accessoryFacets() : (this.cama()?.products ?? []).filter(
-      (p) => category?.slug === 'cama' || p.product_type_id === category?.id,
-    );
+    const products = ['toalhas', 'almofadas', 'mesa', 'decoracao'].includes(
+      category?.slug ?? '',
+    )
+      ? this.accessoryFacets()
+      : (this.cama()?.products ?? []).filter(
+          (p) =>
+            category?.slug === 'cama' || p.product_type_id === category?.id,
+        );
     const options = new Map<string, string>();
     for (const product of products) {
       const label = product.measurements?.['Coleção']?.trim();
@@ -234,7 +259,14 @@ export class CategoryComponent {
   }
 
   setFacet(
-    key: 'color' | 'size' | 'pattern' | 'collection' | 'type' | 'material' | 'opacity',
+    key:
+      | 'color'
+      | 'size'
+      | 'pattern'
+      | 'collection'
+      | 'type'
+      | 'material'
+      | 'opacity',
     value: string,
   ): void {
     const current = this.query.value;
@@ -254,7 +286,10 @@ export class CategoryComponent {
       offset: 0,
       color: '',
       size: '',
-      pattern: '', type: '', material: '', opacity: '',
+      pattern: '',
+      type: '',
+      material: '',
+      opacity: '',
       collection: '',
     });
   }
@@ -268,16 +303,26 @@ export class CategoryComponent {
         this.resolvedCategory.set(null);
         this.query.next({
           search: (query.get('q') ?? '').trim().slice(0, 120),
-          maxPrice: /^\d+(?:\.\d{1,2})?$/.test(query.get('maxPrice') ?? '') ? query.get('maxPrice')! : '',
+          maxPrice: /^\d+(?:\.\d{1,2})?$/.test(query.get('maxPrice') ?? '')
+            ? query.get('maxPrice')!
+            : '',
           available: query.get('available') === '1',
-          sort: ['', 'price_asc', 'price_desc', 'name', 'recent'].includes(query.get('sort') ?? '') ? query.get('sort') ?? '' : '',
-          offset: Math.max(0, Math.min(1000000, Math.floor(Number(query.get('page')) || 1)) - 1) * this.pageSize,
-          color: (query.get('color') ?? '').slice(0,120),
-          size: (query.get('size') ?? '').slice(0,120),
-          pattern: (query.get('pattern') ?? '').slice(0,120),
-          type: (query.get('type') ?? '').slice(0,120),
-          material: (query.get('material') ?? '').slice(0,120),
-          opacity: (query.get('opacity') ?? '').slice(0,120),
+          sort: ['', 'price_asc', 'price_desc', 'name', 'recent'].includes(
+            query.get('sort') ?? '',
+          )
+            ? (query.get('sort') ?? '')
+            : '',
+          offset:
+            Math.max(
+              0,
+              Math.min(1000000, Math.floor(Number(query.get('page')) || 1)) - 1,
+            ) * this.pageSize,
+          color: (query.get('color') ?? '').slice(0, 120),
+          size: (query.get('size') ?? '').slice(0, 120),
+          pattern: (query.get('pattern') ?? '').slice(0, 120),
+          type: (query.get('type') ?? '').slice(0, 120),
+          material: (query.get('material') ?? '').slice(0, 120),
+          opacity: (query.get('opacity') ?? '').slice(0, 120),
           collection: (query.get('collection') ?? '').trim().slice(0, 120),
         });
         return this.catalog.getCategoryBySlug(slug).pipe(
@@ -294,7 +339,9 @@ export class CategoryComponent {
                   color,
                   size,
                   pattern,
-                  type, material, opacity,
+                  type,
+                  material,
+                  opacity,
                   collection,
                 }) => {
                   if (!category)
@@ -401,7 +448,7 @@ export class CategoryComponent {
       : name;
   });
   readonly breadcrumbs = computed<BreadcrumbItem[]>(() => [
-    { label: 'Home', url: '/home' },
+    { label: 'Home', url: '/inicio' },
     ...(CAMA_GROUP.types.includes(this.category()?.name ?? '')
       ? [{ label: 'Cama', url: '/categoria/cama' }]
       : []),

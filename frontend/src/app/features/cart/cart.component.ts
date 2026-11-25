@@ -1,3 +1,4 @@
+import { AssetUrlService } from '../../shared/services/asset-url.service';
 import { InlineNoticeComponent } from '../../shared/components/inline-notice/inline-notice.component';
 import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { Component, inject } from '@angular/core';
@@ -13,11 +14,19 @@ registerLocaleData(localePt);
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [InlineNoticeComponent, AdminStateComponent, CurrencyPipe, RouterLink, CatalogLayoutComponent, MatIconModule],
+  imports: [
+    InlineNoticeComponent,
+    AdminStateComponent,
+    CurrencyPipe,
+    RouterLink,
+    CatalogLayoutComponent,
+    MatIconModule,
+  ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss',
 })
 export class CartComponent {
+  private readonly assetUrls = inject(AssetUrlService);
   readonly cart = inject(CartService);
 
   constructor() {
@@ -35,9 +44,7 @@ export class CartComponent {
   }
 
   imageUrl(path: string): string {
-    return /^https?:\/\//.test(path)
-      ? path
-      : `http://localhost:8080/${path.replace(/^\//, '')}`;
+    return /^https?:\/\//.test(path) ? path : this.assetUrls.resolve(path);
   }
 
   hideBrokenImage(event: Event): void {

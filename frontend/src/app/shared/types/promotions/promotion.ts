@@ -36,3 +36,4 @@ export interface CreatePromotionRequest {
   end_date: string;
 }
 
+export type DiscountMode = 'percentage' | 'amount';

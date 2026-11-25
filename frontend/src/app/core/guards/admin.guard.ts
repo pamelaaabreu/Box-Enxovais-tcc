@@ -10,9 +10,8 @@ import {
   UrlTree,
 } from '@angular/router';
 
-import { jwtDecode } from 'jwt-decode';
+import { readValidJwt } from '../../shared/utils/jwt';
 import { AuthService } from '../services/auth.service';
-import { AppJwtPayload } from '../interfaces/auth.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -51,9 +50,9 @@ export class AdminGuard implements CanActivate, CanMatch {
     }
 
     try {
-      const decodedToken = jwtDecode<AppJwtPayload>(token);
+      const decodedToken = readValidJwt(token);
 
-      if (this.isTokenExpired(decodedToken)) {
+      if (!decodedToken) {
         return this.router.createUrlTree(['/login'], {
           queryParams: { returnUrl },
         });
@@ -67,7 +66,7 @@ export class AdminGuard implements CanActivate, CanMatch {
       }
 
       // Clientes não podem acessar o painel.
-      return this.router.createUrlTree(['/home']);
+      return this.router.createUrlTree(['/inicio']);
     } catch (error) {
       console.error('Erro ao decodificar o token:', error);
 
@@ -75,15 +74,5 @@ export class AdminGuard implements CanActivate, CanMatch {
         queryParams: { returnUrl },
       });
     }
-  }
-
-  private isTokenExpired(token: AppJwtPayload): boolean {
-    if (!token.exp) {
-      return true;
-    }
-
-    const expirationDateInMilliseconds = token.exp * 1000;
-
-    return Date.now() >= expirationDateInMilliseconds;
   }
 }

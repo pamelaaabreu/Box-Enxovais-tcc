@@ -3,7 +3,9 @@
 <app-main-navbar [isHidden]="isScrolled"></app-main-navbar>
 
 <main class="home-content">
-  <app-carousel [natalCampaignId]="campaigns.active()?.id ?? null"></app-carousel>
+  <app-carousel
+    [natalCampaignId]="campaigns.active()?.id ?? null"
+  ></app-carousel>
 
   <app-trust-bar></app-trust-bar>
 

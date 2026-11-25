@@ -1,22 +1,16 @@
-# Kit Codex econômico — Box Enxovais
+# Box Enxovais — instalação e execução local
 
-Copie **os conteúdos** deste ZIP para a **raiz** do repositório, mantendo pastas ocultas `.codex/` e `.agents/`.
-Se já existir `AGENTS.md` ou `.codex/config.toml`, faça backup e **mescle** as instruções: não sobrescreva configurações existentes indiscriminadamente.
+Consulte [README.md](README.md) para arquitetura, contratos e limitações. Requisitos: Node 22.23.5 (frontend/.nvmrc), npm, Go 1.26.11 e PostgreSQL. SMTP é necessário apenas para entregas reais de e-mail.
 
-## Estrutura
-- `AGENTS.md`: regras curtas de economia e segurança, carregadas automaticamente.
-- `.codex/config.toml`: habilita multiagentes, no máximo 1 simultâneo.
-- `.codex/agents/{revisor,testador,infra}.toml`: especialistas disponíveis; solicitados explicitamente.
-- `.agents/skills/*/SKILL.md`: procedimentos carregados sob demanda.
+1. Em `frontend`, execute `npm ci`.
+2. Em `backend`, execute `go mod download` e configure `.env` privado: DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME e JWT_SECRET. SMTP usa EMAIL, EMAIL_KEY e EMAIL_SMTP. Não publique credenciais.
+3. Prepare uma base local própria com as migrations autorizadas. Não execute migrations automaticamente no bd_box. O código inclui migrations até 55; a última versão confirmada do principal nesta auditoria é 54, dirty=false, e a 55 não foi aplicada.
+4. Terminal da API: em `backend`, `go run ./src`.
+5. Outro terminal: em `frontend`, `npm start`.
+6. Abra http://localhost:4200. A API usa a porta 8080 por padrão.
 
-## Como chamar (no chat do Codex)
-- `Use o agente revisor para revisar somente meu diff atual. Sem editar nem rodar testes.`
-- `Use o agente testador para criar os testes mínimos da alteração no login e execute só esses testes.`
-- `Use o agente infra em modo consultivo para comparar Docker Compose e deploy. Não altere arquivos.`
-- `Implemente esta correção sozinho, sem delegação e sem executar a suíte completa.`
+Ao terminar, pressione Ctrl+C em cada terminal iniciado por você. Não mate processos de outros terminais para liberar portas sem identificar seu proprietário.
 
-## Dicas
-- Reinicie a sessão do Codex se os novos agentes não aparecerem.
-- Confira a versão do Codex, pois modelos/subagentes variam conforme instalação e plano.
-- Os arquivos **não criam automações** e não fazem mudanças no código por conta própria.
-- Economia não é garantida por configuração: subagentes também consomem tokens. Delegue só quando valer a pena.
+Verificações: em frontend, `npx ng test --watch=false --browsers=ChromeHeadless` e `npm run build`; em backend, `go test ./...` e `go vet ./...`. Testes PostgreSQL e Playwright exigem ambiente isolado; veja [testes](docs/GUIA_COMPLETO_TCC/07_TESTES_E_QUALIDADE.md).
+
+Pagamentos e fretes são demonstrativos para o TCC. Fotografias em backend/uploads precisam de backup junto ao banco; Git não substitui esse backup. Não se incluem senhas/contas de clientes neste guia.

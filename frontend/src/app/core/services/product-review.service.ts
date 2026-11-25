@@ -1,3 +1,5 @@
+import { AssetUrlService } from '../../shared/services/asset-url.service';
+import { API_BASE_URL } from '../config/api.config';
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
@@ -14,14 +16,20 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class ProductReviewService {
+  private readonly assetUrls = inject(AssetUrlService);
+  private readonly baseUrl = inject(API_BASE_URL).replace(/\/+$/, '');
   private readonly http = inject(HttpClient);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly base = 'http://localhost:8080';
+  private readonly base = this.baseUrl;
 
-  readonly changed = new Subject<void>();
+  private readonly changes = new Subject<void>();
+  readonly changed = this.changes.asObservable();
 
   // Armazena as médias de avaliações por produto.
-  readonly summaries = signal<Record<number, ReviewSummaryState>>({});
+  private readonly summaryState = signal<Record<number, ReviewSummaryState>>(
+    {},
+  );
+  readonly summaries = this.summaryState.asReadonly();
 
   private readonly queued = new Set<number>();
 
@@ -80,11 +88,7 @@ export class ProductReviewService {
   }
 
   image(path: string) {
-    return path
-      ? /^https?:\/\//.test(path)
-        ? path
-        : this.base + '/' + path.replace(/^\//, '')
-      : '';
+    return this.assetUrls.resolve(path);
   }
 
   ensureSummary(id: number, force = false): void {
@@ -100,7 +104,7 @@ export class ProductReviewService {
     )
       return;
 
-    this.summaries.update((items) => ({
+    this.summaryState.update((items) => ({
       ...items,
       [id]: {
         average: current?.average ?? 0,
@@ -149,7 +153,7 @@ export class ProductReviewService {
             // Ignora respostas de gerações anteriores.
             if (generation !== this.generation) return;
 
-            this.summaries.update((items) => {
+            this.summaryState.update((items) => {
               const result = { ...items };
 
               for (const id of batch) {
@@ -168,7 +172,7 @@ export class ProductReviewService {
           error: () => {
             if (generation !== this.generation) return;
 
-            this.summaries.update((items) => {
+            this.summaryState.update((items) => {
               const result = { ...items };
 
               for (const id of batch) {
@@ -195,6 +199,6 @@ export class ProductReviewService {
       this.ensureSummary(id, true);
     }
 
-    this.changed.next();
+    this.changes.next();
   }
 }

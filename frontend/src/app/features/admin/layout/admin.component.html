@@ -1,0 +1,162 @@
+<div class="admin-shell">
+  @if (menuOpen()) {
+    <button
+      class="drawer-backdrop"
+      type="button"
+      aria-label="Fechar menu administrativo"
+      (click)="closeMenu()"
+      tabindex="-1"
+    ></button>
+  }
+  @if (!mobile() || menuOpen()) {
+    <aside
+      class="sidebar"
+      id="admin-sidebar"
+      [class.open]="menuOpen()"
+      [attr.role]="mobile() ? 'dialog' : null"
+      [attr.aria-modal]="mobile() ? 'true' : null"
+      aria-label="Menu administrativo"
+      [cdkTrapFocus]="mobile()"
+      [cdkTrapFocusAutoCapture]="mobile()"
+    >
+      @if (mobile()) {
+        <button
+          type="button"
+          class="drawer-close"
+          aria-label="Fechar menu"
+          cdkFocusInitial
+          (click)="closeMenu()"
+        >
+          <mat-icon aria-hidden="true">close</mat-icon>
+        </button>
+      }
+      <img
+        src="logotipo-branca-completa.png"
+        alt="Box Enxovais — Casa bem vivida"
+        class="logo"
+      />
+      <nav aria-label="Administração">
+        <p class="nav-heading">Menu</p>
+        <a
+          routerLink="/admin/dashboard"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><mat-icon aria-hidden="true">dashboard</mat-icon> Dashboard</a
+        >
+        <a
+          routerLink="/admin/produtos"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><mat-icon aria-hidden="true">inventory_2</mat-icon> Produtos</a
+        >
+        <a
+          routerLink="/admin/pedidos"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><mat-icon aria-hidden="true">receipt_long</mat-icon> Pedidos</a
+        >
+        <a
+          routerLink="/admin/clientes"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><mat-icon aria-hidden="true">groups</mat-icon> Clientes</a
+        >
+        <a
+          routerLink="/admin/relatorios"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><mat-icon aria-hidden="true">description</mat-icon> Relatórios</a
+        >
+        <a
+          routerLink="/admin/promocoes"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><mat-icon aria-hidden="true">sell</mat-icon> Promoções</a
+        >
+        <details [open]="section() === 'cadastros'">
+          <summary>
+            <mat-icon aria-hidden="true">category</mat-icon> Cadastros
+            <mat-icon class="chevron" aria-hidden="true">expand_more</mat-icon>
+          </summary>
+          <a
+            routerLink="/admin/cadastros/categorias"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            >Categorias</a
+          >
+          <a
+            routerLink="/admin/cadastros/marcas"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            >Marcas</a
+          >
+          <a
+            routerLink="/admin/cadastros/faixas-cep"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            >Faixas de CEP</a
+          >
+        </details>
+        <a
+          routerLink="/admin/avaliacoes"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          ><mat-icon aria-hidden="true">rate_review</mat-icon>Avaliações de
+          compra</a
+        >
+        <div class="sidebar-actions">
+          <p class="nav-heading">Outros</p>
+          <a routerLink="/minha-conta"
+            ><mat-icon aria-hidden="true">settings</mat-icon> Configurações</a
+          >
+          <a routerLink="/inicio"
+            ><mat-icon aria-hidden="true">storefront</mat-icon> Voltar para a
+            loja</a
+          >
+          <button type="button" (click)="logout()">
+            <mat-icon aria-hidden="true">logout</mat-icon> Sair da conta
+          </button>
+        </div>
+      </nav>
+      <div class="profile">
+        <span class="avatar" aria-hidden="true">{{ initials }}</span>
+        <div>
+          <strong>{{ name || "Administrador" }}</strong
+          ><span>{{ email }}</span>
+        </div>
+      </div>
+    </aside>
+  }
+  <main class="content" [attr.inert]="mobile() && menuOpen() ? '' : null">
+    @if (
+      section() !== "clientes" &&
+      section() !== "pedidos" &&
+      section() !== "promocoes" &&
+      section() !== "cadastros" &&
+      section() !== "avaliacoes" &&
+      section() !== "produtos"
+    ) {
+      <app-admin-page-header
+        [title]="title()"
+        [description]="subtitle()"
+        [icon]="
+          isProductCreate()
+            ? 'inventory_2'
+            : section() === 'relatorios'
+              ? 'description'
+              : 'dashboard'
+        "
+        [compact]="isProductCreate()"
+        [breadcrumb]="
+          isProductCreate()
+            ? [
+                { label: 'Produtos', url: '/admin/produtos' },
+                { label: title() },
+              ]
+            : [{ label: title() }]
+        "
+      />
+    }
+    <router-outlet />
+  </main>
+</div>

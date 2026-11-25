@@ -1,40 +1,59 @@
+import type { Registration } from '../../shared/types/catalog/registration';
+import { API_BASE_URL, apiEndpoint } from '../config/api.config';
 import type {
   ProductUpdateRequest,
   ProductImageRecord,
   ProductCommerceUpdate,
 } from '../../shared/types/products/admin-product';
 
-export type {
-  ProductUpdateRequest,
-  ProductImageRecord,
-} from '../../shared/types/products/admin-product';
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Product } from '../../shared/models';
+import type { Product } from '../../shared/types/products/product';
 import { forkJoin, Observable } from 'rxjs';
-import { Page, PageOptions, PaginationService } from './pagination.service';
+import { PaginationService } from './pagination.service';
+import type { Page, PageOptions } from '../../shared/types/api/pagination';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
+  private readonly baseUrl = inject(API_BASE_URL).replace(/\/+$/, '');
   private readonly pagination = inject(PaginationService);
-  private apiUrl = 'http://localhost:8080/products';
+  private apiUrl = apiEndpoint(this.baseUrl, 'products');
 
   constructor(private http: HttpClient) {}
 
+  catalogRegistrations(kind: 'categories' | 'brands') {
+    return this.http.get<Registration[]>(
+      apiEndpoint(this.baseUrl, 'admin/catalog/' + kind),
+    );
+  }
+  updateCatalogRegistration(
+    kind: 'categories' | 'brands',
+    id: number,
+    name: string,
+  ) {
+    return this.http.patch(
+      apiEndpoint(this.baseUrl, `admin/catalog/${kind}/${id}`),
+      { name },
+    );
+  }
+  removeCatalogRegistration(kind: 'categories' | 'brands', id: number) {
+    return this.http.delete(
+      apiEndpoint(this.baseUrl, `admin/catalog/${kind}/${id}`),
+    );
+  }
   // Cadastra uma marca ou categoria.
   createCatalogRegistration(kind: 'categories' | 'brands', name: string) {
     return this.http.post<{ id: number; name: string }>(
-      'http://localhost:8080/admin/catalog/' + kind,
+      apiEndpoint(this.baseUrl, 'admin/catalog/') + kind,
       { name },
     );
   }
 
   getBrands(): Observable<{ id: number; name: string }[]> {
     return this.http.get<{ id: number; name: string }[]>(
-      'http://localhost:8080/admin/products/brands',
+      apiEndpoint(this.baseUrl, 'admin/products/brands'),
     );
   }
 
@@ -57,13 +76,13 @@ export class ProductService {
   // Recupera todos os produtos administrativos.
   getAdminProducts(): Observable<Product[]> {
     return this.pagination.getAll<Product>(
-      'http://localhost:8080/admin/products',
+      apiEndpoint(this.baseUrl, 'admin/products'),
     );
   }
 
   getAdminProductsPage(options: PageOptions = {}): Observable<Page<Product>> {
     return this.pagination.getPage<Product>(
-      'http://localhost:8080/admin/products',
+      apiEndpoint(this.baseUrl, 'admin/products'),
       options,
     );
   }
@@ -73,12 +92,12 @@ export class ProductService {
   }
 
   getAdminProduct(id: number) {
-    return this.http.get<Product>(`http://localhost:8080/admin/products/${id}`);
+    return this.http.get<Product>(`${this.baseUrl}/admin/products/${id}`);
   }
 
   updateProduct(id: number, request: ProductUpdateRequest) {
     return this.http.patch<Product>(
-      `http://localhost:8080/admin/products/${id}`,
+      `${this.baseUrl}/admin/products/${id}`,
       request,
     );
   }
@@ -86,13 +105,13 @@ export class ProductService {
   // O backend determina se deve excluir ou arquivar.
   removeProduct(id: number) {
     return this.http.delete<{ action: 'deleted' | 'archived' }>(
-      `http://localhost:8080/admin/products/${id}`,
+      `${this.baseUrl}/admin/products/${id}`,
     );
   }
 
   getProductImages(id: number) {
     return this.http.get<ProductImageRecord[]>(
-      `http://localhost:8080/admin/products/${id}/images`,
+      `${this.baseUrl}/admin/products/${id}/images`,
     );
   }
 
@@ -105,14 +124,14 @@ export class ProductService {
     primary_id: number,
   ) {
     return this.http.put<ProductImageRecord[]>(
-      `http://localhost:8080/admin/products/${id}/images`,
+      `${this.baseUrl}/admin/products/${id}/images`,
       { variant_id, ids, expected_ids, primary_id },
     );
   }
 
   removeProductImage(id: number, imageId: number) {
     return this.http.delete<ProductImageRecord[]>(
-      `http://localhost:8080/admin/products/${id}/images/${imageId}`,
+      `${this.baseUrl}/admin/products/${id}/images/${imageId}`,
     );
   }
 
@@ -125,7 +144,7 @@ export class ProductService {
   ) {
     return this.http.put<{
       variants: NonNullable<Product['variants']>;
-    }>(`http://localhost:8080/admin/products/${id}/variants`, {
+    }>(`${this.baseUrl}/admin/products/${id}/variants`, {
       variants,
       expected_variants: expected,
       ...(commerce ? { commerce } : {}),

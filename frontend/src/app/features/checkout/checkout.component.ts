@@ -1,3 +1,8 @@
+import { AssetUrlService } from '../../shared/services/asset-url.service';
+import { ShippingService } from '../../core/services/shipping.service';
+import { CheckoutService } from '../../core/services/checkout.service';
+import type { QuickPurchase } from '../../shared/types/cart/cart.types';
+import type { SavedAddress } from '../../shared/types/account/account.types';
 import { InlineNoticeComponent } from '../../shared/components/inline-notice/inline-notice.component';
 import { MatSelectModule } from '@angular/material/select';
 import {
@@ -17,7 +22,7 @@ import { jwtDecode } from 'jwt-decode';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -35,10 +40,9 @@ import {
   timer,
 } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CartService, QuickPurchase } from '../../core/services/cart.service';
+import { CartService } from '../../core/services/cart.service';
 import {
   AccountService,
-  SavedAddress,
   contactPhonePattern,
   mobilePhonePattern,
 } from '../../core/services/account.service';
@@ -48,7 +52,7 @@ import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/cat
 registerLocaleData(localePt);
 
 const postalFields = ['street', 'neighborhood', 'city', 'state'] as const;
-type PostalField = (typeof postalFields)[number];
+import type { PostalField } from '../../shared/types/shipping/postal-field';
 
 @Component({
   selector: 'app-checkout',
@@ -68,8 +72,10 @@ type PostalField = (typeof postalFields)[number];
   styleUrl: './checkout.component.scss',
 })
 export class CheckoutComponent {
+  private readonly assetUrls = inject(AssetUrlService);
   readonly cart = inject(CartService);
-  private readonly http = inject(HttpClient);
+  private readonly checkoutApi = inject(CheckoutService);
+  private readonly shippingApi = inject(ShippingService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly account = inject(AccountService);
   private readonly auth = inject(AuthService);
@@ -283,41 +289,35 @@ export class CheckoutComponent {
           this.coverageLoading.set(false);
           if (!/^\d{8}$/.test(cep)) return EMPTY;
           this.coverageLoading.set(true);
-          return this.http
-            .get<{
-              priceCents: number;
-              minDays: number;
-              maxDays: number;
-            }>('http://localhost:8080/shipping/quote', { params: { cep } })
-            .pipe(
-              tap((quote) => {
-                if (
-                  Number.isSafeInteger(quote.priceCents) &&
-                  quote.priceCents >= 0 &&
-                  Number.isSafeInteger(quote.minDays) &&
-                  quote.minDays >= 0 &&
-                  Number.isSafeInteger(quote.maxDays) &&
-                  quote.maxDays >= quote.minDays
-                ) {
-                  this.deliveryQuote.set(quote);
-                  this.coveredCep.set(cep);
-                } else
-                  this.coverageMessage.set(
-                    'Não foi possível consultar a entrega. Tente novamente.',
-                  );
-              }),
-              catchError((error: HttpErrorResponse) => {
+          return this.shippingApi.quote(cep).pipe(
+            tap((quote) => {
+              if (
+                Number.isSafeInteger(quote.priceCents) &&
+                quote.priceCents >= 0 &&
+                Number.isSafeInteger(quote.minDays) &&
+                quote.minDays >= 0 &&
+                Number.isSafeInteger(quote.maxDays) &&
+                quote.maxDays >= quote.minDays
+              ) {
+                this.deliveryQuote.set(quote);
+                this.coveredCep.set(cep);
+              } else
                 this.coverageMessage.set(
-                  error.status === 404
-                    ? 'Entrega indisponível para este CEP no momento.'
-                    : error.status === 400
-                      ? 'Informe um CEP válido.'
-                      : 'Não foi possível consultar a entrega. Tente novamente.',
+                  'Não foi possível consultar a entrega. Tente novamente.',
                 );
-                return EMPTY;
-              }),
-              finalize(() => this.coverageLoading.set(false)),
-            );
+            }),
+            catchError((error: HttpErrorResponse) => {
+              this.coverageMessage.set(
+                error.status === 404
+                  ? 'Entrega indisponível para este CEP no momento.'
+                  : error.status === 400
+                    ? 'Informe um CEP válido.'
+                    : 'Não foi possível consultar a entrega. Tente novamente.',
+              );
+              return EMPTY;
+            }),
+            finalize(() => this.coverageLoading.set(false)),
+          );
         }),
         takeUntil(this.auth.userChanged),
         takeUntilDestroyed(),
@@ -385,7 +385,7 @@ export class CheckoutComponent {
       this.coveredCep.set('');
       this.deliveryQuote.set(null);
       this.postalCancelled.next();
-      void this.router.navigate(['/cart']);
+      void this.router.navigate(['/carrinho']);
     });
     for (const key of postalFields) {
       this.address.controls[key].valueChanges
@@ -613,11 +613,8 @@ export class CheckoutComponent {
       return;
     this.busy.set(true);
     this.error.set('');
-    this.http
-      .post<{
-        success?: boolean;
-        data?: ConfirmedOrder;
-      } | null>('http://localhost:8080/checkout', {
+    this.checkoutApi
+      .confirm({
         requestKey: this.requestKey,
         ...(this.selectedAddress()
           ? { addressId: this.selectedAddressId() }
@@ -699,7 +696,7 @@ export class CheckoutComponent {
     this.openingOrder.set(true);
     this.error.set('');
     try {
-      if (await this.router.navigate(['/checkout/success', order.id])) {
+      if (await this.router.navigate(['/finalizar-compra/sucesso', order.id])) {
         this.cart.load();
         return;
       }
@@ -725,9 +722,7 @@ export class CheckoutComponent {
     this.cart.update(id, quantity);
   }
   imageUrl(path: string): string {
-    return /^https?:\/\//.test(path)
-      ? path
-      : `http://localhost:8080/${path.replace(/^\//, '')}`;
+    return /^https?:\/\//.test(path) ? path : this.assetUrls.resolve(path);
   }
   hideBrokenImage(event: Event): void {
     (event.target as HTMLImageElement).hidden = true;

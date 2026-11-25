@@ -97,13 +97,10 @@ input[type="checkbox"] {
   font-weight: 600;
 }
 
-
-
 .state {
   text-align: center;
   padding: 30px 12px;
 }
-
 
 .catalog-filters button,
 .state button,
@@ -269,21 +266,12 @@ input[type="checkbox"] {
   min-height: 46px;
 }
 
-
-
-
-
-
 // The global form reset clears native input focus styles.
 .catalog-filters input:not([type="checkbox"]):focus {
   border: 1px solid #3d4836 !important;
   background: #fffdf8 !important;
   box-shadow: none !important;
 }
-
-
-
-
 
 .catalog-choice {
   position: relative;
@@ -350,8 +338,6 @@ input[type="checkbox"] {
 .catalog-filters .catalog-stock {
   display: flex;
 }
-
-
 
 .category-navigation {
   display: grid;

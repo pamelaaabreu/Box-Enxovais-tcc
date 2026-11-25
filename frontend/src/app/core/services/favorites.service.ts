@@ -1,3 +1,4 @@
+import { API_BASE_URL, apiEndpoint } from '../config/api.config';
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -13,24 +14,21 @@ import {
 } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from './auth.service';
-import { Page, PageOptions, PaginationService } from './pagination.service';
-import { Product } from '../../shared/models';
+import { PaginationService } from './pagination.service';
+import type { Page, PageOptions } from '../../shared/types/api/pagination';
+import type { Product } from '../../shared/types/products/product';
 
-// Define os diferentes tipos de operações.
-type FavoriteRequest = { session: number; token: string } & (
-  | { kind: 'sync' }
-  | { kind: 'page'; offset: number }
-  | { kind: 'mutation'; productId: number; favorited: boolean }
-);
+import type { FavoriteRequest } from '../../shared/types/favorites/favorite-request';
 
 @Injectable({ providedIn: 'root' })
 export class FavoritesService {
+  private readonly baseUrl = inject(API_BASE_URL).replace(/\/+$/, '');
   private readonly http = inject(HttpClient);
   private readonly pagination = inject(PaginationService);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
-  private readonly url = 'http://localhost:8080/favorites';
+  private readonly url = apiEndpoint(this.baseUrl, 'favorites');
 
   // Fila de operações.
   private readonly requests = new Subject<FavoriteRequest>();

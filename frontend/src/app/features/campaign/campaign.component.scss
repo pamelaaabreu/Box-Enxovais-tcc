@@ -23,7 +23,9 @@
 }
 .campaign h1,
 .campaign h2 {
-  font: 500 clamp(24px, 2.5vw, 34px)/1.3 Montserrat, sans-serif;
+  font:
+    500 clamp(24px, 2.5vw, 34px) / 1.3 Montserrat,
+    sans-serif;
   margin: 0 0 10px;
 }
 .campaign header > p:last-child {
@@ -73,10 +75,14 @@
   outline-offset: 2px;
 }
 @media (min-width: 1200px) {
-  .campaign-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .campaign-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 @media (min-width: 901px) and (max-width: 1199px) {
-  .campaign-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .campaign-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 .campaign-state {
   text-align: center;
@@ -94,5 +100,7 @@
   .campaign {
     padding: 0 var(--home-container-padding, 8px);
   }
-  .campaign-search { max-width: none; }
+  .campaign-search {
+    max-width: none;
+  }
 }

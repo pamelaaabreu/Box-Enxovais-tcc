@@ -1,6 +1,11 @@
 import { DOCUMENT } from '@angular/common';
 import { revealKeyboardFocus } from './shared/accessibility/focus-visibility';
-import { Component, ViewEncapsulation, HostListener, inject } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  HostListener,
+  inject,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({

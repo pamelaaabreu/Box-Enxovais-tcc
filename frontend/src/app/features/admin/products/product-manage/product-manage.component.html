@@ -1,0 +1,80 @@
+<section
+  class="manage-container"
+  [class.with-summary]="selectedTabIndex === 0"
+  [attr.aria-label]="editId ? 'Editar produto' : 'Cadastrar produto'"
+>
+  <app-admin-page-header
+    [image]="previewImage"
+    [title]="editId ? 'Editar produto' : 'Cadastrar produto'"
+    [description]="
+      productName || 'Gerencie as informações e imagens do produto.'
+    "
+    icon="inventory_2"
+    [breadcrumb]="[
+      { label: 'Produtos', url: '/admin/produtos' },
+      { label: editId ? 'Editar produto' : 'Cadastrar produto' },
+    ]"
+  >
+    @if (productId) {
+      <app-product-sku
+        header-actions
+        [productId]="productId"
+        [compact]="true"
+      />
+    }
+  </app-admin-page-header>
+  <mat-tab-group
+    [(selectedIndex)]="selectedTabIndex"
+    [preserveContent]="true"
+    [mat-stretch-tabs]="true"
+  >
+    <mat-tab label="Dados do produto">
+      @if (!productId) {
+        <p class="image-note">
+          A aba Imagens é liberada depois que você salvar os dados do produto.
+        </p>
+      }
+      <app-product-create
+        [externalSummary]="true"
+        [externalSku]="true"
+        [externalVariants]="!!editId"
+        [editId]="editId"
+        (productUpdated)="onProductUpdated()"
+        (productLoaded)="onProductLoaded($event)"
+        [previewImage]="previewImage"
+        (productCreated)="onProductCreated($event)"
+      />
+    </mat-tab>
+    <mat-tab [disabled]="!productId">
+      <ng-template mat-tab-label>
+        @if (!productId) {
+          <mat-icon aria-hidden="true" class="tab-lock">lock_outline</mat-icon>
+        }
+        Imagens
+      </ng-template>
+      @if (productId; as id) {
+        <div class="tab-content">
+          <app-product-image-upload
+            [productId]="id"
+            [showComplete]="true"
+            [editing]="!!editId"
+            (completed)="complete()"
+            (coverChanged)="previewImage = $event"
+          />
+        </div>
+      }
+    </mat-tab>
+    @if (editId) {
+      <mat-tab label="Variações">
+        <div class="tab-content">
+          <ng-container
+            [ngTemplateOutlet]="createForm()?.variantsPanel() ?? null"
+          />
+        </div>
+      </mat-tab>
+    }
+  </mat-tab-group>
+  @if (selectedTabIndex === 0) {
+    <ng-container [ngTemplateOutlet]="createForm()?.summary() ?? null" />
+  }
+</section>

@@ -27,7 +27,7 @@ No checkout, o caminho é mais direto: `CheckoutComponent` envia `POST /checkout
 
 ## Organização física
 
-`frontend/src/app/core` concentra autenticação, HTTP, guards e serviços transversais. `features` contém funcionalidades públicas e formulários extensos. `components/admin` contém telas administrativas e rotas do painel. `shared` reúne contratos, componentes reutilizáveis, validações e utilitários. Os tipos foram organizados por produtos, promoções, pedidos, checkout, API e UI, mantendo reexportações para compatibilidade.
+`frontend/src/app/core` concentra autenticação, HTTP, guards e serviços transversais. `features` contém funcionalidades públicas e formulários extensos. `features/admin` contém telas administrativas e rotas do painel. `shared` reúne contratos, componentes reutilizáveis, validações e utilitários. Os tipos foram organizados por produtos, promoções, pedidos, checkout, API e UI, com imports diretos, sem a antiga fachada shared/models.ts.
 
 No Go, `routes` registra o contrato HTTP, `handlers` trata entrada/saída, `services` concentra regras e integrações quando apropriado e `repositories` executa SQL. `models` contém estruturas compartilhadas; structs privadas de uma consulta podem permanecer junto ao repository. Essa organização é em camadas dentro de uma aplicação, não um conjunto de microsserviços.
 

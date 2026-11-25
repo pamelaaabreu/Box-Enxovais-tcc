@@ -8,13 +8,17 @@
   [class.toast-exit]="!visible"
 >
   <div class="alert-icon" aria-hidden="true">
-    <span class="material-icons" [class.spinning]="type === 'loading'">{{ icons[type] }}</span>
+    <span class="material-icons" [class.spinning]="type === 'loading'">{{
+      icons[type]
+    }}</span>
   </div>
 
   <!-- Conteúdo -->
   <div class="alert-content">
     <h4 class="alert-title">{{ title }}</h4>
-    @if (message) {<p class="alert-message">{{ message }}</p>}
+    @if (message) {
+      <p class="alert-message">{{ message }}</p>
+    }
     @if (action) {
       <button type="button" class="alert-action" (click)="activate()">
         {{ action.label }}
@@ -23,23 +27,24 @@
   </div>
 
   <!-- Botão Fechar -->
-  @if (showClose && type !== 'loading') {<button
-    class="alert-close"
-    type="button"
-    (click)="onClose()"
-    aria-label="Fechar notificação"
-  >
-    <span class="material-icons" aria-hidden="true">close</span>
-  </button>}
+  @if (showClose && type !== "loading") {
+    <button
+      class="alert-close"
+      type="button"
+      (click)="onClose()"
+      aria-label="Fechar notificação"
+    >
+      <span class="material-icons" aria-hidden="true">close</span>
+    </button>
+  }
 
   <!-- Barra de Progresso -->
-  @if (showProgress && duration > 0) {<div
-    aria-hidden="true"
-    class="alert-progress"
-  >
-    <div
-      class="progress-bar"
-      [style.animation-duration]="duration + 'ms'"
-    ></div>
-  </div>}
+  @if (showProgress && duration > 0) {
+    <div aria-hidden="true" class="alert-progress">
+      <div
+        class="progress-bar"
+        [style.animation-duration]="duration + 'ms'"
+      ></div>
+    </div>
+  }
 </div>

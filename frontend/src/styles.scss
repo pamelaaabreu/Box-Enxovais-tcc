@@ -391,8 +391,16 @@ app-top-navbar {
   min-width: 180px;
   box-shadow: 0 4px 16px #3d48361f;
 }
-.box-admin-product-menu .mat-mdc-menu-item { min-height: 44px; }
-.box-admin-product-menu .mat-mdc-menu-content { padding-block: 4px; }
+.box-admin-product-menu .mat-mdc-menu-item {
+  min-height: 44px;
+}
+.box-admin-product-menu .mat-mdc-menu-content {
+  padding-block: 4px;
+}
 
 // Only the shipping editor uses this right-hand Material dialog.
-.box-shipping-drawer .mat-mdc-dialog-surface { border-radius: 0; padding: 0; background: #fffdf8; }
+.box-shipping-drawer .mat-mdc-dialog-surface {
+  border-radius: 0;
+  padding: 0;
+  background: #fffdf8;
+}

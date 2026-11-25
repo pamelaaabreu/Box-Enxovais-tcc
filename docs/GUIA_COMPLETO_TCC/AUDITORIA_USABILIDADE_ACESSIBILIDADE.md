@@ -1,3 +1,5 @@
+> Evidência histórica: datas, PIDs, contagens e estado de implantação abaixo descrevem a execução registrada. Para arquitetura e resultados atuais, consulte README.md deste guia e AUDITORIA_FINAL.md. Não reaplique migrations com base neste histórico.
+
 # Auditoria de usabilidade, responsividade e acessibilidade
 
 ## 1. Objetivo, escopo e parecer
@@ -219,17 +221,17 @@ As escritas da automação utilizaram API 8086 com search_path exclusivo verific
 
 ## 10. Arquivos corrigidos e reprodução
 
-- [frontend/src/app/components/top-navbar/top-navbar.component.scss](../../frontend/src/app/components/top-navbar/top-navbar.component.scss): correção descrita na tabela de achados.
+- [frontend/src/app/shared/components/top-navbar/top-navbar.component.scss](../../frontend/src/app/shared/components/top-navbar/top-navbar.component.scss): correção descrita na tabela de achados.
 - [frontend/src/app/features/catalog/components/product-price/product-price.component.scss](../../frontend/src/app/features/catalog/components/product-price/product-price.component.scss): correção descrita na tabela de achados.
-- [frontend/src/app/features/authorization/register/register.component.scss](../../frontend/src/app/features/authorization/register/register.component.scss): correção descrita na tabela de achados.
+- [frontend/src/app/features/authentication/auth/auth.component.scss](../../frontend/src/app/features/authentication/auth/auth.component.scss): correção descrita na tabela de achados.
 - [frontend/src/app/features/cart/cart.component.scss](../../frontend/src/app/features/cart/cart.component.scss): correção descrita na tabela de achados.
 - [frontend/src/app/features/checkout/checkout.component.scss](../../frontend/src/app/features/checkout/checkout.component.scss): correção descrita na tabela de achados.
-- [frontend/src/app/features/product-manage/images/product-image-upload/product-image-upload.component.scss](../../frontend/src/app/features/product-manage/images/product-image-upload/product-image-upload.component.scss): correção descrita na tabela de achados.
+- [frontend/src/app/features/admin/products/product-manage/images/product-image-upload/product-image-upload.component.scss](../../frontend/src/app/features/admin/products/product-manage/images/product-image-upload/product-image-upload.component.scss): correção descrita na tabela de achados.
 - [frontend/src/app/shared/css/auth-material.scss](../../frontend/src/app/shared/css/auth-material.scss): correção descrita na tabela de achados.
-- [frontend/src/app/components/admin/product/product.component.html](../../frontend/src/app/components/admin/product/product.component.html): correção descrita na tabela de achados.
-- [frontend/src/app/components/admin/product/product.component.scss](../../frontend/src/app/components/admin/product/product.component.scss): correção descrita na tabela de achados.
-- [frontend/src/app/components/admin/report/report.component.html](../../frontend/src/app/components/admin/report/report.component.html): correção descrita na tabela de achados.
-- [frontend/src/app/components/admin/report/report.component.scss](../../frontend/src/app/components/admin/report/report.component.scss): correção descrita na tabela de achados.
+- [frontend/src/app/features/admin/products/product-list/product.component.html](../../frontend/src/app/features/admin/products/product-list/product.component.html): correção descrita na tabela de achados.
+- [frontend/src/app/features/admin/products/product-list/product.component.scss](../../frontend/src/app/features/admin/products/product-list/product.component.scss): correção descrita na tabela de achados.
+- [frontend/src/app/features/admin/reports/report.component.html](../../frontend/src/app/features/admin/reports/report.component.html): correção descrita na tabela de achados.
+- [frontend/src/app/features/admin/reports/report.component.scss](../../frontend/src/app/features/admin/reports/report.component.scss): correção descrita na tabela de achados.
 
 Scripts novos: frontend/e2e/ux-audit.cjs (inventário/matriz/axe), ux-interactions.cjs (tarefas e teclado), ux-public-readonly.cjs (catálogo principal protegido contra escrita). Reutilizado TestBrowserAuditServer existente; backend de produção não foi alterado/reiniciado nesta auditoria.
 

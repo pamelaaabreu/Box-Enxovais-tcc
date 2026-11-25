@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import {
-  ConfirmDialogComponent,
+import { ConfirmDialogComponent } from './confirm-dialog.component';
+import type {
   ConfirmDialogOptions,
-} from './confirm-dialog.component';
+  ConfirmDialogLayout,
+} from '../../types/ui/confirm-dialog';
 
 @Injectable({ providedIn: 'root' })
 export class ConfirmDialogService {
@@ -19,7 +20,7 @@ export class ConfirmDialogService {
     backdropClass: 'box-confirm-backdrop',
   };
 
-  open(options: ConfirmDialogOptions, layout?: { width: string; panelClass: string }) {
+  open(options: ConfirmDialogOptions, layout?: ConfirmDialogLayout) {
     const id = `box-confirm-${++this.nextId}`;
     return this.dialog.open<
       ConfirmDialogComponent,
@@ -27,7 +28,10 @@ export class ConfirmDialogService {
       boolean
     >(ConfirmDialogComponent, {
       ...this.config,
-      ...(layout && { width: layout.width, panelClass: ['box-confirm-panel', layout.panelClass] }),
+      ...(layout && {
+        width: layout.width,
+        panelClass: ['box-confirm-panel', layout.panelClass],
+      }),
       id,
       ariaLabelledBy: id + '-title',
       ariaDescribedBy: id + '-description',

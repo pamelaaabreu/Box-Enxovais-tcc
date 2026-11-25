@@ -21,11 +21,49 @@ html {
   scroll-padding-block: var(--box-header-clearance) 24px;
 }
 
-html body :is(a[href], button, input, textarea, select, summary, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]) {
+html
+  body
+  :is(
+    a[href],
+    button,
+    input,
+    textarea,
+    select,
+    summary,
+    [tabindex]:not([tabindex="-1"]),
+    [contenteditable="true"]
+  ) {
   scroll-margin-block: 16px;
 }
 
-html body :is(a[href], button, input, textarea, select, summary, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]):not(.mat-mdc-input-element, .mdc-checkbox__native-control, .mdc-radio__native-control):not(:where(.search-bar, .admin-search, .orders-search, .newsletter-form, .catalog-choice, .payment-card, .address-default, .stars) input):not(:where(.mat-mdc-form-field) mat-select):focus-visible {
+html
+  body
+  :is(
+    a[href],
+    button,
+    input,
+    textarea,
+    select,
+    summary,
+    [tabindex]:not([tabindex="-1"]),
+    [contenteditable="true"]
+  ):not(
+    .mat-mdc-input-element,
+    .mdc-checkbox__native-control,
+    .mdc-radio__native-control
+  ):not(
+    :where(
+        .search-bar,
+        .admin-search,
+        .orders-search,
+        .newsletter-form,
+        .catalog-choice,
+        .payment-card,
+        .address-default,
+        .stars
+      )
+      input
+  ):not(:where(.mat-mdc-form-field) mat-select):focus-visible {
   outline: var(--box-focus-width) solid var(--box-focus-color);
   outline-offset: var(--box-focus-offset);
   box-shadow: none;
@@ -52,7 +90,15 @@ html body .navbar-container.navbar-hidden:focus-within {
   visibility: visible;
 }
 
-html body :is(.zoom-trigger, .mat-mdc-tab, .gallery-nav, .mdc-icon-button, .mat-mdc-menu-item) {
+html
+  body
+  :is(
+    .zoom-trigger,
+    .mat-mdc-tab,
+    .gallery-nav,
+    .mdc-icon-button,
+    .mat-mdc-menu-item
+  ) {
   --box-focus-offset: -3px;
 }
 
@@ -60,19 +106,65 @@ html body :is(input[type="checkbox"], input[type="radio"]) {
   accent-color: #52663f;
 }
 
-html body :is(.search-bar:has(.search-input:focus-visible), .admin-search:has(input:focus-visible), .orders-search:has(input:focus-visible), .newsletter-form form:has(input:focus-visible), .catalog-choice:has(input:focus-visible), .payment-card:has(input:focus-visible), .address-default:has(input:focus-visible), .stars label:has(input:focus-visible)) {
+html
+  body
+  :is(
+    .search-bar:has(.search-input:focus-visible),
+    .admin-search:has(input:focus-visible),
+    .orders-search:has(input:focus-visible),
+    .newsletter-form form:has(input:focus-visible),
+    .catalog-choice:has(input:focus-visible),
+    .payment-card:has(input:focus-visible),
+    .address-default:has(input:focus-visible),
+    .stars label:has(input:focus-visible)
+  ) {
   outline: var(--box-focus-width) solid var(--box-focus-color);
   outline-offset: var(--box-focus-offset);
   box-shadow: none;
 }
 
-html body :is(.mat-mdc-form-field input, .mat-mdc-form-field textarea, .mat-mdc-form-field mat-select, .search-bar .search-input, .admin-search input, .orders-search input, .newsletter-form input, .catalog-choice input, .payment-card input, .address-default input, .stars input):focus-visible {
+html
+  body
+  :is(
+    .mat-mdc-form-field input,
+    .mat-mdc-form-field textarea,
+    .mat-mdc-form-field mat-select,
+    .search-bar .search-input,
+    .admin-search input,
+    .orders-search input,
+    .newsletter-form input,
+    .catalog-choice input,
+    .payment-card input,
+    .address-default input,
+    .stars input
+  ):focus-visible {
   outline-width: 0;
   box-shadow: none;
 }
 
-html body :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="button"], [type="submit"], [type="reset"], [type="image"]), textarea, select, mat-select):focus-visible,
-html body :is(.search-bar, .admin-search, .orders-search, .newsletter-form form):has(input:focus-visible) {
+html
+  body
+  :is(
+    input:not(
+      [type="checkbox"],
+      [type="radio"],
+      [type="range"],
+      [type="color"],
+      [type="file"],
+      [type="button"],
+      [type="submit"],
+      [type="reset"],
+      [type="image"]
+    ),
+    textarea,
+    select,
+    mat-select
+  ):focus-visible,
+html
+  body
+  :is(.search-bar, .admin-search, .orders-search, .newsletter-form form):has(
+    input:focus-visible
+  ) {
   --box-focus-offset: calc(-1 * var(--box-focus-width));
 }
 
@@ -80,17 +172,25 @@ html body .mat-mdc-form-field {
   --mdc-outlined-text-field-focus-outline-width: 2px;
 }
 
-html body :is(.mat-mdc-checkbox, .mat-mdc-radio-button):has(input:focus-visible) :is(.mdc-checkbox__background, .mdc-radio__background) {
+html
+  body
+  :is(.mat-mdc-checkbox, .mat-mdc-radio-button):has(input:focus-visible)
+  :is(.mdc-checkbox__background, .mdc-radio__background) {
   outline: var(--box-focus-width) solid var(--box-focus-color);
   outline-offset: var(--box-focus-offset);
 }
 
 @media (max-width: 1000px) {
-  :root { --box-header-clearance: 280px; }
+  :root {
+    --box-header-clearance: 280px;
+  }
 }
 
 @media (forced-colors: active) {
-  :root { --box-focus-color: Highlight; --box-focus-on-dark: Highlight; }
+  :root {
+    --box-focus-color: Highlight;
+    --box-focus-on-dark: Highlight;
+  }
 }
 
 html body .admin-shell .sidebar :is(a, button, summary):focus-visible {

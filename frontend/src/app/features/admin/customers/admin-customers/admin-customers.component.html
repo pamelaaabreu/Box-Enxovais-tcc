@@ -1,0 +1,116 @@
+<app-admin-page-header
+  title="Clientes"
+  description="Consulte os clientes cadastrados e acompanhe seus históricos de compras."
+  icon="groups"
+  [breadcrumb]="[{ label: 'Clientes' }]"
+/>
+<section aria-label="Consulta de clientes" [attr.aria-busy]="loading()">
+  <div class="metrics" aria-live="polite">
+    <app-admin-kpi-card
+      title="Total de clientes"
+      variant="featured"
+      [value]="data().total"
+      [loading]="loading()"
+      [compact]="true"
+      icon="groups"
+    />
+    <app-admin-kpi-card
+      title="Com pedidos"
+      [value]="data().withOrders"
+      [loading]="loading()"
+      [compact]="true"
+      icon="shopping_bag"
+      variant="success"
+    />
+    <app-admin-kpi-card
+      title="Sem pedidos"
+      variant="warning"
+      [value]="data().withoutOrders"
+      [loading]="loading()"
+      [compact]="true"
+      icon="person_outline"
+    />
+  </div>
+  <app-admin-filters
+    [fields]="filterFields"
+    applyLabel="Pesquisar"
+    (applied)="apply()"
+    (cleared)="clear()"
+    label="Filtros de clientes"
+  />
+  @if (loading()) {
+    <app-admin-state kind="loading" title="Carregando clientes" />
+  } @else if (error()) {
+    <app-admin-state
+      kind="error"
+      title="Falha ao carregar clientes"
+      [description]="error()"
+      actionLabel="Tentar novamente"
+      (action)="load()"
+    />
+  } @else if (!data().customers.length) {
+    <app-admin-state
+      title="Nenhum cliente encontrado"
+      description="Não há clientes para os critérios informados."
+      actionLabel="Limpar pesquisa"
+      (action)="clear()"
+    />
+  } @else {
+    <app-admin-data-table label="Clientes"
+      ><table class="customers-table">
+        <thead>
+          <tr>
+            <th scope="col">Cliente</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Telefone</th>
+            <th scope="col">Cadastro</th>
+            <th scope="col">Pedidos</th>
+            <th scope="col">Total gasto</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of data().customers; track c.id) {
+            <tr>
+              <td data-label="Cliente">
+                <strong>{{ c.name }}</strong>
+              </td>
+              <td data-label="E-mail">{{ c.email }}</td>
+              <td data-label="Telefone">{{ c.phone || "Não informado" }}</td>
+              <td data-label="Cadastro">
+                {{
+                  c.createdAt
+                    ? (c.createdAt | date: "dd/MM/yyyy" : "-0300")
+                    : "Não registrada"
+                }}
+              </td>
+              <td data-label="Pedidos">
+                <app-status-badge [tone]="c.orders ? 'success' : 'neutral'"
+                  >{{ c.orders }}
+                  {{ c.orders === 1 ? "pedido" : "pedidos" }}</app-status-badge
+                >
+              </td>
+              <td data-label="Total gasto">
+                {{ c.totalSpent | currency: "BRL" }}
+              </td>
+              <td>
+                <a
+                  class="action"
+                  [routerLink]="['/admin/clientes', c.id]"
+                  [attr.aria-label]="'Visualizar cliente ' + c.name"
+                  >Visualizar</a
+                >
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table></app-admin-data-table
+    ><app-pagination
+      [page]="page()"
+      [pageSize]="10"
+      [total]="data().total"
+      (pageChange)="apply($event)"
+      label="Paginação de clientes"
+    />
+  }
+</section>

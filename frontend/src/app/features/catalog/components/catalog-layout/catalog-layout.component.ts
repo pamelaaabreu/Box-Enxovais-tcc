@@ -10,10 +10,10 @@ import {
   ElementRef,
   viewChild,
 } from '@angular/core';
-import { TopWelcomeHeaderComponent } from '../../../../components/top-welcome-header/top-welcome-header.component';
-import { TopNavbarComponent } from '../../../../components/top-navbar/top-navbar.component';
-import { MainNavbarComponent } from '../../../../components/main-navbar/main-navbar.component';
-import { FooterComponent } from '../../../../components/footer/footer.component';
+import { TopWelcomeHeaderComponent } from '../../../../shared/components/top-welcome-header/top-welcome-header.component';
+import { TopNavbarComponent } from '../../../../shared/components/top-navbar/top-navbar.component';
+import { MainNavbarComponent } from '../../../../shared/components/main-navbar/main-navbar.component';
+import { FooterComponent } from '../../../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-catalog-layout',
@@ -46,7 +46,7 @@ export class CatalogLayoutComponent {
           '--catalog-header-height',
           `${element.getBoundingClientRect().height}px`,
         );
-        
+
       updateHeight();
       const observer = new ResizeObserver(updateHeight);
       observer.observe(element);

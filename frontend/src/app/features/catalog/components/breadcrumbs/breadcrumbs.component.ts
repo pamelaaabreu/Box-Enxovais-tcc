@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 
-export interface BreadcrumbItem { label: string; url?: string; }
+import type { BreadcrumbItem } from '../../../../shared/types/ui/breadcrumb';
 
 @Component({
   selector: 'app-breadcrumbs',

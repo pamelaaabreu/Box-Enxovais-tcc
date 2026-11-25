@@ -144,18 +144,50 @@
             </form>
           </aside>
           <div class="catalog-results">
-            <app-catalog-toolbar [showFilters]="true" [filtersOpen]="filtersOpen()" (filtersToggle)="filtersOpen.set(!filtersOpen())" [total]="page()?.total || 0" [sort]="criteria().sort" [loading]="state().status === 'loading'" [disabled]="state().status === 'loading'" (sortChange)="applyFilters(criteria().search, criteria().maxPrice, criteria().available, $event)" />
+            <app-catalog-toolbar
+              [showFilters]="true"
+              [filtersOpen]="filtersOpen()"
+              (filtersToggle)="filtersOpen.set(!filtersOpen())"
+              [total]="page()?.total || 0"
+              [sort]="criteria().sort"
+              [loading]="state().status === 'loading'"
+              [disabled]="state().status === 'loading'"
+              (sortChange)="
+                applyFilters(
+                  criteria().search,
+                  criteria().maxPrice,
+                  criteria().available,
+                  $event
+                )
+              "
+            />
             @if (state().status === "loading") {
               <app-product-grid [loading]="true" />
             } @else if (state().status === "error") {
-              <app-admin-state kind="error" title="Não foi possível carregar o catálogo." actionLabel="Tentar novamente" (action)="movePage(0)" />
+              <app-admin-state
+                kind="error"
+                title="Não foi possível carregar o catálogo."
+                actionLabel="Tentar novamente"
+                (action)="movePage(0)"
+              />
             } @else if (products().length) {
               <app-product-grid [products]="products()" />
             } @else {
-              <app-admin-state title="Nenhum produto encontrado" description="Não encontramos produtos com os filtros selecionados." actionLabel="Limpar filtros" (action)="clearFilters()" />
+              <app-admin-state
+                title="Nenhum produto encontrado"
+                description="Não encontramos produtos com os filtros selecionados."
+                actionLabel="Limpar filtros"
+                (action)="clearFilters()"
+              />
             }
             @if (state().status === "loaded" && (page()?.total || 0) > 0) {
-              <app-pagination [page]="pageNumber()" [total]="page()?.total || 0" [pageSize]="12" [disabled]="state().status !== 'loaded'" (pageChange)="goToPage($event)" />
+              <app-pagination
+                [page]="pageNumber()"
+                [total]="page()?.total || 0"
+                [pageSize]="12"
+                [disabled]="state().status !== 'loaded'"
+                (pageChange)="goToPage($event)"
+              />
             }
           </div>
         </div>

@@ -1,3 +1,26 @@
+# Auditoria consolidada — Box Enxovais
+
+## Resumo executivo atual
+
+Atualização documental: 25/11/2026. Frontend Angular 19 organizado em core/features/shared, admin standalone e rotas portuguesas com aliases compatíveis. Go 1.26.11/net/http e contratos HTTP preservados. Última rodada: 433 Angular, Go normal/race com PostgreSQL isolado, vet e builds aprovados. Banco principal confirmado em 54, dirty=false na preparação, com hashes públicos idênticos ao encerrar; nenhuma migration aplicada nesta auditoria. A 55 permanece pendente.
+
+Resultados funcionais, acessibilidade e inspeção visual são categorias distintas. Há limitações reais: fila SMTP em memória, aviso CSS de Promoções, ausência de certificação WCAG/SMTP real e cobertura visual não universal. Evidências e detalhes atuais estão na seção de conclusão Angular ao final. Não somar números de rodadas históricas.
+
+## Índice por camada
+
+- Frontend, contratos e navegação: seção **Auditoria Angular e newsletter — conclusão técnica, 25/11/2026**.
+- Backend: registros de repositories, services, handlers e complemento pagination/response, preservados abaixo por data.
+- Banco e implantação: registros autorizados de migrations, backup e integridade; não são comandos para reaplicação.
+- Interface, TCC e acessibilidade: registros históricos e evidências visuais; critérios atuais na conclusão Angular.
+- Integrações: correção MIME e newsletter; entrega real não se confunde com testes de serialização.
+- Documentação e armazenamento: seção de atualização documental e revisão de imagens ao final.
+
+## Como ler o histórico
+
+O conteúdo anterior foi preservado para rastreabilidade acadêmica. PIDs, versões de schema, caminhos e contagens nele descrevem aquele momento, não o ambiente atual. Para manutenção use README.md, AGENTS.md e docs/ESTRUTURA_ANGULAR.md. Somente a seção atual consolida o estado desta execução; não há soma de testes repetidos.
+
+---
+
 # AUDITORIA FINAL — Box Enxovais
 
 Data: 20/11/2026. Projeto auditado: `C:/Users/vitor/Documents/Box-Enxovais-tcc`. Atualização: 21/11/2026 — migration 000051 de frete aplicada, onze faixas PR cadastradas e backend principal atualizado após autorização, testes isolados e backup. Resultados das rodadas anteriores permanecem como histórico nas seções abaixo.
@@ -2147,3 +2170,140 @@ Resultados executados: `go test ./src/services -count=1` aprovado; coleta JSON c
 **Implantação autorizada:** após a autorização expressa para reiniciar, foi compilado e conferido o novo executável `box-api-email-utf8-20261124-225251.exe` antes de parar a API antiga. Os bytes do novo binário contêm os textos UTF-8 corretos e não contêm as duas versões corrompidas da newsletter. Reiniciada somente a API às 22h53: novo PID **3240**, porta 8080, GET /products?limit=1 HTTP 200, sem erro de inicialização. Frontend PID **22424**, porta 4200, preservado. Manifesto operacional existente em `.artifacts/runtime/api-54.json` atualizado para o novo PID/binário; logs ativos preservados. Binário anterior mantido para possibilidade de retorno, sem executá-lo em paralelo.
 
 Nenhuma alteração comercial ou de configuração permanente foi executada. Não houve validação de recebimento real no Gmail nesta etapa: a comprovação é a decodificação MIME e a atualização do processo responsável pelos próximos envios. E-mails já recebidos não são modificados. A regra idempotente da newsletter permanece: repetir inscrição existente não reenvia automaticamente a confirmação.
+
+## Auditoria Angular e newsletter — conclusão técnica, 25/11/2026
+
+### Implementação e compatibilidade
+
+Frontend reorganizado em core, features e shared: administração em features/admin com Routes standalone; autenticação em features/authentication/auth; componentes reutilizáveis em shared/components. Tipos de domínio em shared/types, builders de variantes em shared/forms. Removidos somente módulo administrativo substituído, fachada shared/models.ts após migração dos consumidores e imports comprovadamente sem utilização. PromotionService substitui PromoService. Componentes extensos existentes foram preservados; HTTP, contratos e builders foram extraídos sem refazer os fluxos comerciais. Formatação usa a configuração existente, sem modificar valores SCSS manuais ou dependências.
+
+API_BASE_URL e AssetUrlService centralizam origem e arquivos; os componentes não executam HTTP diretamente. Interceptor delimita origem/prefixo e não envia JWT para assets externos ou autenticação pública. Corrigidos estado autenticado após token inválido, resíduos de sessão e paginação sem progresso. Eventos expostos por Observables e resumos de avaliações por Signals somente leitura.
+
+Rotas canônicas portuguesas incluem /inicio, /cadastro, /minha-conta, /carrinho, /favoritos, /finalizar-compra e /admin/produtos, /pedidos, /clientes, /relatorios, /promocoes, /cadastros. Aliases antigos preservam IDs, query e fragmentos. URLs HTTP da API não foram traduzidas. Corrigida duplicação de cabeçalho causada por comparações antigas no layout.
+
+### Newsletter: idempotência e recuperação controlada
+
+SaveIfNew mantém uma inscrição por e-mail. Repetições não enviam nem agendam confirmações. Falha SMTP depois da persistência entra em fila da instância: três tentativas totais, intervalo mínimo de um minuto, lote de cinco, capacidade 256 e expiração em 24 horas. Mutex/inFlight evita reenvios concorrentes; Message-ID é estável. Worker acompanha o contexto de desligamento. Resposta HTTP 200 neutra igual para criação, repetição e entrega pendente; erros de persistência/configuração continuam tratados. Nenhum destinatário é registrado nos logs.
+
+Limites: fila em memória perde pendências no reinício e não recupera falhas anteriores. Não há outbox durável ou migration nova. Confirmação SMTP ambígua impede garantia de entrega exatamente uma vez; Message-ID não obriga deduplicação externa. Permanece a limitação de timeout global do transporte. Código validado, sem reinício/implantação da API principal ou SMTP real nesta auditoria.
+
+### Testes funcionais executados
+
+| Verificação | Resultado |
+|---|---|
+| Angular final, Karma/Chrome Headless 158 | **433 aprovados, zero falhas**. Substitui as contagens parciais 33/57/429/431/34; não somar execuções sobrepostas. |
+| TypeScript sem emissão e noUnusedLocals | Aprovados. |
+| Build Angular produção | Aprovado; aviso de Promoções 15,81 kB diante de warning 14 kB, abaixo do erro 16 kB. Budgets preservados. |
+| Go vet ./... e go build ./... | Aprovados. |
+| Go test ./... -count=1 com ambos opt-ins PostgreSQL | Todos os packages aprovados em banco descartável; routes 108,951 s. |
+| Go test -race ./... -count=1 com PostgreSQL | Aprovado, sem corridas detectadas; routes 99,872 s. CGO/GCC limitados ao processo de teste. |
+| Chromium/Playwright: navegação | Dez páginas administrativas visitadas em 1440, 1024, 768 e 390 px. Rodadas complementares sobrepostas: 39, 7 e final 15 verificações; não somadas como cenários únicos. Última rodada sem erros JS/console. |
+
+E2E real isolado executou login, criação simples, upload/conclusão de galeria, variante, preservação do SKU, ambas ações de descarte, newsletter nova/repetida, favorito, carrinho, entrega fora/dentro da cobertura, Pix, revisão e confirmação. Pedido isolado nº4 retornou frete R$12,90 e total R$142,80. Não foi criado no principal. Aliases /product-register e /image-upload/:id também revalidados. Falhas de seletor/espera foram corrigidas no executor: upload /upload-image, favoritos PUT, query de retorno, radio Pix e sucesso em URL portuguesa; não foram classificadas como bugs da aplicação.
+
+### Acessibilidade verificada
+
+Menu mobile por Enter/Escape e retorno do foco, trap de oito Tabs no alertdialog de descarte, nomes acessíveis e opções Material foram exercitados. Estados de erro e retry foram navegados. Isto não constitui certificação WCAG nem teste integral com leitores de tela.
+
+### Revisão visual e evidências
+
+Capturas reais em docs/validacao-visual/angular-2026-11-25/. Inspeção visual realizada, separadamente dos asserts: login nas quatro larguras; Dashboard 1440/1024/390; produtos 390; pedidos e clientes 1440/390; avaliações e categorias 390; faixas 1440/768/390; promoções 1024/768/390; variantes 1440/768/390 e inválidas 1440/390; descarte e erro 390; relatórios 1440/390; checkout revisão 1440/390; carrinho vazio 390. Conferidos hierarquia, alinhamentos, proporções e fundo geométrico compartilhado com o carrinho. Os seis gráficos preservam paleta e configuração manual, ranking horizontal e legenda inferior.
+
+Problemas visuais reais corrigidos: cabeçalho/menu duplicado, título do vazio de Promoções recortado dentro da tabela e campos das faixas ocultos no mobile. Promoções move o estado vazio para fora do scroll; faixas reutiliza responsive=cards e labels sem criar outra tabela. Capturas posteriores confirmaram as correções.
+
+Limitações de evidência: nem toda captura/resolução foi individualmente inspecionada; não há aprovação visual universal. Home no fixture final não comprova fotografias comerciais (imagens sintéticas e banner indisponível no ambiente isolado); captura inicial com catálogo carregado foi inspecionada separadamente. Captura antiga de dropdown durante animação não é evidência de acabamento final, embora fonte/foco tenham sido testados. Não houve nova certificação assistiva ou SMTP real.
+
+### Integridade, encerramento e candidatos preservados
+
+Comparação final confirmou **hashes de todas as tabelas públicas do bd_box idênticos** ao início. Banco principal em 54, dirty=false na preparação; nenhuma migration principal aplicada. Banco box_frontend_audit_1795574834 removido após encerrar o harness; preview 4206 PID19508 encerrado. Servidores do usuário 4200/8080 preservados. Scripts reproduzíveis frontend/e2e/frontend-audit.cjs e backend/src/routes/audit_browser_test.go mantidos. Artefatos intermediários foram removidos após consolidar documentação e evidências; runtime ativo, backups e imagens preservados.
+
+Candidatos sem remoção automática: SweetAlertService sem consumidor de produção identificado, mas com spec/dependência/CSS/declaração global; componente legacy de promoção sem rota identificada. Risco de referências indiretas exige decisão específica antes de excluir. Nenhum arquivo comercial/acadêmico removido nesta etapa.
+
+Próxima etapa: atualização documental e de instruções; depois, revisão somente leitura de armazenamento/versionamento de imagens.
+
+## Atualização documental e instruções — 25/11/2026
+
+Revisados 31 Markdown entre docs, README, LEIA-ME e as três skills. AGENTS preserva operação econômica e proibição de subagentes automáticos, acrescentando a arquitetura validada, rotas, contratos, concorrência, banco e processos. Frontmatter/nome das skills preservados; reconhecimento estático conferido, sem acionar especialistas. README é referência técnica; LEIA-ME substitui o antigo manual do kit por instalação/execução simplificada. docs/ESTRUTURA_ANGULAR.md descreve a árvore atual, sem inventário obsoleto de movimentos.
+
+Guias 00–12, índice e mapa atualizados conforme código; relatórios históricos de UI, progresso e migrations identificados como históricos. Corrigidos caminhos de componentes/repositories, módulo admin, antiga fachada de modelos, HTTP extraído, estado de implantação e instruções de teste isolado. Design system aponta confirmação, estados, tabelas mobile e gráficos compartilhados. Índice executivo separa estado atual e histórico relevante neste relatório, sem apagar evidências anteriores.
+
+Quatro JSON de catálogo parseados e preservados sem mudanças. catalogo-cama.json é manifesto version1 do importador, cujo padrão aponta a ele; os outros três são documentação/rastreabilidade de marca, travesseiros e variantes, não manifestos intercambiáveis do importador (schemas diferentes). Não foram reimportados nem utilizados para reescrever migrations antigas. Fotos acadêmicas/comerciais, documentos e histórico preservados; nenhuma exclusão de documentação nesta etapa.
+
+Referências locais Markdown verificadas após correções; o ZIP GUIA_COMPLETO_TCC.zip foi regenerado, testado por CRC e seus 18 membros comparados byte a byte com a pasta. Nenhuma suíte comercial foi repetida apenas por mudanças documentais. Dependências e código permanecem como validados na etapa anterior.
+
+## Armazenamento e versionamento de imagens — leitura em 25/11/2026
+
+### Inventário e origem
+
+| Local | Situação confirmada |
+|---|---|
+| backend/uploads | 443 arquivos, 373.633.391 bytes; **zero rastreados pelo Git**. Regra /backend/uploads/ já está no .gitignore. |
+| backend/demo-assets | 233 arquivos, 179.810.863 bytes; todos rastreados. São fontes/manifestos/instaladores do catálogo demonstrativo, não uploads dinâmicos. |
+| backend/uploads.zip | **Rastreado**, 71.023.730 bytes, datado de 16/11/2026; 146 arquivos, todos presentes e idênticos no uploads atual. CRC íntegro. |
+
+ZIP SHA-256: af9fbfc0cf226835b09be2698ed3a885034539a3a44b1092f9e8258a6deefbcb. Ele cobre somente 146 dos 443 arquivos atuais e não constitui backup completo/atual. Nenhum dos três arquivos com padrão de nome timestamp do upload administrativo aparece nesse ZIP. O nome permite classificar o mecanismo, mas não comprova autor/data de cada envio. Nenhum upload dinâmico atual está diretamente rastreado; o ZIP versionado continua sendo uma cópia histórica de mídia.
+
+210 imagens de demo-assets têm cópias de mesmo nome e SHA-256 em uploads. Os manifestos com hash conferiram 187 entradas: zero divergências/ausências. Instaladores copiam somente arquivos verificados, recusando sobrescrita divergente. O importador usa nomes endereçados por conteúdo e mantém arquivos em falha para permitir retry após commit ambíguo. Fontes, migrations e manifestos foram preservados, sem reimportação.
+
+### Persistência e integridade
+
+config.Load define UPLOAD_DIR, padrão ./uploads, relativo à raiz backend; rotas/uploads.go serve essa pasta em /uploads/. Reiniciar a API não remove arquivos, mas excluir/substituir a pasta em deploy perderia mídia. Não foi identificada configuração de volume/container ou rotina agendada de backup de mídia no repositório examinado. Em produção deve existir armazenamento persistente separado do build.
+
+Consulta ao bd_box por transação **ReadOnly + RepeatableRead**: migration54, dirty=false; 360 registros em product_images e uma imagem de campanha; 357 caminhos locais distintos. **Zero arquivos referenciados ausentes e zero vínculos inválidos produto/variante.** Não foram lidos/expostos nomes ou dados de clientes. Nenhuma escrita SQL, migration ou mudança de versionamento foi executada nesta revisão.
+
+SaveImageAsset valida extensão/MIME e limite10MB, usa O_EXCL para não sobrescrever e remove arquivo parcial quando falha a escrita. Upload grava o arquivo antes do registro; se o repository falha tenta removê-lo. Registro/reordenação bloqueiam produto e validam variante. Remover imagem confirma a exclusão do vínculo e reorganiza capa no banco, mas **não apaga o arquivo físico**. Exclusão física segura de produto também não limpa os arquivos. Arquivamento preserva os vínculos. Não há coletor geral de órfãos implementado; isso favorece preservação, mas permite acúmulo.
+
+### Candidatos: nenhuma exclusão autorizada ou realizada
+
+86 arquivos não têm vínculo atual em product_images/promotions; 73 ainda são mencionados em código, SQL, manifestos ou documentação. Os 13 restantes são candidatos não classificados, **não órfãos comprovados**: podem participar de origem de importação, restauração, snapshots ou referências indiretas. Não se buscou toda ocorrência dentro de dados históricos/JSON comerciais para autorizar exclusão.
+
+- cama-detalhe-023-2-capa-640.jpg
+- catalog-cama-aurora-vermelho--196968af8b2a4ebbbe6c4e421ee92aad4d69cf214ab43f6a1db30caa3ad0f52a.jpg
+- catalog-cama-aurora-vinho--869692cba4f5b44a702685bdcb94010435d13892073a79eea5e3f009fc69209a.jpg
+- catalog-cama-essencia-floral-botanico--c6223300e0a18a7fcc1a398827b3eab22952861a984c7eb21189c399524927df.jpg
+- catalog-cama-essencia-floral-verde-oliva--53bae49b293233b4dce41c630ee72bf746ea4d370e0acda8d0a603db93b63c41.png
+- catalog-cama-essencia-floral-verde-oliva--d172b2ca5963108571c1654c5a84a9b3bcf7d1f80b3fed890b258eb0d7b5f6e0.jpg
+- catalog-cama-essencia-floral-verde-suave--81a246f96a5ef24ac4ee100824ddd54c0700f726e8290619d0f3d8bd728ec5e4.png
+- catalog-cama-essencia-floral-verde-suave--8fc065cf3afd24bac7f42f8d23bb53a0e231932d5bf2e3ba38c01fdab1b7bf68.jpg
+- catalog-cama-geometrico-rosa-nude--551c4980c8c84cb1a46e558756892a668afd7ce1226545f583d050a8bcc69f45.jpg
+- catalog-cama-serenidade-botanico-azul--01a2815d20a2da1a3ca6fadea11961d3dc854cc318f9c4b11a2a83e3e5d3f32b.jpg
+- catalog-cama-serenidade-botanico-azul-claro--20cab80e9daca1474095adafa853a5fe90e869bf500dbc4046400be3a2aa1f30.jpg
+- edredom-aconchego-bege.webp
+- jogo-cama-essencia-floral-verde-oliva-variacao.webp
+
+Risco de exclusão: médio/alto sem validar origem e restauração; nomes catalog-* são derivados por hash, portanto ausência do nome completo no manifesto não prova inutilidade. Os 73 mencionados e as fontes demonstrativas têm risco alto de quebrar reprodução; preservados integralmente.
+
+### Melhorias propostas, ainda não aplicadas
+
+1. Manter uploads dinâmicos fora do Git e fontes demonstrativas versionadas com manifestos. Avaliar retirar apenas o ZIP legado do versionamento após aprovação, mantendo cópia privada verificada; não reescrever histórico Git automaticamente.
+2. Backup coordenado do PostgreSQL **e** uploads persistentes, com inventário/SHA-256, retenção e cópia externa privada. pg_dump não inclui os bytes dos arquivos. Restaurar primeiro em ambiente isolado e conferir cada caminho do banco, sem sobrescrever o principal.
+3. Futuro coletor de candidatos somente em dry-run, considerando todas as tabelas/snapshots, manifestos, período de carência, operações em curso e arquivos compartilhados. Exclusão após commit e aprovação, nunca por simples ausência de vínculo atual.
+4. Avaliar desabilitar listagem de diretórios do FileServer sem alterar entrega de imagens. Diretório de uploads é público; backups nunca devem ficar ali.
+
+Nenhuma dessas propostas foi implementada neste pedido de análise. Imagens comerciais, ZIP, .gitignore, banco e histórico Git preservados. API GET /products?limit=1 e frontend4200 responderam200 após as tarefas. Não houve teste destrutivo de restauração no principal ou envio real de e-mail.
+
+### Encerramento final das três etapas
+
+Concluídas na ordem: auditoria Angular/newsletter, atualização documental e revisão somente leitura de mídia. Removidos exclusivamente **9.596 arquivos auxiliares desta auditoria, 850.218.228 bytes** (aproximadamente810,8MiB), incluindo compilador portátil, logs, capturas intermediárias e scripts temporários. Preservadas29 evidências finais em docs/validacao-visual/angular-2026-11-25, executor E2E e harness, runtime ativo, todas as imagens comerciais, fontes demonstrativas, arquivos acadêmicos e backups. Nenhum diretório externo foi limpo.
+
+Documentos alterados: AGENTS.md, as três SKILL.md existentes, README.md, LEIA-ME.md, docs/ESTRUTURA_ANGULAR.md, guias e mapa em GUIA_COMPLETO_TCC, seu ZIP, design-system/mensagens-e-estados-ui.md, índice de evidências e identificação histórica de docs/auditoria/CODIGO_NAO_UTILIZADO.md. Sem exclusão de documentos históricos. Última verificação:31 Markdown, zero links locais ausentes, UTF-8 válido; frontmatter das três skills preservado; ZIP18 membros com CRC e comparação integral aprovados; git diff --check documental aprovado.
+
+Inventário das principais mudanças de código da auditoria Angular (não da revisão documental/mídia):
+
+| Origem/responsabilidade | Destino/arquivos atuais |
+|---|---|
+| components/admin e seus componentes | features/admin/{layout,dashboard,products,orders,customers,reports,promotions,catalog,shipping,experience-reviews}; cada componente mantém TS/HTML/SCSS/spec em sua pasta |
+| features/product-manage e features/create-promotion | features/admin/products/product-manage e features/admin/promotions/promotion-manager |
+| features/authorization/register e recuperação compartilhada | features/authentication/{auth,forgot-password,reset-password} |
+| carousel, footer, navegação, trustbar, favorite-button, show-password | shared/components, com imports de todos os consumidores corrigidos |
+| admin-routing.module e AdminModule | features/admin/admin.routes.ts e spec; módulo substituído removido, sem componente duplicado |
+| core/auth.interceptor e validadores dispersos | core/interceptors/auth.interceptor.ts e shared/validators |
+| interfaces em componentes/services e shared/models.ts | shared/types por domínio; fachada removida após migrar consumidores |
+| builders de variantes | shared/forms/product-variants.ts |
+| URLs repetidas | core/config/api.config.ts; shared/services/asset-url.service.ts e spec |
+| HTTP em páginas | services próprios de Dashboard, Relatórios, avaliações administrativas e newsletter; core/services/{home,shipping,checkout,customer-orders,purchase-review}.service.ts |
+| PromoService | core/services/promotion.service.ts (PromotionService) |
+
+Newsletter Go: criados services/newsletter_recovery.go, services/newsletter_recovery_test.go e handlers/newsletter_privacy_test.go; alterados services/newsletter_service.go, handlers/newsletter.go e src/main.go. Teste reproduzível novo frontend/e2e/frontend-audit.cjs; harness Go existente recebeu isolamento explícito. Testes Angular, rotas, configuração, consumidores e templates afetados foram atualizados e constam no diff. Nenhuma dependência/package-lock/go.mod/go.sum foi alterada por esta etapa.
+
+Pendências preservadas por estabilidade: candidatos legados não excluídos; componentes extensos funcionais mantidos após extrair HTTP/contratos/builders; aviso CSS Promoções; recuperação SMTP não durável e sem implantação nesta auditoria; revisão visual não universal/certificação assistiva não executada. Propostas de backup/versionamento e limpeza de candidatos de mídia aguardam decisão específica. Não houve implantação automática, reinício dos servidores do usuário ou mudança do banco principal.

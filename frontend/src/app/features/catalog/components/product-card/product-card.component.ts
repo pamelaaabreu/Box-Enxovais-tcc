@@ -1,6 +1,6 @@
 import { ProductRatingComponent } from '../../../../shared/components/product-rating/product-rating.component';
 import { NgTemplateOutlet } from '@angular/common';
-import { FavoriteButtonComponent } from '../../../../shared/favorite-button/favorite-button.component';
+import { FavoriteButtonComponent } from '../../../../shared/components/favorite-button/favorite-button.component';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,7 +9,7 @@ import {
   computed,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CatalogProduct } from '../../interfaces/product.interface';
+import { CatalogProduct } from '../../../../shared/types/catalog/catalog-product';
 import { ProductMediaComponent } from '../product-media/product-media.component';
 import { ProductPriceComponent } from '../product-price/product-price.component';
 
@@ -66,7 +66,10 @@ export class ProductCardComponent {
       : (image ?? null);
   });
 
-  readonly variablePrice = computed(() => new Set(this.product().variants.map(variant => variant.price)).size > 1);
+  readonly variablePrice = computed(
+    () =>
+      new Set(this.product().variants.map((variant) => variant.price)).size > 1,
+  );
   readonly available = computed(
     () => this.product().active && this.product().quantity > 0,
   );

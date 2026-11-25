@@ -131,10 +131,19 @@
         <p role="alert">Sua sessão expirou. Faça login novamente.</p>
       }
       @case ("missing") {
-        <app-admin-state title="Pedido não encontrado" actionLabel="Voltar aos meus pedidos" actionLink="/meus-pedidos" />
+        <app-admin-state
+          title="Pedido não encontrado"
+          actionLabel="Voltar aos meus pedidos"
+          actionLink="/meus-pedidos"
+        />
       }
       @case ("error") {
-        <app-admin-state kind="error" title="Não foi possível carregar seus pedidos." actionLabel="Tentar novamente" (action)="retry()" />
+        <app-admin-state
+          kind="error"
+          title="Não foi possível carregar seus pedidos."
+          actionLabel="Tentar novamente"
+          (action)="retry()"
+        />
       }
       @case ("ready") {
         @if (details(); as order) {
@@ -158,10 +167,12 @@
                   {{ units(order) === 1 ? "item" : "itens" }}
                 </p>
               </div>
-              <a class="action" routerLink="/home">Continuar comprando</a>
+              <a class="action" routerLink="/inicio">Continuar comprando</a>
             </div>
           </header>
-          @if(order.canCancel && order.status==='simulated_approved'){<app-purchase-review [orderId]="order.id" />}
+          @if (order.canCancel && order.status === "simulated_approved") {
+            <app-purchase-review [orderId]="order.id" />
+          }
 
           <div class="detail-grid">
             <section class="order detail-panel detail-products">
@@ -270,7 +281,11 @@
                 <dl>
                   <div>
                     <dt>Forma de pagamento</dt>
-                    <dd>{{ payments[order.paymentMethod] }}<br>{{planLabel(order)}}</dd>
+                    <dd>
+                      {{ payments[order.paymentMethod] }}<br />{{
+                        planLabel(order)
+                      }}
+                    </dd>
                   </div>
                   <div>
                     <dt>
@@ -279,14 +294,50 @@
                     </dt>
                     <dd>
                       {{
-                        (order.productsSubtotal ?? subtotal(order))
+                        order.productsSubtotal ?? subtotal(order)
                           | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
                       }}
                     </dd>
                   </div>
-                  <div><dt>Descontos</dt><dd>@if(order.discount !== null && order.discount !== undefined){ {{order.discount|currency:'BRL':'symbol':'1.2-2':'pt-BR'}} }@else{Não registrados}</dd></div>
-                  <div><dt>Frete</dt><dd>@if(order.shipping !== null && order.shipping !== undefined){ {{order.shipping|currency:'BRL':'symbol':'1.2-2':'pt-BR'}} }@else{Não registrado}</dd></div>
-                  @if(order.shippingMethod === 'delivery'){<div><dt>Entrega</dt><dd>{{order.shippingMinDays}} a {{order.shippingMaxDays}} dias úteis</dd></div>}
+                  <div>
+                    <dt>Descontos</dt>
+                    <dd>
+                      @if (
+                        order.discount !== null && order.discount !== undefined
+                      ) {
+                        {{
+                          order.discount
+                            | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                        }}
+                      } @else {
+                        Não registrados
+                      }
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Frete</dt>
+                    <dd>
+                      @if (
+                        order.shipping !== null && order.shipping !== undefined
+                      ) {
+                        {{
+                          order.shipping
+                            | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                        }}
+                      } @else {
+                        Não registrado
+                      }
+                    </dd>
+                  </div>
+                  @if (order.shippingMethod === "delivery") {
+                    <div>
+                      <dt>Entrega</dt>
+                      <dd>
+                        {{ order.shippingMinDays }} a
+                        {{ order.shippingMaxDays }} dias úteis
+                      </dd>
+                    </div>
+                  }
                   <div class="detail-total">
                     <dt>Total do pedido</dt>
                     <dd>
@@ -475,9 +526,7 @@
                     @if (order.items.length > 2) {
                       <small class="order-extra"
                         >+ {{ order.items.length - 2 }}
-                        {{
-                          order.items.length === 3 ? "produto" : "produtos"
-                        }}
+                        {{ order.items.length === 3 ? "produto" : "produtos" }}
                         neste pedido</small
                       >
                     }
@@ -507,12 +556,34 @@
               }
             </div>
           } @else if (filtersActive()) {
-            <app-admin-state title="Nenhum pedido encontrado" [description]="search() ? 'Não encontramos pedidos para sua pesquisa.' : 'Não encontramos pedidos para os filtros selecionados.'" [actionLabel]="search() ? 'Limpar pesquisa' : 'Limpar filtros'" (action)="search() ? submitSearch('') : clearFilters()" />
+            <app-admin-state
+              title="Nenhum pedido encontrado"
+              [description]="
+                search()
+                  ? 'Não encontramos pedidos para sua pesquisa.'
+                  : 'Não encontramos pedidos para os filtros selecionados.'
+              "
+              [actionLabel]="search() ? 'Limpar pesquisa' : 'Limpar filtros'"
+              (action)="search() ? submitSearch('') : clearFilters()"
+            />
           } @else {
-            <app-admin-state class="empty" icon="inventory_2" title="Você ainda não fez nenhum pedido" actionLabel="Explorar produtos" actionLink="/home" />
+            <app-admin-state
+              class="empty"
+              icon="inventory_2"
+              title="Você ainda não fez nenhum pedido"
+              actionLabel="Explorar produtos"
+              actionLink="/inicio"
+            />
           }
-          @if(orders().length && totalOrders()>10){<app-pagination [page]="page()" [total]="totalOrders()" [pageSize]="10" [disabled]="state()!=='ready'" (pageChange)="goToOrderPage($event)" />}
-
+          @if (orders().length && totalOrders() > 10) {
+            <app-pagination
+              [page]="page()"
+              [total]="totalOrders()"
+              [pageSize]="10"
+              [disabled]="state() !== 'ready'"
+              (pageChange)="goToOrderPage($event)"
+            />
+          }
         }
       }
     }

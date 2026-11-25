@@ -128,7 +128,11 @@
       <a class="product-link" [routerLink]="details()">{{ displayName() }}</a>
     </h2>
     <app-product-rating [productId]="product().id" />
-    <span class="product-sku" [attr.aria-hidden]="!product().sku ? true : null">{{ product().sku ? "SKU: " + product().sku : "" }}</span>
+    <span
+      class="product-sku"
+      [attr.aria-hidden]="!product().sku ? true : null"
+      >{{ product().sku ? "SKU: " + product().sku : "" }}</span
+    >
     @if (!homeTile() && !favoritesTile() && product().brand_name; as brand) {
       @if (
         !displayName()
@@ -138,7 +142,9 @@
         <span class="product-brand">{{ brand }}</span>
       }
     }
-    @if (catalogTile() && !homeTile() && (!favoritesTile() || variablePrice())) {
+    @if (
+      catalogTile() && !homeTile() && (!favoritesTile() || variablePrice())
+    ) {
       <span class="price-prefix">A partir de</span>
     }
     @if (compact() || catalogTile()) {
@@ -164,8 +170,15 @@
             >Ver detalhes</a
           >
         }
-        @if (product().variants.length && (!favoritesTile() || available()) && details(); as link) {
-          <a [class.home-secondary]="homeTile()" [routerLink]="link">Escolher tamanho</a>
+        @if (
+          product().variants.length &&
+            (!favoritesTile() || available()) &&
+            details();
+          as link
+        ) {
+          <a [class.home-secondary]="homeTile()" [routerLink]="link"
+            >Escolher tamanho</a
+          >
         } @else {
           <button
             type="button"

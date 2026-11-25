@@ -4,7 +4,7 @@ Este guia explica a implementação existente, seus limites e a relação entre 
 
 ## Estado de entrega
 
-Código revisado em 22/11/2026. O banco principal permanece na migration 51, `dirty=false`. A avaliação simplificada exige a migration 52 e o parcelamento exige a 53; ambas foram validadas em schemas isolados e **não foram aplicadas ao principal nesta tarefa**. Não inicie o novo checkout contra um schema sem a coluna de parcelamento. A ativação exige autorização específica, backup verificado, aplicação ordenada das migrations e reinício controlado da API. Nenhum comando deste guia deve ser entendido como autorização de alteração do banco principal.
+Código e estrutura revisados em 25/11/2026. Último estado confirmado do principal: migration 54, dirty=false; 55 pendente. Documentos de implantação 52/53 e progresso mantêm histórico datado, não instrução para reaplicar migrations. Nenhum comando do guia autoriza alterações no principal. Resultados atuais: 433 Angular, Go/PostgreSQL normal/race e build aprovados; limites no AUDITORIA_FINAL.md.
 
 ## Índice
 

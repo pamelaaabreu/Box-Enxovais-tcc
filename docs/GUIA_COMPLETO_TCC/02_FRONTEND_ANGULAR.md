@@ -2,7 +2,7 @@
 
 ## Componentes, templates e estilos
 
-Um componente combina estado TypeScript, template HTML e estilos SCSS. A maioria das páginas é standalone: declara diretamente o que utiliza, sem exigir um módulo para cada tela. O painel ainda possui organização própria em módulo/rotas; não foi refeito por estética. Montserrat, cores oliva/bege, bordas e estados de foco são preservados pelos estilos compartilhados.
+Um componente combina estado TypeScript, template HTML e estilos SCSS. A maioria das páginas é standalone: declara diretamente o que utiliza, sem exigir um módulo para cada tela. O painel usa Routes standalone em features/admin/admin.routes.ts, sem AdminModule. Montserrat, cores oliva/bege, bordas e estados de foco são preservados pelos estilos compartilhados.
 
 `app.routes.ts` usa `loadComponent` para carregar páginas como catálogo, favoritos e checkout sob demanda. A área administrativa é carregada pelas rotas do admin. Lazy loading reduz o código inicial, mas cada rota continua dependendo da autorização da API; esconder uma página não protege um endpoint.
 
@@ -10,7 +10,7 @@ Um componente combina estado TypeScript, template HTML e estilos SCSS. A maioria
 
 `core/services/product.service.ts` consulta produtos e operações administrativas. `cart.service.ts`, `favorites.service.ts` e `account.service.ts` encapsulam seus respectivos contratos. `pagination.service.ts` normaliza páginas, filtros e metadados. Serviços retornam Observables: o componente decide como representar carregamento, sucesso ou falha.
 
-`core/auth.interceptor.ts` participa do envio da autenticação nas chamadas pertinentes. `AuthService` gerencia o token e a expiração da sessão no navegador; `authGuard` e `AdminGuard` controlam a navegação. Login e cadastro compartilham `features/authorization/register/register.component.ts` (`AuthComponent`), preservando a experiência ao alternar as duas rotas.
+`core/interceptors/auth.interceptor.ts` participa do envio da autenticação nas chamadas pertinentes. `AuthService` gerencia o token e a expiração da sessão no navegador; `authGuard` e `AdminGuard` controlam a navegação. Login e cadastro compartilham `features/authentication/auth/auth.component.ts` (`AuthComponent`), preservando a experiência ao alternar as duas rotas.
 
 ## Estado: Signals e RxJS
 
@@ -32,10 +32,12 @@ O componente `features/purchase-review` é reutilizado na confirmação e nos pe
 
 `shared/components/confirm-dialog` mantém confirmação e foco acessível para descarte/exclusão. Os estados administrativos compartilham identidade visual; validação de campo não é substituída por uma tela vazia. Cards, toolbar e paginação devem continuar reutilizados nas categorias.
 
-`shared/types` contém contratos de domínio. `shared/models.ts` agora é uma fachada de reexportação para não quebrar os imports existentes. Tipos de leitura podem conter timestamps; DTOs de gravação devem selecionar apenas campos aceitos. Isso evita repetir o erro de enviar `created_at` e `updated_at` na edição de campanhas.
+`shared/types` contém contratos de domínio. A fachada shared/models.ts foi removida após migrar os consumidores para imports de domínio. Tipos de leitura podem conter timestamps; DTOs de gravação devem selecionar apenas campos aceitos. Isso evita repetir o erro de enviar `created_at` e `updated_at` na edição de campanhas.
 
 ## Acessibilidade e responsividade
 
 Rótulos, radios nativos, botões semânticos e `:focus-visible` permitem teclado sem contornos azuis duplicados. O foco não deve ser removido para esconder um problema visual. Testes em 1440, 1024, 768 e 390 px verificam overflow e leitura; eles não substituem uma auditoria formal de todas as páginas e tecnologias assistivas.
 
 Veja [fluxos](05_FLUXOS_DO_SISTEMA.md) para seguir requisições e [testes](07_TESTES_E_QUALIDADE.md) para resultados reais.
+
+API_BASE_URL centraliza HTTP e AssetUrlService resolve imagens. Componentes delegam requisições a services; builders de variantes ficam em shared/forms. provideAppInitializer restaura a sessão. Eventos são Observables somente leitura e os resumos de avaliações são Signals somente leitura. Rotas atuais e árvore estão em [estrutura Angular](../ESTRUTURA_ANGULAR.md).

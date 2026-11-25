@@ -431,7 +431,10 @@
     min-height: 254px;
   }
 }
-.address-empty { display: block; padding: 0; }
+.address-empty {
+  display: block;
+  padding: 0;
+}
 .address-empty h3,
 .address-empty p {
   margin: 0;
@@ -864,4 +867,8 @@
   align-items: center;
 }
 
-@media(max-width:600px){.account-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width: 600px) {
+  .account-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

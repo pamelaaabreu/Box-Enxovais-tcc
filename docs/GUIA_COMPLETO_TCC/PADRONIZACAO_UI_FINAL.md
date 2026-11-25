@@ -1,3 +1,5 @@
+> Evidência histórica: datas, PIDs, contagens e estado de implantação abaixo descrevem a execução registrada. Para arquitetura e resultados atuais, consulte README.md deste guia e AUDITORIA_FINAL.md. Não reaplique migrations com base neste histórico.
+
 # Padronização de UI e revisão visual — 22/11/2026
 
 ## Escopo implementado

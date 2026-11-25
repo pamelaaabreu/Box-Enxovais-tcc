@@ -7,16 +7,50 @@ import { AuthService } from '../../core/services/auth.service';
 import { AccountComponent, ageOnDate, birthDateISO } from './account.component';
 
 describe('AccountComponent', () => {
-  it('keeps the address failure visible during retry and clears it only after recovery',()=>{
-    const response=new Subject<never[]>();
-    const addresses=jasmine.createSpy('addresses').and.returnValues(throwError(()=>new Error('network')),response);
-    TestBed.configureTestingModule({imports:[AccountComponent],providers:[provideRouter([]),{provide:AccountService,useValue:{profile:()=>of({name:'Pessoa Teste',email:'test@example.com',phone:'',nationalId:'',birthDate:''}),addresses}},{provide:AuthService,useValue:{userChanged:NEVER,updateSavedName:()=>{}}},{provide:CustomAlertService,useValue:{success:()=>{}}}]}).overrideComponent(AccountComponent,{set:{template:''}});
-    const component=TestBed.createComponent(AccountComponent).componentInstance;
-    expect(component.addressesError()).toBe('Não foi possível carregar seus endereços.');
+  it('keeps the address failure visible during retry and clears it only after recovery', () => {
+    const response = new Subject<never[]>();
+    const addresses = jasmine.createSpy('addresses').and.returnValues(
+      throwError(() => new Error('network')),
+      response,
+    );
+    TestBed.configureTestingModule({
+      imports: [AccountComponent],
+      providers: [
+        provideRouter([]),
+        {
+          provide: AccountService,
+          useValue: {
+            profile: () =>
+              of({
+                name: 'Pessoa Teste',
+                email: 'test@example.com',
+                phone: '',
+                nationalId: '',
+                birthDate: '',
+              }),
+            addresses,
+          },
+        },
+        {
+          provide: AuthService,
+          useValue: { userChanged: NEVER, updateSavedName: () => {} },
+        },
+        { provide: CustomAlertService, useValue: { success: () => {} } },
+      ],
+    }).overrideComponent(AccountComponent, { set: { template: '' } });
+    const component =
+      TestBed.createComponent(AccountComponent).componentInstance;
+    expect(component.addressesError()).toBe(
+      'Não foi possível carregar seus endereços.',
+    );
     component.loadAddresses();
-    expect(component.addressesError()).toBe('Não foi possível carregar seus endereços.');
-    response.next([]);response.complete();
-    expect(component.addressesError()).toBe('');expect(component.addressesLoaded()).toBeTrue();
+    expect(component.addressesError()).toBe(
+      'Não foi possível carregar seus endereços.',
+    );
+    response.next([]);
+    response.complete();
+    expect(component.addressesError()).toBe('');
+    expect(component.addressesLoaded()).toBeTrue();
   });
   it('validates calendar dates and counts birthdays without requiring adulthood', () => {
     expect(birthDateISO('29/02/2024', new Date(2025, 2, 1))).toBe('2024-02-29');
@@ -28,51 +62,100 @@ describe('AccountComponent', () => {
   });
 
   it('sends a date-only value and uses the profile confirmed by the API', () => {
-    const saved = { name: 'Pessoa Teste', email: 'test@example.com', phone: '11912345678',
-      nationalId: '', birthDate: '' };
-    const updateProfile = jasmine.createSpy('updateProfile').and.returnValue(of({ ...saved, birthDate: '2000-02-29' }));
+    const saved = {
+      name: 'Pessoa Teste',
+      email: 'test@example.com',
+      phone: '11912345678',
+      nationalId: '',
+      birthDate: '',
+    };
+    const updateProfile = jasmine
+      .createSpy('updateProfile')
+      .and.returnValue(of({ ...saved, birthDate: '2000-02-29' }));
     TestBed.configureTestingModule({
       imports: [AccountComponent],
       providers: [
         provideRouter([]),
-        { provide: AccountService, useValue: { profile: () => of(saved), addresses: () => of([]), updateProfile } },
-        { provide: AuthService, useValue: { userChanged: NEVER, updateSavedName: jasmine.createSpy('updateSavedName') } },
-        { provide: CustomAlertService, useValue: { success: jasmine.createSpy('success') } },
+        {
+          provide: AccountService,
+          useValue: {
+            profile: () => of(saved),
+            addresses: () => of([]),
+            updateProfile,
+          },
+        },
+        {
+          provide: AuthService,
+          useValue: {
+            userChanged: NEVER,
+            updateSavedName: jasmine.createSpy('updateSavedName'),
+          },
+        },
+        {
+          provide: CustomAlertService,
+          useValue: { success: jasmine.createSpy('success') },
+        },
       ],
     }).overrideComponent(AccountComponent, { set: { template: '' } });
-    const component = TestBed.createComponent(AccountComponent).componentInstance;
+    const component =
+      TestBed.createComponent(AccountComponent).componentInstance;
     component.editProfile();
     component.profile.controls.birthDate.setValue('30/02/2000');
     component.saveProfile();
     expect(updateProfile).not.toHaveBeenCalled();
     component.profile.controls.birthDate.setValue('29/02/2000');
     component.saveProfile();
-    expect(updateProfile).toHaveBeenCalledWith(jasmine.objectContaining({ birthDate: '2000-02-29' }));
+    expect(updateProfile).toHaveBeenCalledWith(
+      jasmine.objectContaining({ birthDate: '2000-02-29' }),
+    );
     expect(component.confirmedProfile()?.birthDate).toBe('2000-02-29');
     expect(component.editingProfile()).toBeFalse();
   });
 
   it('cancels stale CEPs and preserves manual edits and omitted fields', fakeAsync(() => {
     const first = new Subject<{ logradouro?: string }>();
-    const second = new Subject<{ logradouro?: string; bairro?: string; localidade?: string }>();
-    const lookupZip = jasmine.createSpy('lookupZip').and.returnValues(first, second);
+    const second = new Subject<{
+      logradouro?: string;
+      bairro?: string;
+      localidade?: string;
+    }>();
+    const lookupZip = jasmine
+      .createSpy('lookupZip')
+      .and.returnValues(first, second);
     const account = {
       profile: () => NEVER,
       addresses: () => of([]),
       lookupZip,
-      saveAddress: jasmine.createSpy('saveAddress').and.returnValue(of({ data: { id: 4, isDefault: true } })),
+      saveAddress: jasmine
+        .createSpy('saveAddress')
+        .and.returnValue(of({ data: { id: 4, isDefault: true } })),
     };
     TestBed.configureTestingModule({
       imports: [AccountComponent],
-      providers: [provideRouter([]), { provide: AccountService, useValue: account },
+      providers: [
+        provideRouter([]),
+        { provide: AccountService, useValue: account },
         { provide: AuthService, useValue: { userChanged: NEVER } },
-        { provide: CustomAlertService, useValue: { success: jasmine.createSpy('success') } }],
+        {
+          provide: CustomAlertService,
+          useValue: { success: jasmine.createSpy('success') },
+        },
+      ],
     }).overrideComponent(AccountComponent, { set: { template: '' } });
-    const component = TestBed.createComponent(AccountComponent).componentInstance;
+    const component =
+      TestBed.createComponent(AccountComponent).componentInstance;
     component.editAddress({
-      id: 4, isDefault: true, label: 'Casa', recipient: 'Pessoa Teste',
-      street: 'Rua antiga', neighborhood: 'Bairro manual', number: '10',
-      complement: 'Apto 2', city: 'São Paulo', state: 'SP', zipCode: '01000-000',
+      id: 4,
+      isDefault: true,
+      label: 'Casa',
+      recipient: 'Pessoa Teste',
+      street: 'Rua antiga',
+      neighborhood: 'Bairro manual',
+      number: '10',
+      complement: 'Apto 2',
+      city: 'São Paulo',
+      state: 'SP',
+      zipCode: '01000-000',
     });
     expect(lookupZip).not.toHaveBeenCalled();
     component.address.controls.zipCode.setValue('01001-000');
@@ -85,10 +168,16 @@ describe('AccountComponent', () => {
     first.next({ logradouro: 'Rua obsoleta' });
     second.next({ logradouro: 'Rua automática', localidade: 'Nova cidade' });
     second.complete();
-    expect(component.address.getRawValue()).toEqual(jasmine.objectContaining({
-      street: 'Rua digitada', city: 'Nova cidade', neighborhood: 'Bairro manual',
-      number: '10', complement: 'Apto 2', zipCode: '01002-000',
-    }));
+    expect(component.address.getRawValue()).toEqual(
+      jasmine.objectContaining({
+        street: 'Rua digitada',
+        city: 'Nova cidade',
+        neighborhood: 'Bairro manual',
+        number: '10',
+        complement: 'Apto 2',
+        zipCode: '01002-000',
+      }),
+    );
     expect(component.zipFound()).toBeTrue();
     expect(component.lockedPostalFields()).toEqual(['city']);
     component.toggleManualAddress();
@@ -103,7 +192,10 @@ describe('AccountComponent', () => {
     expect(component.address.controls.label.value).toBe('Personalizado');
     expect(component.lookingUp()).toBeFalse();
     component.saveAddress();
-    expect(account.saveAddress).toHaveBeenCalledWith(4, jasmine.objectContaining({ number: '10', complement: 'Apto 2' }));
+    expect(account.saveAddress).toHaveBeenCalledWith(
+      4,
+      jasmine.objectContaining({ number: '10', complement: 'Apto 2' }),
+    );
 
     component.editAddress();
     lookupZip.and.returnValue(of({ erro: true }));

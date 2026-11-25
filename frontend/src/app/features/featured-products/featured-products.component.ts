@@ -1,4 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../../core/config/api.config';
+import { HomeService } from '../../core/services/home.service';
+
 import { ProductCardComponent } from '../catalog/components/product-card/product-card.component';
 import { CatalogService } from '../catalog/services/catalog.service';
 import { CartService } from '../../core/services/cart.service';
@@ -14,9 +16,8 @@ import {
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, map, of, startWith, switchMap } from 'rxjs';
-import { Product } from '../../shared/models';
 
-type FeaturedState = { products: Product[]; loading: boolean; error: string };
+import type { FeaturedState } from '../../shared/types/products/featured-state';
 
 @Component({
   selector: 'app-featured-products',
@@ -26,13 +27,14 @@ type FeaturedState = { products: Product[]; loading: boolean; error: string };
   styleUrl: './featured-products.component.scss',
 })
 export class FeaturedProductsComponent {
+  private readonly apiBase = inject(API_BASE_URL).replace(/\/+$/, '');
   readonly cart = inject(CartService);
   readonly catalog = inject(CatalogService);
-  private readonly http = inject(HttpClient);
+  private readonly homeApi = inject(HomeService);
   readonly favorites = inject(FavoritesService);
   private readonly router = inject(Router);
   @Input() titulo: string = 'Título Padrão';
-  readonly backendUrl = 'http://localhost:8080';
+  readonly backendUrl = this.apiBase;
   readonly favoritesOnly = signal(false);
   private readonly refresh = signal(0);
   private readonly query = computed(() => {
@@ -69,15 +71,11 @@ export class FeaturedProductsComponent {
                 limit: 4,
                 filters: { status: 'active' },
               })
-            : this.http
-                .get<{
-                  products: Product[];
-                }>('http://localhost:8080/home/featured')
-                .pipe(
-                  map((result) => {
-                    return { items: result.products };
-                  }),
-                );
+            : this.homeApi.featured().pipe(
+                map((result) => {
+                  return { items: result.products };
+                }),
+              );
         return request.pipe(
           map(
             (page): FeaturedState => ({

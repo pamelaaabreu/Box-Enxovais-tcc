@@ -5,22 +5,15 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, Subject, tap } from 'rxjs';
+import { API_BASE_URL } from '../config/api.config';
+import { readValidJwt } from '../../shared/utils/jwt';
 import {
   LoginCredentials,
   LoginResponse,
   RegisterPayload,
-} from '../interfaces/auth.interface';
-
-// Estrutura genérica de resposta da API.
-interface ApiResponse<T = unknown> {
-  success: boolean;
-  message?: string;
-  data?: T;
-}
-
-interface ResetAuthorization {
-  resetToken: string;
-}
+  ResetAuthorization,
+} from '../../shared/types/auth/auth.types';
+import type { ApiResponse } from '../../shared/types/api/response';
 
 @Injectable({
   providedIn: 'root',
@@ -39,13 +32,17 @@ export class AuthService implements OnDestroy {
   // Token de recuperação mantido apenas em memória.
   private passwordResetToken: string | null = null;
 
-  private baseUrl = 'http://localhost:8080';
+  private readonly baseUrl = inject(API_BASE_URL).replace(/\/+$/, '');
 
-  public isLogged = false;
+  private loggedIn = false;
+  get isLogged(): boolean {
+    return this.loggedIn;
+  }
   public userName: string | null = null;
 
   // Notifica alterações na sessão.
-  public userChanged = new Subject<void>();
+  private readonly userChanges = new Subject<void>();
+  readonly userChanged = this.userChanges.asObservable();
 
   private readonly savedNameChanges = new Subject<void>();
 
@@ -75,12 +72,12 @@ export class AuthService implements OnDestroy {
 
     if (!token) {
       this.clearExpiryTimer();
-      this.isLogged = false;
+      this.loggedIn = false;
       this.userName = null;
       return;
     }
 
-    this.isLogged = true;
+    this.loggedIn = true;
     this.userName = sessionStorage.getItem('userName');
 
     this.scheduleTokenExpiry(token);
@@ -105,13 +102,16 @@ export class AuthService implements OnDestroy {
         this.sessionExpiryHandled = false;
 
         this.saveAuthData(response);
+
+        this.loggedIn = this.hasValidExpiry(response.token);
+        this.userName = response.name || null;
         this.scheduleTokenExpiry(response.token);
 
-        this.isLogged = true;
-        this.userName = response.name || null;
+        // Uma resposta com JWT inválido não pode reativar a sessão encerrada.
+        if (!this.isLogged) return;
 
         // Notifica os consumidores sobre a alteração da sessão.
-        this.userChanged.next();
+        this.userChanges.next();
       }),
     );
   }
@@ -194,10 +194,10 @@ export class AuthService implements OnDestroy {
 
     if (this.isBrowser()) this.clearAuthData();
 
-    this.isLogged = false;
+    this.loggedIn = false;
     this.userName = null;
 
-    this.userChanged.next();
+    this.userChanges.next();
 
     void this.router.navigate(['/login']);
   }
@@ -226,17 +226,7 @@ export class AuthService implements OnDestroy {
 
   // Verifica a expiração contida no JWT.
   private hasValidExpiry(token: string): boolean {
-    try {
-      const { exp } = jwtDecode<{ exp?: number }>(token);
-
-      return (
-        typeof exp === 'number' &&
-        Number.isFinite(exp) &&
-        exp * 1000 > Date.now()
-      );
-    } catch {
-      return false;
-    }
+    return readValidJwt(token) !== null;
   }
 
   // Programa o encerramento automático da sessão.
@@ -288,7 +278,7 @@ export class AuthService implements OnDestroy {
 
     // Identifica páginas relacionadas à autenticação.
     const isAuthPage =
-      /^\/(login|register|forgot-password|verify-code|reset-password)(?:[/?#]|$)/.test(
+      /^\/(login|cadastro|recuperar-senha|verificar-codigo|redefinir-senha|register|forgot-password|verify-code|reset-password)(?:[/?#]|$)/.test(
         currentUrl,
       );
 
@@ -300,10 +290,10 @@ export class AuthService implements OnDestroy {
 
     this.clearAuthData();
 
-    this.isLogged = false;
+    this.loggedIn = false;
     this.userName = null;
 
-    this.userChanged.next();
+    this.userChanges.next();
 
     void this.router.navigate(['/login'], {
       queryParams: returnUrl ? { returnUrl } : {},
@@ -365,6 +355,7 @@ export class AuthService implements OnDestroy {
 
   // Persiste os dados da sessão.
   private saveAuthData(response: LoginResponse): void {
+    this.clearAuthData();
     sessionStorage.setItem('authToken', response.token);
 
     if (response.name) {
@@ -384,6 +375,8 @@ export class AuthService implements OnDestroy {
 
   // Remove os dados da autenticação.
   private clearAuthData(): void {
+    this.clearPasswordResetToken();
+    this.clearPasswordResetEmail();
     sessionStorage.removeItem('authToken');
     sessionStorage.removeItem('userName');
     sessionStorage.removeItem('userEmail');

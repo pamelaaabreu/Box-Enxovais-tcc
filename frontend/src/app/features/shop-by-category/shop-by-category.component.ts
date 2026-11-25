@@ -1,6 +1,6 @@
 import { Component, Input, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HomeService } from '../../core/services/home.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 @Component({
@@ -12,10 +12,8 @@ import { catchError, of } from 'rxjs';
 export class ShopByCategoryComponent {
   @Input() titulo = 'Navegue por categorias';
   readonly categories = toSignal(
-    inject(HttpClient)
-      .get<{ name: string; slug: string; imagePath: string }[]>(
-        'http://localhost:8080/home/categories',
-      )
+    inject(HomeService)
+      .categories()
       .pipe(catchError(() => of([]))),
     { initialValue: [] },
   );

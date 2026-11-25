@@ -1,6 +1,8 @@
+import { AssetUrlService } from '../../shared/services/asset-url.service';
+import { CustomerOrdersService } from '../../core/services/customer-orders.service';
 import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { InlineNoticeComponent } from '../../shared/components/inline-notice/inline-notice.component';
-import { PaymentPlan } from '../../shared/types/checkout/checkout';
+
 import { installmentSummary } from '../../shared/utils/installments';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { PurchaseReviewComponent } from '../purchase-review/purchase-review.component';
@@ -12,7 +14,7 @@ import {
   registerLocaleData,
 } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
   DestroyRef,
@@ -53,49 +55,10 @@ import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/cat
 
 registerLocaleData(localePt);
 
-interface Order extends PaymentPlan {
-  shipping?: number | null;
-  shippingMinDays?: number | null;
-  shippingMaxDays?: number | null;
-  shippingMethod?: string | null;
-  productsSubtotal?: number | null;
-  discount?: number | null;
-  id: number;
-  createdAt: string;
-  total: number;
-  status: string;
-  items: {
-    id: number;
-    name: string;
-    quantity: number;
-    image: string;
-    productId?: number;
-    unitPrice: number;
-    subtotal: number;
-  }[];
-}
-
-interface Details extends Order {
-  canCancel: boolean;
-  cancellation?: { reasonCode: string; reasonDetails?: string };
-  address: {
-    recipient: string;
-    street: string;
-    number: string;
-    complement: string;
-    neighborhood: string;
-    city: string;
-    state: string;
-    zipCode: string;
-  };
-  paymentMethod: string;
-}
-
-interface OrderPage {
-  total?: number;
-  orders: Order[];
-  hasMore: boolean;
-}
+import type {
+  CustomerOrder as Order,
+  CustomerOrderDetails as Details,
+} from '../../shared/types/orders/customer-order';
 
 @Component({
   selector: 'app-order-history',
@@ -122,6 +85,7 @@ interface OrderPage {
   styleUrls: ['./order-history.component.scss', './order-history-detail.scss'],
 })
 export class OrderHistoryComponent {
+  private readonly assetUrls = inject(AssetUrlService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly auth = inject(AuthService);
   private readonly dialog = inject(ConfirmDialogService);
@@ -153,7 +117,7 @@ export class OrderHistoryComponent {
   }
   readonly cancelling = signal(false);
   readonly cancelError = signal('');
-  private readonly http = inject(HttpClient);
+  private readonly orderApi = inject(CustomerOrdersService);
   private readonly router = inject(Router);
   private readonly reload = new BehaviorSubject<void>(undefined);
   readonly page = signal(1);
@@ -231,10 +195,7 @@ export class OrderHistoryComponent {
             this.state.set('waiting-dates');
             return EMPTY;
           }
-          const url = id
-            ? 'http://localhost:8080/orders/' + encodeURIComponent(id)
-            : this.listUrl();
-          return this.http.get<{ data: OrderPage | Details }>(url).pipe(
+          return this.orderApi.read(id, id ? '' : this.listQuery()).pipe(
             map((response) => ({ id, data: response?.data })),
             catchError((error: HttpErrorResponse) => {
               if (error.status === 401) this.expire();
@@ -333,7 +294,7 @@ export class OrderHistoryComponent {
     this.reload.next();
   }
 
-  private listUrl(): string {
+  private listQuery(): string {
     const query = new URLSearchParams({ page: String(this.page()) });
     if (this.sort() !== 'recent') query.set('sort', this.sort());
     if (this.search()) query.set('search', this.search());
@@ -361,7 +322,7 @@ export class OrderHistoryComponent {
     }
     if (from) query.set('dateFrom', from);
     if (to) query.set('dateTo', to);
-    return 'http://localhost:8080/orders?' + query;
+    return query.toString();
   }
 
   retry(): void {
@@ -444,17 +405,14 @@ export class OrderHistoryComponent {
 
     this.cancelError.set('');
     this.cancelling.set(true);
-    this.http
-      .post<{ data: Details }>(
-        'http://localhost:8080/orders/' + order.id + '/cancel',
-        {
-          reasonCode: this.cancellationReason.value,
-          reasonDetails:
-            this.cancellationReason.value === 'other'
-              ? this.cancellationDetails.value.trim()
-              : '',
-        },
-      )
+    this.orderApi
+      .cancel(order.id, {
+        reasonCode: this.cancellationReason.value,
+        reasonDetails:
+          this.cancellationReason.value === 'other'
+            ? this.cancellationDetails.value.trim()
+            : '',
+      })
       .pipe(
         takeUntil(this.auth.userChanged),
         takeUntilDestroyed(this.destroyRef),
@@ -509,9 +467,7 @@ export class OrderHistoryComponent {
   }
 
   imageUrl(path: string): string {
-    return /^https?:\/\//.test(path)
-      ? path
-      : 'http://localhost:8080/' + path.replace(/^\//, '');
+    return /^https?:\/\//.test(path) ? path : this.assetUrls.resolve(path);
   }
 
   markBroken(id: number): void {

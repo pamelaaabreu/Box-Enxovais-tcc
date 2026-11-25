@@ -4,7 +4,7 @@ import { AdminStateComponent } from '../../../../shared/components/admin-state/a
 import { CustomAlertService } from '../../../../core/services/custom-alert.service';
 import { CAMA_GROUP } from '../../data/categories';
 import { ShippingQuoteComponent } from './shipping-quote/shipping-quote.component';
-import { FavoriteButtonComponent } from '../../../../shared/favorite-button/favorite-button.component';
+import { FavoriteButtonComponent } from '../../../../shared/components/favorite-button/favorite-button.component';
 import { CartService } from '../../../../core/services/cart.service';
 import { CurrencyPipe } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -30,13 +30,11 @@ import {
   switchMap,
 } from 'rxjs';
 import { CatalogService } from '../../services/catalog.service';
-import { CatalogState } from '../../interfaces/catalog-state';
-import { CatalogProduct } from '../../interfaces/product.interface';
+import { CatalogState } from '../../../../shared/types/catalog/catalog-state';
+import { CatalogProduct } from '../../../../shared/types/catalog/catalog-product';
 import { CatalogLayoutComponent } from '../../components/catalog-layout/catalog-layout.component';
-import {
-  BreadcrumbsComponent,
-  BreadcrumbItem,
-} from '../../components/breadcrumbs/breadcrumbs.component';
+import { BreadcrumbsComponent } from '../../components/breadcrumbs/breadcrumbs.component';
+import type { BreadcrumbItem } from '../../../../shared/types/ui/breadcrumb';
 import { ProductGalleryComponent } from '../../components/product-gallery/product-gallery.component';
 import { ProductPriceComponent } from '../../components/product-price/product-price.component';
 import { QuantitySelectorComponent } from '../../components/quantity-selector/quantity-selector.component';
@@ -44,7 +42,10 @@ import { QuantitySelectorComponent } from '../../components/quantity-selector/qu
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [ProductRatingComponent, ProductReviewsComponent, AdminStateComponent,
+  imports: [
+    ProductRatingComponent,
+    ProductReviewsComponent,
+    AdminStateComponent,
     ShippingQuoteComponent,
     CurrencyPipe,
     FavoriteButtonComponent,
@@ -151,7 +152,10 @@ export class ProductDetailComponent {
         ![
           'collection_slug',
           'coordinated_family',
-          'coordinated_pair_type', 'catalog_slug', 'catalog_import_key', 'coordination_colors',
+          'coordinated_pair_type',
+          'catalog_slug',
+          'catalog_import_key',
+          'coordination_colors',
         ].includes(key) &&
         value != null &&
         String(value).trim(),
@@ -174,8 +178,11 @@ export class ProductDetailComponent {
       )?.[1],
   );
 
-  readonly dimensionReference = computed(() =>
-    this.selectedVariant()?.dimensions || this.product()?.measurements?.['Dimensões'] || '',
+  readonly dimensionReference = computed(
+    () =>
+      this.selectedVariant()?.dimensions ||
+      this.product()?.measurements?.['Dimensões'] ||
+      '',
   );
 
   readonly sizes = computed(() => {
@@ -295,7 +302,12 @@ export class ProductDetailComponent {
       null,
   );
   readonly selectedPrice = computed(
-    () => this.selectedVariant()?.price ?? (this.product()?.promotion_active ? this.product()?.promotional_price : this.product()?.price) ?? 0,
+    () =>
+      this.selectedVariant()?.price ??
+      (this.product()?.promotion_active
+        ? this.product()?.promotional_price
+        : this.product()?.price) ??
+      0,
   );
   readonly galleryImages = computed(() => {
     const images = this.selectedVariant()?.images;
@@ -408,7 +420,7 @@ export class ProductDetailComponent {
     );
     return product
       ? [
-          { label: 'Home', url: '/home' },
+          { label: 'Home', url: '/inicio' },
           ...(camaSubcategory
             ? [{ label: 'Cama', url: '/categoria/cama' }]
             : []),
@@ -424,7 +436,7 @@ export class ProductDetailComponent {
             : []),
           { label: product.name },
         ]
-      : [{ label: 'Home', url: '/home' }, { label: 'Produto' }];
+      : [{ label: 'Home', url: '/inicio' }, { label: 'Produto' }];
   });
 
   constructor() {

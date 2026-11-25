@@ -1,5 +1,28 @@
-<section aria-label="Preço e estoque" class="commerce-summary" [class.embedded]="!framed" [class.cards]="cards">
-  @if (!cards) { <h2>Preço e estoque</h2> }
-  <dl><div><dt>Preço inicial</dt><dd>{{ cards && startingPrice !== "—" ? "A partir de " : "" }}{{ startingPrice }}</dd></div><div><dt>Estoque total</dt><dd>{{ totalStock }} {{ totalStock === 1 ? 'unidade' : 'unidades' }}</dd></div><div><dt>Variações</dt><dd>{{ variants.length }}</dd></div></dl>
+<section
+  aria-label="Preço e estoque"
+  class="commerce-summary"
+  [class.embedded]="!framed"
+  [class.cards]="cards"
+>
+  @if (!cards) {
+    <h2>Preço e estoque</h2>
+  }
+  <dl>
+    <div>
+      <dt>Preço inicial</dt>
+      <dd>
+        {{ cards && startingPrice !== "—" ? "A partir de " : ""
+        }}{{ startingPrice }}
+      </dd>
+    </div>
+    <div>
+      <dt>Estoque total</dt>
+      <dd>{{ totalStock }} {{ totalStock === 1 ? "unidade" : "unidades" }}</dd>
+    </div>
+    <div>
+      <dt>Variações</dt>
+      <dd>{{ variants.length }}</dd>
+    </div>
+  </dl>
   <p>Valores calculados automaticamente a partir das variações.</p>
- </section>
+</section>

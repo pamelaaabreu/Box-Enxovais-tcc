@@ -18,7 +18,8 @@ import { ProductCardComponent } from '../catalog/components/product-card/product
 @Component({
   selector: 'app-favorites',
   standalone: true,
-  imports: [AdminStateComponent,
+  imports: [
+    AdminStateComponent,
     PaginationComponent,
     CatalogLayoutComponent,
     ProductCardComponent,
@@ -73,29 +74,27 @@ export class FavoritesComponent {
       ...this.favorites.ids(),
       ...this.products().map((product) => product.id),
     ]);
-    const eligible = this.related()
-      .filter((product) => {
-        if (
-          !product.active ||
-          product.quantity <= 0 ||
-          excluded.has(product.id)
-        )
-          return false;
-        excluded.add(product.id);
-        return true;
-      })
-      ;
+    const eligible = this.related().filter((product) => {
+      if (!product.active || product.quantity <= 0 || excluded.has(product.id))
+        return false;
+      excluded.add(product.id);
+      return true;
+    });
     const categories = new Set<number>();
     const images = new Set<string>();
-    const diverse = eligible.filter(product => {
+    const diverse = eligible.filter((product) => {
       const image = product.images[0]?.url;
-      if (categories.has(product.category.id) || (image && images.has(image))) return false;
+      if (categories.has(product.category.id) || (image && images.has(image)))
+        return false;
       categories.add(product.category.id);
       if (image) images.add(image);
       return true;
     });
-    const chosen = new Set(diverse.map(product => product.id));
-    return [...diverse,...eligible.filter(product => !chosen.has(product.id))].slice(0,4);
+    const chosen = new Set(diverse.map((product) => product.id));
+    return [
+      ...diverse,
+      ...eligible.filter((product) => !chosen.has(product.id)),
+    ].slice(0, 4);
   });
   constructor() {
     this.favorites.openPage();

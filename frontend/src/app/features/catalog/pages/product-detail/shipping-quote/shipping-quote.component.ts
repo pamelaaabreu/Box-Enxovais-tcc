@@ -1,4 +1,5 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ShippingService } from '../../../../../core/services/shipping.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CurrencyPipe } from '@angular/common';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -7,11 +8,7 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { Subscription, catchError, map, of } from 'rxjs';
 import { AccountService } from '../../../../../core/services/account.service';
 
-interface ShippingQuote {
-  priceCents: number;
-  minDays: number;
-  maxDays: number;
-}
+import type { ShippingQuote } from '../../../../../shared/types/checkout/checkout';
 
 @Component({
   providers: [provideNgxMask()],
@@ -21,7 +18,7 @@ interface ShippingQuote {
   styleUrl: './shipping-quote.component.scss',
 })
 export class ShippingQuoteComponent {
-  private readonly http = inject(HttpClient);
+  private readonly shippingApi = inject(ShippingService);
   private readonly account = inject(AccountService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -69,10 +66,8 @@ export class ShippingQuoteComponent {
     this.loading.set(true);
 
     // Consulta o valor e prazo da entrega.
-    this.request = this.http
-      .get<ShippingQuote>('http://localhost:8080/shipping/quote', {
-        params: { cep },
-      })
+    this.request = this.shippingApi
+      .quote(cep)
       .pipe(
         map((result) => ({
           result,

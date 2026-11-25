@@ -1,7 +1,7 @@
 <app-catalog-layout class="account-surface">
   <main class="account">
     <nav class="account-breadcrumb" aria-label="Breadcrumb">
-      <a routerLink="/home">Início</a><span aria-hidden="true">›</span
+      <a routerLink="/inicio">Início</a><span aria-hidden="true">›</span
       ><span aria-current="page">Minha conta</span>
     </nav>
     <header class="account-identity">
@@ -29,7 +29,9 @@
           [class.active]="activeTab() === tab.id"
           (click)="selectTab(tab.id)"
           (keydown)="moveTabFocus($event, index)"
-        >{{ tab.label }}</button>
+        >
+          {{ tab.label }}
+        </button>
       }
     </div>
     @if (error()) {
@@ -38,7 +40,12 @@
     @if (notice()) {
       <app-inline-notice kind="success">{{ notice() }}</app-inline-notice>
     }
-    <section id="dados" role="tabpanel" aria-labelledby="tab-dados" [hidden]="activeTab() !== 'dados'">
+    <section
+      id="dados"
+      role="tabpanel"
+      aria-labelledby="tab-dados"
+      [hidden]="activeTab() !== 'dados'"
+    >
       <div class="profile-heading">
         <h2>
           <span class="section-icon"
@@ -237,7 +244,12 @@
         }
       </div>
     </section>
-    <section id="enderecos" role="tabpanel" aria-labelledby="tab-enderecos" [hidden]="activeTab() !== 'enderecos'">
+    <section
+      id="enderecos"
+      role="tabpanel"
+      aria-labelledby="tab-enderecos"
+      [hidden]="activeTab() !== 'enderecos'"
+    >
       <h2>
         <span class="section-icon"
           ><mat-icon aria-hidden="true">location_on</mat-icon></span
@@ -248,66 +260,123 @@
       </h2>
       <div class="section-body">
         @if (addressesError()) {
-          <app-admin-state class="address-empty" layout="compact" kind="error"
-            [title]="addressesError()" description="Tente novamente para consultar os endereços salvos na sua conta."
-            actionLabel="Tentar novamente" (action)="loadAddresses()" />
+          <app-admin-state
+            class="address-empty"
+            layout="compact"
+            kind="error"
+            [title]="addressesError()"
+            description="Tente novamente para consultar os endereços salvos na sua conta."
+            actionLabel="Tentar novamente"
+            (action)="loadAddresses()"
+          />
         }
 
         @if (addressesLoaded() && !editing() && !addressesError()) {
           @if (addresses().length) {
-            <p class="address-list-intro">Usamos esses endereços nas suas compras. O endereço padrão é selecionado automaticamente.</p>
+            <p class="address-list-intro">
+              Usamos esses endereços nas suas compras. O endereço padrão é
+              selecionado automaticamente.
+            </p>
             <div class="address-list-grid">
               @for (item of addresses(); track item.id) {
-                <article class="saved-address" [class.is-default]="item.isDefault">
+                <article
+                  class="saved-address"
+                  [class.is-default]="item.isDefault"
+                >
                   <div class="address-card-heading">
                     <div class="address-card-identity">
                       <span class="section-icon">
-                        <mat-icon aria-hidden="true">{{ item.label === 'Casa' ? 'home' : item.label === 'Trabalho' ? 'work_outline' : 'place' }}</mat-icon>
+                        <mat-icon aria-hidden="true">{{
+                          item.label === "Casa"
+                            ? "home"
+                            : item.label === "Trabalho"
+                              ? "work_outline"
+                              : "place"
+                        }}</mat-icon>
                       </span>
                       <div>
                         <h3>{{ item.label }}</h3>
                         @if (item.isDefault) {
-                          <span class="badge"><mat-icon aria-hidden="true">check</mat-icon>Endereço padrão</span>
+                          <span class="badge"
+                            ><mat-icon aria-hidden="true">check</mat-icon
+                            >Endereço padrão</span
+                          >
                         }
                       </div>
                     </div>
                     <div class="address-card-actions">
-                      <button mat-icon-button type="button" [disabled]="busy()"
-                        [attr.aria-label]="'Editar endereço ' + item.label" (click)="editAddress(item)">
+                      <button
+                        mat-icon-button
+                        type="button"
+                        [disabled]="busy()"
+                        [attr.aria-label]="'Editar endereço ' + item.label"
+                        (click)="editAddress(item)"
+                      >
                         <mat-icon aria-hidden="true">edit</mat-icon>
                       </button>
-                      <button mat-icon-button type="button" class="delete-address" [disabled]="busy()"
-                        [attr.aria-label]="'Excluir endereço ' + item.label" (click)="removeAddress(item)">
+                      <button
+                        mat-icon-button
+                        type="button"
+                        class="delete-address"
+                        [disabled]="busy()"
+                        [attr.aria-label]="'Excluir endereço ' + item.label"
+                        (click)="removeAddress(item)"
+                      >
                         <mat-icon aria-hidden="true">delete_outline</mat-icon>
                       </button>
                     </div>
                   </div>
                   <p>
-                    <strong>{{ item.recipient }}</strong><br />
-                    {{ item.street }}, {{ item.number }}@if (item.complement) { — {{ item.complement }} }<br />
-                    {{ item.neighborhood }} · {{ item.city }} / {{ item.state }}<br />
+                    <strong>{{ item.recipient }}</strong
+                    ><br />
+                    {{ item.street }}, {{ item.number }}
+                    @if (item.complement) {
+                      — {{ item.complement }}
+                    }
+                    <br />
+                    {{ item.neighborhood }} · {{ item.city }} / {{ item.state
+                    }}<br />
                     CEP {{ item.zipCode | mask: "00000-000" }}
                   </p>
                   @if (!item.isDefault) {
-                    <button class="make-default" type="button" [disabled]="busy()" (click)="makeDefault(item.id)">
+                    <button
+                      class="make-default"
+                      type="button"
+                      [disabled]="busy()"
+                      (click)="makeDefault(item.id)"
+                    >
                       @if (settingDefaultId() === item.id) {
-                        <mat-spinner diameter="16" aria-hidden="true" /> Atualizando…
+                        <mat-spinner diameter="16" aria-hidden="true" />
+                        Atualizando…
                       } @else {
-                        <mat-icon aria-hidden="true">star_outline</mat-icon> Definir como padrão
+                        <mat-icon aria-hidden="true">star_outline</mat-icon>
+                        Definir como padrão
                       }
                     </button>
                   }
                 </article>
               }
-              <button class="new-address" type="button" [disabled]="busy()" (click)="editAddress()">
-                <span class="section-icon"><mat-icon aria-hidden="true">add</mat-icon></span>
+              <button
+                class="new-address"
+                type="button"
+                [disabled]="busy()"
+                (click)="editAddress()"
+              >
+                <span class="section-icon"
+                  ><mat-icon aria-hidden="true">add</mat-icon></span
+                >
                 Novo endereço
               </button>
             </div>
           } @else {
-            <app-admin-state class="address-empty" layout="compact" title="Você ainda não tem endereços cadastrados"
+            <app-admin-state
+              class="address-empty"
+              layout="compact"
+              title="Você ainda não tem endereços cadastrados"
               description="Cadastre um endereço para agilizar suas compras. Você poderá escolher qual será o padrão."
-              actionLabel="Adicionar endereço" (action)="editAddress()" />
+              actionLabel="Adicionar endereço"
+              (action)="editAddress()"
+            />
           }
         }
         @if (editing()) {
@@ -331,7 +400,10 @@
               </h3>
             </div>
             <p class="profile-required">Campos com * são obrigatórios.</p>
-            <div class="fields address-fields" [class.with-custom-label]="labelChoice() === 'Outro'">
+            <div
+              class="fields address-fields"
+              [class.with-custom-label]="labelChoice() === 'Outro'"
+            >
               <fieldset class="address-label-choices">
                 <legend>Identificação *</legend>
                 <div class="address-chips">
@@ -351,9 +423,7 @@
               </fieldset>
               @if (labelChoice() === "Outro") {
                 <div class="profile-field custom-label">
-                  <label for="address-custom-label"
-                    >Nome do endereço *</label
-                  >
+                  <label for="address-custom-label">Nome do endereço *</label>
                   <mat-form-field
                     appearance="outline"
                     subscriptSizing="dynamic"
@@ -365,12 +435,26 @@
                       maxlength="40"
                       required
                     />
-                    <button mat-icon-button matSuffix type="button"
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      type="button"
                       class="confirm-address-name"
-                      [disabled]="busy() || address.controls.label.invalid || !address.controls.label.value.trim()"
-                      [attr.aria-label]="customNameConfirmed() ? 'Nome do endereço confirmado' : 'Confirmar nome do endereço'"
-                      (click)="confirmAddressName()">
-                      <mat-icon aria-hidden="true">{{ customNameConfirmed() ? "check_circle" : "check" }}</mat-icon>
+                      [disabled]="
+                        busy() ||
+                        address.controls.label.invalid ||
+                        !address.controls.label.value.trim()
+                      "
+                      [attr.aria-label]="
+                        customNameConfirmed()
+                          ? 'Nome do endereço confirmado'
+                          : 'Confirmar nome do endereço'
+                      "
+                      (click)="confirmAddressName()"
+                    >
+                      <mat-icon aria-hidden="true">{{
+                        customNameConfirmed() ? "check_circle" : "check"
+                      }}</mat-icon>
                     </button>
                     <mat-hint>Ex.: Casa da praia</mat-hint>
                     <mat-error>
@@ -412,7 +496,9 @@
                     "
                   >
                     @if (field.key === "recipient") {
-                      <mat-icon matPrefix aria-hidden="true">person_outline</mat-icon>
+                      <mat-icon matPrefix aria-hidden="true"
+                        >person_outline</mat-icon
+                      >
                     }
                     @if (field.key === "zipCode") {
                       <mat-icon matIconPrefix aria-hidden="true"
@@ -434,29 +520,68 @@
                         >lock_outline</mat-icon
                       >
                     }
-                    @if (field.key === 'state' && !lockedPostalFields().includes('state')) {
-                      <mat-select formControlName="state" aria-label="Estado" panelClass="box-form-options" required>
-                        @for (uf of ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']; track uf) {
-                          <mat-option [value]="uf">{{uf}}</mat-option>
+                    @if (
+                      field.key === "state" &&
+                      !lockedPostalFields().includes("state")
+                    ) {
+                      <mat-select
+                        formControlName="state"
+                        aria-label="Estado"
+                        panelClass="box-form-options"
+                        required
+                      >
+                        @for (
+                          uf of [
+                            "AC",
+                            "AL",
+                            "AP",
+                            "AM",
+                            "BA",
+                            "CE",
+                            "DF",
+                            "ES",
+                            "GO",
+                            "MA",
+                            "MT",
+                            "MS",
+                            "MG",
+                            "PA",
+                            "PB",
+                            "PR",
+                            "PE",
+                            "PI",
+                            "RJ",
+                            "RN",
+                            "RS",
+                            "RO",
+                            "RR",
+                            "SC",
+                            "SP",
+                            "SE",
+                            "TO",
+                          ];
+                          track uf
+                        ) {
+                          <mat-option [value]="uf">{{ uf }}</mat-option>
                         }
                       </mat-select>
                     } @else {
-                    <input
-                      matInput
-                      [required]="field.key !== 'complement'"
-                      [id]="'address-' + field.key"
-                      [formControlName]="field.key"
-                      [mask]="field.key === 'zipCode' ? '00000-000' : ''"
-                      [dropSpecialCharacters]="false"
-                      [readonly]="lockedPostalFields().includes(field.key)"
-                      [maxlength]="
-                        field.key === 'zipCode'
-                          ? 9
-                          : field.key === 'state'
-                            ? 2
-                            : 200
-                      "
-                    />
+                      <input
+                        matInput
+                        [required]="field.key !== 'complement'"
+                        [id]="'address-' + field.key"
+                        [formControlName]="field.key"
+                        [mask]="field.key === 'zipCode' ? '00000-000' : ''"
+                        [dropSpecialCharacters]="false"
+                        [readonly]="lockedPostalFields().includes(field.key)"
+                        [maxlength]="
+                          field.key === 'zipCode'
+                            ? 9
+                            : field.key === 'state'
+                              ? 2
+                              : 200
+                        "
+                      />
                     }
                     @if (field.key === "zipCode" && zipStatus()) {
                       <mat-hint class="zip-hint" role="status">
@@ -488,7 +613,9 @@
                   (lockedPostalFields().length || manualAddress())
                 ) {
                   <div class="postal-notice" [class.manual]="manualAddress()">
-                    <mat-icon aria-hidden="true">{{ manualAddress() ? "edit" : "lock_outline" }}</mat-icon>
+                    <mat-icon aria-hidden="true">{{
+                      manualAddress() ? "edit" : "lock_outline"
+                    }}</mat-icon>
                     <span>{{
                       manualAddress()
                         ? "Edição liberada. Os dados podem deixar de coincidir com o CEP."
@@ -513,15 +640,26 @@
             <label class="address-default" [attr.inert]="busy() ? '' : null">
               <span class="address-default-copy">
                 <strong>Endereço padrão</strong>
-                <span id="address-default-description">Usado automaticamente nas suas compras.</span>
+                <span id="address-default-description"
+                  >Usado automaticamente nas suas compras.</span
+                >
               </span>
-              <input type="checkbox" role="switch" aria-label="Endereço padrão"
-                aria-describedby="address-default-description" [formControl]="defaultAddress" />
+              <input
+                type="checkbox"
+                role="switch"
+                aria-label="Endereço padrão"
+                aria-describedby="address-default-description"
+                [formControl]="defaultAddress"
+              />
               <span class="address-switch-track" aria-hidden="true"></span>
             </label>
             @if (defaultAddress.disabled && defaultAddress.value) {
               <p class="address-default-hint">
-                {{ isEditingAddress ? "Para trocar o padrão, selecione outro endereço." : "Seu primeiro endereço será definido como padrão." }}
+                {{
+                  isEditingAddress
+                    ? "Para trocar o padrão, selecione outro endereço."
+                    : "Seu primeiro endereço será definido como padrão."
+                }}
               </p>
             }
             <div class="actions">
@@ -544,14 +682,19 @@
         }
       </div>
     </section>
-    <section id="seguranca" role="tabpanel" aria-labelledby="tab-seguranca" [hidden]="activeTab() !== 'seguranca'">
+    <section
+      id="seguranca"
+      role="tabpanel"
+      aria-labelledby="tab-seguranca"
+      [hidden]="activeTab() !== 'seguranca'"
+    >
       <h2>
         <span class="section-icon"
           ><mat-icon aria-hidden="true">shield</mat-icon></span
         >Segurança da conta
       </h2>
       <div class="section-body">
-        <a class="security-row" routerLink="/forgot-password">
+        <a class="security-row" routerLink="/recuperar-senha">
           <span
             ><strong>Redefinir senha</strong
             ><small
@@ -574,6 +717,22 @@
         </div>
       </div>
     </section>
-    <section id="avaliacoes" role="tabpanel" aria-labelledby="tab-avaliacoes" [hidden]="activeTab() !== 'avaliacoes'"><h2><span class="section-icon"><mat-icon aria-hidden="true">rate_review</mat-icon></span>Minhas avaliações</h2><div class="section-body">@if (activeTab() === 'avaliacoes') { <app-my-reviews /> }</div></section>
+    <section
+      id="avaliacoes"
+      role="tabpanel"
+      aria-labelledby="tab-avaliacoes"
+      [hidden]="activeTab() !== 'avaliacoes'"
+    >
+      <h2>
+        <span class="section-icon"
+          ><mat-icon aria-hidden="true">rate_review</mat-icon></span
+        >Minhas avaliações
+      </h2>
+      <div class="section-body">
+        @if (activeTab() === "avaliacoes") {
+          <app-my-reviews />
+        }
+      </div>
+    </section>
   </main>
 </app-catalog-layout>

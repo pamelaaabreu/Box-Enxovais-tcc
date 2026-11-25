@@ -15,7 +15,14 @@
 <header [class.compact]="compact">
   <div class="heading">
     @if (showImage) {
-      <img class="heading-image" [src]="image" alt="" width="56" height="56" (error)="failedImage = image" />
+      <img
+        class="heading-image"
+        [src]="image"
+        alt=""
+        width="56"
+        height="56"
+        (error)="failedImage = image"
+      />
     } @else if (icon) {
       <span class="icon"
         ><mat-icon fontSet="material-icons" aria-hidden="true">{{
@@ -35,7 +42,14 @@
   </div>
   <div class="actions">
     @if (adminNavigation?.compact()) {
-      <button type="button" class="admin-menu-button" aria-label="Abrir menu" aria-controls="admin-sidebar" [attr.aria-expanded]="adminNavigation?.opened()" (click)="openMenu()">
+      <button
+        type="button"
+        class="admin-menu-button"
+        aria-label="Abrir menu"
+        aria-controls="admin-sidebar"
+        [attr.aria-expanded]="adminNavigation?.opened()"
+        (click)="openMenu()"
+      >
         <mat-icon aria-hidden="true">menu</mat-icon>
       </button>
     }
@@ -63,7 +77,16 @@
     }
     <ng-content select="[header-actions]" />
     @if (status) {
-      <app-status-badge [tone]="status === 'Aprovado' || status === 'Ativa' || status === 'Ativo' ? 'success' : status === 'Cancelado' || status === 'Inativa' ? 'danger' : 'neutral'">{{ status }}</app-status-badge>
+      <app-status-badge
+        [tone]="
+          status === 'Aprovado' || status === 'Ativa' || status === 'Ativo'
+            ? 'success'
+            : status === 'Cancelado' || status === 'Inativa'
+              ? 'danger'
+              : 'neutral'
+        "
+        >{{ status }}</app-status-badge
+      >
     }
   </div>
 </header>

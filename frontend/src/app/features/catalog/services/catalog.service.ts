@@ -1,15 +1,17 @@
+import { AssetUrlService } from '../../../shared/services/asset-url.service';
 import { CARD_IMAGE_VARIANTS } from '../data/card-image-variants';
-import { PageOptions } from '../../../core/services/pagination.service';
+import type { PageOptions } from '../../../shared/types/api/pagination';
 import { Injectable, inject } from '@angular/core';
 import { Observable, of, map, catchError, throwError } from 'rxjs';
 import { ProductService } from '../../../core/services/product.service';
-import { Product } from '../../../shared/models';
+import type { Product } from '../../../shared/types/products/product';
 import { CAMA_GROUP, CATEGORIES } from '../data/categories';
-import { Category } from '../interfaces/category.interface';
-import { CatalogProduct } from '../interfaces/product.interface';
+import { Category } from '../../../shared/types/catalog/category';
+import { CatalogProduct } from '../../../shared/types/catalog/catalog-product';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogService {
+  private readonly assetUrls = inject(AssetUrlService);
   private readonly products = inject(ProductService);
 
   // Converte um nome em um slug.
@@ -53,7 +55,7 @@ export class CatalogService {
         (path, index) => {
           const url = /^https?:\/\//.test(path)
             ? path
-            : `http://localhost:8080/${path.replace(/^\//, '')}`;
+            : this.assetUrls.resolve(path);
 
           const optimizedCover = url.endsWith(
             '/cama-detalhe-023-2-capa-1448.jpg',
@@ -67,8 +69,10 @@ export class CatalogService {
             url,
 
             cardUrl: CARD_IMAGE_VARIANTS[url.slice(url.lastIndexOf('/') + 1)]
-              ? 'http://localhost:8080/uploads/' +
-                CARD_IMAGE_VARIANTS[url.slice(url.lastIndexOf('/') + 1)]
+              ? this.assetUrls.resolve(
+                  'uploads/' +
+                    CARD_IMAGE_VARIANTS[url.slice(url.lastIndexOf('/') + 1)],
+                )
               : undefined,
 
             srcset: optimizedCover
@@ -116,7 +120,7 @@ export class CatalogService {
   }
 
   // Consulta os produtos das subcategorias de Cama.
-  getCamaFilterProducts(category: Category) {
+  getBedSubcategoryProducts(category: Category) {
     const ids = category.children?.map((child) => child.id);
 
     if (!ids?.length) return of([]);

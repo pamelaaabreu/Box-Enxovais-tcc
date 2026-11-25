@@ -153,7 +153,9 @@
     grid-column: span 8;
   }
 
-  label:not(.payment-option):not(.save-delivery-address):not(.saved-address-card) {
+  label:not(.payment-option):not(.save-delivery-address):not(
+      .saved-address-card
+    ) {
     display: block;
     margin: 0 0 6px;
     color: #394033;
@@ -187,7 +189,11 @@
     cursor: default;
   }
 
-  input:not([type="radio"]):not([type="checkbox"]):hover:not(:disabled, :focus, [aria-invalid="true"]),
+  input:not([type="radio"]):not([type="checkbox"]):hover:not(
+      :disabled,
+      :focus,
+      [aria-invalid="true"]
+    ),
   select:hover:not(:disabled, :focus, [aria-invalid="true"]) {
     border-color: #bfc8b8;
   }
@@ -195,7 +201,6 @@
   input:not([type="radio"]):not([type="checkbox"]):focus,
   select:focus {
     border: 1px solid #667255 !important;
-
   }
 
   input:not([type="radio"]):not([type="checkbox"])[aria-invalid="true"],
@@ -204,7 +209,6 @@
 
     &:focus {
       border-color: #b74a45 !important;
-
     }
   }
 
@@ -789,7 +793,9 @@
   }
 }
 
-.delivery-choice { margin-block: 12px; }
+.delivery-choice {
+  margin-block: 12px;
+}
 
 .checkout-flow .save-delivery-address {
   display: flex;
@@ -801,7 +807,8 @@
   line-height: 1.5;
   cursor: pointer;
 }
-.save-delivery-address input[type="checkbox"], .saved-address-card input[type="radio"] {
+.save-delivery-address input[type="checkbox"],
+.saved-address-card input[type="radio"] {
   width: 18px;
   height: 18px;
   min-height: 18px;
@@ -810,8 +817,19 @@
   padding: 0;
   accent-color: #52663f;
 }
-.address-options { display: grid; gap: 10px; min-width: 0; padding: 0; margin: 18px 0; border: 0; }
-.address-options legend { font-size: 14px; font-weight: 500; margin-bottom: 12px; }
+.address-options {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 0;
+  margin: 18px 0;
+  border: 0;
+}
+.address-options legend {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
 .checkout-flow .saved-address-card {
   display: flex;
   align-items: center;
@@ -825,9 +843,26 @@
   font-size: 14px;
   line-height: 1.5;
 }
-.saved-address-card.selected { border-color: #52663f; background: #f1f2e9; }
-.address-copy { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
-.default-address { margin-left: 8px; font-size: 11px; font-weight: 500; color: #52663f; }
-.delivery-coverage { margin-block: 14px; }
-.delivery-coverage p { margin: 0; font-size: 13px; }
-
+.saved-address-card.selected {
+  border-color: #52663f;
+  background: #f1f2e9;
+}
+.address-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.default-address {
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #52663f;
+}
+.delivery-coverage {
+  margin-block: 14px;
+}
+.delivery-coverage p {
+  margin: 0;
+  font-size: 13px;
+}

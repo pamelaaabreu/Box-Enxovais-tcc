@@ -1,5 +1,5 @@
 import { TestimonialsComponent } from '../testimonials/testimonials.component';
-import { TrustBarComponent } from '../../components/trust-bar/trust-bar.component';
+import { TrustBarComponent } from '../../shared/components/trust-bar/trust-bar.component';
 import {
   Component,
   HostListener,
@@ -8,12 +8,12 @@ import {
 } from '@angular/core';
 import { CampaignService } from '../../core/services/campaign.service';
 import { CampaignComponent } from '../campaign/campaign.component';
-import { FooterComponent } from '../../components/footer/footer.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { CommonModule } from '@angular/common';
-import { MainNavbarComponent } from '../../components/main-navbar/main-navbar.component';
-import { CarouselComponent } from '../../components/carousel/carousel.component';
-import { TopWelcomeHeaderComponent } from '../../components/top-welcome-header/top-welcome-header.component';
-import { TopNavbarComponent } from '../../components/top-navbar/top-navbar.component';
+import { MainNavbarComponent } from '../../shared/components/main-navbar/main-navbar.component';
+import { CarouselComponent } from '../../shared/components/carousel/carousel.component';
+import { TopWelcomeHeaderComponent } from '../../shared/components/top-welcome-header/top-welcome-header.component';
+import { TopNavbarComponent } from '../../shared/components/top-navbar/top-navbar.component';
 import { FeaturedProductsComponent } from '../featured-products/featured-products.component';
 import { ShopByCategoryComponent } from '../shop-by-category/shop-by-category.component';
 

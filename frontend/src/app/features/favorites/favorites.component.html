@@ -29,13 +29,22 @@
     @if (favorites.pageLoading()) {
       <app-admin-state kind="loading" title="Carregando favoritos…" />
     } @else if (favorites.pageError()) {
-      <app-admin-state kind="error" [title]="favorites.pageError()" actionLabel="Tentar novamente" (action)="favorites.loadPage()" />
+      <app-admin-state
+        kind="error"
+        [title]="favorites.pageError()"
+        actionLabel="Tentar novamente"
+        (action)="favorites.loadPage()"
+      />
     } @else {
       @if (favorites.page(); as page) {
         @if (page.items.length) {
           <div class="grid saved-products">
             @for (product of products(); track product.id) {
-              <app-product-card [product]="product" [catalogTile]="true" [favoritesTile]="true" />
+              <app-product-card
+                [product]="product"
+                [catalogTile]="true"
+                [favoritesTile]="true"
+              />
             }
           </div>
 
@@ -51,9 +60,14 @@
             />
           }
         } @else {
-          <app-admin-state class="empty-state" icon="favorite" title="Sua lista de favoritos está esperando por você."
+          <app-admin-state
+            class="empty-state"
+            icon="favorite"
+            title="Sua lista de favoritos está esperando por você."
             description="Explore nossas coleções e salve os produtos que mais combinam com seu lar."
-            actionLabel="Explorar produtos" actionLink="/categoria/todos" />
+            actionLabel="Explorar produtos"
+            actionLink="/categoria/todos"
+          />
         }
 
         @if (page.items.length && recommendations().length) {
@@ -65,12 +79,16 @@
 
             <div class="grid recommendations-grid">
               @for (product of recommendations(); track product.id) {
-                <app-product-card [product]="product" [catalogTile]="true" [favoritesTile]="true" />
+                <app-product-card
+                  [product]="product"
+                  [catalogTile]="true"
+                  [favoritesTile]="true"
+                />
               }
             </div>
           </section>
         }
       }
     }
- </section>
+  </section>
 </app-catalog-layout>

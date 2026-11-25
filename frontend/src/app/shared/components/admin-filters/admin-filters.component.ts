@@ -1,15 +1,16 @@
 import { Component, input, output } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 
-export interface AdminFilterOption { value: string; label: string; }
-interface FilterBase { key: string; label: string; control: FormControl<string>; wide?: boolean; }
-export type AdminFilterField = FilterBase & (
-  { type: 'text' | 'search' | 'date'; placeholder?: string; maxlength?: number; required?: boolean; id?: string }
-  | { type: 'select'; options: readonly AdminFilterOption[] }
-);
+import type { AdminFilterField } from '../../types/ui/admin-filters';
 
-@Component({ selector: 'app-admin-filters', standalone: true, imports: [ReactiveFormsModule, MatSelectModule], templateUrl: './admin-filters.component.html', styleUrl: './admin-filters.component.scss' })
+@Component({
+  selector: 'app-admin-filters',
+  standalone: true,
+  imports: [ReactiveFormsModule, MatSelectModule],
+  templateUrl: './admin-filters.component.html',
+  styleUrl: './admin-filters.component.scss',
+})
 export class AdminFiltersComponent {
   readonly fields = input.required<readonly AdminFilterField[]>();
   readonly applyLabel = input('Filtrar');

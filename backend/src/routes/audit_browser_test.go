@@ -19,8 +19,11 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
+
+	"gopkg.in/gomail.v2"
 )
 
 func TestBrowserAuditServer(t *testing.T) {
@@ -30,6 +33,10 @@ func TestBrowserAuditServer(t *testing.T) {
 	cfg, err := config.Load("../../.env")
 	if err != nil {
 		t.Fatal("configuration unavailable")
+	}
+	// O harness nunca deve criar fixtures no banco principal da aplicação.
+	if !strings.HasPrefix(cfg.Database.Name, "box_frontend_audit_") || os.Getenv("AUDIT_ISOLATED_DATABASE") != cfg.Database.Name {
+		t.Fatal("explicit disposable audit database required")
 	}
 	base, err := db.Open(context.Background(), cfg.Database)
 	if err != nil {
@@ -108,7 +115,7 @@ func TestBrowserAuditServer(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	for _, name := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000004_products_quantity_nonnegative", "000005_favorites", "000006_checkout", "000051_order_shipping", "000053_checkout_installments", "000007_order_cancellation", "000008_order_cancellation_reason", "000009_account_addresses", "000010_business_phone", "000011_user_cnpj", "000012_shipping_ranges", "000013_product_variants", "000024_catalog_brand_editorial", "000045_home_experience_campaigns", "000048_product_external_sku", "000049_promotion_timestamps", "000050_product_image_order", "000052_purchase_review_optional_criteria"} {
+	for _, name := range []string{"000001_initial_schema", "000002_simplify_customer_registration", "000003_cart", "000004_products_quantity_nonnegative", "000005_favorites", "000006_checkout", "000051_order_shipping", "000053_checkout_installments", "000007_order_cancellation", "000008_order_cancellation_reason", "000009_account_addresses", "000010_business_phone", "000011_user_cnpj", "000012_shipping_ranges", "000013_product_variants", "000024_catalog_brand_editorial", "000045_home_experience_campaigns", "000048_product_external_sku", "000049_promotion_timestamps", "000050_product_image_order", "000052_purchase_review_optional_criteria", "000054_product_reviews"} {
 		migration, e := os.ReadFile("../../migrations/" + name + ".up.sql")
 		if e != nil {
 			t.Fatal(e)
@@ -226,6 +233,10 @@ func TestBrowserAuditServer(t *testing.T) {
 	InitRoutesFavorites(mux, handlers.FavoritesHandler{Service: services.FavoritesService{Store: repositories.FavoritesRepository{DB: database}}})
 	InitRoutesHome(mux, handlers.HomeHandler{Store: repositories.HomeRepository{DB: database}})
 	InitRoutesReviews(mux, handlers.HomeHandler{Store: repositories.HomeRepository{DB: database}})
+	InitRoutesProductReviews(mux, handlers.ProductReviewHandler{Service: services.ProductReviewService{Store: repositories.ProductReviewRepository{DB: database}}})
+	newsletter := services.NewNewsletterService(repositories.SubscriberRepository{DB: database})
+	newsletter.Send = func(*gomail.Message) error { return nil }
+	InitRoutesNewsletter(mux, handlers.NewsletterHandler{Service: newsletter})
 	InitRoutesShipping(mux, handlers.QuoteShipping(database), handlers.ListShippingRanges(database), handlers.SaveShippingRange(database), handlers.DeleteShippingRange(database))
 	InitRoutesPromotions(mux, handlers.PromotionHandler{Service: services.PromotionService{Store: repositories.PromotionRepository{DB: database}, UploadDir: assets}}, products)
 	orders := handlers.OrderHistoryHandler{Store: repositories.CheckoutRepository{DB: database}}

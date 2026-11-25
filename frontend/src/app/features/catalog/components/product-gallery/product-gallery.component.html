@@ -1,14 +1,29 @@
 <div class="main-image">
   @if (selectedImage(); as image) {
-    <button type="button" class="zoom-trigger" aria-label="Ampliar imagem do produto" (click)="zoom.showModal()">
+    <button
+      type="button"
+      class="zoom-trigger"
+      aria-label="Ampliar imagem do produto"
+      (click)="zoom.showModal()"
+    >
       <app-product-media [image]="image" [priority]="true" />
       <mat-icon aria-hidden="true">zoom_in</mat-icon>
     </button>
     @if (orderedImages().length > 1) {
-      <button type="button" class="gallery-nav previous" aria-label="Imagem anterior" (click)="move(-1)">
+      <button
+        type="button"
+        class="gallery-nav previous"
+        aria-label="Imagem anterior"
+        (click)="move(-1)"
+      >
         <mat-icon aria-hidden="true">chevron_left</mat-icon>
       </button>
-      <button type="button" class="gallery-nav next" aria-label="Próxima imagem" (click)="move(1)">
+      <button
+        type="button"
+        class="gallery-nav next"
+        aria-label="Próxima imagem"
+        (click)="move(1)"
+      >
         <mat-icon aria-hidden="true">chevron_right</mat-icon>
       </button>
     }
@@ -19,18 +34,32 @@
 @if (orderedImages().length > 1) {
   <div class="thumbnails" role="group" aria-label="Imagens do produto">
     @for (image of orderedImages(); track image.id; let index = $index) {
-      <button type="button" [attr.aria-label]="'Ver imagem ' + (index + 1) + ': ' + image.alt"
-        [attr.aria-pressed]="selectedImage()?.id === image.id" (click)="selectedId.set(image.id)">
+      <button
+        type="button"
+        [attr.aria-label]="'Ver imagem ' + (index + 1) + ': ' + image.alt"
+        [attr.aria-pressed]="selectedImage()?.id === image.id"
+        (click)="selectedId.set(image.id)"
+      >
         <app-product-media [image]="image" [compact]="true" />
       </button>
     }
   </div>
 }
 <dialog #zoom aria-label="Imagem ampliada do produto">
-  <button type="button" class="close-zoom" aria-label="Fechar imagem ampliada" (click)="zoom.close()">
+  <button
+    type="button"
+    class="close-zoom"
+    aria-label="Fechar imagem ampliada"
+    (click)="zoom.close()"
+  >
     <mat-icon aria-hidden="true">close</mat-icon>
   </button>
   @if (selectedImage(); as image) {
-    <img class="zoom-image" [src]="image.url" [alt]="image.alt" loading="lazy" />
+    <img
+      class="zoom-image"
+      [src]="image.url"
+      [alt]="image.alt"
+      loading="lazy"
+    />
   }
 </dialog>

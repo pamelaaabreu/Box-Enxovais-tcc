@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
-import { ProductImage } from '../../interfaces/product-image.interface';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  signal,
+} from '@angular/core';
+import { ProductImage } from '../../../../shared/types/catalog/catalog-image';
 
 @Component({
   selector: 'app-product-media',
@@ -14,6 +20,10 @@ export class ProductMediaComponent {
   readonly compact = input(false);
   readonly showCaption = input(true);
   readonly failedUrl = signal<string | null>(null);
-  readonly showImage = computed(() => !!this.image()?.url && this.failedUrl() !== this.image()?.url);
-  onImageError(): void { this.failedUrl.set(this.image()?.url ?? null); }
+  readonly showImage = computed(
+    () => !!this.image()?.url && this.failedUrl() !== this.image()?.url,
+  );
+  onImageError(): void {
+    this.failedUrl.set(this.image()?.url ?? null);
+  }
 }

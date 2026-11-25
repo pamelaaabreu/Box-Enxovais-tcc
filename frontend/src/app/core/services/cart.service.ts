@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config/api.config';
 import { CustomAlertService } from './custom-alert.service';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -14,27 +15,11 @@ import {
 } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from './auth.service';
-import { Cart } from '../interfaces/cart.interface';
+import { Cart } from '../../shared/types/cart/cart.types';
 
-// Informações da compra imediata.
-export type QuickPurchase = {
-  productId: number;
-  quantity: number;
-  variantId?: number;
-  reuseCartItem: boolean;
-};
+import type { QuickPurchase } from '../../shared/types/cart/cart.types';
 
-// Estrutura de uma operação enfileirada.
-type CartRequest = {
-  onAdded?: () => void;
-  onAddError?: (message: string, status: number) => void;
-  method: string;
-  path: string;
-  body?: unknown;
-  key: number;
-  productId?: number;
-  session: number;
-};
+import type { CartRequest } from '../../shared/types/cart/cart-request';
 
 // Cria um carrinho vazio.
 const emptyCart = (): Cart => ({
@@ -45,6 +30,7 @@ const emptyCart = (): Cart => ({
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
+  private readonly baseUrl = inject(API_BASE_URL).replace(/\/+$/, '');
   private readonly http = inject(HttpClient);
   private readonly auth = inject(AuthService);
   private readonly alerts = inject(CustomAlertService);
@@ -89,7 +75,7 @@ export class CartService {
             return this.http
               .request<{
                 data: Cart;
-              }>(request.method, `http://localhost:8080/cart${request.path}`, {
+              }>(request.method, `${this.baseUrl}/cart${request.path}`, {
                 body: request.body,
               })
               .pipe(
@@ -139,7 +125,7 @@ export class CartService {
                       action: {
                         label: 'Ver sacola',
                         run: () => {
-                          void this.router.navigate(['/cart']);
+                          void this.router.navigate(['/carrinho']);
                         },
                       },
                     });
@@ -150,7 +136,7 @@ export class CartService {
 
                   // Redireciona após uma recompra.
                   if (request.key === Number.MIN_SAFE_INTEGER)
-                    void this.router.navigate(['/cart']);
+                    void this.router.navigate(['/carrinho']);
 
                   if (request.productId && request.method !== 'DELETE')
                     this.feedback.update((value) => ({
@@ -257,7 +243,7 @@ export class CartService {
 
     try {
       if (
-        await this.router.navigate(['/checkout'], {
+        await this.router.navigate(['/finalizar-compra'], {
           queryParams: { compra: 'agora' },
         })
       )

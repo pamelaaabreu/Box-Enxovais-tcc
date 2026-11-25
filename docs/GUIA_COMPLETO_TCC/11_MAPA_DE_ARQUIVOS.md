@@ -9,7 +9,7 @@ Os links apontam ao código próprio a partir desta pasta. Siga uma funcionalida
 | [README.md](../../README.md) | Execução e panorama técnico. |
 | [frontend/src/app/app.routes.ts](../../frontend/src/app/app.routes.ts) | Rotas e lazy loading. |
 | [frontend/src/app/app.config.ts](../../frontend/src/app/app.config.ts) | Providers da aplicação. |
-| [frontend/src/app/components/admin/admin-routing.module.ts](../../frontend/src/app/components/admin/admin-routing.module.ts) | Navegação administrativa. |
+| [frontend/src/app/features/admin/admin.routes.ts](../../frontend/src/app/features/admin/admin.routes.ts) | Navegação administrativa. |
 | [backend/src/main.go](../../backend/src/main.go) | Inicialização e injeção de dependências. |
 | [backend/src/config/config.go](../../backend/src/config/config.go) | Configuração validada. |
 | [backend/src/db/conn.go](../../backend/src/db/conn.go) | Conexão PostgreSQL. |
@@ -18,16 +18,16 @@ Os links apontam ao código próprio a partir desta pasta. Siga uma funcionalida
 
 | Arquivo | Função |
 |---|---|
-| [frontend/src/app/features/authorization/register/register.component.ts](../../frontend/src/app/features/authorization/register/register.component.ts) | AuthComponent de login e cadastro. |
+| [frontend/src/app/features/authentication/auth/auth.component.ts](../../frontend/src/app/features/authentication/auth/auth.component.ts) | AuthComponent de login e cadastro. |
 | [frontend/src/app/core/services/auth.service.ts](../../frontend/src/app/core/services/auth.service.ts) | Sessão, expiração e recuperação. |
-| [frontend/src/app/core/auth.interceptor.ts](../../frontend/src/app/core/auth.interceptor.ts) | Integração de autenticação HTTP. |
+| [frontend/src/app/core/interceptors/auth.interceptor.ts](../../frontend/src/app/core/interceptors/auth.interceptor.ts) | Integração de autenticação HTTP. |
 | [frontend/src/app/core/guards/admin.guard.ts](../../frontend/src/app/core/guards/admin.guard.ts) | Navegação administrativa. |
 | [frontend/src/app/core/services/account.service.ts](../../frontend/src/app/core/services/account.service.ts) | Perfil e endereços salvos. |
 | [backend/src/routes/auth.go](../../backend/src/routes/auth.go) | Endpoints de autenticação. |
 | [backend/src/services/auth_service.go](../../backend/src/services/auth_service.go) | JWT, bcrypt e recuperação. |
-| [backend/src/middleware/authMiddleware.go](../../backend/src/middleware/authMiddleware.go) | Verificação do Bearer. |
+| [backend/src/middleware/auth_middleware.go](../../backend/src/middleware/auth_middleware.go) | Verificação do Bearer. |
 | [backend/src/repositories/user_repository.go](../../backend/src/repositories/user_repository.go) | Persistência de usuários. |
-| [backend/src/repositories/account.go](../../backend/src/repositories/account.go) | Conta e endereços. |
+| [backend/src/repositories/account_repository.go](../../backend/src/repositories/account_repository.go) | Conta e endereços. |
 
 ## Catálogo e cadastro
 
@@ -37,14 +37,14 @@ Os links apontam ao código próprio a partir desta pasta. Siga uma funcionalida
 | [frontend/src/app/core/services/product.service.ts](../../frontend/src/app/core/services/product.service.ts) | Leitura pública e CRUD. |
 | [frontend/src/app/core/services/pagination.service.ts](../../frontend/src/app/core/services/pagination.service.ts) | Paginação e filtros HTTP. |
 | [frontend/src/app/features/catalog/pages/product-detail/product-detail.component.ts](../../frontend/src/app/features/catalog/pages/product-detail/product-detail.component.ts) | Galeria e seleção de tamanho. |
-| [frontend/src/app/features/product-manage/register/product-create/product-create.component.ts](../../frontend/src/app/features/product-manage/register/product-create/product-create.component.ts) | Formulário de criação e edição. |
+| [frontend/src/app/features/admin/products/product-manage/register/product-create/product-create.component.ts](../../frontend/src/app/features/admin/products/product-manage/register/product-create/product-create.component.ts) | Formulário de criação e edição. |
 | [frontend/src/app/shared/components/product-commerce-summary/product-commerce-summary.component.ts](../../frontend/src/app/shared/components/product-commerce-summary/product-commerce-summary.component.ts) | Resumo derivado de variantes. |
-| [frontend/src/app/features/product-manage/images/product-image-upload/product-image-upload.component.ts](../../frontend/src/app/features/product-manage/images/product-image-upload/product-image-upload.component.ts) | Galeria administrativa. |
+| [frontend/src/app/features/admin/products/product-manage/images/product-image-upload/product-image-upload.component.ts](../../frontend/src/app/features/admin/products/product-manage/images/product-image-upload/product-image-upload.component.ts) | Galeria administrativa. |
 | [backend/src/routes/products.go](../../backend/src/routes/products.go) | Contrato HTTP de produtos e cadastros. |
 | [backend/src/repositories/product_repository.go](../../backend/src/repositories/product_repository.go) | Catálogo e recomendações. |
-| [backend/src/repositories/product_variants.go](../../backend/src/repositories/product_variants.go) | Persistência de variantes. |
-| [backend/src/repositories/product_admin.go](../../backend/src/repositories/product_admin.go) | Edição e exclusão segura. |
-| [backend/src/repositories/product_images_admin.go](../../backend/src/repositories/product_images_admin.go) | Ordem e imagem principal. |
+| [backend/src/repositories/product_variants_repository.go](../../backend/src/repositories/product_variants_repository.go) | Persistência de variantes. |
+| [backend/src/repositories/product_admin_repository.go](../../backend/src/repositories/product_admin_repository.go) | Edição e exclusão segura. |
+| [backend/src/repositories/product_images_admin_repository.go](../../backend/src/repositories/product_images_admin_repository.go) | Ordem e imagem principal. |
 
 ## Compra e experiência
 
@@ -57,11 +57,11 @@ Os links apontam ao código próprio a partir desta pasta. Siga uma funcionalida
 | [frontend/src/app/features/checkout/checkout-success/checkout-success.component.ts](../../frontend/src/app/features/checkout/checkout-success/checkout-success.component.ts) | Confirmação consultada na API. |
 | [frontend/src/app/features/order-history/order-history.component.ts](../../frontend/src/app/features/order-history/order-history.component.ts) | Histórico e cancelamento. |
 | [frontend/src/app/features/purchase-review/purchase-review.component.ts](../../frontend/src/app/features/purchase-review/purchase-review.component.ts) | Avaliação reutilizada. |
-| [backend/src/handlers/checkoutHandler.go](../../backend/src/handlers/checkoutHandler.go) | Entrada HTTP do checkout. |
+| [backend/src/handlers/checkout_handler.go](../../backend/src/handlers/checkout_handler.go) | Entrada HTTP do checkout. |
 | [backend/src/repositories/checkout_repository.go](../../backend/src/repositories/checkout_repository.go) | Transação de compra e idempotência. |
-| [backend/src/repositories/shipping.go](../../backend/src/repositories/shipping.go) | Cobertura e cotação por CEP. |
-| [backend/src/repositories/order_history.go](../../backend/src/repositories/order_history.go) | Histórico congelado. |
-| [backend/src/repositories/order_cancellation.go](../../backend/src/repositories/order_cancellation.go) | Cancelamento e reposição. |
+| [backend/src/repositories/shipping_repository.go](../../backend/src/routes/shipping.go) | Cobertura e cotação por CEP. |
+| [backend/src/repositories/order_history_repository.go](../../backend/src/repositories/order_history_repository.go) | Histórico congelado. |
+| [backend/src/repositories/order_cancellation_repository.go](../../backend/src/repositories/order_cancellation_repository.go) | Cancelamento e reposição. |
 | [backend/src/repositories/home_repository.go](../../backend/src/repositories/home_repository.go) | Home e avaliações. |
 | [backend/src/models/payment_plan.go](../../backend/src/models/payment_plan.go) | Validação e divisão inteira das parcelas. |
 | [backend/src/services/checkout_email.go](../../backend/src/services/checkout_email.go) | Recibos e cancelamentos. |
@@ -70,15 +70,15 @@ Os links apontam ao código próprio a partir desta pasta. Siga uma funcionalida
 
 | Arquivo | Função |
 |---|---|
-| [frontend/src/app/features/create-promotion/create-promotion.component.ts](../../frontend/src/app/features/create-promotion/create-promotion.component.ts) | Editor de campanha. |
-| [frontend/src/app/components/admin/orders/admin-orders.service.ts](../../frontend/src/app/components/admin/orders/admin-orders.service.ts) | Pedidos administrativos. |
-| [frontend/src/app/components/admin/customers/admin-customers.service.ts](../../frontend/src/app/components/admin/customers/admin-customers.service.ts) | Consulta de clientes. |
+| [frontend/src/app/features/admin/promotions/promotion-manager/create-promotion.component.ts](../../frontend/src/app/features/admin/promotions/promotion-manager/create-promotion.component.ts) | Editor de campanha. |
+| [frontend/src/app/features/admin/orders/admin-orders.service.ts](../../frontend/src/app/features/admin/orders/services/admin-orders.service.ts) | Pedidos administrativos. |
+| [frontend/src/app/features/admin/customers/admin-customers.service.ts](../../frontend/src/app/features/admin/customers/services/admin-customers.service.ts) | Consulta de clientes. |
 | [frontend/src/app/shared/components/confirm-dialog/confirm-dialog.service.ts](../../frontend/src/app/shared/components/confirm-dialog/confirm-dialog.service.ts) | Confirmação reutilizável. |
 | [backend/src/routes/admin_orders.go](../../backend/src/routes/admin_orders.go) | Endpoints administrativos de pedidos. |
 | [backend/src/routes/admin_customers.go](../../backend/src/routes/admin_customers.go) | Consulta protegida de clientes. |
 | [backend/src/routes/promotions.go](../../backend/src/routes/promotions.go) | Campanhas e upload. |
 | [backend/src/repositories/dashboard_repository.go](../../backend/src/repositories/dashboard_repository.go) | Indicadores. |
-| [backend/src/repositories/reports.go](../../backend/src/repositories/reports.go) | Consultas de relatórios. |
+| [backend/src/repositories/reports_repository.go](../../backend/src/repositories/reports_repository.go) | Consultas de relatórios. |
 | [backend/src/repositories/report_inventory.go](../../backend/src/repositories/report_inventory.go) | Estoque em relatórios. |
 
 ## Contratos e validação
@@ -92,9 +92,9 @@ Os links apontam ao código próprio a partir desta pasta. Siga uma funcionalida
 | [frontend/src/app/shared/types/orders/admin-order.ts](../../frontend/src/app/shared/types/orders/admin-order.ts) | Detalhes administrativos do pedido. |
 | [frontend/src/app/shared/types/api/pagination.ts](../../frontend/src/app/shared/types/api/pagination.ts) | Página e opções genéricas. |
 | [frontend/src/app/shared/types/ui/alert.ts](../../frontend/src/app/shared/types/ui/alert.ts) | Feedback de UI. |
-| [frontend/src/app/shared/models.ts](../../frontend/src/app/shared/models.ts) | Reexportação compatível. |
-| [backend/migrations/000052_purchase_review_optional_criteria.up.sql](../../backend/migrations/000052_purchase_review_optional_criteria.up.sql) | Critérios opcionais, pendente no principal. |
-| [backend/migrations/000053_checkout_installments.up.sql](../../backend/migrations/000053_checkout_installments.up.sql) | Parcelas, pendente no principal. |
+| [frontend/src/app/shared/types/products/product.ts](../../frontend/src/app/shared/types/products/product.ts) | Contrato Product atual. |
+| [backend/migrations/000052_purchase_review_optional_criteria.up.sql](../../backend/migrations/000052_purchase_review_optional_criteria.up.sql) | Critérios opcionais, implantação histórica concluída. |
+| [backend/migrations/000053_checkout_installments.up.sql](../../backend/migrations/000053_checkout_installments.up.sql) | Parcelas, implantação histórica concluída. |
 | [backend/src/routes/purchase_review_test.go](../../backend/src/routes/purchase_review_test.go) | Integração/concorrência da avaliação. |
 | [backend/src/routes/installments_test.go](../../backend/src/routes/installments_test.go) | Integração e rollback do parcelamento. |
 | [frontend/e2e/regression.cjs](../../frontend/e2e/regression.cjs) | Sete suítes finais isoladas. |

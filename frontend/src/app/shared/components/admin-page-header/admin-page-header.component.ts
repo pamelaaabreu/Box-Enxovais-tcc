@@ -4,10 +4,7 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 
-export interface AdminBreadcrumb {
-  label: string;
-  url?: string;
-}
+import type { BreadcrumbItem as AdminBreadcrumb } from '../../types/ui/breadcrumb';
 
 @Component({
   selector: 'app-admin-page-header',
@@ -18,14 +15,18 @@ export interface AdminBreadcrumb {
 })
 export class AdminPageHeaderComponent {
   readonly adminNavigation = inject(AdminNavigationService, { optional: true });
-  openMenu(): void { this.adminNavigation?.opened.set(true); }
+  openMenu(): void {
+    this.adminNavigation?.opened.set(true);
+  }
   @Input({ required: true }) title = '';
   @Input() description = '';
   @Input() breadcrumb: AdminBreadcrumb[] = [];
   @Input() icon = '';
   @Input() image = '';
   failedImage = '';
-  get showImage(): boolean { return !!this.image && this.image !== this.failedImage; }
+  get showImage(): boolean {
+    return !!this.image && this.image !== this.failedImage;
+  }
   @Input() status = '';
   @Input() compact = false;
   @Input() titleId: string | null = null;

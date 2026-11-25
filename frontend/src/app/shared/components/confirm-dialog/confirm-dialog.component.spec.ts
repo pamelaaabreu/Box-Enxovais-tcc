@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-import { ConfirmDialogComponent, ConfirmDialogOptions } from './confirm-dialog.component';
+import { ConfirmDialogComponent } from './confirm-dialog.component';
+import type { ConfirmDialogOptions } from '../../types/ui/confirm-dialog';
 
 describe('ConfirmDialogComponent', () => {
   function setup(options: Partial<ConfirmDialogOptions> = {}) {
@@ -10,11 +11,18 @@ describe('ConfirmDialogComponent', () => {
       imports: [ConfirmDialogComponent],
       providers: [
         { provide: MatDialogRef, useValue: dialog },
-        { provide: MAT_DIALOG_DATA, useValue: {
-          title: 'Sair sem salvar?', message: 'Você tem alterações pendentes.',
-          variant: 'warning', primary: 'Continuar editando', secondary: 'Sair sem salvar',
-          confirmAction: 'secondary', ...options,
-        } },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {
+            title: 'Sair sem salvar?',
+            message: 'Você tem alterações pendentes.',
+            variant: 'warning',
+            primary: 'Continuar editando',
+            secondary: 'Sair sem salvar',
+            confirmAction: 'secondary',
+            ...options,
+          },
+        },
       ],
     });
     return { dialog, fixture: TestBed.createComponent(ConfirmDialogComponent) };
@@ -36,7 +44,11 @@ describe('ConfirmDialogComponent', () => {
     const first = new Subject<void>();
     const retry = new Subject<void>();
     const execute = jasmine.createSpy('execute').and.returnValues(first, retry);
-    const { dialog, fixture } = setup({ variant: 'danger', confirmAction: 'primary', execute });
+    const { dialog, fixture } = setup({
+      variant: 'danger',
+      confirmAction: 'primary',
+      execute,
+    });
     const component = fixture.componentInstance;
     component.choose('primary');
     component.choose('primary');

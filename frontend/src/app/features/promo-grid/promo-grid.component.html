@@ -1,1 +1,31 @@
-@if(campaign();as campaign){<section class="home-campaign" aria-labelledby="campaign-title"><header>@if(campaign.imagePath){<img [src]="'http://localhost:8080/'+campaign.imagePath" alt="" loading="lazy" />}<div><p class="eyebrow">Seleção especial</p><h2 id="campaign-title">{{campaign.name}}</h2><p>{{campaign.description}}</p><small>De {{campaign.startDate|date:'dd/MM/yyyy'}} até {{campaign.endDate|date:'dd/MM/yyyy'}}</small></div></header><div class="campaign-grid">@for(product of campaign.products;track product.id){<app-product-card [product]="catalog.adapt(product)" [catalogTile]="true" [promotion]="true" />}</div></section>}
+@if (campaign(); as campaign) {
+  <section class="home-campaign" aria-labelledby="campaign-title">
+    <header>
+      @if (campaign.imagePath) {
+        <img
+          [src]="'http://localhost:8080/' + campaign.imagePath"
+          alt=""
+          loading="lazy"
+        />
+      }
+      <div>
+        <p class="eyebrow">Seleção especial</p>
+        <h2 id="campaign-title">{{ campaign.name }}</h2>
+        <p>{{ campaign.description }}</p>
+        <small
+          >De {{ campaign.startDate | date: "dd/MM/yyyy" }} até
+          {{ campaign.endDate | date: "dd/MM/yyyy" }}</small
+        >
+      </div>
+    </header>
+    <div class="campaign-grid">
+      @for (product of campaign.products; track product.id) {
+        <app-product-card
+          [product]="catalog.adapt(product)"
+          [catalogTile]="true"
+          [promotion]="true"
+        />
+      }
+    </div>
+  </section>
+}

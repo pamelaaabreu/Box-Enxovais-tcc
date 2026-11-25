@@ -1,0 +1,79 @@
+<div class="carousel-container">
+  <div
+    id="carouselExampleIndicators"
+    class="carousel slide"
+    data-bs-ride="carousel"
+    data-bs-interval="8000"
+    data-bs-pause="hover"
+    aria-roledescription="carrossel"
+    aria-label="Coleções da Box Enxovais"
+  >
+    <div class="carousel-inner">
+      @for (slide of slides; track slide.key; let i = $index) {
+        <div class="carousel-item" [class.active]="i === 0">
+          <section
+            class="banner"
+            [class]="'banner banner--' + slide.key"
+            [attr.aria-labelledby]="'banner-title-' + i"
+          >
+            <img
+              class="banner__image"
+              [src]="slide.image"
+              [alt]="slide.alt"
+              [attr.loading]="i === 0 ? 'eager' : 'lazy'"
+              [attr.fetchpriority]="i === 0 ? 'high' : null"
+              decoding="async"
+            />
+            <div class="banner__content">
+              <p class="banner__eyebrow">{{ slide.eyebrow }}</p>
+              <h2
+                class="banner__title"
+                [id]="'banner-title-' + i"
+                [attr.aria-label]="slide.title"
+              >
+                <span class="banner__headline"
+                  >{{ slide.titleStart }}<br />{{ slide.titleLead
+                  }}<em>{{ slide.titleEmphasis }}</em></span
+                >
+              </h2>
+              <p class="banner__description">{{ slide.description }}</p>
+              <a
+                class="banner__button"
+                [class.banner__button--light]="slide.key !== 'natal'"
+                [routerLink]="
+                  slide.key === 'natal' && natalCampaignId()
+                    ? ['/campanha', natalCampaignId()]
+                    : slide.link
+                "
+                >{{ slide.cta
+                }}<svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path d="M7 17 17 7M7 7h10v10" /></svg
+              ></a>
+            </div>
+          </section>
+        </div>
+      }
+    </div>
+    <div class="carousel-indicators">
+      @for (slide of slides; track slide.key; let i = $index) {
+        <button
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          [attr.data-bs-slide-to]="i"
+          [class.active]="i === 0"
+          [attr.aria-current]="i === 0 ? 'true' : null"
+          [attr.aria-label]="'Banner de ' + slide.label"
+        ></button>
+      }
+    </div>
+  </div>
+</div>

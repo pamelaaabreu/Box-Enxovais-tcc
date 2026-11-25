@@ -8,3 +8,8 @@ description: "Discussão manual e enxuta de infraestrutura, Docker, CI/CD, deplo
 3. Recomende a opção mínima com isolamento de ambientes, variáveis de ambiente, backup, TLS, logs e orçamento.
 4. Separe decisão de implementação. Não exponha secrets nem rode comandos de produção.
 5. Resumo em até 300 palavras, salvo pedido de detalhamento.
+
+## Referências atuais
+- Arquitetura: AGENTS.md, docs/ESTRUTURA_ANGULAR.md e README.md. Angular em features/admin e features/authentication/auth; API net/http em backend/src.
+- Banco principal não é alvo de teste de escrita. Preserve migrations, uploads, backups e servidores existentes. Nunca exponha DSNs/credenciais.
+- Sem delegação automática; escopo e execução seguem a autorização expressa do usuário.

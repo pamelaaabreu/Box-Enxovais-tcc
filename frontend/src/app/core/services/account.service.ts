@@ -1,31 +1,13 @@
+import { API_BASE_URL, apiEndpoint } from '../config/api.config';
 import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { map, timeout } from 'rxjs';
 
-export interface AccountProfile {
-  name: string;
-  email: string;
-  phone: string;
-  nationalId: string;
-  birthDate: string;
-}
-
-export interface ShippingAddress {
-  recipient: string;
-  zipCode: string;
-  street: string;
-  number: string;
-  complement: string;
-  neighborhood: string;
-  city: string;
-  state: string;
-}
-
-export interface SavedAddress extends ShippingAddress {
-  id: number;
-  label: string;
-  isDefault: boolean;
-}
+import type {
+  AccountProfile,
+  ShippingAddress,
+  SavedAddress,
+} from '../../shared/types/account/account.types';
 
 // Expressões regulares para validação de telefones.
 export const mobilePhonePattern =
@@ -36,12 +18,13 @@ export const contactPhonePattern =
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
+  private readonly baseUrl = inject(API_BASE_URL).replace(/\/+$/, '');
   private readonly http = inject(HttpClient);
 
   // Cliente HTTP que não passa pelos interceptors.
   private readonly postalHttp = new HttpClient(inject(HttpBackend));
 
-  private readonly url = 'http://localhost:8080/me';
+  private readonly url = apiEndpoint(this.baseUrl, 'me');
 
   // Consulta os dados cadastrais.
   profile() {

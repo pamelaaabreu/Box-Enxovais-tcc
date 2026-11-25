@@ -24,7 +24,10 @@ describe('CustomAlertComponent', () => {
     const elapsed = spyOn(fixture.componentInstance.elapsed, 'emit');
     fixture.componentRef.setInput('duration', 800);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.progress-bar').style.animationDuration).toBe('800ms');
+    expect(
+      fixture.nativeElement.querySelector('.progress-bar').style
+        .animationDuration,
+    ).toBe('800ms');
     tick(799);
     expect(elapsed).not.toHaveBeenCalled();
     tick(91);

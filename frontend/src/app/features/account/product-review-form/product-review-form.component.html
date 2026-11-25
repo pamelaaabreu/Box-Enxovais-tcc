@@ -1,14 +1,85 @@
 <form [formGroup]="form" (ngSubmit)="submit()" [attr.aria-busy]="saving()">
- <h3>{{ review ? 'Editar avaliação' : 'Avaliar produto' }} — {{ product.productName }}</h3>
- <fieldset [disabled]="saving()"><legend>Sua nota para o produto</legend>
-  <div class="stars">@for (rating of ratings; track rating) { <label [class.selected]="form.controls.rating.value >= rating"><input type="radio" formControlName="rating" name="rating" [value]="rating" [attr.aria-label]="rating + ' de 5 estrelas'" [attr.aria-invalid]="form.controls.rating.touched && form.controls.rating.invalid" [attr.aria-describedby]="form.controls.rating.touched && form.controls.rating.invalid ? 'product-rating-error-' + product.productId : null" /><mat-icon aria-hidden="true">star</mat-icon></label> }</div>
-  @if (form.controls.rating.touched && form.controls.rating.invalid) { <small [id]="'product-rating-error-' + product.productId">Selecione uma nota de 1 a 5.</small> }
- </fieldset>
- <label [for]="'product-comment-' + product.productId">Comentário (opcional)</label>
- <textarea [id]="'product-comment-' + product.productId" formControlName="comment" rows="3" maxlength="1000" [readOnly]="saving()" [attr.aria-invalid]="form.controls.comment.touched && form.controls.comment.invalid" [attr.aria-describedby]="form.controls.comment.touched && form.controls.comment.invalid ? 'product-comment-error-' + product.productId : null"></textarea>
- @if (form.controls.comment.touched && form.controls.comment.invalid) { <small [id]="'product-comment-error-' + product.productId">Use até 1000 caracteres.</small> }
- <label class="consent"><input type="checkbox" formControlName="publicationConsent" [attr.disabled]="saving() ? '' : null" />Autorizo publicar minha avaliação com meu primeiro nome e a inicial do sobrenome.</label>
- <p class="hint">Avaliações novas ou editadas passam por moderação antes de aparecerem na loja.</p>
- @if (error()) { <app-inline-notice>{{ error() }}</app-inline-notice> }
- <div class="actions"><button type="submit" [disabled]="saving()">{{ saving() ? 'Salvando…' : 'Salvar avaliação' }}</button><button type="button" class="secondary" [disabled]="saving()" (click)="cancelled.emit()">Cancelar</button></div>
+  <h3>
+    {{ review ? "Editar avaliação" : "Avaliar produto" }} —
+    {{ product.productName }}
+  </h3>
+  <fieldset [disabled]="saving()">
+    <legend>Sua nota para o produto</legend>
+    <div class="stars">
+      @for (rating of ratings; track rating) {
+        <label [class.selected]="form.controls.rating.value >= rating"
+          ><input
+            type="radio"
+            formControlName="rating"
+            name="rating"
+            [value]="rating"
+            [attr.aria-label]="rating + ' de 5 estrelas'"
+            [attr.aria-invalid]="
+              form.controls.rating.touched && form.controls.rating.invalid
+            "
+            [attr.aria-describedby]="
+              form.controls.rating.touched && form.controls.rating.invalid
+                ? 'product-rating-error-' + product.productId
+                : null
+            "
+          /><mat-icon aria-hidden="true">star</mat-icon></label
+        >
+      }
+    </div>
+    @if (form.controls.rating.touched && form.controls.rating.invalid) {
+      <small [id]="'product-rating-error-' + product.productId"
+        >Selecione uma nota de 1 a 5.</small
+      >
+    }
+  </fieldset>
+  <label [for]="'product-comment-' + product.productId"
+    >Comentário (opcional)</label
+  >
+  <textarea
+    [id]="'product-comment-' + product.productId"
+    formControlName="comment"
+    rows="3"
+    maxlength="1000"
+    [readOnly]="saving()"
+    [attr.aria-invalid]="
+      form.controls.comment.touched && form.controls.comment.invalid
+    "
+    [attr.aria-describedby]="
+      form.controls.comment.touched && form.controls.comment.invalid
+        ? 'product-comment-error-' + product.productId
+        : null
+    "
+  ></textarea>
+  @if (form.controls.comment.touched && form.controls.comment.invalid) {
+    <small [id]="'product-comment-error-' + product.productId"
+      >Use até 1000 caracteres.</small
+    >
+  }
+  <label class="consent"
+    ><input
+      type="checkbox"
+      formControlName="publicationConsent"
+      [attr.disabled]="saving() ? '' : null"
+    />Autorizo publicar minha avaliação com meu primeiro nome e a inicial do
+    sobrenome.</label
+  >
+  <p class="hint">
+    Avaliações novas ou editadas passam por moderação antes de aparecerem na
+    loja.
+  </p>
+  @if (error()) {
+    <app-inline-notice>{{ error() }}</app-inline-notice>
+  }
+  <div class="actions">
+    <button type="submit" [disabled]="saving()">
+      {{ saving() ? "Salvando…" : "Salvar avaliação" }}</button
+    ><button
+      type="button"
+      class="secondary"
+      [disabled]="saving()"
+      (click)="cancelled.emit()"
+    >
+      Cancelar
+    </button>
+  </div>
 </form>

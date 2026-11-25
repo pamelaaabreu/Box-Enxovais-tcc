@@ -602,9 +602,11 @@ legend,
   display: block;
   min-block-size: 1.4em;
   margin: 0;
-  font: 400 11px/1.4 "Montserrat", sans-serif;
+  font:
+    400 11px/1.4 "Montserrat",
+    sans-serif;
   color: #68705f;
-  letter-spacing: .025em;
+  letter-spacing: 0.025em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -1,11 +1,13 @@
+import { API_BASE_URL, apiEndpoint } from '../config/api.config';
 import { Injectable, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of, switchMap, timer } from 'rxjs';
-import { HomeCampaign } from '../../shared/models';
+import type { HomeCampaign } from '../../shared/types/promotions/promotion';
 
 @Injectable({ providedIn: 'root' })
 export class CampaignService {
+  private readonly baseUrl = inject(API_BASE_URL).replace(/\/+$/, '');
   private readonly http = inject(HttpClient);
 
   // Emite um novo valor a cada segundo.
@@ -16,7 +18,7 @@ export class CampaignService {
     timer(0, 30000).pipe(
       switchMap(() =>
         this.http
-          .get<HomeCampaign | null>('http://localhost:8080/home/campaign')
+          .get<HomeCampaign | null>(apiEndpoint(this.baseUrl, 'home/campaign'))
           .pipe(catchError(() => of(null))),
       ),
     ),
@@ -45,7 +47,7 @@ export class CampaignService {
 
   get(id: string) {
     return this.http.get<HomeCampaign>(
-      'http://localhost:8080/campaigns/' + encodeURIComponent(id),
+      apiEndpoint(this.baseUrl, 'campaigns/') + encodeURIComponent(id),
     );
   }
 }

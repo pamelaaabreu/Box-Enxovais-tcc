@@ -5,17 +5,26 @@ import {
 } from '@angular/common/http';
 
 import { Injectable, inject } from '@angular/core';
-import { EMPTY, Observable, expand, map, reduce } from 'rxjs';
+import { EMPTY, Observable, expand, map, reduce, throwError } from 'rxjs';
 
 import type { Page, PageOptions } from '../../shared/types/api/pagination';
-
-export type { Page, PageOptions } from '../../shared/types/api/pagination';
 
 @Injectable({ providedIn: 'root' })
 export class PaginationService {
   private readonly http = inject(HttpClient);
 
   getPage<T>(url: string, options: PageOptions = {}): Observable<Page<T>> {
+    const offset = options.offset ?? 0;
+    const limit = options.limit ?? 20;
+    if (
+      !Number.isSafeInteger(offset) ||
+      offset < 0 ||
+      !Number.isSafeInteger(limit) ||
+      limit < 1 ||
+      limit > 100
+    ) {
+      return throwError(() => new Error('Parâmetros de paginação inválidos.'));
+    }
     // Cria um codificador de parâmetros HTTP.
     const encoder = new HttpUrlEncodingCodec();
 
@@ -83,9 +92,16 @@ export class PaginationService {
         meta.offset >= 0 &&
         Number.isSafeInteger(meta.limit) &&
         meta.limit > 0 &&
+        meta.limit <= 100 &&
+        meta.offset === (options.offset ?? 0) &&
+        page.items.length <= meta.limit &&
         Number.isSafeInteger(meta.total) &&
         meta.total >= 0 &&
-        typeof meta.hasMore === 'boolean'
+        typeof meta.hasMore === 'boolean' &&
+        (!meta.hasMore ||
+          (page.items.length > 0 &&
+            Number.isSafeInteger(meta.offset + page.items.length) &&
+            meta.offset + page.items.length < meta.total))
       ) {
         return page as Page<T>;
       }

@@ -1,5 +1,36 @@
-:host { display: inline-flex; max-width: 100%; vertical-align: middle; }
-.status-badge { display: inline-flex; align-items: center; justify-content: center; min-height: 30px; box-sizing: border-box; padding: 5px 12px; border: 1px solid #ded8c7; border-radius: 20px; background: #f0ede3; color: #62563f; font: 600 13px/1.4 Montserrat, sans-serif; text-align: center; }
-[data-tone="success"] { background: #e8efdf; border-color: #d7e2cc; color: #3d4836; }
-[data-tone="danger"] { background: #f7eae5; border-color: #e9cec4; color: #954432; }
-[data-tone="warning"] { background: #f7f0dc; border-color: #e8ddba; color: #705924; }
+:host {
+  display: inline-flex;
+  max-width: 100%;
+  vertical-align: middle;
+}
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  box-sizing: border-box;
+  padding: 5px 12px;
+  border: 1px solid #ded8c7;
+  border-radius: 20px;
+  background: #f0ede3;
+  color: #62563f;
+  font:
+    600 13px/1.4 Montserrat,
+    sans-serif;
+  text-align: center;
+}
+[data-tone="success"] {
+  background: #e8efdf;
+  border-color: #d7e2cc;
+  color: #3d4836;
+}
+[data-tone="danger"] {
+  background: #f7eae5;
+  border-color: #e9cec4;
+  color: #954432;
+}
+[data-tone="warning"] {
+  background: #f7f0dc;
+  border-color: #e8ddba;
+  color: #705924;
+}

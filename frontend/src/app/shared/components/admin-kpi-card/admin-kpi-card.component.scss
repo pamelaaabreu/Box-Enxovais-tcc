@@ -1,4 +1,9 @@
-:host { display: block; min-width: 0; height: 100%; font-family: Montserrat, sans-serif; }
+:host {
+  display: block;
+  min-width: 0;
+  height: 100%;
+  font-family: Montserrat, sans-serif;
+}
 .metric {
   position: relative;
   display: flex;
@@ -195,16 +200,39 @@
   outline-offset: 3px;
 }
 
+.metric {
+  height: 100%;
+}
+.metric--success {
+  background: linear-gradient(120deg, #fffdf8, #eff4e9);
+}
+.metric--compact {
+  min-height: 96px;
+  padding: 14px 16px;
+}
+.metric--compact .metric__value {
+  font-size: 24px;
+}
+.metric--compact h2 {
+  font-size: 13px;
+}
+.loading-value {
+  display: block;
+  min-height: 28px;
+  font-size: 12px;
+  color: #667255;
+}
+.skeleton {
+  background: #edf0e7;
+}
+.metric--featured:focus-visible {
+  outline-color: #a8b997;
+}
 
-.metric { height: 100%; }
-.metric--success { background: linear-gradient(120deg, #fffdf8, #eff4e9); }
-.metric--compact { min-height: 96px; padding: 14px 16px; }
-.metric--compact .metric__value { font-size: 24px; }
-.metric--compact h2 { font-size: 13px; }
-.loading-value { display: block; min-height: 28px; font-size: 12px; color: #667255; }
-.skeleton { background: #edf0e7; }
-.metric--featured:focus-visible { outline-color: #a8b997; }
+.metric:not(:has(.metric__icon)) h2 {
+  max-width: 100%;
+}
 
-.metric:not(:has(.metric__icon)) h2 { max-width: 100%; }
-
-.skeleton h2 { color: var(--dash-ink, #303b2d); }
+.skeleton h2 {
+  color: var(--dash-ink, #303b2d);
+}

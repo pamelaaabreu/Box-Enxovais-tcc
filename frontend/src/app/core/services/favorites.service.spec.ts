@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { FavoritesService } from './favorites.service';
-import { Product } from '../../shared/models';
+import type { Product } from '../../shared/types/products/product';
 
 const url = 'http://localhost:8080/favorites';
 const product = (id: number) =>

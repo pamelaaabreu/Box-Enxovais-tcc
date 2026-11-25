@@ -1,7 +1,64 @@
-import {TestBed} from '@angular/core/testing';
-import {PaginationComponent} from './pagination.component';
-describe('PaginationComponent',()=>{
- it('reports totals and emits a valid selected page with accessible current state',()=>{const f=TestBed.createComponent(PaginationComponent);f.componentRef.setInput('total',95);f.componentRef.setInput('pageSize',10);f.componentRef.setInput('page',5);f.detectChanges();expect(f.nativeElement.textContent).toContain('Página 5 de 10');expect(f.nativeElement.textContent).not.toContain('registros');expect(f.nativeElement.querySelector('[aria-label="Página anterior"] svg')).not.toBeNull();expect(f.nativeElement.querySelector('[aria-current=page]').textContent.trim()).toBe('5');expect(f.componentInstance.items()).toEqual([1,'…',4,5,6,'…',10]);const emit=spyOn(f.componentInstance.pageChange,'emit');f.nativeElement.querySelector('[aria-label="Página 6"]').click();expect(emit).toHaveBeenCalledWith(6)});
- it('disables boundaries and never emits an invalid or disabled selection',()=>{const f=TestBed.createComponent(PaginationComponent);f.componentRef.setInput('total',1);f.detectChanges();expect(f.nativeElement.querySelector('[aria-label="Página anterior"]').disabled).toBeTrue();expect(f.nativeElement.querySelector('[aria-label="Próxima página"]').disabled).toBeTrue();const emit=spyOn(f.componentInstance.pageChange,'emit');f.componentInstance.select(0);f.componentInstance.select(2);f.componentRef.setInput('total',100);f.componentRef.setInput('disabled',true);f.detectChanges();f.componentInstance.select(2);expect(emit).not.toHaveBeenCalled()});
- it('handles first and last pages and empty results without invalid page events',()=>{const f=TestBed.createComponent(PaginationComponent);f.componentRef.setInput('total',120);f.componentRef.setInput('pageSize',12);f.detectChanges();expect(f.componentInstance.current()).toBe(1);expect(f.componentInstance.items()).toContain('…');f.componentRef.setInput('page',10);f.detectChanges();expect(f.nativeElement.querySelector('[aria-label="Próxima página"]').disabled).toBeTrue();expect(f.nativeElement.querySelector('[aria-label="Página anterior"]').disabled).toBeFalse();f.componentRef.setInput('total',0);f.detectChanges();expect(f.componentInstance.current()).toBe(1);expect(f.nativeElement.querySelector('.summary').textContent).toContain('Página 1 de 1')});
+import { TestBed } from '@angular/core/testing';
+import { PaginationComponent } from './pagination.component';
+describe('PaginationComponent', () => {
+  it('reports totals and emits a valid selected page with accessible current state', () => {
+    const f = TestBed.createComponent(PaginationComponent);
+    f.componentRef.setInput('total', 95);
+    f.componentRef.setInput('pageSize', 10);
+    f.componentRef.setInput('page', 5);
+    f.detectChanges();
+    expect(f.nativeElement.textContent).toContain('Página 5 de 10');
+    expect(f.nativeElement.textContent).not.toContain('registros');
+    expect(
+      f.nativeElement.querySelector('[aria-label="Página anterior"] svg'),
+    ).not.toBeNull();
+    expect(
+      f.nativeElement.querySelector('[aria-current=page]').textContent.trim(),
+    ).toBe('5');
+    expect(f.componentInstance.items()).toEqual([1, '…', 4, 5, 6, '…', 10]);
+    const emit = spyOn(f.componentInstance.pageChange, 'emit');
+    f.nativeElement.querySelector('[aria-label="Página 6"]').click();
+    expect(emit).toHaveBeenCalledWith(6);
+  });
+  it('disables boundaries and never emits an invalid or disabled selection', () => {
+    const f = TestBed.createComponent(PaginationComponent);
+    f.componentRef.setInput('total', 1);
+    f.detectChanges();
+    expect(
+      f.nativeElement.querySelector('[aria-label="Página anterior"]').disabled,
+    ).toBeTrue();
+    expect(
+      f.nativeElement.querySelector('[aria-label="Próxima página"]').disabled,
+    ).toBeTrue();
+    const emit = spyOn(f.componentInstance.pageChange, 'emit');
+    f.componentInstance.select(0);
+    f.componentInstance.select(2);
+    f.componentRef.setInput('total', 100);
+    f.componentRef.setInput('disabled', true);
+    f.detectChanges();
+    f.componentInstance.select(2);
+    expect(emit).not.toHaveBeenCalled();
+  });
+  it('handles first and last pages and empty results without invalid page events', () => {
+    const f = TestBed.createComponent(PaginationComponent);
+    f.componentRef.setInput('total', 120);
+    f.componentRef.setInput('pageSize', 12);
+    f.detectChanges();
+    expect(f.componentInstance.current()).toBe(1);
+    expect(f.componentInstance.items()).toContain('…');
+    f.componentRef.setInput('page', 10);
+    f.detectChanges();
+    expect(
+      f.nativeElement.querySelector('[aria-label="Próxima página"]').disabled,
+    ).toBeTrue();
+    expect(
+      f.nativeElement.querySelector('[aria-label="Página anterior"]').disabled,
+    ).toBeFalse();
+    f.componentRef.setInput('total', 0);
+    f.detectChanges();
+    expect(f.componentInstance.current()).toBe(1);
+    expect(f.nativeElement.querySelector('.summary').textContent).toContain(
+      'Página 1 de 1',
+    );
+  });
 });

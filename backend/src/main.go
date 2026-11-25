@@ -131,7 +131,7 @@ func run() error {
 
 	// Inscrições de newsletter.
 	subscriberRepository := repositories.SubscriberRepository{DB: database}
-	newsletterService := services.NewsletterService{Store: subscriberRepository}
+	newsletterService := services.NewNewsletterService(subscriberRepository)
 	newsletter := handlers.NewsletterHandler{Service: newsletterService}
 
 	// Inicializa o roteador HTTP; cada funcionalidade centraliza seus endpoints em routes.
@@ -172,6 +172,7 @@ func run() error {
 		syscall.SIGTERM,
 	)
 	defer stop()
+	go newsletterService.RunRetries(signalContext)
 
 	// canal que permite comunicação de go routines; <- operador de comunicação
 	serverErrors := make(chan error, 1)

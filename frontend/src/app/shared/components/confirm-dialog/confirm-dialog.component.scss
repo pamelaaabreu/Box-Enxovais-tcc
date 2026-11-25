@@ -132,6 +132,12 @@
   }
 }
 
-.box-quick-registration-panel .box-confirm { padding: clamp(16px, 6vw, 24px); }
-.box-quick-registration-panel .box-confirm-title { margin-bottom: 10px; }
-.box-quick-registration-panel .box-confirm-actions { margin-top: 18px; }
+.box-quick-registration-panel .box-confirm {
+  padding: clamp(16px, 6vw, 24px);
+}
+.box-quick-registration-panel .box-confirm-title {
+  margin-bottom: 10px;
+}
+.box-quick-registration-panel .box-confirm-actions {
+  margin-top: 18px;
+}

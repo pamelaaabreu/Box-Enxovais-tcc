@@ -1,0 +1,345 @@
+<section
+  class="reports"
+  aria-label="Relatórios administrativos"
+  [attr.aria-busy]="state() === 'loading'"
+>
+  <nav class="report-tabs" aria-label="Tipo de relatório">
+    @for (k of kinds; track k.value) {
+      <button
+        type="button"
+        [class.active]="kind() === k.value"
+        [attr.aria-pressed]="kind() === k.value"
+        (click)="select(k.value)"
+      >
+        {{ k.label }}
+      </button>
+    }
+  </nav>
+  @if (kind() !== "stock") {
+    <app-period-filter
+      [form]="filter"
+      [showGrouping]="false"
+      (applied)="apply()"
+    />
+  }
+  <app-admin-filters
+    [fields]="filterFields()"
+    applyLabel="Aplicar filtros"
+    clearLabel="Limpar filtros"
+    label="Filtros do relatório"
+    (applied)="apply()"
+    (cleared)="clear()"
+  />
+  @if (active()) {
+    <p class="filter-note">Filtros ativos</p>
+  }
+  <p class="note">
+    @if (kind() === "stock") {
+      Estoque atual de produtos ativos. Variações contabilizadas
+      individualmente, sem duplicar o estoque do produto. Baixo: 1 a 5 unidades.
+    } @else {
+      Período no fuso de São Paulo. Valores históricos de pedidos aprovados em
+      simulação; não representam liquidação de gateway.
+    }
+    @if (kind() === "products") {
+      Nomes e valores de vendas são históricos. SKU, categoria e marca são do
+      cadastro atual. Faturamento dos produtos não inclui frete.
+    }
+    @if (kind() === "customers") {
+      Recorrentes: pelo menos dois pedidos aprovados no período. Clientes sem
+      compras são exibidos com valor zero.
+    }
+  </p>
+  @if (state() === "loading") {
+    <app-admin-state kind="loading" title="Carregando relatório…" />
+    <div class="metrics" aria-hidden="true">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <app-admin-kpi-card
+          title="Carregando indicador"
+          [loading]="true"
+          [compact]="true"
+        />
+      }
+    </div>
+  } @else if (state() === "error") {
+    <app-admin-state
+      kind="error"
+      title="Não foi possível carregar o relatório"
+      [description]="error()"
+      actionLabel="Tentar novamente"
+      (action)="load()"
+    />
+  } @else {
+    @if (data(); as report) {
+      <div class="metrics">
+        @for (s of stats(); track s.key) {
+          <app-admin-kpi-card
+            [title]="s.label"
+            [value]="s.money ? s.value / 100 : s.value"
+            [format]="s.money ? 'currency' : 'number'"
+            [compact]="true"
+            [variant]="
+              s.key === 'cancelledOrders' ||
+              s.key === 'lowStock' ||
+              s.key === 'outOfStock'
+                ? 'warning'
+                : s.key === 'revenueCents'
+                  ? 'featured'
+                  : s.key === 'approvedOrders'
+                    ? 'success'
+                    : 'default'
+            "
+          />
+        }
+      </div>
+      <div class="results-bar">
+        <p>
+          {{ report.total }}
+          {{
+            report.total === 1 ? "registro encontrado" : "registros encontrados"
+          }}
+        </p>
+        @if (kind() !== "customers") {
+          <button
+            type="button"
+            (click)="export()"
+            [disabled]="exporting() || !report.total"
+          >
+            <mat-icon aria-hidden="true">download</mat-icon
+            >{{ exporting() ? "Exportando…" : "Exportar CSV" }}
+          </button>
+        }
+      </div>
+      @if (exportError()) {
+        <p class="feedback" role="alert">{{ exportError() }}</p>
+      }
+      @if (!report.rows.length) {
+        <app-admin-state
+          title="Nenhum registro encontrado"
+          description="Não há registros para os filtros selecionados."
+          actionLabel="Limpar filtros"
+          (action)="clear()"
+        />
+      } @else {
+        <div
+          class="table-wrap admin-adaptive-table"
+          tabindex="0"
+          role="region"
+          aria-label="Tabela do relatório"
+        >
+          <table [class.sales]="kind() === 'sales'">
+            <caption class="sr-only">
+              Relatório de
+              {{
+                kind() === "sales"
+                  ? "vendas"
+                  : kind() === "products"
+                    ? "produtos"
+                    : kind() === "customers"
+                      ? "clientes"
+                      : "estoque"
+              }}
+            </caption>
+            <thead>
+              <tr>
+                @if (kind() === "sales") {
+                  <th>Pedido</th>
+                  <th>Data</th>
+                  <th>Cliente</th>
+                  <th>Itens</th>
+                  <th>Total</th>
+                  <th>Pagamento</th>
+                  <th>Status</th>
+                }
+                @if (kind() === "products") {
+                  <th>Produto / SKU</th>
+                  <th>Categoria</th>
+                  <th>Marca</th>
+                  <th>Unidades</th>
+                  <th>Faturamento</th>
+                  <th>Participação</th>
+                }
+                @if (kind() === "customers") {
+                  <th>Cliente</th>
+                  <th>E-mail</th>
+                  <th>Pedidos aprovados</th>
+                  <th>Total gasto</th>
+                  <th>Última compra</th>
+                }
+                @if (kind() === "stock") {
+                  <th>Produto / SKU</th>
+                  <th>Variante</th>
+                  <th>Categoria</th>
+                  <th>Disponível</th>
+                  <th>Situação</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of report.rows; track $index) {
+                <tr>
+                  @if (kind() === "sales") {
+                    <td data-label="Pedido">
+                      <span class="cell-value"
+                        ><a [routerLink]="['/admin/pedidos', row.id]"
+                          >#{{ row.id }}</a
+                        ></span
+                      >
+                    </td>
+                    <td class="nowrap" data-label="Data">
+                      <span class="cell-value">{{
+                        formatDate(row.createdAt)
+                      }}</span>
+                    </td>
+                    <td data-label="Cliente">
+                      <span class="cell-value">{{ row.name }}</span>
+                    </td>
+                    <td data-label="Itens">
+                      <span class="cell-value">{{ row.units }}</span>
+                    </td>
+                    <td class="money" data-label="Total">
+                      <span class="cell-value"
+                        >{{
+                          row.revenueCents / 100
+                            | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                        }}<small
+                          >Frete:
+                          @if (
+                            row.shippingCents !== null &&
+                            row.shippingCents !== undefined
+                          ) {
+                            {{
+                              row.shippingCents / 100
+                                | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                            }}
+                          } @else {
+                            Não registrado
+                          }
+                        </small></span
+                      >
+                    </td>
+                    <td data-label="Pagamento">
+                      <span class="cell-value">{{
+                        paymentLabel(row.payment)
+                      }}</span>
+                    </td>
+                    <td data-label="Status">
+                      <span class="cell-value"
+                        ><app-status-badge
+                          [tone]="
+                            row.status === 'cancelled' ? 'danger' : 'success'
+                          "
+                          >{{ statusLabel(row.status) }}</app-status-badge
+                        ></span
+                      >
+                    </td>
+                  }
+                  @if (kind() === "products") {
+                    <td data-label="Produto / SKU">
+                      <span class="cell-value"
+                        ><strong>{{ row.name }}</strong
+                        ><small
+                          >{{ row.sku || "SKU indisponível" }}
+                          @if (row.archived) {
+                            · Arquivado ou fora do catálogo
+                          }
+                        </small></span
+                      >
+                    </td>
+                    <td data-label="Categoria">
+                      <span class="cell-value">{{ row.category }}</span>
+                    </td>
+                    <td data-label="Marca">
+                      <span class="cell-value">{{ row.brand }}</span>
+                    </td>
+                    <td data-label="Unidades">
+                      <span class="cell-value">{{ row.units }}</span>
+                    </td>
+                    <td class="money" data-label="Faturamento">
+                      <span class="cell-value">{{
+                        row.revenueCents / 100
+                          | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                      }}</span>
+                    </td>
+                    <td data-label="Participação">
+                      <span class="cell-value"
+                        >{{ row.share | number: "1.0-2" : "pt-BR" }}%</span
+                      >
+                    </td>
+                  }
+                  @if (kind() === "customers") {
+                    <td data-label="Cliente">
+                      <span class="cell-value"
+                        ><a [routerLink]="['/admin/clientes', row.id]">{{
+                          row.name
+                        }}</a></span
+                      >
+                    </td>
+                    <td data-label="E-mail">
+                      <span class="cell-value">{{ row.email }}</span>
+                    </td>
+                    <td data-label="Pedidos aprovados">
+                      <span class="cell-value">{{ row.orders }}</span>
+                    </td>
+                    <td class="money" data-label="Total gasto">
+                      <span class="cell-value">{{
+                        row.revenueCents / 100
+                          | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                      }}</span>
+                    </td>
+                    <td class="nowrap" data-label="Última compra">
+                      <span class="cell-value">{{
+                        row.lastPurchase
+                          ? formatDate(row.lastPurchase)
+                          : "Sem compras no período"
+                      }}</span>
+                    </td>
+                  }
+                  @if (kind() === "stock") {
+                    <td data-label="Produto / SKU">
+                      <span class="cell-value"
+                        ><strong>{{ row.name }}</strong
+                        ><small>{{ row.sku }}</small></span
+                      >
+                    </td>
+                    <td data-label="Variante">
+                      <span class="cell-value">{{
+                        row.variant || "Produto simples"
+                      }}</span>
+                    </td>
+                    <td data-label="Categoria">
+                      <span class="cell-value">{{ row.category }}</span>
+                    </td>
+                    <td data-label="Disponível">
+                      <span class="cell-value">{{ row.units }}</span>
+                    </td>
+                    <td data-label="Situação">
+                      <span class="cell-value"
+                        ><app-status-badge
+                          [tone]="
+                            row.status === 'available'
+                              ? 'success'
+                              : row.units === 0
+                                ? 'danger'
+                                : 'warning'
+                          "
+                          >{{ statusLabel(row.status) }}</app-status-badge
+                        ></span
+                      >
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <app-pagination
+          [page]="report.page"
+          [pageSize]="report.pageSize"
+          [total]="report.total"
+          (pageChange)="apply($event)"
+        />
+      }
+    }
+  }
+</section>

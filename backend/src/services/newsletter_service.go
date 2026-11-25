@@ -13,10 +13,12 @@ var ErrNewsletterPersistence = errors.New("newsletter persistence failed")
 var ErrNewsletterConfiguration = errors.New("newsletter SMTP not configured")
 var ErrNewsletterDelivery = errors.New("newsletter delivery failed")
 
+type NewsletterStore interface {
+	SaveIfNew(context.Context, string) (bool, error)
+}
 type NewsletterService struct {
-	Store interface {
-		SaveIfNew(context.Context, string) (bool, error)
-	}
+	Store    NewsletterStore
+	recovery *newsletterRecovery
 
 	// Permite substituir o envio SMTP durante os testes.
 	Send func(*gomail.Message) error
@@ -42,13 +44,12 @@ func (service NewsletterService) Subscribe(
 	if !isValidEmail(email) {
 		return ErrNewsletterEmailInvalid
 	}
-	send := service.Send
-	if send == nil {
+	if service.Send == nil {
 		if _, _, _, err := smtpConfiguration(); err != nil {
 			return err
 		}
-		send = sendNewsletterSMTP
 	}
+
 	if service.Store == nil {
 		return ErrNewsletterPersistence
 	}
@@ -60,7 +61,11 @@ func (service NewsletterService) Subscribe(
 		return nil
 	}
 	// SMTP não participa da transação: a inscrição persiste mesmo se a confirmação falhar.
-	if err = send(newsletterMessage(email)); err != nil {
+	delivery := newNewsletterDelivery(email)
+	if err = service.deliver(delivery); err != nil {
+		if service.recovery != nil {
+			service.recovery.retain(delivery)
+		}
 		return errors.Join(ErrNewsletterDelivery, err)
 	}
 	return nil

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormArray } from '@angular/forms';
 
-import { VariantForm } from '../product-variants/product-variants.component';
+import type { VariantForm } from '../../types/products/variant-form';
 import { money, parsePrice } from '../../forms/price-input';
 
 @Component({

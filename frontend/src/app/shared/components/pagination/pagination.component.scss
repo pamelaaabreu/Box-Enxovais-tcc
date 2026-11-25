@@ -1,95 +1,93 @@
-
-      :host {
-        display: block;
-        min-width: 0;
-      }
-      .pager {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        margin-top: 24px;
-        font-family: Montserrat, sans-serif;
-        color: #3d4836;
-      }
-      .summary {
-        font-size: 11px;
-        color: #6b7163;
-        line-height: 16px;
-      }
-      .controls {
-        display: flex;
-        justify-content: center;
-        gap: 4px;
-        align-items: center;
-        max-width: 100%;
-      }
-      button {
-        display: grid;
-        place-items: center;
-        min-width: 36px;
-        min-height: 36px;
-        padding: 6px;
-        border: 1px solid #d5dace;
-        border-radius: 8px;
-        background: transparent;
-        color: inherit;
-        font:
-          500 12px Montserrat,
-          sans-serif;
-        cursor: pointer;
-      }
-      svg {
-        width: 18px;
-        height: 18px;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 1.6;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-      button[aria-current='page'] {
-        background: #3d4836;
-        border-color: #3d4836;
-        color: white;
-      }
-      button:hover:not(:disabled) {
-        background: #edf0e7;
-      }
-      button[aria-current='page']:hover {
-        background: #526047;
-      }
-      button:disabled {
-        opacity: 0.4;
-        cursor: default;
-      }
-      button:focus-visible {
-        outline: 2px solid #657550;
-        outline-offset: 2px;
-      }
-      .controls > span {
-        min-width: 14px;
-        text-align: center;
-        font-size: 12px;
-      }
-      @media (pointer: coarse) {
-        button {
-          min-height: 44px;
-        }
-      }
-      @media (max-width: 540px) {
-        button {
-          min-width: 32px;
-          padding: 4px;
-        }
-        .controls > span {
-          min-width: 10px;
-        }
-      }
-      @media (max-width: 360px) {
-        .controls {
-          gap: 2px;
-          flex-wrap: wrap;
-        }
-      }
-    
+:host {
+  display: block;
+  min-width: 0;
+}
+.pager {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  font-family: Montserrat, sans-serif;
+  color: #3d4836;
+}
+.summary {
+  font-size: 11px;
+  color: #6b7163;
+  line-height: 16px;
+}
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  align-items: center;
+  max-width: 100%;
+}
+button {
+  display: grid;
+  place-items: center;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 6px;
+  border: 1px solid #d5dace;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font:
+    500 12px Montserrat,
+    sans-serif;
+  cursor: pointer;
+}
+svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+button[aria-current="page"] {
+  background: #3d4836;
+  border-color: #3d4836;
+  color: white;
+}
+button:hover:not(:disabled) {
+  background: #edf0e7;
+}
+button[aria-current="page"]:hover {
+  background: #526047;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+button:focus-visible {
+  outline: 2px solid #657550;
+  outline-offset: 2px;
+}
+.controls > span {
+  min-width: 14px;
+  text-align: center;
+  font-size: 12px;
+}
+@media (pointer: coarse) {
+  button {
+    min-height: 44px;
+  }
+}
+@media (max-width: 540px) {
+  button {
+    min-width: 32px;
+    padding: 4px;
+  }
+  .controls > span {
+    min-width: 10px;
+  }
+}
+@media (max-width: 360px) {
+  .controls {
+    gap: 2px;
+    flex-wrap: wrap;
+  }
+}

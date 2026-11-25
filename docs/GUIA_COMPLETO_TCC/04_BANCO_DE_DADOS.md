@@ -45,8 +45,14 @@ O checkout mantém bloqueios e transação para não vender acima do saldo. Canc
 
 ## Migrations e rollback
 
-`backend/migrations` documenta evolução incremental. A 13 criou variantes; a 48 introduziu SKU externo; a 50 concluiu suporte necessário ao CRUD; a 51 registra frete. A 52 torna critérios auxiliares antigos de avaliação opcionais, mantendo nota geral obrigatória. A 53 adiciona parcelamento.
+`backend/migrations` documenta evolução incremental. A 13 criou variantes; a 48 introduziu SKU externo; a 50 concluiu suporte necessário ao CRUD; a 51 registra frete. A 52 torna critérios auxiliares antigos de avaliação opcionais, mantendo nota geral obrigatória. A 53 adiciona parcelamento; a 54 separa avaliações de produto da experiência da compra.
 
-Estado principal nesta entrega: **51, dirty=false**. As 52/53 foram testadas isoladamente. O down da 52 recusa reimpor NOT NULL quando avaliações simplificadas perderiam compatibilidade. O down da 53 recusa apagar a coluna quando planos já foram gravados. Rollback seguro pode, portanto, interromper com erro deliberado em vez de apagar histórico financeiro.
+Estado principal confirmado na auditoria Angular: **54, dirty=false**. As 52/53 foram aplicadas na implantação autorizada; a 54 cria product_reviews. A 55 permanece pendente. O down da 52 recusa reimpor NOT NULL quando avaliações simplificadas perderiam compatibilidade. O down da 53 recusa apagar a coluna quando planos já foram gravados. Rollback seguro pode, portanto, interromper com erro deliberado em vez de apagar histórico financeiro.
 
 Nunca edite migrations já aplicadas para corrigir dados. Prepare uma incremental, faça backup e obtenha autorização quando o destino for o principal. Os testes desta entrega não alteraram preços, estoques, pedidos ou campanhas do principal.
+
+Avaliações de produto mantêm vínculo com usuário/produto, elegibilidade por compra aprovada, edição pelo proprietário e agregação real. Não se convertem avaliações antigas de experiência em notas de produto. Nenhuma migration principal foi executada nesta revisão documental.
+
+## Arquivos e backup
+
+product_images guarda caminhos, não bytes. pg_dump sozinho não restaura fotografias: combine backup de banco com cópia coerente do UPLOAD_DIR e inventário de hashes. O ZIP legado versionado cobre só parte das imagens atuais. Remoção de vínculo de galeria não apaga automaticamente arquivo físico; candidatos exigem revisão de referências indiretas, sem exclusão automática. Inventário atual no AUDITORIA_FINAL.md.

@@ -10,7 +10,7 @@ Comece pelo problema de escolher a peça certa, com tamanho e entrega disponíve
 
 Use a confirmação de pedido como exemplo de integração. A API valida usuário, carrinho, preço atual, promoção e faixa de CEP, bloqueia saldo e grava snapshots em uma transação. Uma chave de idempotência evita compra duplicada. Cancelar repõe uma vez, sem apagar o histórico. O parcelamento divide centavos exatamente e não envia dados bancários.
 
-Mostre a avaliação única de experiência, reutilizada no sucesso e no histórico. Diferencie consentimento de publicação e moderação. Termine com o painel e a evidência de testes: 356 Angular, Go/PostgreSQL, sete suítes E2E finais e quatro larguras. Declare que banco principal e schemas isolados são ambientes diferentes e que as migrations pendentes exigem implantação autorizada.
+Mostre a avaliação única de experiência, reutilizada no sucesso e no histórico. Diferencie consentimento de publicação e moderação. Termine com o painel e a evidência de testes: 433 Angular na rodada atual, Go/PostgreSQL normal/race e navegação real em quatro larguras. Declare que banco principal e schemas isolados são ambientes diferentes e que as migrations pendentes exigem implantação autorizada.
 
 ## Roteiro prático de demonstração
 
@@ -44,7 +44,7 @@ Oferece componentes, roteamento, injeção de dependências e formulários reati
 
 ### 5. O que significa standalone?
 
-O componente declara suas próprias dependências. Isso reduz necessidade de módulos por tela; ainda existe organização modular no admin.
+O componente declara suas próprias dependências. Isso reduz necessidade de módulos por tela; o admin também usa Routes standalone.
 
 ### 6. Por que lazy loading?
 
@@ -160,7 +160,7 @@ Não. Prova compilação/distribuição; a evidência funcional vem de testes de
 
 ### 34. O principal foi alterado nos testes?
 
-Não. Hashes de 63 tabelas públicas permaneceram iguais e o banco ficou na versão 51, dirty=false.
+Não. Na rodada atual os hashes de todas as tabelas públicas ficaram idênticos; o principal foi confirmado em 54, dirty=false. Resultados anteriores em 51 são históricos.
 
 ### 35. Quais limitações você reconhece?
 
@@ -173,3 +173,5 @@ Autorização específica e implantação controlada das migrations 52/53, com b
 ## Encerramento sugerido
 
 Destaque o aprendizado de integrar UI, regras transacionais e persistência, em vez de alegar equivalência a uma operação comercial real. Proponha gateway, logística, emissão fiscal e atualização planejada de dependências como evoluções. Para aprofundar respostas, consulte [decisões](08_DECISOES_TECNICAS.md), [segurança](06_SEGURANCA.md) e [banco](04_BANCO_DE_DADOS.md).
+
+Na banca, diferencie avaliação da compra e do produto. Explique que newsletter é idempotente, mas recuperação de SMTP é limitada à memória da instância. Não afirme garantia absoluta de e-mail ou certificação completa de acessibilidade.

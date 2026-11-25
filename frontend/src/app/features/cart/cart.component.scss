@@ -451,7 +451,10 @@
   font-size: clamp(1.9rem, 2.7vw, 2.5rem);
 }
 
-.empty { display: block; min-width: 0; }
+.empty {
+  display: block;
+  min-width: 0;
+}
 .mobile-label {
   display: none;
 }
@@ -620,7 +623,7 @@ button:focus-visible {
   .cart-page--empty .cart-heading {
     margin-bottom: 0;
   }
-.cart-page--empty .empty__icon {
+  .cart-page--empty .empty__icon {
     margin-bottom: 18px;
   }
 }

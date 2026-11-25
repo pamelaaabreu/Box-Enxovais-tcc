@@ -3,17 +3,30 @@
     <section class="campaign" aria-labelledby="campaign-heading">
       <header>
         <p class="eyebrow">Coleção especial</p>
-        @if (fullPage) {<h1 id="campaign-heading">{{ campaign.name }}</h1>} @else {<h2 id="campaign-heading">{{ campaign.name }}</h2>}
+        @if (fullPage) {
+          <h1 id="campaign-heading">{{ campaign.name }}</h1>
+        } @else {
+          <h2 id="campaign-heading">{{ campaign.name }}</h2>
+        }
         <p>{{ campaign.description }}</p>
       </header>
       @if (fullPage) {
         <div class="campaign-search">
           <label for="campaign-search">Buscar nesta coleção</label>
-          <input id="campaign-search" type="search" placeholder="Nome ou SKU"
-            [ngModel]="search()" (ngModelChange)="search.set($event); page.set(1)" />
+          <input
+            id="campaign-search"
+            type="search"
+            placeholder="Nome ou SKU"
+            [ngModel]="search()"
+            (ngModelChange)="search.set($event); page.set(1)"
+          />
         </div>
-        <app-catalog-toolbar [total]="products().length" [sort]="sort()" [sortOptions]="sortOptions"
-          (sortChange)="sort.set($event); page.set(1)" />
+        <app-catalog-toolbar
+          [total]="products().length"
+          [sort]="sort()"
+          [sortOptions]="sortOptions"
+          (sortChange)="sort.set($event); page.set(1)"
+        />
       }
       <div class="campaign-grid">
         @for (product of visibleProducts(); track product.id) {
@@ -26,9 +39,12 @@
         }
       </div>
       @if (fullPage && !products().length) {
-        <app-admin-state title="Nenhum produto encontrado"
+        <app-admin-state
+          title="Nenhum produto encontrado"
           description="Tente outro nome ou SKU para buscar nesta coleção."
-          actionLabel="Limpar busca" (action)="search.set(''); page.set(1)" />
+          actionLabel="Limpar busca"
+          (action)="search.set(''); page.set(1)"
+        />
       }
       @if (fullPage && products().length > pageSize) {
         <app-pagination
@@ -49,9 +65,12 @@
       @if (loading()) {
         <app-admin-state kind="loading" title="Carregando coleção…" />
       } @else {
-        <app-admin-state title="Esta coleção não está disponível."
+        <app-admin-state
+          title="Esta coleção não está disponível."
           description="Explore os produtos disponíveis no catálogo."
-          actionLabel="Explorar produtos" actionLink="/categoria/todos" />
+          actionLabel="Explorar produtos"
+          actionLink="/categoria/todos"
+        />
       }
     </section>
   }

@@ -2,7 +2,6 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   DestroyRef,
-  TemplateRef,
   ViewEncapsulation,
   inject,
   signal,
@@ -15,23 +14,9 @@ import {
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Observable, defer, finalize, first } from 'rxjs';
+import { defer, finalize, first } from 'rxjs';
 
-export interface ConfirmDialogOptions {
-  title: string;
-  message: string;
-  variant: 'warning' | 'danger' | 'info';
-  icon?: string;
-  primary: string;
-  secondary: string;
-  confirmAction?: 'primary' | 'secondary';
-  disableClose?: boolean;
-  details?: readonly string[];
-  content?: TemplateRef<unknown>;
-  actions?: TemplateRef<unknown>;
-  execute?: () => Observable<unknown>;
-  errorMessage?: (error: unknown) => string;
-}
+import type { ConfirmDialogOptions } from '../../types/ui/confirm-dialog';
 
 @Component({
   standalone: true,

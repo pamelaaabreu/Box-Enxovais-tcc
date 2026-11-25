@@ -4,7 +4,7 @@ Uma decisão pode estar comprovada no código, enquanto a explicação de seu be
 
 | Solução comprovada | Benefício técnico interpretado | Custo ou limite |
 |---|---|---|
-| Componentes Angular standalone e rotas lazy | Dependências locais e carregamento por funcionalidade | Convivem com módulo administrativo; não significa aplicação inteira sem módulos |
+| Componentes Angular standalone e rotas lazy | Dependências locais e carregamento por funcionalidade | Admin usa Routes standalone; dependências externas podem continuar oferecendo módulos |
 | Go com net/http | Controle explícito do servidor, métodos e middleware sem framework adicional | Exige disciplina para padronizar validações e respostas |
 | PostgreSQL relacional | FKs, unicidade e transações protegem relações comerciais | Não elimina a necessidade de validar regras no Go |
 | Migrations incrementais | Schema reproduzível e rastreável | Down pode ser inseguro após uso; há guardas deliberadas em 52/53 |
@@ -15,7 +15,7 @@ Uma decisão pode estar comprovada no código, enquanto a explicação de seu be
 | Campos esperados em edição e reordenação | Detecta alterações concorrentes em vez de sobrescrever silenciosamente | Interface precisa apresentar conflito e permitir recarregar |
 | Pagamento demonstrativo | Permite estudar compra sem coletar dados financeiros sensíveis | Não comprova cobrança, aprovação bancária ou liquidação |
 | Componentes compartilhados de confirmação, estados e avaliação | Mesma semântica e aparência em diferentes telas | Uma alteração global exige avaliar consumidores existentes |
-| Compatibilidade por reexportação de tipos | Organização por domínio sem migração arriscada de todos os imports | Fachada antiga permanece e pode ser descontinuada gradualmente |
+| Contratos por domínio em shared/types | Imports diretos verificados pelo TypeScript | Fachada antiga removida somente após migrar consumidores |
 
 ## Por que não refazer tudo antes da defesa
 
@@ -27,4 +27,4 @@ Persistir quantidade e total histórico é suficiente para reproduzir o plano de
 
 ## Evoluções recomendadas
 
-Depois da apresentação, centralizar URL de API por ambiente, atualizar dependências com análise de compatibilidade, estudar SSR apenas se houver objetivo de SEO, ampliar testes assistivos e planejar armazenamento de mídia/backup para produção. São recomendações futuras, não funcionalidades implementadas por esta tarefa.
+API_BASE_URL já centraliza a origem. Depois da apresentação, configurar o provider por ambiente, atualizar dependências com análise de compatibilidade, estudar SSR apenas se houver objetivo de SEO, ampliar testes assistivos e planejar armazenamento de mídia/backup para produção. São recomendações futuras, não funcionalidades implementadas por esta tarefa.

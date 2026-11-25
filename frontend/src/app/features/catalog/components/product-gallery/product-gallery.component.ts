@@ -8,7 +8,7 @@ import {
   linkedSignal,
 } from '@angular/core';
 
-import { ProductImage } from '../../interfaces/product-image.interface';
+import { ProductImage } from '../../../../shared/types/catalog/catalog-image';
 import { ProductMediaComponent } from '../product-media/product-media.component';
 
 @Component({

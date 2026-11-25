@@ -1,9 +1,10 @@
+import { CheckoutService } from '../../../core/services/checkout.service';
 import { ConfirmedOrder } from '../../../shared/types/checkout/checkout';
 import { installmentSummary } from '../../../shared/utils/installments';
 import { Component, inject, signal } from '@angular/core';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
-import { HttpClient } from '@angular/common/http';
+
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -35,7 +36,7 @@ registerLocaleData(localePt);
   templateUrl: './checkout-success.component.html',
 })
 export class CheckoutSuccessComponent {
-  private readonly http = inject(HttpClient);
+  private readonly checkoutApi = inject(CheckoutService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly auth = inject(AuthService);
@@ -78,38 +79,33 @@ export class CheckoutSuccessComponent {
             return EMPTY;
           }
 
-          return this.http
-            .get<{
-              success: boolean;
-              data?: ConfirmedOrder;
-            }>(`http://localhost:8080/checkout/success/${id}`)
-            .pipe(
-              // Cancela a consulta quando a sessão muda.
-              takeUntil(this.auth.userChanged),
+          return this.checkoutApi.success(id).pipe(
+            // Cancela a consulta quando a sessão muda.
+            takeUntil(this.auth.userChanged),
 
-              catchError((error) => {
-                this.loading.set(false);
+            catchError((error) => {
+              this.loading.set(false);
 
-                if (error.status === 404 || error.status === 400) {
-                  this.notFound.set(true);
-                } else if (error.status === 401) {
-                  this.error.set('Sua sessão expirou. Faça login novamente.');
+              if (error.status === 404 || error.status === 400) {
+                this.notFound.set(true);
+              } else if (error.status === 401) {
+                this.error.set('Sua sessão expirou. Faça login novamente.');
 
-                  void this.router.navigate(['/login']);
-                } else {
-                  // Permite retry para falhas potencialmente temporárias.
-                  this.canRetry.set(
-                    error.status === 0 ||
-                      error.status === 429 ||
-                      error.status >= 500,
-                  );
+                void this.router.navigate(['/login']);
+              } else {
+                // Permite retry para falhas potencialmente temporárias.
+                this.canRetry.set(
+                  error.status === 0 ||
+                    error.status === 429 ||
+                    error.status >= 500,
+                );
 
-                  this.error.set('Não foi possível consultar o pedido agora.');
-                }
+                this.error.set('Não foi possível consultar o pedido agora.');
+              }
 
-                return EMPTY;
-              }),
-            );
+              return EMPTY;
+            }),
+          );
         }),
 
         takeUntilDestroyed(),

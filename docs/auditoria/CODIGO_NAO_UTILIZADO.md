@@ -1,3 +1,5 @@
+> Auditoria histórica de 22/11/2026. Caminhos e estado de implantação abaixo correspondem àquela rodada. Candidatos atuais e arquitetura vigente estão no AUDITORIA_FINAL.md e docs/ESTRUTURA_ANGULAR.md. Não usar este inventário como autorização automática de exclusão.
+
 # Auditoria de uso de código — 22/11/2026
 
 ## Método e limites

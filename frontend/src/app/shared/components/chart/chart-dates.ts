@@ -1,4 +1,4 @@
-export type ChartGrouping = 'day' | 'month';
+import type { ChartGrouping } from '../../types/ui/chart';
 
 export function civilDate(
   value: string,

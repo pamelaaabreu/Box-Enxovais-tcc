@@ -30,4 +30,3 @@ export interface Product {
   promotional_price: number;
   promotion_active?: boolean;
 }
-

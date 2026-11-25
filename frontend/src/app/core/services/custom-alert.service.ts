@@ -5,7 +5,7 @@ import {
   createComponent,
 } from '@angular/core';
 import { CustomAlertComponent } from '../../shared/custom-alert/custom-alert.component';
-import { AlertType, AlertOptions } from '../../shared/models';
+import type { AlertType, AlertOptions } from '../../shared/types/ui/alert';
 import { FormGroup } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })

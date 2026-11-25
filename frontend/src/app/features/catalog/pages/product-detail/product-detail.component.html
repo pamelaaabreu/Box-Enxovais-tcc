@@ -15,9 +15,20 @@
       </div>
     </div>
   } @else if (state().status === "error") {
-    <app-admin-state kind="error" title="Não foi possível carregar o produto." description="Tente novamente em instantes." actionLabel="Tentar novamente" (action)="retry()" />
+    <app-admin-state
+      kind="error"
+      title="Não foi possível carregar o produto."
+      description="Tente novamente em instantes."
+      actionLabel="Tentar novamente"
+      (action)="retry()"
+    />
   } @else if (!product()) {
-    <app-admin-state title="Produto não encontrado" description="Este produto não está disponível ou não existe mais." actionLabel="Voltar aos produtos" actionLink="/categoria/todos" />
+    <app-admin-state
+      title="Produto não encontrado"
+      description="Este produto não está disponível ou não existe mais."
+      actionLabel="Voltar aos produtos"
+      actionLink="/categoria/todos"
+    />
   } @else {
     @if (product(); as product) {
       <div class="product-layout">
@@ -46,7 +57,9 @@
           </div>
           <h1 id="product-title">{{ product.name }}</h1>
           <app-product-rating [productId]="product.id" />
-          @if (product.sku) { <p class="product-sku">SKU: {{ product.sku }}</p> }
+          @if (product.sku) {
+            <p class="product-sku">SKU: {{ product.sku }}</p>
+          }
           <app-product-price
             [emphasized]="true"
             [showInstallments]="false"
@@ -155,7 +168,7 @@
               />
             </div>
             @if (showCartLink()) {
-              <a class="purchase-button" routerLink="/cart">Ver sacola</a>
+              <a class="purchase-button" routerLink="/carrinho">Ver sacola</a>
             } @else {
               <button
                 class="purchase-button"
@@ -400,7 +413,7 @@
           </div>
         </div>
         @if (showCartLink()) {
-          <a class="purchase-button" routerLink="/cart">Ver sacola</a>
+          <a class="purchase-button" routerLink="/carrinho">Ver sacola</a>
         } @else {
           <button
             class="purchase-button"

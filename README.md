@@ -2,7 +2,7 @@
 
 E-commerce desenvolvido como evolução de um projeto de TCC. O repositório reúne uma aplicação Angular, uma API HTTP em Go e um banco PostgreSQL. Os fluxos implementados incluem autenticação, catálogo, favoritos, carrinho, checkout demonstrativo, administração de produtos/promoções/pedidos e consulta administrativa de clientes. Resultados, limites e evidências estão em [AUDITORIA_FINAL.md](AUDITORIA_FINAL.md).
 
-O [guia completo para a defesa do TCC](docs/GUIA_COMPLETO_TCC/README.md) explica arquitetura, fluxos, segurança e testes. As migrations 52 e 53 permanecem pendentes de aplicação autorizada no banco principal.
+O [guia completo para a defesa do TCC](docs/GUIA_COMPLETO_TCC/README.md) explica arquitetura, fluxos, segurança e testes. Estado confirmado nesta auditoria: principal em 54, dirty=false; migration 55 presente no código e não aplicada. Resultados de implantação 52/53 permanecem no guia histórico.
 
 ## Visão geral
 
@@ -36,10 +36,9 @@ Box-Enxovais-tcc/
 ├── frontend/
 │   ├── public/                 # imagens e arquivos estáticos
 │   └── src/app/
-│       ├── components/         # navegação, rodapé e área administrativa
 │       ├── core/               # autenticação, guards, interceptor e serviços HTTP
-│       ├── features/           # páginas e funcionalidades de negócio
-│       └── shared/             # modelos, validações, alertas e UI reutilizável
+│       ├── features/           # públicas, autenticação e admin standalone
+│       └── shared/             # types, forms, validações e UI reutilizável
 ├── backend/
 │   ├── src/
 │   │   ├── config/               # configuração da aplicação
@@ -67,33 +66,27 @@ A aplicação é formada majoritariamente por componentes standalone carregados 
 
 ### Rotas
 
-| Caminho | Responsabilidade |
+| Caminho canônico | Responsabilidade |
 | --- | --- |
-| `/home` | Home composta por navegação, carrossel, produtos, categorias, depoimentos, promoções e newsletter |
-| `/register` e `/login` | Cadastro e autenticação |
-| `/forgot-password` | Solicitação do código de recuperação |
-| `/reset-password` | Validação do código e nova senha |
-| `/404` | Recurso não encontrado |
+| `/inicio` | Home, catálogo em destaque, campanhas e newsletter |
+| `/cadastro`, `/login` | AuthComponent compartilhado |
+| `/recuperar-senha`, `/verificar-codigo`, `/redefinir-senha` | Recuperação por código e autorização temporária |
+| `/minha-conta` (inclui Minhas avaliações), `/meus-pedidos` | Área autenticada |
+| `/carrinho`, `/favoritos`, `/finalizar-compra` | Compra |
+| `/admin/dashboard` | Indicadores e seis gráficos ECharts |
+| `/admin/produtos` | Listagem, criação, edição, imagens e variantes |
+| `/admin/pedidos`, `/admin/clientes`, `/admin/relatorios` | Gestão e consulta |
+| `/admin/promocoes`, `/admin/cadastros` | Campanhas, categorias, marcas e faixas de CEP |
 
-Rotas administrativas usam `AdminGuard`, que decodifica o JWT, verifica expiração e exige role `admin`:
-
-- `/admin/dashboard` e `/admin/metrics` (indicadores e gráficos com filtro de período)
-- `/admin/products` e `/admin/products/manage`
-- `/admin/promotions`, `/admin/promotions/new` e `/admin/promotions/:id/edit`
-- `/admin/orders` e `/admin/orders/:id`
-- `/admin/customers` e `/admin/customers/:id` (somente consulta)
-- `/admin/reports`
-- `/product-register`, `/image-upload/:id`, `/promotion-register` e `/add-to-promotion` são atalhos standalone também protegidos.
-
-O token, nome, e-mail e role ficam no `sessionStorage`. O interceptor inclui `Authorization: Bearer <token>` nas requisições. O guard melhora a navegação, mas a autorização efetiva permanece no backend.
+Rotas antigas em inglês e atalhos administrativos foram preservados como aliases. `/admin/metrics` redireciona para Dashboard. AdminGuard exige sessão válida e perfil admin; autorização efetiva permanece no Go. JWT em sessionStorage é enviado somente para a origem/prefixo da API configurada, não a serviços externos.
 
 ### Serviços e estado
 
 - `AuthService`: cadastro, login, logout e recuperação de senha.
 - `ProductService`: cadastro, edição, variantes, imagens e exclusão/arquivamento seguro; listagens utilizam filtros e paginação do backend.
-- `PromoService`: campanhas, participantes por nome/SKU, imagens e descontos.
+- `PromotionService`: campanhas, participantes por nome/SKU, imagens e descontos.
 - `UploadService`: envio multipart de imagens.
-- `SweetAlertService` e `CustomAlertService`: feedback visual.
+- `ConfirmDialogService`: confirmações acessíveis; `CustomAlertService`: feedback global. SweetAlertService permanece como candidato de revisão, sem remoção automática.
 
 Não há store global: o estado fica nos componentes, em serviços singleton e no `sessionStorage`.
 
@@ -115,7 +108,7 @@ sequenceDiagram
     H-->>F: JSON + status HTTP
 ```
 
-Rotas públicas passam pelo middleware de método. Rotas administrativas passam pela validação do método, autenticação JWT e autorização de administrador.
+ServeMux registra método/caminho nativamente. Rotas administrativas passam por autenticação JWT e autorização; guardas de método em handlers preservam usos diretos quando necessários.
 
 ### API atual
 
@@ -125,7 +118,7 @@ Rotas públicas passam pelo middleware de método. Rotas administrativas passam 
 | `POST` | `/login` | Público | Autentica e emite JWT válido por 2 horas |
 | `POST` | `/send-reset-token` | Público | Envia código de recuperação por SMTP |
 | `POST` | `/reset-password` | Público | Valida código e troca a senha |
-| `POST` | `/api/newsletter/subscribe` | Público | Envia confirmação por SMTP e persiste assinante, sem cupom não configurado |
+| `POST` | `/api/newsletter/subscribe` | Público | Persiste idempotentemente e tenta confirmação SMTP; resposta neutra e recuperação limitada |
 | `GET` | `/products/{id}` | Público | Retorna produto e imagens |
 | `GET` | `/api/promotions/{nome}` | Público | Lista produtos de uma promoção ativa |
 | `POST` | `/products` | Admin | Cria produto |
@@ -137,7 +130,7 @@ Rotas públicas passam pelo middleware de método. Rotas administrativas passam 
 | `POST` | `/admin/orders/{id}/cancel` | Admin | Cancelamento transacional com reposição |
 | `GET` | `/uploads/{arquivo}` | Público | Entrega imagem local |
 
-Existe um handler para `GET /validate-reset-token/{token}`, porém ele não está registrado. O frontend usa hoje o fluxo de código enviado por e-mail, e não o schema `password_resets` baseado em link.
+Recuperação utiliza os endpoints POST /send-reset-token, /validate-reset-code, /validate-reset-token e /reset-password; consulte routes/auth.go para o contrato atual. Não se presume um fluxo GET por link.
 
 ## Banco de dados
 
@@ -160,8 +153,8 @@ Consulte `backend/migrations/README.md` antes de aplicar migrações, especialme
 
 ### Pré-requisitos
 
-- Node.js compatível com Angular 19 e npm
-- Go 1.24
+- Node.js 22.23.5 (frontend/.nvmrc) e npm
+- Go 1.26.11
 - PostgreSQL
 - golang-migrate
 - credenciais SMTP para testar e-mails
@@ -195,7 +188,7 @@ $env:DATABASE_URL = "postgres://usuario:senha@localhost:5432/bd_box?sslmode=disa
 A partir de `backend/`, em uma base nova:
 
 ```powershell
-$migrationSource = "file://$((Resolve-Path migrations).Path.Replace('\', '/'))"
+$migrationSource = "file:$((Resolve-Path migrations).Path.Replace('\', '/'))"
 migrate -source $migrationSource -database $env:DATABASE_URL up
 ```
 
@@ -215,7 +208,7 @@ Em outro terminal:
 
 ```powershell
 cd frontend
-npm install
+npm ci
 npm start
 ```
 
@@ -236,12 +229,26 @@ Os testes incluem Angular, HTTP/Go, integração PostgreSQL em schemas isolados 
 
 ## Limitações e decisões pendentes
 
-- URLs da API e configuração de desenvolvimento permanecem locais.
+- API_BASE_URL centraliza a URL da API; o valor padrão é localhost:8080. Produção precisa configurar origem/API e HTTPS.
 - Checkout e dados comerciais do catálogo são demonstrativos para o TCC; não representam cobrança real.
 - Pedidos antigos não registram detalhamento separado de frete/desconto nem acompanhamento de envio/entrega.
-- Clientes administrativos são somente consulta. Relatórios ainda possui escopo pendente descrito na auditoria; Dashboard/Métricas utiliza indicadores e gráficos reais com filtros de período.
+- Clientes administrativos são somente consulta. Dashboard é a página única de indicadores; a rota antiga de Métricas redireciona para ela. Relatórios oferece vendas, produtos, clientes e estoque; CSV apenas onde implementado.
 - Kits de capas com estoque compartilhado precisam de modelagem de componentes antes da publicação.
 - SMTP depende das credenciais do ambiente. Testes com envio controlado não comprovam entrega real.
 - Deploy e observabilidade não foram revalidados durante a limpeza documental.
 
 As migrations e os manifestos estruturados são a referência dos dados demonstrativos. Contratos permanentes ficam em docs; relatórios de etapas concluídas foram consolidados no AUDITORIA_FINAL.md. Artefatos intermediários usam `.artifacts/`, com retenção explícita das evidências finais.
+
+## Arquitetura e manutenção atuais
+
+Veja [estrutura Angular](docs/ESTRUTURA_ANGULAR.md): componentes standalone, types por domínio, Reactive Forms e HTTP em services. `API_BASE_URL` está em core/config; `AssetUrlService` resolve imagens. O interceptor limita credenciais à origem/prefixo da API. Login/cadastro compartilham AuthComponent em features/authentication/auth.
+
+Navegação: /inicio, /login, /cadastro, /minha-conta, /carrinho, /favoritos, /finalizar-compra e /admin/{dashboard,produtos,pedidos,clientes,relatorios,promocoes,cadastros}. Aliases antigos preservados. Os endpoints da API continuam em inglês; navegação e HTTP são contratos distintos.
+
+Configuração adicional Go: DB_SSLMODE, DB_CONNECT_TIMEOUT, HTTP_ADDR, CORS_ORIGIN, UPLOAD_DIR e HTTP_*_TIMEOUT. Não remova opções válidas da conexão; pg_dump não aceita search_path como parâmetro URI. Nunca imprima credenciais. O exemplo de migrate é exclusivamente para base nova autorizada, não para aplicar todas as pendentes no principal.
+
+Newsletter preserva idempotência e resposta neutra; falha SMTP após persistência pode ser recuperada pela fila limitada em memória (três tentativas totais). Reinício perde pendências; não existe outbox durável. Avaliações de produto são separadas de avaliações da compra, com propriedade, elegibilidade e moderação no backend.
+
+Para encerrar aplicação local, use Ctrl+C nos terminais que você abriu. Automações devem guardar PID, encerrar apenas seus processos e limpar artefatos após consolidar evidências. Testes de escrita nunca apontam ao bd_box. Para race use CGO e compilador C compatível apenas no ambiente do processo; para integrações use CART_TEST_DATABASE_URL e REVIEW_TEST_DATABASE_URL de banco descartável.
+
+Resultados atuais: 433 Angular; Go normal/race com PostgreSQL isolado, vet e build aprovados. Build Angular aprovado com aviso CSS de Promoções (15,81 kB, limite de erro 16 kB). E2E, acessibilidade verificada e inspeção visual têm evidências/limites separados no AUDITORIA_FINAL.md.
