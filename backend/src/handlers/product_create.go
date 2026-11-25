@@ -14,8 +14,7 @@ func (h ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Utiliza a struct Product e redefine a quantidade
-	// como um pointer para int32.
+	// Recebe os campos de cadastro; quantidade ausente é diferente de zero.
 	var body struct {
 		Name             string                  `json:"name"`
 		Description      *string                 `json:"description"`
@@ -45,7 +44,7 @@ func (h ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 
 	// Trata conflitos de SKU.
 	if errors.Is(err, services.ErrProductSKUConflict) {
-		response.Error(w, 409, err.Error())
+		response.Error(w, http.StatusConflict, err.Error())
 		return
 	}
 
@@ -54,14 +53,14 @@ func (h ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		errors.Is(err, services.ErrProductSKU) ||
 		errors.Is(err, services.ErrProductVariants) {
 
-		response.Error(w, 400, err.Error())
+		response.Error(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	// Trata falhas internas.
 	if err != nil {
-		log.Printf("Erro ao inserir produto: %v", err)
-		response.Error(w, 500, "Erro ao criar produto")
+		log.Println("Erro ao inserir produto")
+		response.Error(w, http.StatusInternalServerError, "Erro ao criar produto")
 		return
 	}
 

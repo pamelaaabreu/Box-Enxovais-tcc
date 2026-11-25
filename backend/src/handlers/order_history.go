@@ -9,6 +9,7 @@ import (
 	"database/sql"
 	"errors"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -46,7 +47,7 @@ func (h OrderHistoryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(raw, 10, 64)
 
 		if err != nil || id <= 0 {
-			response.Error(w, 404, "Pedido não encontrado")
+			response.Error(w, http.StatusNotFound, "Pedido não encontrado")
 			return
 		}
 
@@ -58,34 +59,26 @@ func (h OrderHistoryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		order, err := h.Store.GetOrderDetails(r.Context(), userID, id)
 
 		if errors.Is(err, sql.ErrNoRows) {
-			response.Error(w, 404, "Pedido não encontrado")
+			response.Error(w, http.StatusNotFound, "Pedido não encontrado")
 			return
 		}
 
 		if err != nil {
-			response.Error(w, 500, "Não foi possível consultar o pedido")
+			response.Error(w, http.StatusInternalServerError, "Não foi possível consultar o pedido")
 			return
 		}
 
-		response.Success(w, 200, "", order)
+		response.Success(w, http.StatusOK, "", order)
 		return
 	}
 
 	// Configura e valida a paginação.
 	const pageSize = 10
 
-	page := 1
-
-	if raw := r.URL.Query().Get("page"); raw != "" {
-
-		var err error
-
-		page, err = strconv.Atoi(raw)
-
-		if err != nil || page < 1 || page > 1000000 {
-			response.Error(w, 400, "Página inválida")
-			return
-		}
+	page, pageErr := requestPage(r.URL.Query().Get("page"), maximumRequestPage)
+	if pageErr != nil {
+		response.Error(w, http.StatusBadRequest, "Página inválida")
+		return
 	}
 
 	// Interpreta os filtros recebidos.
@@ -162,14 +155,14 @@ func (h OrderHistoryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if e != nil {
-			response.Error(w, 500, "Não foi possível contar seus pedidos.")
+			response.Error(w, http.StatusInternalServerError, "Não foi possível contar seus pedidos.")
 			return
 		}
 
 		data["total"] = total
 	}
 
-	response.Success(w, 200, "", data)
+	response.Success(w, http.StatusOK, "", data)
 }
 
 func (h OrderHistoryHandler) cancel(w http.ResponseWriter, r *http.Request, userID int, id int64) {
@@ -259,21 +252,23 @@ func (h OrderHistoryHandler) cancel(w http.ResponseWriter, r *http.Request, user
 
 func parseOrderFilters(r *http.Request) (models.OrderFilters, error) {
 
-	var filters models.OrderFilters
+	return parseOrderFilterValues(r.URL.Query(), false)
+}
 
-	query := r.URL.Query()
+func parseOrderFilterValues(query url.Values, administrative bool) (models.OrderFilters, error) {
+	var filters models.OrderFilters
 
 	// Valida a pesquisa textual.
 	filters.Search = strings.TrimSpace(query.Get("search"))
 
-	if len(filters.Search) > 200 ||
+	if utf8.RuneCountInString(filters.Search) > 200 ||
 		strings.ContainsRune(filters.Search, 0) {
 
 		return filters, errors.New("Busca inválida")
 	}
 
 	// Processa o filtro de pedidos cancelados.
-	if status := query.Get("status"); status != "" {
+	if status := query.Get("status"); status != "" && !administrative {
 
 		if status != "cancelled" {
 			return filters, errors.New("Status inválido")

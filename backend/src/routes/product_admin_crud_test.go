@@ -7,7 +7,6 @@ import (
 	"backend/src/services"
 	"bytes"
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
@@ -164,7 +163,7 @@ func TestAdminProductCRUDPostgres(t *testing.T) {
 			writer.WriteField("variantId", strconv.FormatInt(*variantID, 10))
 		}
 		part, _ := writer.CreateFormFile("image", "fixture.png")
-		png, _ := base64.StdEncoding.DecodeString("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jv9sAAAAASUVORK5CYII=")
+		png := validPNGFixture(t)
 		part.Write(png)
 		writer.Close()
 		r := httptest.NewRequest("POST", "/upload-image", &data)
@@ -314,4 +313,14 @@ func TestAdminProductCRUDPostgres(t *testing.T) {
 	if err = database.PingContext(context.Background()); err != nil {
 		t.Fatal(err)
 	}
+	t.Run("missing_readback_after_patch", func(t *testing.T) {
+		product := create("Readback fixture", nil)
+		// An AFTER UPDATE trigger removes an otherwise unreferenced fixture; the edit must not index an empty result.
+		if _, err := database.Exec(`CREATE FUNCTION remove_updated_fixture() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.name='Readback fixture' THEN DELETE FROM products WHERE id=NEW.id; END IF; RETURN NEW; END $$; CREATE TRIGGER remove_updated_fixture AFTER UPDATE ON products FOR EACH ROW EXECUTE FUNCTION remove_updated_fixture()`); err != nil {
+			t.Fatal(err)
+		}
+		defer database.Exec(`DROP TRIGGER remove_updated_fixture ON products;DROP FUNCTION remove_updated_fixture();`)
+		call("PATCH", fmt.Sprintf("/admin/products/%d", product.ID), request(product), admin, 404)
+	})
+
 }

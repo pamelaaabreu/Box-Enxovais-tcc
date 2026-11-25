@@ -3,15 +3,19 @@ package handlers
 import (
 	"backend/src/models"
 	"backend/src/response"
+	"bytes"
 	"context"
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"io"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
 	"unicode"
+	"unicode/utf8"
 )
 
 // Interpreta e valida os filtros do relatório.
@@ -49,7 +53,7 @@ func reportFilter(r *http.Request, kind string) (models.ReportFilter, error) {
 	}
 
 	// Limita o tamanho da pesquisa.
-	if len(f.Search) > 160 {
+	if utf8.RuneCountInString(f.Search) > 160 || strings.ContainsRune(f.Search, 0) {
 		return f, errors.New("A busca deve ter até 160 caracteres.")
 	}
 
@@ -106,6 +110,9 @@ func reportFilter(r *http.Request, kind string) (models.ReportFilter, error) {
 func (h ProductHandler) Report(kind string, export bool) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		if !allowMethods(w, r, http.MethodGet) {
+			return
+		}
 
 		w.Header().Set("Cache-Control", "no-store")
 
@@ -113,13 +120,13 @@ func (h ProductHandler) Report(kind string, export bool) http.HandlerFunc {
 		f, err := reportFilter(r, kind)
 
 		if err != nil {
-			response.Error(w, 400, err.Error())
+			response.Error(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
 		// Impede a exportação do relatório de clientes.
 		if export && kind == "customers" {
-			response.Error(w, 404, "Exportação indisponível.")
+			response.Error(w, http.StatusNotFound, "Exportação indisponível.")
 			return
 		}
 
@@ -137,155 +144,37 @@ func (h ProductHandler) Report(kind string, export bool) http.HandlerFunc {
 			f.PageSize = 10001
 		}
 
-		data, err := h.Service.Store.Report(ctx, f)
+		data, err := h.Service.Report(ctx, f)
 
 		if err != nil {
-			response.Error(w, 500, "Não foi possível carregar o relatório. Tente novamente.")
+			response.Error(w, http.StatusInternalServerError, "Não foi possível carregar o relatório. Tente novamente.")
 			return
 		}
 
 		// A consulta comum retorna JSON.
 		if !export {
-			response.JSON(w, 200, data)
+			response.JSON(w, http.StatusOK, data)
 			return
 		}
 
 		// Impede exportações acima do limite.
 		if data.Total > 10000 {
-			response.Error(w, 422, "A exportação permite até 10.000 registros. Refine os filtros.")
+			response.Error(w, http.StatusUnprocessableEntity, "A exportação permite até 10.000 registros. Refine os filtros.")
 			return
 		}
 
-		// Configura os cabeçalhos do arquivo CSV.
-		w.Header().Set(
-			"Content-Type",
-			"text/csv; charset=utf-8",
-		)
-
-		w.Header().Set(
-			"Content-Disposition",
-			`attachment; filename="relatorio-`+kind+`.csv"`,
-		)
-
-		// Escreve o BOM UTF-8.
-		_, _ = w.Write([]byte{0xef, 0xbb, 0xbf})
-
-		writer := csv.NewWriter(w)
-
-		// Define o separador utilizado no CSV.
-		writer.Comma = ';'
-
-		var header []string
-
-		// Define as colunas de acordo com o relatório.
-		switch kind {
-
-		case "sales":
-			header = []string{
-				"Pedido",
-				"Data (São Paulo)",
-				"Itens",
-				"Total (R$)",
-				"Pagamento demonstrativo",
-				"Status",
-				"Subtotal produtos (R$)",
-				"Descontos (R$)",
-				"Frete (R$)",
-			}
-
-		case "products":
-			header = []string{
-				"Produto",
-				"SKU atual",
-				"Categoria atual",
-				"Marca atual",
-				"Unidades vendidas",
-				"Faturamento (R$)",
-				"Participação (%)",
-			}
-
-		case "stock":
-			header = []string{
-				"Produto",
-				"SKU",
-				"Variante",
-				"Categoria",
-				"Disponível",
-				"Situação",
-			}
+		content, err := buildReportCSV(kind, data.Rows)
+		if err != nil {
+			log.Println("Falha ao preparar CSV")
+			response.Error(w, http.StatusInternalServerError, "Não foi possível preparar o relatório.")
+			return
+		}
+		w.Header().Set("Content-Type", "text/csv; charset=utf-8")
+		w.Header().Set("Content-Disposition", `attachment; filename="relatorio-`+kind+`.csv"`)
+		if err := writeReportCSV(w, content); err != nil {
+			log.Println("Falha na transmissão do CSV")
 		}
 
-		_ = writer.Write(header)
-
-		loc, _ := time.LoadLocation("America/Sao_Paulo")
-
-		// Percorre os registros recuperados.
-		for _, v := range data.Rows {
-
-			var row []string
-
-			switch kind {
-
-			case "sales":
-
-				date, _ := time.Parse(
-					time.RFC3339Nano,
-					v.CreatedAt,
-				)
-
-				row = []string{
-					strconv.FormatInt(v.ID, 10),
-					date.In(loc).Format("02/01/2006 15:04"),
-					strconv.FormatInt(v.Units, 10),
-					reportMoney(v.RevenueCents),
-					reportPayment(v.Payment),
-					reportStatus(v.Status),
-					optionalReportMoney(v.ProductsSubtotalCents),
-					optionalReportMoney(v.DiscountCents),
-					optionalReportMoney(v.ShippingCents),
-				}
-
-			case "products":
-
-				row = []string{
-					v.Name,
-					v.SKU,
-					v.Category,
-					v.Brand,
-					strconv.FormatInt(v.Units, 10),
-					reportMoney(v.RevenueCents),
-					strings.ReplaceAll(
-						fmt.Sprintf("%.2f", v.Share),
-						".",
-						",",
-					),
-				}
-
-			case "stock":
-
-				row = []string{
-					v.Name,
-					v.SKU,
-					v.Variant,
-					v.Category,
-					strconv.FormatInt(v.Units, 10),
-					reportStatus(v.Status),
-				}
-			}
-
-			// Aplica a proteção contra CSV Injection.
-			for i := range row {
-				row[i] = reportCSVText(row[i])
-			}
-
-			// Escreve o registro no arquivo.
-			if writer.Write(row) != nil {
-				return
-			}
-		}
-
-		// Envia os dados restantes armazenados no buffer.
-		writer.Flush()
 	}
 }
 
@@ -362,4 +251,146 @@ func optionalReportMoney(cents *int64) string {
 	}
 
 	return reportMoney(*cents)
+}
+
+func buildReportCSV(kind string, rows []models.ReportRow) ([]byte, error) {
+	var buffer bytes.Buffer
+	if _, err := buffer.Write([]byte{0xef, 0xbb, 0xbf}); err != nil {
+		return nil, err
+	}
+	writer := csv.NewWriter(&buffer)
+	writer.Comma = ';'
+	var header []string
+
+	// Define as colunas de acordo com o relatório.
+	switch kind {
+
+	case "sales":
+		header = []string{
+			"Pedido",
+			"Data (São Paulo)",
+			"Itens",
+			"Total (R$)",
+			"Pagamento demonstrativo",
+			"Status",
+			"Subtotal produtos (R$)",
+			"Descontos (R$)",
+			"Frete (R$)",
+		}
+
+	case "products":
+		header = []string{
+			"Produto",
+			"SKU atual",
+			"Categoria atual",
+			"Marca atual",
+			"Unidades vendidas",
+			"Faturamento (R$)",
+			"Participação (%)",
+		}
+
+	case "stock":
+		header = []string{
+			"Produto",
+			"SKU",
+			"Variante",
+			"Categoria",
+			"Disponível",
+			"Situação",
+		}
+	}
+
+	if err := writer.Write(header); err != nil {
+		return nil, err
+	}
+
+	loc, err := time.LoadLocation("America/Sao_Paulo")
+	if err != nil {
+		return nil, err
+	}
+
+	// Percorre os registros recuperados.
+	for _, v := range rows {
+
+		var row []string
+
+		switch kind {
+
+		case "sales":
+
+			date, err := time.Parse(
+				time.RFC3339Nano,
+				v.CreatedAt,
+			)
+
+			if err != nil {
+				return nil, errors.New("Data do relatório inválida")
+			}
+			row = []string{
+				strconv.FormatInt(v.ID, 10),
+				date.In(loc).Format("02/01/2006 15:04"),
+				strconv.FormatInt(v.Units, 10),
+				reportMoney(v.RevenueCents),
+				reportPayment(v.Payment),
+				reportStatus(v.Status),
+				optionalReportMoney(v.ProductsSubtotalCents),
+				optionalReportMoney(v.DiscountCents),
+				optionalReportMoney(v.ShippingCents),
+			}
+
+		case "products":
+
+			row = []string{
+				v.Name,
+				v.SKU,
+				v.Category,
+				v.Brand,
+				strconv.FormatInt(v.Units, 10),
+				reportMoney(v.RevenueCents),
+				strings.ReplaceAll(
+					fmt.Sprintf("%.2f", v.Share),
+					".",
+					",",
+				),
+			}
+
+		case "stock":
+
+			row = []string{
+				v.Name,
+				v.SKU,
+				v.Variant,
+				v.Category,
+				strconv.FormatInt(v.Units, 10),
+				reportStatus(v.Status),
+			}
+		}
+
+		// Aplica a proteção contra CSV Injection.
+		for i := range row {
+			row[i] = reportCSVText(row[i])
+		}
+
+		// Escreve o registro no arquivo.
+		if err := writer.Write(row); err != nil {
+			return nil, err
+		}
+	}
+
+	// Envia os dados restantes armazenados no buffer.
+	writer.Flush()
+	if err := writer.Error(); err != nil {
+		return nil, err
+	}
+	return buffer.Bytes(), nil
+}
+func writeReportCSV(w io.Writer, content []byte) error {
+	n, err := w.Write(content)
+	if err != nil {
+		return err
+	}
+	if n != len(content) {
+		return io.ErrShortWrite
+	}
+	return nil
 }

@@ -30,18 +30,18 @@ func adminProductError(w http.ResponseWriter, err error) {
 	switch {
 
 	case errors.Is(err, sql.ErrNoRows):
-		response.Error(w, 404, "Produto ou imagem não encontrado.")
+		response.Error(w, http.StatusNotFound, "Produto ou imagem não encontrado.")
 
 	case errors.Is(err, repositories.ErrProductConflict),
 		errors.Is(err, repositories.ErrVariantConflict),
 		errors.Is(err, repositories.ErrImageConflict):
 
-		response.Error(w, 409, err.Error())
+		response.Error(w, http.StatusConflict, err.Error())
 
 	case errors.Is(err, services.ErrProductDetails),
 		errors.Is(err, services.ErrProductVariants):
 
-		response.Error(w, 400, err.Error())
+		response.Error(w, http.StatusBadRequest, err.Error())
 
 	// Trata violações de restrições do PostgreSQL.
 	case errors.As(err, &pg) &&
@@ -49,10 +49,10 @@ func adminProductError(w http.ResponseWriter, err error) {
 			pg.Code == "23505" ||
 			pg.Code == "23514"):
 
-		response.Error(w, 409, "Há vínculos ou dados incompatíveis. Recarregue o produto e revise as informações.")
+		response.Error(w, http.StatusConflict, "Há vínculos ou dados incompatíveis. Recarregue o produto e revise as informações.")
 
 	default:
-		response.Error(w, 500, "Não foi possível concluir a operação. Tente novamente.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível concluir a operação. Tente novamente.")
 	}
 }
 
@@ -64,7 +64,7 @@ func (h ProductHandler) AdminProduct(w http.ResponseWriter, r *http.Request) {
 	id, err := productID(r)
 
 	if err != nil {
-		response.Error(w, 400, "Produto inválido.")
+		response.Error(w, http.StatusBadRequest, "Produto inválido.")
 		return
 	}
 
@@ -86,12 +86,7 @@ func (h ProductHandler) AdminProduct(w http.ResponseWriter, r *http.Request) {
 		}
 
 		w.Header().Set("Cache-Control", "no-store")
-
-		if len(products) == 0 {
-			adminProductError(w, sql.ErrNoRows)
-			return
-		}
-		response.JSON(w, 200, products[0])
+		response.JSON(w, http.StatusOK, products[0])
 
 	case http.MethodPatch:
 
@@ -121,20 +116,20 @@ func (h ProductHandler) AdminProduct(w http.ResponseWriter, r *http.Request) {
 			adminProductError(w, sql.ErrNoRows)
 			return
 		}
-		response.JSON(w, 200, products[0])
+		response.JSON(w, http.StatusOK, products[0])
 
 	case http.MethodDelete:
 
 		// Exclui ou arquiva o produto conforme
 		// as regras de integridade do repository.
-		action, err := h.Service.Store.Remove(r.Context(), id)
+		action, err := h.Service.Remove(r.Context(), id)
 
 		if err != nil {
 			adminProductError(w, err)
 			return
 		}
 
-		response.JSON(w, 200, map[string]string{
+		response.JSON(w, http.StatusOK, map[string]string{
 			"action": action,
 		})
 	}

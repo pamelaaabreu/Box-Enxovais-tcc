@@ -31,5 +31,6 @@ func InitRoutesProducts(mux *http.ServeMux, products handlers.ProductHandler, im
 	adminRoute(mux, "POST /upload-image", images.UploadProductImage)
 	adminRoute(mux, "POST /products", products.CreateProduct)
 	publicRoute(mux, "GET /products/{id}/related", products.ListRelatedProducts)
+	publicRoute(mux, "GET /products/{id}", products.GetProduct)
 	publicRoute(mux, "GET /products/", products.GetProduct)
 }

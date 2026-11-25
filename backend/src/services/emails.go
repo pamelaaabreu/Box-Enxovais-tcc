@@ -51,14 +51,7 @@ func buildRecoveryEmail(email, subject, code, templatePath, assetsDir string) (*
 		return nil, fmt.Errorf("renderizar template: %w", err)
 	}
 
-	messageEmail := gomail.NewMessage()
-
-	messageEmail.SetHeader("From", os.Getenv("EMAIL"))
-	messageEmail.SetHeader("To", email)
-	messageEmail.SetHeader("Subject", subject)
-
-	messageEmail.SetBody("text/plain", fmt.Sprintf("Box Enxovais\n\nSeu código de recuperação: %s\nVálido por 5 minutos após o envio.\nUse o código para continuar a redefinição da sua senha.\n\nNão solicitou essa alteração? Pode ignorar este e-mail. Sua senha permanecerá inalterada.\n\nEste é um e-mail automático. Não é necessário responder.", code))
-	messageEmail.AddAlternative("text/html", body.String())
+	messageEmail := newEmailMessage(email, subject, fmt.Sprintf("Box Enxovais\n\nSeu código de recuperação: %s\nVálido por 5 minutos após o envio.\nUse o código para continuar a redefinição da sua senha.\n\nNão solicitou essa alteração? Pode ignorar este e-mail. Sua senha permanecerá inalterada.\n\nEste é um e-mail automático. Não é necessário responder.", code), body.String())
 
 	images := []string{
 		"checkout-logo-white.png",

@@ -21,15 +21,16 @@ func (h HomeHandler) Reviews(w http.ResponseWriter, r *http.Request) {
 	reviews, err := h.Store.Reviews(r.Context(), false)
 
 	if err != nil {
-		response.Error(w, 500, "Não foi possível carregar as avaliações.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível carregar as avaliações.")
 		return
 	}
 
-	response.JSON(w, 200, reviews)
+	response.JSON(w, http.StatusOK, reviews)
 }
 
 // Lista as avaliações para administração.
 func (h HomeHandler) AdminReviews(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
 	if !allowMethods(w, r, http.MethodGet) {
 		return
 	}
@@ -37,11 +38,11 @@ func (h HomeHandler) AdminReviews(w http.ResponseWriter, r *http.Request) {
 	reviews, err := h.Store.Reviews(r.Context(), true)
 
 	if err != nil {
-		response.Error(w, 500, "Não foi possível carregar as avaliações.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível carregar as avaliações.")
 		return
 	}
 
-	response.JSON(w, 200, reviews)
+	response.JSON(w, http.StatusOK, reviews)
 }
 
 // Consulta ou cadastra uma avaliação de compra.
@@ -56,7 +57,7 @@ func (h HomeHandler) Review(w http.ResponseWriter, r *http.Request) {
 	userID, ok := middlewares.GetUserIDFromContext(r.Context())
 
 	if !ok || userID <= 0 {
-		response.Error(w, 401, "Entre para avaliar sua compra.")
+		response.Error(w, http.StatusUnauthorized, "Entre para avaliar sua compra.")
 		return
 	}
 
@@ -64,7 +65,7 @@ func (h HomeHandler) Review(w http.ResponseWriter, r *http.Request) {
 	orderID, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 
 	if err != nil || orderID <= 0 {
-		response.Error(w, 404, "Pedido não encontrado.")
+		response.Error(w, http.StatusNotFound, "Pedido não encontrado.")
 		return
 	}
 
@@ -78,16 +79,16 @@ func (h HomeHandler) Review(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if errors.Is(err, sql.ErrNoRows) {
-			response.Error(w, 404, "Compra concluída não encontrada.")
+			response.Error(w, http.StatusNotFound, "Compra concluída não encontrada.")
 			return
 		}
 
 		if err != nil {
-			response.Error(w, 500, "Não foi possível consultar a avaliação.")
+			response.Error(w, http.StatusInternalServerError, "Não foi possível consultar a avaliação.")
 			return
 		}
 
-		response.JSON(w, 200, review)
+		response.JSON(w, http.StatusOK, review)
 		return
 	}
 
@@ -100,7 +101,7 @@ func (h HomeHandler) Review(w http.ResponseWriter, r *http.Request) {
 
 	// Valida as notas e o comentário.
 	if err := services.ValidateExperienceReview(&review); err != nil {
-		response.Error(w, 400, err.Error())
+		response.Error(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -114,27 +115,28 @@ func (h HomeHandler) Review(w http.ResponseWriter, r *http.Request) {
 
 	// Impede avaliações duplicadas.
 	if errors.Is(err, repositories.ErrReviewDuplicate) {
-		response.Error(w, 409, "Este pedido já foi avaliado.")
+		response.Error(w, http.StatusConflict, "Este pedido já foi avaliado.")
 		return
 	}
 
 	if errors.Is(err, sql.ErrNoRows) {
-		response.Error(w, 404, "Compra concluída não encontrada.")
+		response.Error(w, http.StatusNotFound, "Compra concluída não encontrada.")
 		return
 	}
 
 	if err != nil {
-		response.Error(w, 500, "Não foi possível salvar a avaliação.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível salvar a avaliação.")
 		return
 	}
 
-	response.JSON(w, 201, map[string]string{
+	response.JSON(w, http.StatusCreated, map[string]string{
 		"message": "Avaliação recebida para moderação.",
 	})
 }
 
 // Realiza a moderação administrativa.
 func (h HomeHandler) Moderate(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
 	if !allowMethods(w, r, http.MethodPatch) {
 		return
 	}
@@ -150,7 +152,7 @@ func (h HomeHandler) Moderate(w http.ResponseWriter, r *http.Request) {
 	reviewID, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 
 	if err != nil || reviewID <= 0 {
-		response.Error(w, 404, "Avaliação não encontrada.")
+		response.Error(w, http.StatusNotFound, "Avaliação não encontrada.")
 		return
 	}
 
@@ -166,7 +168,7 @@ func (h HomeHandler) Moderate(w http.ResponseWriter, r *http.Request) {
 		request.Status != "rejected" &&
 		request.Status != "pending" {
 
-		response.Error(w, 400, "Selecione um estado válido.")
+		response.Error(w, http.StatusBadRequest, "Selecione um estado válido.")
 		return
 	}
 
@@ -179,16 +181,16 @@ func (h HomeHandler) Moderate(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		response.Error(w, 404, "Avaliação não encontrada.")
+		response.Error(w, http.StatusNotFound, "Avaliação não encontrada.")
 		return
 	}
 
 	if err != nil {
-		response.Error(w, 500, "Não foi possível moderar a avaliação.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível moderar a avaliação.")
 		return
 	}
 
-	response.JSON(w, 200, map[string]string{
+	response.JSON(w, http.StatusOK, map[string]string{
 		"message": "Avaliação atualizada.",
 	})
 }

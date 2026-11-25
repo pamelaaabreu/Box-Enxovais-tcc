@@ -17,6 +17,9 @@ import (
 func ListShippingRanges(database *sql.DB) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		if !allowMethods(w, r, http.MethodGet) {
+			return
+		}
 
 		items, err := repositories.ListShippingRanges(
 			r.Context(),
@@ -36,6 +39,9 @@ func ListShippingRanges(database *sql.DB) http.HandlerFunc {
 func SaveShippingRange(database *sql.DB) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		if !allowMethods(w, r, http.MethodPost, http.MethodPatch) {
+			return
+		}
 
 		var item models.ShippingRange
 
@@ -113,6 +119,9 @@ func SaveShippingRange(database *sql.DB) http.HandlerFunc {
 func DeleteShippingRange(database *sql.DB) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		if !allowMethods(w, r, http.MethodDelete) {
+			return
+		}
 
 		id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 

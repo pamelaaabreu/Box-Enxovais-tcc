@@ -28,17 +28,17 @@ func (h PromotionHandler) AddProductToPromotion(w http.ResponseWriter, r *http.R
 		switch {
 
 		case errors.Is(err, services.ErrPromotionInvalid):
-			response.Error(w, 400, err.Error())
+			response.Error(w, http.StatusBadRequest, err.Error())
 
 		case errors.Is(err, services.ErrPromotionNotFound):
 			response.Error(w, http.StatusNotFound, "Promoção não encontrada ou inativa")
 
 		case errors.Is(err, services.ErrPromotionLookup):
-			log.Printf("Erro ao buscar promoção: %v", err)
+			log.Println("Erro ao buscar promoção")
 			response.Error(w, http.StatusInternalServerError, "Erro interno do servidor")
 
 		default:
-			log.Printf("Erro ao adicionar produto à promoção: %v", err)
+			log.Println("Erro ao adicionar produto à promoção")
 			response.Error(w, http.StatusInternalServerError, "Erro ao adicionar produto à promoção")
 		}
 

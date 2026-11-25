@@ -27,16 +27,16 @@ func reviewResult(w http.ResponseWriter, status int, value any, err error) {
 		response.Error(w, http.StatusBadRequest, validation.Error())
 
 	case errors.Is(err, sql.ErrNoRows):
-		response.Error(w, 404, "Avaliação ou compra elegível não encontrada.")
+		response.Error(w, http.StatusNotFound, "Avaliação ou compra elegível não encontrada.")
 
 	case errors.Is(err, repositories.ErrReviewDuplicate):
-		response.Error(w, 409, "Você já avaliou este produto. Edite a avaliação existente.")
+		response.Error(w, http.StatusConflict, "Você já avaliou este produto. Edite a avaliação existente.")
 
 	case errors.Is(err, repositories.ErrReviewConflict):
-		response.Error(w, 409, "A avaliação mudou ou não possui autorização de publicação. Recarregue a lista.")
+		response.Error(w, http.StatusConflict, "A avaliação mudou ou não possui autorização de publicação. Recarregue a lista.")
 
 	case err != nil:
-		response.Error(w, 500, "Não foi possível carregar ou salvar as avaliações.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível carregar ou salvar as avaliações.")
 
 	default:
 		response.JSON(w, status, value)
@@ -49,7 +49,7 @@ func reviewPathID(w http.ResponseWriter, r *http.Request) (int64, bool) {
 	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 
 	if err != nil || id <= 0 {
-		response.Error(w, 404, "Avaliação ou produto não encontrado.")
+		response.Error(w, http.StatusNotFound, "Avaliação ou produto não encontrado.")
 		return 0, false
 	}
 
@@ -70,9 +70,9 @@ func (h ProductReviewHandler) Mine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	items, err := h.Service.Store.Mine(r.Context(), id)
+	items, err := h.Service.Mine(r.Context(), id)
 
-	reviewResult(w, 200, items, err)
+	reviewResult(w, http.StatusOK, items, err)
 }
 
 // Lista os produtos que podem ser avaliados.
@@ -89,9 +89,9 @@ func (h ProductReviewHandler) Reviewable(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	items, err := h.Service.Store.Reviewable(r.Context(), id)
+	items, err := h.Service.Reviewable(r.Context(), id)
 
-	reviewResult(w, 200, items, err)
+	reviewResult(w, http.StatusOK, items, err)
 }
 
 // Lista as avaliações públicas de um produto.
@@ -106,9 +106,9 @@ func (h ProductReviewHandler) Public(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	items, err := h.Service.Store.Public(r.Context(), id, false)
+	items, err := h.Service.Public(r.Context(), id, false)
 
-	reviewResult(w, 200, items, err)
+	reviewResult(w, http.StatusOK, items, err)
 }
 
 // Recupera as avaliações públicas da Home.
@@ -117,9 +117,9 @@ func (h ProductReviewHandler) Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	items, err := h.Service.Store.Public(r.Context(), 0, true)
+	items, err := h.Service.Public(r.Context(), 0, true)
 
-	reviewResult(w, 200, items, err)
+	reviewResult(w, http.StatusOK, items, err)
 }
 
 // Recupera as médias de vários produtos.
@@ -132,7 +132,7 @@ func (h ProductReviewHandler) Summaries(w http.ResponseWriter, r *http.Request) 
 	parts := strings.Split(r.URL.Query().Get("ids"), ",")
 
 	if len(parts) > 100 {
-		response.Error(w, 400, "Consulte até 100 produtos por vez.")
+		response.Error(w, http.StatusBadRequest, "Consulte até 100 produtos por vez.")
 		return
 	}
 
@@ -144,7 +144,7 @@ func (h ProductReviewHandler) Summaries(w http.ResponseWriter, r *http.Request) 
 		id, err := strconv.ParseInt(raw, 10, 64)
 
 		if err != nil || id <= 0 {
-			response.Error(w, 400, "Informe identificadores válidos de produtos.")
+			response.Error(w, http.StatusBadRequest, "Informe identificadores válidos de produtos.")
 			return
 		}
 
@@ -155,9 +155,9 @@ func (h ProductReviewHandler) Summaries(w http.ResponseWriter, r *http.Request) 
 		}
 	}
 
-	items, err := h.Service.Store.Summaries(r.Context(), ids)
+	items, err := h.Service.Summaries(r.Context(), ids)
 
-	reviewResult(w, 200, items, err)
+	reviewResult(w, http.StatusOK, items, err)
 }
 
 // Cadastra ou edita uma avaliação.
@@ -188,13 +188,13 @@ func (h ProductReviewHandler) Save(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Define o cadastro como operação padrão.
-	productID, reviewID, status := id, int64(0), 201
+	productID, reviewID, status := id, int64(0), http.StatusCreated
 
 	// PATCH utiliza o ID da avaliação existente.
 	if r.Method == http.MethodPatch {
 		productID = 0
 		reviewID = id
-		status = 200
+		status = http.StatusOK
 	}
 
 	err := h.Service.Save(
@@ -212,20 +212,29 @@ func (h ProductReviewHandler) Save(w http.ResponseWriter, r *http.Request) {
 
 // Lista as avaliações para a administração.
 func (h ProductReviewHandler) Admin(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
 	if !allowMethods(w, r, http.MethodGet) {
 		return
 	}
 
 	w.Header().Set("Cache-Control", "no-store")
 
-	items, err := h.Service.Store.Admin(r.Context())
+	items, err := h.Service.Admin(r.Context())
 
-	reviewResult(w, 200, items, err)
+	reviewResult(w, http.StatusOK, items, err)
 }
 
 // Atualiza o status de moderação.
 func (h ProductReviewHandler) Moderate(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
 	if !allowMethods(w, r, http.MethodPatch) {
+		return
+	}
+
+	// Recupera o administrador responsável.
+	moderator, authenticated := middlewares.GetUserIDFromContext(r.Context())
+	if !authenticated || moderator <= 0 {
+		response.Error(w, http.StatusUnauthorized, "Faça login para continuar.")
 		return
 	}
 
@@ -249,18 +258,11 @@ func (h ProductReviewHandler) Moderate(w http.ResponseWriter, r *http.Request) {
 			input.Status != "pending" &&
 			input.Status != "rejected") {
 
-		response.Error(w, 400, "Selecione um estado válido e recarregue a avaliação.")
+		response.Error(w, http.StatusBadRequest, "Selecione um estado válido e recarregue a avaliação.")
 		return
 	}
 
-	// Recupera o administrador responsável.
-	moderator, authenticated := middlewares.GetUserIDFromContext(r.Context())
-	if !authenticated || moderator <= 0 {
-		response.Error(w, http.StatusUnauthorized, "Faça login para continuar.")
-		return
-	}
-
-	err := h.Service.Store.Moderate(
+	err := h.Service.Moderate(
 		r.Context(),
 		id,
 		moderator,
@@ -268,7 +270,7 @@ func (h ProductReviewHandler) Moderate(w http.ResponseWriter, r *http.Request) {
 		input.ExpectedUpdatedAt,
 	)
 
-	reviewResult(w, 200, map[string]string{
+	reviewResult(w, http.StatusOK, map[string]string{
 		"message": "Avaliação atualizada.",
 	}, err)
 }

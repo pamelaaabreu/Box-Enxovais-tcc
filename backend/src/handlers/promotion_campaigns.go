@@ -25,12 +25,12 @@ func (h PromotionHandler) CreatePromotion(w http.ResponseWriter, r *http.Request
 	promotionID, err := h.Service.Create(r.Context(), req)
 
 	if errors.Is(err, services.ErrPromotionInvalid) {
-		response.Error(w, 400, err.Error())
+		response.Error(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	if err != nil {
-		log.Printf("Erro ao criar promoção: %v", err)
+		log.Println("Erro ao criar promoção")
 		response.Error(w, http.StatusInternalServerError, "Erro ao criar promoção")
 		return
 	}
@@ -45,16 +45,16 @@ func (h PromotionHandler) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Consulta as campanhas cadastradas.
-	records, err := h.Service.Store.ListCampaigns(r.Context())
+	records, err := h.Service.ListCampaigns(r.Context())
 
 	if err != nil {
-		response.Error(w, 500, "Não foi possível carregar as campanhas.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível carregar as campanhas.")
 		return
 	}
 
 	w.Header().Set("Cache-Control", "no-store")
 
-	response.JSON(w, 200, records)
+	response.JSON(w, http.StatusOK, records)
 }
 
 func (h PromotionHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -66,7 +66,7 @@ func (h PromotionHandler) Update(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 
 	if err != nil || id <= 0 {
-		response.Error(w, 404, "Campanha não encontrada.")
+		response.Error(w, http.StatusNotFound, "Campanha não encontrada.")
 		return
 	}
 
@@ -81,19 +81,19 @@ func (h PromotionHandler) Update(w http.ResponseWriter, r *http.Request) {
 	_, err = h.Service.Update(r.Context(), id, request)
 
 	if errors.Is(err, services.ErrPromotionInvalid) {
-		response.Error(w, 400, err.Error())
+		response.Error(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	if errors.Is(err, services.ErrPromotionNotFound) {
-		response.Error(w, 404, "Campanha não encontrada.")
+		response.Error(w, http.StatusNotFound, "Campanha não encontrada.")
 		return
 	}
 
 	if err != nil {
-		response.Error(w, 500, "Não foi possível salvar a campanha.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível salvar a campanha.")
 		return
 	}
 
-	response.JSON(w, 200, map[string]int{"id": id})
+	response.JSON(w, http.StatusOK, map[string]int{"id": id})
 }

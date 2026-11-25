@@ -14,33 +14,37 @@ func (h ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Extrai e converte o ID recebido pela URL.
+	// Usa o parâmetro da rota; mantém compatibilidade com chamadas diretas.
+	rawID := r.PathValue("id")
+	if rawID == "" {
+		rawID = strings.TrimPrefix(r.URL.Path, "/products/")
+	}
 	id, err := strconv.ParseInt(
-		strings.TrimPrefix(r.URL.Path, "/products/"),
+		rawID,
 		10,
 		64,
 	)
 
 	if err != nil || id <= 0 {
-		response.Error(w, 400, "ID inválido")
+		response.Error(w, http.StatusBadRequest, "ID inválido")
 		return
 	}
 
 	products, err := h.Service.Get(r.Context(), id)
 
 	if err != nil {
-		response.Error(w, 500, "Erro ao buscar produto")
+		response.Error(w, http.StatusInternalServerError, "Erro ao buscar produto")
 		return
 	}
 
 	// Verifica se algum produto foi encontrado.
 	if len(products) == 0 {
-		response.Error(w, 404, "Produto não encontrado")
+		response.Error(w, http.StatusNotFound, "Produto não encontrado")
 		return
 	}
 
 	// Retorna somente o primeiro produto encontrado.
-	response.JSON(w, 200, products[0])
+	response.JSON(w, http.StatusOK, products[0])
 }
 
 // Recupera as recomendações de produtos relacionados.
@@ -57,10 +61,10 @@ func (h ProductHandler) ListRelatedProducts(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	products, err := h.Service.Store.ListRelated(r.Context(), id)
+	products, err := h.Service.ListRelated(r.Context(), id)
 
 	if err != nil {
-		log.Printf("list related products: %v", err)
+		log.Println("list related products")
 		response.Error(w, http.StatusInternalServerError, "Erro ao buscar produtos relacionados")
 		return
 	}

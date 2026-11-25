@@ -23,18 +23,10 @@ func (h AdminCustomerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	// Impede o armazenamento dos dados dos clientes em cache.
 	w.Header().Set("Cache-Control", "no-store")
 
-	page := 1
-
-	// Valida a página solicitada.
-	if raw := r.URL.Query().Get("page"); raw != "" {
-		n, e := strconv.Atoi(raw)
-
-		if e != nil || n < 1 || n > 1000000 {
-			response.Error(w, 400, "Página inválida.")
-			return
-		}
-
-		page = n
+	page, pageErr := requestPage(r.URL.Query().Get("page"), maximumRequestPage)
+	if pageErr != nil {
+		response.Error(w, http.StatusBadRequest, "Página inválida")
+		return
 	}
 
 	var data any
@@ -45,7 +37,7 @@ func (h AdminCustomerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 		id, e := strconv.Atoi(raw)
 
 		if e != nil || id <= 0 || id > 2147483647 {
-			response.Error(w, 404, "Cliente não encontrado.")
+			response.Error(w, http.StatusNotFound, "Cliente não encontrado.")
 			return
 		}
 
@@ -66,7 +58,7 @@ func (h AdminCustomerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 			utf8.RuneCountInString(search) > 200 ||
 			strings.ContainsRune(search, 0) {
 
-			response.Error(w, 400, "Informe uma busca com até 200 caracteres válidos.")
+			response.Error(w, http.StatusBadRequest, "Informe uma busca com até 200 caracteres válidos.")
 			return
 		}
 
@@ -75,14 +67,14 @@ func (h AdminCustomerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 
 	// Trata registros inexistentes.
 	if errors.Is(err, sql.ErrNoRows) {
-		response.Error(w, 404, "Cliente não encontrado.")
+		response.Error(w, http.StatusNotFound, "Cliente não encontrado.")
 		return
 	}
 
 	if err != nil {
-		response.Error(w, 500, "Não foi possível consultar os clientes. Tente novamente.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível consultar os clientes. Tente novamente.")
 		return
 	}
 
-	response.Success(w, 200, "", data)
+	response.Success(w, http.StatusOK, "", data)
 }

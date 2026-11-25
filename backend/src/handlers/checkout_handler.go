@@ -12,7 +12,6 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 // Define as operações necessárias para o checkout.
@@ -37,7 +36,7 @@ func (h CheckoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	userID, ok := middlewares.GetUserIDFromContext(r.Context())
 
 	if !ok || userID <= 0 {
-		response.Error(w, 401, "Faça login para finalizar a compra")
+		response.Error(w, http.StatusUnauthorized, "Faça login para finalizar a compra")
 		return
 	}
 
@@ -47,18 +46,18 @@ func (h CheckoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 
 		if err != nil || id <= 0 {
-			response.Error(w, 400, "Pedido inválido")
+			response.Error(w, http.StatusBadRequest, "Pedido inválido")
 			return
 		}
 
 		order, err := h.Store.Get(r.Context(), userID, id)
 
 		if errors.Is(err, sql.ErrNoRows) {
-			response.Error(w, 404, "Pedido não encontrado")
+			response.Error(w, http.StatusNotFound, "Pedido não encontrado")
 		} else if err != nil {
-			response.Error(w, 500, "Não foi possível consultar o pedido. Tente novamente.")
+			response.Error(w, http.StatusInternalServerError, "Não foi possível consultar o pedido. Tente novamente.")
 		} else {
-			response.Success(w, 200, "", order)
+			response.Success(w, http.StatusOK, "", order)
 		}
 
 		return
@@ -83,7 +82,7 @@ func (h CheckoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		!requestKeyPattern.MatchString(input.RequestKey) ||
 		input.ExpectedTotalCents < 0 {
 
-		response.Error(w, 400, "Confira o endereço, o telefone e os dados da compra")
+		response.Error(w, http.StatusBadRequest, "Confira o endereço, o telefone e os dados da compra")
 		return
 	}
 
@@ -92,13 +91,13 @@ func (h CheckoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		input.PaymentMethod != "card" &&
 		input.PaymentMethod != "boleto" {
 
-		response.Error(w, 400, "Forma de pagamento simulada inválida")
+		response.Error(w, http.StatusBadRequest, "Forma de pagamento simulada inválida")
 		return
 	}
 
 	// Valida o parcelamento.
 	if _, err := models.NormalizeInstallments(input.PaymentMethod, input.Installments); err != nil {
-		response.Error(w, 400, err.Error())
+		response.Error(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -108,19 +107,19 @@ func (h CheckoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		if errors.Is(err, repositories.ErrCheckoutAddress) {
-			response.Error(w, 404, "Endereço não encontrado")
+			response.Error(w, http.StatusNotFound, "Endereço não encontrado")
 
 		} else if errors.Is(err, repositories.ErrCheckoutPostalCode) {
-			response.Error(w, 400, "Informe um CEP válido.")
+			response.Error(w, http.StatusBadRequest, "Informe um CEP válido.")
 
 		} else if errors.Is(err, repositories.ErrCheckoutDeliveryUnavailable) {
-			response.Error(w, 422, "Entrega indisponível para este CEP no momento.")
+			response.Error(w, http.StatusUnprocessableEntity, "Entrega indisponível para este CEP no momento.")
 
 		} else if errors.Is(err, repositories.ErrCheckoutConflict) {
-			response.Error(w, 409, err.Error())
+			response.Error(w, http.StatusConflict, err.Error())
 
 		} else {
-			response.Error(w, 500, "Não foi possível concluir a compra. Tente novamente.")
+			response.Error(w, http.StatusInternalServerError, "Não foi possível concluir a compra. Tente novamente.")
 		}
 
 		return
@@ -134,7 +133,7 @@ func (h CheckoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	response.Success(
 		w,
-		200,
+		http.StatusOK,
 		"Compra simulada aprovada. Nenhuma cobrança foi realizada.",
 		order,
 	)

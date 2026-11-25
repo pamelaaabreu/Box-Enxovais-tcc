@@ -26,7 +26,7 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	userID, ok := middlewares.GetUserIDFromContext(r.Context())
 
 	if !ok || userID <= 0 {
-		response.Error(w, 401, "Faça login para acessar o carrinho")
+		response.Error(w, http.StatusUnauthorized, "Faça login para acessar o carrinho")
 		return
 	}
 
@@ -42,7 +42,7 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		id, err = strconv.ParseInt(r.PathValue("id"), 10, 64)
 
 		if err != nil || id <= 0 {
-			response.Error(w, 400, "Item inválido")
+			response.Error(w, http.StatusBadRequest, "Item inválido")
 			return
 		}
 	}
@@ -58,7 +58,7 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			id, err = strconv.ParseInt(r.PathValue("orderID"), 10, 64)
 
 			if err != nil || id <= 0 {
-				response.Error(w, 404, "Pedido não encontrado")
+				response.Error(w, http.StatusNotFound, "Pedido não encontrado")
 				return
 			}
 
@@ -82,7 +82,7 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			body.Quantity < 1 ||
 			body.Quantity > repositories.MaxCartQuantity {
 
-			response.Error(w, 400, "Produto ou quantidade inválidos")
+			response.Error(w, http.StatusBadRequest, "Produto ou quantidade inválidos")
 			return
 		}
 
@@ -104,7 +104,7 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if body.Quantity < 1 ||
 			body.Quantity > repositories.MaxCartQuantity {
 
-			response.Error(w, 400, "Quantidade inválida")
+			response.Error(w, http.StatusBadRequest, "Quantidade inválida")
 			return
 		}
 
@@ -133,7 +133,7 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		status := 500
+		status := http.StatusInternalServerError
 		message := "Não foi possível atualizar o carrinho. Tente novamente."
 
 		// Converte os erros do repository em respostas HTTP.
@@ -142,17 +142,17 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		case errors.Is(err, repositories.ErrCartItemNotFound),
 			errors.Is(err, repositories.ErrCartOrderNotFound):
 
-			status = 404
+			status = http.StatusNotFound
 			message = err.Error()
 
 		case errors.Is(err, repositories.ErrCartProduct),
 			errors.Is(err, repositories.ErrCartQuantity):
 
-			status = 409
+			status = http.StatusConflict
 			message = err.Error()
 
 		default:
-			log.Printf("cart operation failed: %v", err)
+			log.Println("cart operation failed")
 		}
 
 		response.Error(w, status, message)
@@ -160,5 +160,5 @@ func (h CartHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Retorna o carrinho atualizado.
-	response.Success(w, 200, "", cart)
+	response.Success(w, http.StatusOK, "", cart)
 }

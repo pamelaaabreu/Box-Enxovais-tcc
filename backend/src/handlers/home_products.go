@@ -11,17 +11,17 @@ func (h HomeHandler) Highlights(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p, s, e := h.Store.Highlights(r.Context())
+	products, bestSellers, err := h.Store.Highlights(r.Context())
 
-	if e != nil {
-		response.Error(w, 500, "Não foi possível carregar os destaques.")
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, "Não foi possível carregar os destaques.")
 		return
 	}
 
 	// Informa se os produtos são realmente os mais vendidos.
-	response.JSON(w, 200, map[string]any{
-		"products":    p,
-		"bestSellers": s,
+	response.JSON(w, http.StatusOK, map[string]any{
+		"products":    products,
+		"bestSellers": bestSellers,
 	})
 }
 
@@ -34,11 +34,11 @@ func (h HomeHandler) Featured(w http.ResponseWriter, r *http.Request) {
 	products, err := h.Store.Featured(r.Context())
 
 	if err != nil {
-		response.Error(w, 500, "Não foi possível carregar os destaques.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível carregar os destaques.")
 		return
 	}
 
-	response.JSON(w, 200, map[string]any{
+	response.JSON(w, http.StatusOK, map[string]any{
 		"products": products,
 	})
 }

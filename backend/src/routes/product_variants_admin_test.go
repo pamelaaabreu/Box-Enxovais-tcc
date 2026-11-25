@@ -59,6 +59,9 @@ func TestAdminProductVariantsPostgres(t *testing.T) {
 	InitRoutesProducts(mux, handler, handlers.ProductImageHandler{})
 	call := func(method, path string, body any, auth string, want int) *httptest.ResponseRecorder {
 		t.Helper()
+		if product, ok := body.(models.Product); ok && method == "POST" {
+			body = map[string]any{"name": product.Name, "price": product.Price, "quantity": product.Quantity, "product_type_id": product.ProductTypeID, "status": product.Status, "measurements": product.Measurements, "variants": product.Variants}
+		}
 		data, _ := json.Marshal(body)
 		request := httptest.NewRequest(method, path, strings.NewReader(string(data)))
 		request.Header.Set("Content-Type", "application/json")

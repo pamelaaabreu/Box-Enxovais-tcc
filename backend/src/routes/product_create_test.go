@@ -6,7 +6,6 @@ import (
 	"backend/src/repositories"
 	"backend/src/services"
 	"bytes"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
@@ -210,10 +209,7 @@ func TestProductCreatePostgres(t *testing.T) {
 				}
 			}
 		}
-		png, err := base64.StdEncoding.DecodeString("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/Z0cAAAAASUVORK5CYII=")
-		if err != nil {
-			t.Fatal(err)
-		}
+		png := validPNGFixture(t)
 		upload(png, token("customer"), http.StatusForbidden)
 		upload([]byte("not an image"), admin, http.StatusUnsupportedMediaType)
 		upload(make([]byte, 10*1024*1024+1), admin, http.StatusBadRequest)

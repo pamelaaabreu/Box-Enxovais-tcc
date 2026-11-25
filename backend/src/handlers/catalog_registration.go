@@ -3,22 +3,24 @@ package handlers
 import (
 	"backend/src/repositories"
 	"backend/src/response"
+	"backend/src/services"
 	"database/sql"
 	"errors"
 	"github.com/lib/pq"
 	"net/http"
 	"strconv"
-	"strings"
-	"unicode/utf8"
 )
 
 func (h ProductHandler) CatalogRegistrations(kind repositories.CatalogKind) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		if !allowMethods(w, r, http.MethodGet, http.MethodPost, http.MethodPatch, http.MethodDelete) {
+			return
+		}
 
 		w.Header().Set("Cache-Control", "no-store")
 
-		store := h.Service.Store
+		store := h.Service
 
 		// Lista as marcas ou categorias cadastradas.
 		if r.Method == http.MethodGet {
@@ -72,19 +74,8 @@ func (h ProductHandler) CatalogRegistrations(kind repositories.CatalogKind) http
 			return
 		}
 
-		// Remove espaços excedentes do nome.
-		name := strings.Join(strings.Fields(body.Name), " ")
-
-		if name == "" ||
-			utf8.RuneCountInString(name) > 100 ||
-			strings.ContainsRune(name, 0) {
-
-			response.Error(w, http.StatusBadRequest, "Informe um nome de até 100 caracteres")
-			return
-		}
-
 		// Cadastra ou atualiza a marca ou categoria.
-		item, err := store.SaveRegistration(r.Context(), kind, id, name)
+		item, err := store.SaveRegistration(r.Context(), kind, id, body.Name)
 
 		if err != nil {
 			catalogError(w, err)
@@ -105,8 +96,11 @@ func (h ProductHandler) CatalogRegistrations(kind repositories.CatalogKind) http
 func catalogError(w http.ResponseWriter, err error) {
 
 	var pg *pq.Error
+	var validation services.ValidationError
 
 	switch {
+	case errors.As(err, &validation):
+		response.Error(w, http.StatusBadRequest, validation.Error())
 
 	case errors.Is(err, sql.ErrNoRows):
 		response.Error(w, http.StatusNotFound, "Cadastro não encontrado")

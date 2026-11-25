@@ -16,7 +16,7 @@ func (h ProductImageHandler) AdminImages(w http.ResponseWriter, r *http.Request)
 	id, err := productID(r)
 
 	if err != nil {
-		response.Error(w, 400, "Produto inválido.")
+		response.Error(w, http.StatusBadRequest, "Produto inválido.")
 		return
 	}
 
@@ -33,12 +33,12 @@ func (h ProductImageHandler) AdminImages(w http.ResponseWriter, r *http.Request)
 
 		// Limita a quantidade de IDs recebidos.
 		if len(order.IDs) > 500 {
-			response.Error(w, 400, "Revise a quantidade de imagens.")
+			response.Error(w, http.StatusBadRequest, "Revise a quantidade de imagens.")
 			return
 		}
 
 		// Reordena as imagens no banco.
-		if err = h.Service.Store.Reorder(r.Context(), id, order); err != nil {
+		if err = h.Service.Reorder(r.Context(), id, order); err != nil {
 			adminProductError(w, err)
 			return
 		}
@@ -53,19 +53,19 @@ func (h ProductImageHandler) AdminImages(w http.ResponseWriter, r *http.Request)
 		)
 
 		if e != nil || imageID <= 0 {
-			response.Error(w, 400, "Imagem inválida.")
+			response.Error(w, http.StatusBadRequest, "Imagem inválida.")
 			return
 		}
 
 		// Remove a imagem.
-		if err = h.Service.Store.Remove(r.Context(), id, imageID); err != nil {
+		if err = h.Service.Remove(r.Context(), id, imageID); err != nil {
 			adminProductError(w, err)
 			return
 		}
 	}
 
 	// Retorna a galeria atualizada após a operação.
-	images, err := h.Service.Store.List(r.Context(), id)
+	images, err := h.Service.List(r.Context(), id)
 
 	if err != nil {
 		adminProductError(w, err)
@@ -74,5 +74,5 @@ func (h ProductImageHandler) AdminImages(w http.ResponseWriter, r *http.Request)
 
 	w.Header().Set("Cache-Control", "no-store")
 
-	response.JSON(w, 200, images)
+	response.JSON(w, http.StatusOK, images)
 }

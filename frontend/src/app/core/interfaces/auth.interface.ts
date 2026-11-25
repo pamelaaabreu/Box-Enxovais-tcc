@@ -1,8 +1,10 @@
+// Credenciais enviadas no login.
 export interface LoginCredentials {
   email: string;
   password: string;
 }
 
+// Resposta recebida após autenticação.
 export interface LoginResponse {
   token: string;
   name?: string;
@@ -10,6 +12,7 @@ export interface LoginResponse {
   role?: string;
 }
 
+// Dados enviados durante o cadastro.
 export interface RegisterPayload {
   name: string;
   email: string;
@@ -17,6 +20,7 @@ export interface RegisterPayload {
   terms: boolean;
 }
 
+// Informações contidas no JWT.
 export interface AppJwtPayload {
   userId?: number;
   role?: string;

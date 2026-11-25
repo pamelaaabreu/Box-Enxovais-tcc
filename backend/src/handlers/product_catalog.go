@@ -35,7 +35,7 @@ func (h ProductHandler) writeProductPage(w http.ResponseWriter, r *http.Request,
 	values, err := url.ParseQuery(r.URL.RawQuery)
 
 	if err != nil {
-		response.Error(w, 400, "Parâmetros de consulta inválidos")
+		response.Error(w, http.StatusBadRequest, "Parâmetros de consulta inválidos")
 		return
 	}
 
@@ -44,7 +44,7 @@ func (h ProductHandler) writeProductPage(w http.ResponseWriter, r *http.Request,
 	pageQuery, err := h.Service.ParsePage(values, promotion != nil)
 
 	if err != nil {
-		response.Error(w, 400, err.Error())
+		response.Error(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -60,12 +60,12 @@ func (h ProductHandler) writeProductPage(w http.ResponseWriter, r *http.Request,
 	}
 
 	if err != nil {
-		log.Printf("list products: %v", err)
-		response.Error(w, 500, "Erro ao buscar produtos")
+		log.Println("list products")
+		response.Error(w, http.StatusInternalServerError, "Erro ao buscar produtos")
 		return
 	}
 
-	response.JSON(w, 200, page)
+	response.JSON(w, http.StatusOK, page)
 }
 
 // Lista os produtos de uma campanha promocional.

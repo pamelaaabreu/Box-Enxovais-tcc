@@ -11,12 +11,12 @@ func (h HomeHandler) Categories(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Recupera as categorias e suas imagens representativas.
-	v, e := h.Store.Categories(r.Context())
+	categories, err := h.Store.Categories(r.Context())
 
-	if e != nil {
-		response.Error(w, 500, "Não foi possível carregar as categorias.")
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, "Não foi possível carregar as categorias.")
 		return
 	}
 
-	response.JSON(w, 200, v)
+	response.JSON(w, http.StatusOK, categories)
 }

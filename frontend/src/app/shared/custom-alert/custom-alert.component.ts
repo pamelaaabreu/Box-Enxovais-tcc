@@ -24,7 +24,10 @@ export class CustomAlertComponent implements OnInit, OnDestroy {
   @Input() showClose: boolean = true;
   @Input() showProgress: boolean = true;
 
+  // Ação opcional que pode ser executada pelo usuário.
   @Input() action?: { label: string; run: () => void };
+
+  // Associa cada tipo de alerta a um ícone.
   readonly icons: Record<AlertType, string> = {
     success: 'check',
     error: 'error_outline',
@@ -35,16 +38,23 @@ export class CustomAlertComponent implements OnInit, OnDestroy {
 
   activate(): void {
     if (this.closing) return;
+
+    // Executa a ação e fecha o alerta.
     this.action?.run();
+
     this.close();
   }
 
   @Input() recoverySuccess = false;
+
+  // Notifica quando o tempo de exibição termina.
   @Output() elapsed = new EventEmitter<void>();
 
+  // Notifica quando o alerta termina seu fechamento.
   @Output() closed = new EventEmitter<void>();
 
   visible: boolean = false;
+
   private timeoutId?: ReturnType<typeof setTimeout>;
   private exitTimeoutId?: ReturnType<typeof setTimeout>;
   private closing = false;
@@ -52,16 +62,20 @@ export class CustomAlertComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.visible = true;
 
+    // Programa o fechamento automático.
     if (this.duration > 0) {
       this.timeoutId = setTimeout(() => {
         this.elapsed.emit();
+
         this.close();
       }, this.duration);
     }
   }
 
+  // Limpa os timers quando o componente é destruído.
   ngOnDestroy() {
     clearTimeout(this.exitTimeoutId);
+
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
     }
@@ -72,10 +86,16 @@ export class CustomAlertComponent implements OnInit, OnDestroy {
   }
 
   private close() {
+    // Impede fechamentos duplicados.
     if (this.closing) return;
+
     this.closing = true;
+
     clearTimeout(this.timeoutId);
+
     this.visible = false;
+
+    // Aguarda 90 ms antes de emitir o fechamento.
     this.exitTimeoutId = setTimeout(() => {
       this.closed.emit();
     }, 90);

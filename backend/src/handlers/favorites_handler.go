@@ -29,7 +29,7 @@ func (h FavoritesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	userID, ok := middlewares.GetUserIDFromContext(r.Context())
 
 	if !ok || userID <= 0 {
-		response.Error(w, 401, "Faça login para acessar seus favoritos")
+		response.Error(w, http.StatusUnauthorized, "Faça login para acessar seus favoritos")
 		return
 	}
 
@@ -39,7 +39,7 @@ func (h FavoritesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		values, err := url.ParseQuery(r.URL.RawQuery)
 
 		if err != nil {
-			response.Error(w, 400, "Parâmetros de consulta inválidos")
+			response.Error(w, http.StatusBadRequest, "Parâmetros de consulta inválidos")
 			return
 		}
 
@@ -50,16 +50,16 @@ func (h FavoritesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			var validation services.ValidationError
 
 			if errors.As(err, &validation) {
-				response.Error(w, 400, validation.Error())
+				response.Error(w, http.StatusBadRequest, validation.Error())
 				return
 			}
 
 			log.Println("Could not list favorites")
-			response.Error(w, 500, "Não foi possível carregar seus favoritos")
+			response.Error(w, http.StatusInternalServerError, "Não foi possível carregar seus favoritos")
 			return
 		}
 
-		response.JSON(w, 200, page)
+		response.JSON(w, http.StatusOK, page)
 		return
 	}
 
@@ -74,7 +74,7 @@ func (h FavoritesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		productID <= 0 ||
 		productID > math.MaxInt32 {
 
-		response.Error(w, 400, "Produto inválido")
+		response.Error(w, http.StatusBadRequest, "Produto inválido")
 		return
 	}
 
@@ -82,13 +82,13 @@ func (h FavoritesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	favorited := r.Method == http.MethodPut
 
 	if favorited {
-		err = h.Service.Store.Add(
+		err = h.Service.Add(
 			r.Context(),
 			userID,
 			productID,
 		)
 	} else {
-		err = h.Service.Store.Remove(
+		err = h.Service.Remove(
 			r.Context(),
 			userID,
 			productID,
@@ -100,21 +100,21 @@ func (h FavoritesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		switch {
 
 		case errors.Is(err, repositories.ErrFavoriteProductNotFound):
-			response.Error(w, 404, err.Error())
+			response.Error(w, http.StatusNotFound, err.Error())
 
 		case errors.Is(err, repositories.ErrFavoriteProductUnavailable):
-			response.Error(w, 409, err.Error())
+			response.Error(w, http.StatusConflict, err.Error())
 
 		default:
 			log.Println("Could not update favorite")
-			response.Error(w, 500, "Não foi possível atualizar seus favoritos")
+			response.Error(w, http.StatusInternalServerError, "Não foi possível atualizar seus favoritos")
 		}
 
 		return
 	}
 
 	// Retorna o estado atualizado do favorito.
-	response.Success(w, 200, "", struct {
+	response.Success(w, http.StatusOK, "", struct {
 		ProductID int64 `json:"productId"`
 		Favorited bool  `json:"favorited"`
 	}{productID, favorited})

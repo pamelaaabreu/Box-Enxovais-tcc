@@ -2,8 +2,8 @@ import { AdminStateComponent } from '../../shared/components/admin-state/admin-s
 import { InlineNoticeComponent } from '../../shared/components/inline-notice/inline-notice.component';
 import { PaymentPlan } from '../../shared/types/checkout/checkout';
 import { installmentSummary } from '../../shared/utils/installments';
-import {PaginationComponent} from '../../shared/components/pagination/pagination.component';
-import {PurchaseReviewComponent} from '../purchase-review/purchase-review.component';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { PurchaseReviewComponent } from '../purchase-review/purchase-review.component';
 import { ConfirmDialogService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
 import {
   CurrencyPipe,
@@ -13,7 +13,15 @@ import {
 } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, DestroyRef, Injector, TemplateRef, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  Injector,
+  TemplateRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CustomAlertService } from '../../core/services/custom-alert.service';
@@ -46,7 +54,12 @@ import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/cat
 registerLocaleData(localePt);
 
 interface Order extends PaymentPlan {
-  shipping?:number|null;shippingMinDays?:number|null;shippingMaxDays?:number|null;shippingMethod?:string|null;productsSubtotal?:number|null;discount?:number|null;
+  shipping?: number | null;
+  shippingMinDays?: number | null;
+  shippingMaxDays?: number | null;
+  shippingMethod?: string | null;
+  productsSubtotal?: number | null;
+  discount?: number | null;
   id: number;
   createdAt: string;
   total: number;
@@ -79,7 +92,7 @@ interface Details extends Order {
 }
 
 interface OrderPage {
- total?:number;
+  total?: number;
   orders: Order[];
   hasMore: boolean;
 }
@@ -87,7 +100,11 @@ interface OrderPage {
 @Component({
   selector: 'app-order-history',
   standalone: true,
-  imports: [AdminStateComponent, InlineNoticeComponent,PaginationComponent,PurchaseReviewComponent,
+  imports: [
+    AdminStateComponent,
+    InlineNoticeComponent,
+    PaginationComponent,
+    PurchaseReviewComponent,
     CatalogLayoutComponent,
     RouterLink,
     CurrencyPipe,
@@ -118,11 +135,21 @@ export class OrderHistoryComponent {
     ['duplicate_order', 'Realizei o pedido em duplicidade'],
     ['other', 'Outro motivo'],
   ]);
-  readonly cancellationReason = new FormControl('', { nonNullable: true, validators: Validators.required });
-  readonly cancellationDetails = new FormControl('', { nonNullable: true, validators: Validators.maxLength(500) });
+  readonly cancellationReason = new FormControl('', {
+    nonNullable: true,
+    validators: Validators.required,
+  });
+  readonly cancellationDetails = new FormControl('', {
+    nonNullable: true,
+    validators: Validators.maxLength(500),
+  });
   get canConfirmCancellation(): boolean {
-    return this.cancellationReasons.has(this.cancellationReason.value)
-      && (this.cancellationReason.value !== 'other' || (this.cancellationDetails.valid && !!this.cancellationDetails.value.trim()));
+    return (
+      this.cancellationReasons.has(this.cancellationReason.value) &&
+      (this.cancellationReason.value !== 'other' ||
+        (this.cancellationDetails.valid &&
+          !!this.cancellationDetails.value.trim()))
+    );
   }
   readonly cancelling = signal(false);
   readonly cancelError = signal('');
@@ -130,10 +157,13 @@ export class OrderHistoryComponent {
   private readonly router = inject(Router);
   private readonly reload = new BehaviorSubject<void>(undefined);
   readonly page = signal(1);
- readonly totalOrders=signal(0);
+  readonly totalOrders = signal(0);
   readonly search = signal('');
   readonly searchDraft = signal('');
-  private readonly searchInput = new Subject<{value: string; immediate: boolean}>();
+  private readonly searchInput = new Subject<{
+    value: string;
+    immediate: boolean;
+  }>();
   private readonly injector = inject(Injector);
   readonly reorderCart = signal<CartService | null>(null);
   readonly loadingMore = signal(false);
@@ -164,16 +194,20 @@ export class OrderHistoryComponent {
 
   constructor() {
     const auth = this.auth;
-    this.searchInput.pipe(
-      switchMap(({value, immediate}) => immediate ? of(value) : timer(300).pipe(map(() => value))),
-      distinctUntilChanged(),
-      takeUntil(auth.userChanged),
-      takeUntilDestroyed(),
-    ).subscribe(value => {
-      if (value === this.search()) return;
-      this.search.set(value);
-      this.reloadFilters();
-    });
+    this.searchInput
+      .pipe(
+        switchMap(({ value, immediate }) =>
+          immediate ? of(value) : timer(300).pipe(map(() => value)),
+        ),
+        distinctUntilChanged(),
+        takeUntil(auth.userChanged),
+        takeUntilDestroyed(),
+      )
+      .subscribe((value) => {
+        if (value === this.search()) return;
+        this.search.set(value);
+        this.reloadFilters();
+      });
     this.destroyRef.onDestroy(() => this.cancellationDialog?.close());
     auth.userChanged.pipe(takeUntilDestroyed()).subscribe(() => this.expire());
     combineLatest([inject(ActivatedRoute).paramMap, this.reload])
@@ -205,7 +239,7 @@ export class OrderHistoryComponent {
             catchError((error: HttpErrorResponse) => {
               if (error.status === 401) this.expire();
               else if (!id && this.loadingMore()) {
-                this.page.update(page => page - 1);
+                this.page.update((page) => page - 1);
                 this.loadingMore.set(false);
                 this.loadMoreError.set(true);
               } else
@@ -234,14 +268,17 @@ export class OrderHistoryComponent {
           'orders' in data &&
           Array.isArray(data.orders)
         ) {
-          this.orders.update(current => {
+          this.orders.update((current) => {
             if (!this.loadingMore()) return data.orders;
-            const known = new Set(current.map(order => order.id));
-            return [...current, ...data.orders.filter(order => !known.has(order.id))];
+            const known = new Set(current.map((order) => order.id));
+            return [
+              ...current,
+              ...data.orders.filter((order) => !known.has(order.id)),
+            ];
           });
           this.loadingMore.set(false);
           this.hasMore.set(data.hasMore);
- this.totalOrders.set(data.total ?? data.orders.length);
+          this.totalOrders.set(data.total ?? data.orders.length);
         } else {
           this.state.set('error');
           return;
@@ -275,12 +312,12 @@ export class OrderHistoryComponent {
 
   changeSearch(value: string): void {
     this.searchDraft.set(value);
-    this.searchInput.next({value: value.trim(), immediate: false});
+    this.searchInput.next({ value: value.trim(), immediate: false });
   }
 
   submitSearch(value: string): void {
     this.searchDraft.set(value);
-    this.searchInput.next({value: value.trim(), immediate: true});
+    this.searchInput.next({ value: value.trim(), immediate: true });
   }
 
   reorder(orderId: number): void {
@@ -312,7 +349,9 @@ export class OrderHistoryComponent {
         const day = start.getUTCDate();
         start.setUTCDate(1);
         start.setUTCMonth(start.getUTCMonth() - 6);
-        const lastDay = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 0)).getUTCDate();
+        const lastDay = new Date(
+          Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 0),
+        ).getUTCDate();
         start.setUTCDate(Math.min(day, lastDay));
       } else {
         start.setUTCDate(start.getUTCDate() - Number(this.period()) + 1);
@@ -329,10 +368,19 @@ export class OrderHistoryComponent {
     if (!this.invalidDates() && this.state() === 'error') this.reload.next();
   }
 
-  goToOrderPage(page:number):void{
- if(this.state()!=='ready'||!Number.isSafeInteger(page)||page<1||page>Math.ceil(this.totalOrders()/10)||page===this.page())return;
- this.loadingMore.set(false);this.page.set(page);this.reload.next();
- }
+  goToOrderPage(page: number): void {
+    if (
+      this.state() !== 'ready' ||
+      !Number.isSafeInteger(page) ||
+      page < 1 ||
+      page > Math.ceil(this.totalOrders() / 10) ||
+      page === this.page()
+    )
+      return;
+    this.loadingMore.set(false);
+    this.page.set(page);
+    this.reload.next();
+  }
   movePage(delta: -1 | 1): void {
     if (
       this.loadingMore() ||
@@ -347,14 +395,24 @@ export class OrderHistoryComponent {
     this.reload.next();
   }
 
-  confirmCancellation(template: TemplateRef<unknown>, actions: TemplateRef<unknown>, order: Details): void {
-    if (!order.canCancel || order.status === 'cancelled' || this.cancellationDialog) return;
+  confirmCancellation(
+    template: TemplateRef<unknown>,
+    actions: TemplateRef<unknown>,
+    order: Details,
+  ): void {
+    if (
+      !order.canCancel ||
+      order.status === 'cancelled' ||
+      this.cancellationDialog
+    )
+      return;
     this.cancellationReason.reset();
     this.cancellationDetails.reset();
     this.cancelError.set('');
     const dialog = this.dialog.open({
       title: 'Cancelar pedido #' + order.id + '?',
-      message: 'Tem certeza de que deseja cancelar esta compra? Esta ação não poderá ser desfeita.',
+      message:
+        'Tem certeza de que deseja cancelar esta compra? Esta ação não poderá ser desfeita.',
       variant: 'danger',
       icon: 'warning_amber',
       primary: 'Confirmar cancelamento',
@@ -364,51 +422,82 @@ export class OrderHistoryComponent {
       actions,
     });
     this.cancellationDialog = dialog;
-    dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      if (this.cancellationDialog === dialog) this.cancellationDialog = undefined;
-    });
+    dialog
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        if (this.cancellationDialog === dialog)
+          this.cancellationDialog = undefined;
+      });
   }
 
   cancelPurchase(): void {
     const order = this.details();
     const dialog = this.cancellationDialog;
-    if (!order?.canCancel || !dialog || this.cancelling() || !this.canConfirmCancellation) return;
+    if (
+      !order?.canCancel ||
+      !dialog ||
+      this.cancelling() ||
+      !this.canConfirmCancellation
+    )
+      return;
 
     this.cancelError.set('');
     this.cancelling.set(true);
-    this.http.post<{ data: Details }>('http://localhost:8080/orders/' + order.id + '/cancel', {
-      reasonCode: this.cancellationReason.value,
-      reasonDetails: this.cancellationReason.value === 'other' ? this.cancellationDetails.value.trim() : '',
-    }).pipe(
-      takeUntil(this.auth.userChanged),
-      takeUntilDestroyed(this.destroyRef),
-      finalize(() => this.cancelling.set(false)),
-    ).subscribe({
-      next: ({ data }) => {
-        if (this.details()?.id !== order.id) return;
-        this.details.set(data);
-        dialog.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-          this.alerts.success('Pedido cancelado com sucesso!');
-        });
-        dialog.close();
-      },
-      error: (error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          this.expire();
-          return;
-        }
-        if (this.details()?.id !== order.id) return;
-        this.cancelError.set((error.status === 400 || error.status === 409) && typeof error.error?.message === 'string'
-          ? error.error.message : 'Não foi possível cancelar o pedido. Tente novamente.');
-      },
-    });
+    this.http
+      .post<{ data: Details }>(
+        'http://localhost:8080/orders/' + order.id + '/cancel',
+        {
+          reasonCode: this.cancellationReason.value,
+          reasonDetails:
+            this.cancellationReason.value === 'other'
+              ? this.cancellationDetails.value.trim()
+              : '',
+        },
+      )
+      .pipe(
+        takeUntil(this.auth.userChanged),
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.cancelling.set(false)),
+      )
+      .subscribe({
+        next: ({ data }) => {
+          if (this.details()?.id !== order.id) return;
+          this.details.set(data);
+          dialog
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+              this.alerts.success('Pedido cancelado com sucesso!');
+            });
+          dialog.close();
+        },
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            this.expire();
+            return;
+          }
+          if (this.details()?.id !== order.id) return;
+          this.cancelError.set(
+            (error.status === 400 || error.status === 409) &&
+              typeof error.error?.message === 'string'
+              ? error.error.message
+              : 'Não foi possível cancelar o pedido. Tente novamente.',
+          );
+        },
+      });
   }
 
   units(order: Order): number {
     return order.items.reduce((total, item) => total + item.quantity, 0);
   }
 
-  planLabel(order:Order):string{return installmentSummary(Math.round(order.total*100),order.installments)}
+  planLabel(order: Order): string {
+    return installmentSummary(
+      Math.round(order.total * 100),
+      order.installments,
+    );
+  }
 
   subtotal(order: Order): number {
     return (

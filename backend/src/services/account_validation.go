@@ -113,7 +113,7 @@ func ValidateProfilePatch(p *models.AccountProfilePatch) string {
 }
 
 // Realiza a validação matemática dos dígitos do CPF.
-// Pressupõe que o CPF já contém exatamente 11 dígitos.
+// Rejeita comprimento e caracteres inválidos antes de acessar os dígitos.
 func ValidCPF(cpf string) bool {
 	if len(cpf) != 11 {
 		return false

@@ -40,7 +40,7 @@ func (h AdminOrdersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(raw, 10, 64)
 
 		if err != nil || id <= 0 {
-			response.Error(w, 404, "Pedido não encontrado")
+			response.Error(w, http.StatusNotFound, "Pedido não encontrado")
 			return
 		}
 
@@ -71,31 +71,24 @@ func (h AdminOrdersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		order, err := h.Store.GetAdminOrder(r.Context(), id)
 
 		if errors.Is(err, sql.ErrNoRows) {
-			response.Error(w, 404, "Pedido não encontrado")
+			response.Error(w, http.StatusNotFound, "Pedido não encontrado")
 			return
 		}
 
 		if err != nil {
-			response.Error(w, 500, "Não foi possível consultar o pedido.")
+			response.Error(w, http.StatusInternalServerError, "Não foi possível consultar o pedido.")
 			return
 		}
 
-		response.Success(w, 200, "", order)
+		response.Success(w, http.StatusOK, "", order)
 		return
 	}
 
 	// Valida a página solicitada.
-	page := 1
-
-	if raw := r.URL.Query().Get("page"); raw != "" {
-		n, err := strconv.Atoi(raw)
-
-		if err != nil || n < 1 || n > 1000000 {
-			response.Error(w, 400, "Página inválida")
-			return
-		}
-
-		page = n
+	page, pageErr := requestPage(r.URL.Query().Get("page"), maximumRequestPage)
+	if pageErr != nil {
+		response.Error(w, http.StatusBadRequest, "Página inválida")
+		return
 	}
 
 	// Valida os status permitidos no painel administrativo.
@@ -105,35 +98,20 @@ func (h AdminOrdersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		status != "simulated_approved" &&
 		status != "cancelled" {
 
-		response.Error(w, 400, "Status inválido")
+		response.Error(w, http.StatusBadRequest, "Status inválido")
 		return
 	}
 
-	// Cria uma cópia da requisição para reutilizar
-	// o processamento dos filtros do histórico.
-	clone := r.Clone(r.Context())
-
-	urlCopy := *r.URL
-	clone.URL = &urlCopy
-
-	// Remove o status da cópia, pois o filtro administrativo
-	// é tratado separadamente.
-	q := clone.URL.Query()
-
-	q.Del("status")
-
-	clone.URL.RawQuery = q.Encode()
-
-	filters, err := parseOrderFilters(clone)
+	filters, err := parseOrderFilterValues(r.URL.Query(), true)
 
 	if err != nil {
-		response.Error(w, 400, err.Error())
+		response.Error(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	// Não permite a ordenação por pedidos mais antigos.
 	if filters.Oldest {
-		response.Error(w, 400, "Ordenação inválida")
+		response.Error(w, http.StatusBadRequest, "Ordenação inválida")
 		return
 	}
 
@@ -147,9 +125,9 @@ func (h AdminOrdersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		response.Error(w, 500, "Não foi possível carregar os pedidos.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível carregar os pedidos.")
 		return
 	}
 
-	response.Success(w, 200, "", orders)
+	response.Success(w, http.StatusOK, "", orders)
 }

@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"errors"
-	"os"
 
 	"gopkg.in/gomail.v2"
 )
@@ -69,26 +68,7 @@ func (service NewsletterService) Subscribe(
 func sendNewsletterSMTP(message *gomail.Message) error { return sendSMTP(message) }
 
 func newsletterMessage(email string) *gomail.Message {
-	message := gomail.NewMessage()
-
-	message.SetAddressHeader(
-		"From",
-		os.Getenv("EMAIL"),
-		"Box Enxovais",
-	)
-
-	message.SetHeader("To", email)
-	message.SetHeader("Subject", "Bem-vindo à Box Enxovais")
-
-	message.SetBody(
-		"text/plain",
+	return newEmailMessage(email, "Bem-vindo à Box Enxovais",
 		"Sua inscrição foi recebida. Acompanhe novidades e campanhas da loja.",
-	)
-
-	message.AddAlternative(
-		"text/html",
-		`<div style="font-family:Montserrat,Arial,sans-serif;color:#3d4836;padding:24px"><h2>Obrigado por se inscrever!</h2><p>Sua inscrição foi recebida. Acompanhe novidades e campanhas da loja.</p><p>Equipe Box Enxovais</p></div>`,
-	)
-
-	return message
+		`<div style="font-family:Montserrat,Arial,sans-serif;color:#3d4836;padding:24px"><h2>Obrigado por se inscrever!</h2><p>Sua inscrição foi recebida. Acompanhe novidades e campanhas da loja.</p><p>Equipe Box Enxovais</p></div>`)
 }

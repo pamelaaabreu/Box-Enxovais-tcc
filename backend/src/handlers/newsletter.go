@@ -50,6 +50,9 @@ func (h NewsletterHandler) SubscribeNewsletter(
 		case errors.Is(err, services.ErrNewsletterEmailInvalid):
 			response.Error(w, http.StatusBadRequest, "Informe um e-mail v\u00e1lido.")
 
+		case errors.Is(err, services.ErrNewsletterPersistence):
+			response.Error(w, http.StatusInternalServerError, "Não foi possível registrar sua inscrição. Tente novamente.")
+
 		case errors.Is(err, services.ErrNewsletterConfiguration):
 			log.Println("Newsletter client not configured")
 

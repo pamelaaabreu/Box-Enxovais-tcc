@@ -6,6 +6,8 @@ import (
 	"net/http"
 )
 
+const internalErrorJSON = `{"success":false,"message":"Erro interno do servidor"}`
+
 // Estrutura padronizada das respostas da API.
 type APIResponse struct {
 	Success bool   `json:"success"`
@@ -15,19 +17,23 @@ type APIResponse struct {
 
 // Converte os dados em JSON e envia a resposta HTTP.
 func JSON(w http.ResponseWriter, status int, payload any) {
+	if status == http.StatusNoContent {
+		w.Header().Del("Content-Type")
+		w.Header().Del("Content-Length")
+		w.WriteHeader(status)
+		return
+	}
 
 	// Converte os dados em um slice de bytes.
 	body, err := json.Marshal(payload)
 
 	// Caso a conversão falhe, retorna um erro interno.
 	if err != nil {
-		log.Println("Could not encode HTTP response")
+		log.Printf("Falha de serialização JSON: status=%d tipo=%T", status, payload)
 
 		status = http.StatusInternalServerError
 
-		body, _ = json.Marshal(APIResponse{
-			Message: "Erro interno do servidor",
-		})
+		body = []byte(internalErrorJSON)
 	}
 
 	// Informa que a resposta contém JSON.
@@ -37,8 +43,10 @@ func JSON(w http.ResponseWriter, status int, payload any) {
 	w.WriteHeader(status)
 
 	// Escreve o conteúdo, acrescentando uma quebra de linha.
-	if _, err := w.Write(append(body, '\n')); err != nil {
-		log.Println("Could not write HTTP response")
+	encoded := append(body, '\n')
+	written, writeErr := w.Write(encoded)
+	if writeErr != nil || written != len(encoded) {
+		log.Printf("Falha de escrita JSON: status=%d bytes=%d esperados=%d", status, written, len(encoded))
 	}
 }
 

@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 import { AdminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
+  // Rotas que exigem autenticação.
   {
     path: 'account',
     canActivate: [authGuard],
@@ -57,21 +58,26 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/cart/cart.component').then((m) => m.CartComponent),
   },
+
+  // Redireciona a URL inicial para a Home.
   {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full',
   },
 
+  // Rotas públicas.
   {
     path: 'home',
     loadComponent: () =>
       import('./features/home/home.component').then((m) => m.HomeComponent),
   },
-
   {
     path: 'campanha/:id',
-    loadComponent: () => import('./features/campaign/campaign.component').then(m=>m.CampaignComponent),
+    loadComponent: () =>
+      import('./features/campaign/campaign.component').then(
+        (m) => m.CampaignComponent,
+      ),
   },
   {
     path: 'categoria/:slug',
@@ -80,7 +86,6 @@ export const routes: Routes = [
         (m) => m.CategoryComponent,
       ),
   },
-
   {
     path: 'produto/:slug',
     loadComponent: () =>
@@ -89,22 +94,26 @@ export const routes: Routes = [
       ),
   },
 
+  // Utiliza a mesma configuração de rota para login e cadastro.
   {
-    // One route configuration preserves the auth panel and video between tabs.
     matcher: (segments) =>
       segments.length === 1 && ['login', 'register'].includes(segments[0].path)
         ? { consumed: segments, posParams: { authPage: segments[0] } }
         : null,
+
+    // Define a aba correspondente à URL.
     resolve: {
       selectedTab: (route: ActivatedRouteSnapshot) =>
         route.paramMap.get('authPage') === 'register' ? 1 : 0,
     },
+
     loadComponent: () =>
       import('./features/authorization/register/register.component').then(
         (m) => m.AuthComponent,
       ),
   },
 
+  // Etapas de recuperação de senha.
   {
     path: 'forgot-password',
     data: { recoveryStep: 'email' },
@@ -113,7 +122,6 @@ export const routes: Routes = [
         ({ ForgotPasswordComponent }) => ForgotPasswordComponent,
       ),
   },
-
   {
     path: 'verify-code',
     data: { recoveryStep: 'otp' },
@@ -122,7 +130,6 @@ export const routes: Routes = [
         ({ ForgotPasswordComponent }) => ForgotPasswordComponent,
       ),
   },
-
   {
     path: 'reset-password',
     loadComponent: () =>
@@ -131,6 +138,7 @@ export const routes: Routes = [
       ),
   },
 
+  // Rotas administrativas.
   {
     path: 'image-upload/:id',
     canMatch: [AdminGuard],
@@ -139,10 +147,16 @@ export const routes: Routes = [
         (m) => m.ProductImageUploadComponent,
       ),
   },
-
   {
     path: 'product-register',
-    canDeactivate: [(page: import('./features/product-manage/register/product-create/product-create.component').ProductCreateComponent) => page.canLeave()],
+
+    // Verifica se o administrador pode abandonar o formulário.
+    canDeactivate: [
+      (
+        page: import('./features/product-manage/register/product-create/product-create.component').ProductCreateComponent,
+      ) => page.canLeave(),
+    ],
+
     canMatch: [AdminGuard],
     loadComponent: () =>
       import('./features/product-manage/register/product-create/product-create.component').then(
@@ -150,8 +164,17 @@ export const routes: Routes = [
       ),
   },
 
-  { path: 'promotion-register', pathMatch: 'full', redirectTo: 'admin/promotions/new' },
-  { path: 'add-to-promotion', pathMatch: 'full', redirectTo: 'admin/promotions' },
+  // Redirecionamentos para as rotas administrativas atuais.
+  {
+    path: 'promotion-register',
+    pathMatch: 'full',
+    redirectTo: 'admin/promotions/new',
+  },
+  {
+    path: 'add-to-promotion',
+    pathMatch: 'full',
+    redirectTo: 'admin/promotions',
+  },
 
   {
     path: 'admin',
@@ -160,6 +183,7 @@ export const routes: Routes = [
       import('./components/admin/admin.module').then((m) => m.AdminModule),
   },
 
+  // Página não encontrada.
   {
     path: '404',
     loadComponent: () =>
@@ -168,6 +192,7 @@ export const routes: Routes = [
       ),
   },
 
+  // Captura URLs que não correspondem às rotas anteriores.
   {
     path: '**',
     loadComponent: () =>

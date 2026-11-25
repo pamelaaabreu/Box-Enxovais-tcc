@@ -20,7 +20,7 @@ func (h ProductHandler) SaveProductVariants(w http.ResponseWriter, r *http.Reque
 	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 
 	if err != nil || id <= 0 {
-		response.Error(w, 400, "Produto inválido")
+		response.Error(w, http.StatusBadRequest, "Produto inválido")
 		return
 	}
 
@@ -37,7 +37,7 @@ func (h ProductHandler) SaveProductVariants(w http.ResponseWriter, r *http.Reque
 	}
 	if body.Expected == nil {
 
-		response.Error(w, 400, "Informe as variações e recarregue os dados do produto")
+		response.Error(w, http.StatusBadRequest, "Informe as variações e recarregue os dados do produto")
 		return
 	}
 
@@ -51,28 +51,28 @@ func (h ProductHandler) SaveProductVariants(w http.ResponseWriter, r *http.Reque
 	)
 
 	if errors.Is(err, services.ErrProductVariants) {
-		response.Error(w, 400, err.Error())
+		response.Error(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	// Trata alterações concorrentes.
 	if errors.Is(err, repositories.ErrVariantConflict) {
-		response.Error(w, 409, err.Error())
+		response.Error(w, http.StatusConflict, err.Error())
 		return
 	}
 
 	if errors.Is(err, sql.ErrNoRows) {
-		response.Error(w, 404, "Produto não encontrado")
+		response.Error(w, http.StatusNotFound, "Produto não encontrado")
 		return
 	}
 
 	if err != nil {
-		response.Error(w, 500, "Não foi possível salvar as variações")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível salvar as variações")
 		return
 	}
 
 	// Retorna as variantes atualizadas.
-	response.JSON(w, 200, map[string]any{
+	response.JSON(w, http.StatusOK, map[string]any{
 		"variants": items,
 	})
 }

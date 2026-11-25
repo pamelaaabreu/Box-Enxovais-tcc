@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"math"
 	"net/url"
 	"regexp"
 	"sort"
@@ -15,6 +16,23 @@ import (
 // Limites padrão e máximo da paginação.
 const DefaultLimit = 20
 const MaxLimit = 100
+
+// Limite da lista de identificadores, independente do tamanho da página.
+const MaxFilterIDs = 100
+const maxSQLParameters = 65535
+const (
+	FilterText        = "text"
+	FilterInteger     = "integer"
+	FilterDecimal     = "decimal"
+	FilterTimestamp   = "timestamp"
+	FilterIntegerList = "integer_list"
+)
+const (
+	operatorEqual    = "eq"
+	operatorContains = "contains"
+)
+
+var filterOperators = map[string]string{"eq": "=", "gte": ">=", "lte": "<=", "gt": ">", "lt": "<", "contains": "ILIKE"}
 
 // Define uma coluna permitida e seu tipo de filtro.
 type FilterField struct {
@@ -38,6 +56,8 @@ type Page[T any] struct {
 
 // Informações necessárias para construir a consulta.
 type PageQuery struct {
+	firstParameter int // Base posicional de filtros gerados por ParsePage.
+
 	Order  string // Ordenação definida pelo servidor.
 	Offset int
 	Limit  int
@@ -54,7 +74,10 @@ var decimalValue = regexp.MustCompile(`^-?[0-9]{1,12}(\.[0-9]{1,2})?$`)
 // Os valores recebidos são utilizados como parâmetros SQL.
 func ParsePage(values url.Values, fields map[string]FilterField, firstParameter int) (PageQuery, error) {
 
-	q := PageQuery{Limit: DefaultLimit}
+	q := PageQuery{Limit: DefaultLimit, firstParameter: firstParameter}
+	if firstParameter < 1 || firstParameter > maxSQLParameters-1 {
+		return q, fmt.Errorf("Posição inicial de parâmetros inválida")
+	}
 
 	// Recupera e ordena as chaves para garantir
 	// uma construção determinística dos filtros.
@@ -119,40 +142,33 @@ func ParsePage(values url.Values, fields map[string]FilterField, firstParameter 
 		}
 
 		// Utiliza igualdade como operador padrão.
-		op := "eq"
+		op := operatorEqual
 
 		if len(parts) == 2 {
 			op = parts[1]
 		}
 
 		// Traduz os operadores permitidos para SQL.
-		operator, ok := map[string]string{
-			"eq":       "=",
-			"gte":      ">=",
-			"lte":      "<=",
-			"gt":       ">",
-			"lt":       "<",
-			"contains": "ILIKE",
-		}[op]
+		operator, ok := filterOperators[op]
 
 		// Verifica a compatibilidade entre operador e tipo.
 		if !ok ||
-			(op == "contains" && field.Kind != "text") ||
-			(field.Kind == "text" && op != "eq" && op != "contains") {
+			(op == operatorContains && field.Kind != FilterText) ||
+			(field.Kind == FilterText && op != operatorEqual && op != operatorContains) {
 
 			return q, fmt.Errorf("Operador não permitido: %s", key)
 		}
 
 		// Processa filtros que recebem listas de IDs.
-		if field.Kind == "integer_list" {
+		if field.Kind == FilterIntegerList {
 
-			if op != "eq" {
+			if op != operatorEqual {
 				return q, fmt.Errorf("Operador não permitido: %s", key)
 			}
 
 			ids := strings.Split(value, ",")
 
-			if len(ids) > MaxLimit {
+			if len(ids) > MaxFilterIDs {
 				return q, fmt.Errorf("Lista de valores inválida: %s", key)
 			}
 
@@ -189,7 +205,7 @@ func ParsePage(values url.Values, fields map[string]FilterField, firstParameter 
 		// Valida e converte o valor conforme seu tipo.
 		switch field.Kind {
 
-		case "integer":
+		case FilterInteger:
 
 			n, err := strconv.ParseInt(value, 10, 64)
 
@@ -199,13 +215,13 @@ func ParsePage(values url.Values, fields map[string]FilterField, firstParameter 
 
 			arg = n
 
-		case "decimal":
+		case FilterDecimal:
 
 			if !decimalValue.MatchString(value) {
 				return q, fmt.Errorf("Valor decimal inválido: %s", key)
 			}
 
-		case "timestamp":
+		case FilterTimestamp:
 
 			parsed, err := time.Parse(time.RFC3339, value)
 
@@ -218,9 +234,12 @@ func ParsePage(values url.Values, fields map[string]FilterField, firstParameter 
 
 			arg = parsed
 
-		case "text":
+		case FilterText:
+			if strings.ContainsRune(value, 0) {
+				return q, fmt.Errorf("Texto inválido em %s", key)
+			}
 
-			if op == "contains" {
+			if op == operatorContains {
 
 				// Protege caracteres especiais do ILIKE.
 				arg = "%" + strings.NewReplacer(
@@ -248,6 +267,10 @@ func ParsePage(values url.Values, fields map[string]FilterField, firstParameter 
 				firstParameter+len(q.Args)-1,
 			),
 		)
+	}
+
+	if firstParameter+len(q.Args)-1 > maxSQLParameters-2 {
+		return q, fmt.Errorf("Quantidade de parâmetros excedida")
 	}
 
 	// Combina todos os filtros utilizando AND.
@@ -279,6 +302,19 @@ func ReadPage[T any](
 			Offset: query.Offset,
 			Limit:  query.Limit,
 		},
+	}
+
+	if query.Limit < 1 || query.Limit > MaxLimit || query.Offset < 0 || int64(query.Offset) > math.MaxInt32 {
+		return result, fmt.Errorf("Limite ou offset de paginação inválido")
+	}
+	if query.firstParameter != 0 && query.firstParameter != len(baseArgs)+1 {
+		return result, fmt.Errorf("Parâmetros anteriores incompatíveis com os filtros")
+	}
+	if len(baseArgs)+len(query.Args) > maxSQLParameters-2 {
+		return result, fmt.Errorf("Quantidade de parâmetros excedida")
+	}
+	if database == nil || scan == nil || strings.TrimSpace(baseSQL) == "" || strings.TrimSpace(orderBy) == "" {
+		return result, fmt.Errorf("Consulta paginada não configurada")
 	}
 
 	// Utiliza uma transação somente para leitura,

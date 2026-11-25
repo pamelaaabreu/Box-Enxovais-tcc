@@ -7,6 +7,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -62,4 +63,17 @@ func allowMethods(w http.ResponseWriter, r *http.Request, methods ...string) boo
 	w.Header().Set("Allow", strings.Join(methods, ", "))
 	response.Error(w, http.StatusMethodNotAllowed, "Método não permitido")
 	return false
+}
+
+const maximumRequestPage = 1_000_000
+
+func requestPage(raw string, maximum int) (int, error) {
+	if raw == "" {
+		return 1, nil
+	}
+	page, err := strconv.Atoi(raw)
+	if err != nil || page < 1 || page > maximum {
+		return 0, errors.New("invalid page")
+	}
+	return page, nil
 }

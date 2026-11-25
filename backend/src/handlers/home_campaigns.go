@@ -14,14 +14,14 @@ func (h HomeHandler) Campaign(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Cache-Control", "no-store")
 
-	c, e := h.Store.Campaign(r.Context())
+	campaign, err := h.Store.Campaign(r.Context())
 
-	if e != nil {
-		response.Error(w, 500, "Não foi possível carregar a campanha.")
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, "Não foi possível carregar a campanha.")
 		return
 	}
 
-	response.JSON(w, 200, c)
+	response.JSON(w, http.StatusOK, campaign)
 }
 
 // Consulta uma campanha específica.
@@ -36,22 +36,22 @@ func (h HomeHandler) CampaignDetail(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 
 	if err != nil || id <= 0 {
-		response.Error(w, 404, "Campanha não encontrada.")
+		response.Error(w, http.StatusNotFound, "Campanha não encontrada.")
 		return
 	}
 
 	campaign, err := h.Store.CampaignByID(r.Context(), id)
 
 	if err != nil {
-		response.Error(w, 500, "Não foi possível carregar a campanha.")
+		response.Error(w, http.StatusInternalServerError, "Não foi possível carregar a campanha.")
 		return
 	}
 
 	// Verifica se a campanha está disponível.
 	if campaign == nil {
-		response.Error(w, 404, "Esta campanha não está disponível.")
+		response.Error(w, http.StatusNotFound, "Esta campanha não está disponível.")
 		return
 	}
 
-	response.JSON(w, 200, campaign)
+	response.JSON(w, http.StatusOK, campaign)
 }

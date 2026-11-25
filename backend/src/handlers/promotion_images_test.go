@@ -70,6 +70,7 @@ func TestPromotionUploadImage(t *testing.T) {
 		{name: "PNG válido", filename: "campanha.png", content: pngData, attach: true, wantStatus: http.StatusCreated, wantExt: ".png"},
 		{name: "JPEG válido", filename: "campanha.jpeg", content: jpegData, attach: true, wantStatus: http.StatusCreated, wantExt: ".jpg"},
 		{name: "Extensão não substitui MIME", filename: "campanha.png", content: []byte("não é uma imagem"), attach: true, wantStatus: http.StatusUnsupportedMediaType},
+		{name: "PNG truncado", filename: "image.png", content: pngData[:len(pngData)/2], attach: true, wantStatus: http.StatusUnsupportedMediaType},
 		{name: "Imagem vazia", filename: "campanha.png", content: []byte{}, attach: true, wantStatus: http.StatusBadRequest},
 		{name: "Imagem ausente", attach: false, wantStatus: http.StatusBadRequest},
 		{name: "Imagem acima de 10 MiB", filename: "campanha.png", content: bytes.Repeat([]byte("x"), (10<<20)+1), attach: true, wantStatus: http.StatusBadRequest},

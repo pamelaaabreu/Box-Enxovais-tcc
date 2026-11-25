@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -44,26 +45,34 @@ func sendOrderEmail(database *sql.DB, userID int, order models.CheckoutOrder, ca
 }
 
 func sendOrderMessage(email, name string, order models.CheckoutOrder, cancelled bool) error {
+	message, err := buildOrderEmail(email, name, order, cancelled, "src/templates")
+	if err != nil {
+		return err
+	}
+	if err = sendSMTP(message); err != nil {
+		return fmt.Errorf("envio SMTP")
+	}
+	return nil
+}
+
+func buildOrderEmail(email, name string, order models.CheckoutOrder, cancelled bool, templateDir string) (*gomail.Message, error) {
+
 	filename, verb := "checkout_receipt.html", "confirmado"
 	if cancelled {
 		filename, verb = "order_cancelled.html", "cancelado"
 	}
 	money := func(cents models.Money) string { return fmt.Sprintf("R$ %d,%02d", cents/100, cents%100) }
 	tmpl, err := template.New(filename).Funcs(template.FuncMap{"money": money}).
-		ParseFiles("src/templates/" + filename)
+		ParseFiles(filepath.Join(templateDir, filename))
 	if err != nil {
-		return fmt.Errorf("template")
+		return nil, fmt.Errorf("template")
 	}
 	var html bytes.Buffer
 	if err := tmpl.Execute(&html, struct {
 		Name  string
 		Order models.CheckoutOrder
 	}{name, order}); err != nil {
-		return fmt.Errorf("renderização")
-	}
-	_, from, _, err := smtpConfiguration()
-	if err != nil {
-		return fmt.Errorf("configuração SMTP")
+		return nil, fmt.Errorf("renderização")
 	}
 
 	var plain strings.Builder
@@ -78,18 +87,10 @@ func sendOrderMessage(email, name string, order models.CheckoutOrder, cancelled 
 			fmt.Fprintf(&plain, "%s ", money(amount))
 		}
 	}
-	msg := gomail.NewMessage()
-	msg.SetHeader("From", from)
-	msg.SetHeader("To", email)
-	msg.SetHeader("Subject", fmt.Sprintf("Box Enxovais — Pedido #%d %s", order.ID, verb))
-	msg.SetBody("text/plain", plain.String())
-	msg.AddAlternative("text/html", html.String())
-	msg.Embed("src/templates/assets/checkout-logo-white.png", gomail.SetHeader(map[string][]string{
+	msg := newEmailMessage(email, fmt.Sprintf("Box Enxovais — Pedido #%d %s", order.ID, verb), plain.String(), html.String())
+	msg.Embed(filepath.Join(templateDir, "assets", "checkout-logo-white.png"), gomail.SetHeader(map[string][]string{
 		"Content-ID":          {"<checkout-logo-white.png>"},
 		"Content-Disposition": {"inline"},
 	}))
-	if err := sendSMTP(msg); err != nil {
-		return fmt.Errorf("envio SMTP")
-	}
-	return nil
+	return msg, nil
 }

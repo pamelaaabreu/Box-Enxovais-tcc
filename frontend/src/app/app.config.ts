@@ -1,7 +1,4 @@
-import {
-  APP_INITIALIZER,
-  ApplicationConfig,
-} from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import {
   provideHttpClient,
@@ -21,9 +18,16 @@ export function initializeAuth(authService: AuthService): () => void {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    // Disponibiliza o sistema de rotas.
     provideRouter(routes),
+
+    // Configura a comunicação HTTP e o interceptor.
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+
+    // Configura o suporte às animações.
     provideAnimationsAsync(),
+
+    // Executa a inicialização da autenticação.
     {
       provide: APP_INITIALIZER,
       useFactory: initializeAuth,

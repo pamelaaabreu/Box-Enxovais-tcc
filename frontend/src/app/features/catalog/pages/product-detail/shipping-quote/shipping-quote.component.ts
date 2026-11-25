@@ -24,10 +24,14 @@ export class ShippingQuoteComponent {
   private readonly http = inject(HttpClient);
   private readonly account = inject(AccountService);
   private readonly destroyRef = inject(DestroyRef);
+
   private request?: Subscription;
+
   readonly cep = signal('');
   readonly loading = signal(false);
   readonly touched = signal(false);
+
+  // Indica se o CEP foi tocado e está inválido.
   readonly invalid = computed(() => this.touched() && !this.isValidCep());
 
   touchCep(): void {
@@ -37,11 +41,14 @@ export class ShippingQuoteComponent {
   private isValidCep(): boolean {
     return /^\d{8}$/.test(this.cep().replace('-', ''));
   }
+
   readonly message = signal('');
   readonly quote = signal<ShippingQuote | null>(null);
 
+  // Cancela a consulta anterior quando o CEP muda.
   changeCep(value: string): void {
     this.request?.unsubscribe();
+
     this.cep.set(value);
     this.quote.set(null);
     this.message.set('');
@@ -50,24 +57,37 @@ export class ShippingQuoteComponent {
 
   calculate(): void {
     if (this.loading()) return;
+
     const cep = this.cep().replace('-', '');
+
     this.quote.set(null);
     this.touchCep();
     this.message.set('');
+
     if (this.invalid()) return;
+
     this.loading.set(true);
+
+    // Consulta o valor e prazo da entrega.
     this.request = this.http
       .get<ShippingQuote>('http://localhost:8080/shipping/quote', {
         params: { cep },
       })
       .pipe(
-        map((result) => ({ result, message: '' })),
+        map((result) => ({
+          result,
+          message: '',
+        })),
+
         catchError((error: HttpErrorResponse) => {
           const failed = {
             result: null,
             message: 'Não foi possível calcular a entrega. Tente novamente.',
           };
+
           if (error.status !== 404) return of(failed);
+
+          // Verifica se o CEP existe quando não há cobertura.
           return this.account.lookupZip(cep).pipe(
             map((address) => ({
               result: null,
@@ -78,6 +98,7 @@ export class ShippingQuoteComponent {
             catchError(() => of(failed)),
           );
         }),
+
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(({ result, message }) => {

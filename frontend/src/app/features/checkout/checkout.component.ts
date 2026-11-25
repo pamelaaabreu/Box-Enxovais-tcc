@@ -1,16 +1,23 @@
 import { InlineNoticeComponent } from '../../shared/components/inline-notice/inline-notice.component';
 import { MatSelectModule } from '@angular/material/select';
-import { ConfirmedOrder, ShippingQuote } from '../../shared/types/checkout/checkout';
+import {
+  ConfirmedOrder,
+  ShippingQuote,
+} from '../../shared/types/checkout/checkout';
 import { installmentSummary } from '../../shared/utils/installments';
-import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  HttpClient,
-  HttpErrorResponse,
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -29,7 +36,12 @@ import {
 } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CartService, QuickPurchase } from '../../core/services/cart.service';
-import { AccountService, SavedAddress, contactPhonePattern, mobilePhonePattern } from '../../core/services/account.service';
+import {
+  AccountService,
+  SavedAddress,
+  contactPhonePattern,
+  mobilePhonePattern,
+} from '../../core/services/account.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/catalog-layout.component';
 
@@ -67,7 +79,7 @@ export class CheckoutComponent {
   private readonly coverageChanges = new Subject<string>();
   private readonly postalCancelled = new Subject<void>();
   private addressChosen = false;
-  private coverageRequestCep = "";
+  private coverageRequestCep = '';
   private readonly savedChoiceKey = this.addressChoiceKey();
   private readonly restoredAddressId = this.restoreAddressChoice();
   readonly addressesLoading = signal(true);
@@ -75,14 +87,30 @@ export class CheckoutComponent {
   readonly coverageLoading = signal(false);
   readonly coverageMessage = signal('');
   readonly coveredCep = signal('');
-  readonly deliveryQuote = signal<ShippingQuote|null>(null);
-  readonly checkoutTotal = computed(() => (Math.round(this.cart.total()*100)+(this.deliveryCovered()?this.deliveryQuote()?.priceCents??0:0))/100);
-  readonly deliveryCovered = computed(() => !!this.coveredCep() && this.coveredCep() === this.deliveryCep());
+  readonly deliveryQuote = signal<ShippingQuote | null>(null);
+  readonly checkoutTotal = computed(
+    () =>
+      (Math.round(this.cart.total() * 100) +
+        (this.deliveryCovered()
+          ? (this.deliveryQuote()?.priceCents ?? 0)
+          : 0)) /
+      100,
+  );
+  readonly deliveryCovered = computed(
+    () => !!this.coveredCep() && this.coveredCep() === this.deliveryCep(),
+  );
   readonly savedAddresses = signal<SavedAddress[]>([]);
   readonly selectedAddressId = signal(0);
-  readonly selectedAddress = computed(() => this.savedAddresses().find(address => address.id === this.selectedAddressId()));
+  readonly selectedAddress = computed(() =>
+    this.savedAddresses().find(
+      (address) => address.id === this.selectedAddressId(),
+    ),
+  );
   readonly saveAddress = this.fb.nonNullable.control(false);
-  readonly contactPhone = this.fb.nonNullable.control('', Validators.pattern(contactPhonePattern));
+  readonly contactPhone = this.fb.nonNullable.control(
+    '',
+    Validators.pattern(contactPhonePattern),
+  );
   readonly step = signal(1);
   readonly busy = signal(false);
   readonly error = signal('');
@@ -99,9 +127,7 @@ export class CheckoutComponent {
     city: 0,
     state: 0,
   };
-  readonly order = signal<ConfirmedOrder | null>(
-    null,
-  );
+  readonly order = signal<ConfirmedOrder | null>(null);
   private readonly requestKey = crypto.randomUUID();
   readonly ready = computed(
     () =>
@@ -198,10 +224,17 @@ export class CheckoutComponent {
     state: ['', Validators.required],
   });
   readonly payment = this.fb.nonNullable.control('pix', Validators.required);
- readonly installments=this.fb.nonNullable.control(1,[Validators.required,Validators.pattern(/^[1-6]$/)]);
- readonly installmentOptions=[1,2,3,4,5,6];
- paymentCount():number {return this.payment.value==='card'?this.installments.value:1}
- planLabel(count:number=this.paymentCount()):string{return installmentSummary(Math.round(this.checkoutTotal()*100),count)}
+  readonly installments = this.fb.nonNullable.control(1, [
+    Validators.required,
+    Validators.pattern(/^[1-6]$/),
+  ]);
+  readonly installmentOptions = [1, 2, 3, 4, 5, 6];
+  paymentCount(): number {
+    return this.payment.value === 'card' ? this.installments.value : 1;
+  }
+  planLabel(count: number = this.paymentCount()): string {
+    return installmentSummary(Math.round(this.checkoutTotal() * 100), count);
+  }
   readonly paymentLabels: Record<string, string> = {
     pix: 'Pix',
     card: 'Cartão de crédito',
@@ -209,82 +242,148 @@ export class CheckoutComponent {
   };
   constructor() {
     this.cart.load();
-    if (inject(ActivatedRoute, { optional: true })?.snapshot?.queryParamMap?.get('compra') === 'agora') {
+    if (
+      inject(ActivatedRoute, { optional: true })?.snapshot?.queryParamMap?.get(
+        'compra',
+      ) === 'agora'
+    ) {
       const quickPurchase = signal<QuickPurchase | null>(null);
-      this.cart.consumeQuickPurchase(purchase => quickPurchase.set(purchase));
+      this.cart.consumeQuickPurchase((purchase) => quickPurchase.set(purchase));
       effect(() => {
         const purchase = quickPurchase();
         if (!purchase || this.cart.loading() || !this.ready()) return;
-        const hasSelectedItem = this.cart.cart().items.some(item => item.productId === purchase.productId &&
-          (item.variantId ?? 0) === (purchase.variantId ?? 0) && item.available && item.quantity > 0);
-        if (hasSelectedItem && this.selectedAddress() && this.deliveryCovered() && this.contactPhone.valid && this.step() === 1) {
+        const hasSelectedItem = this.cart
+          .cart()
+          .items.some(
+            (item) =>
+              item.productId === purchase.productId &&
+              (item.variantId ?? 0) === (purchase.variantId ?? 0) &&
+              item.available &&
+              item.quantity > 0,
+          );
+        if (
+          hasSelectedItem &&
+          this.selectedAddress() &&
+          this.deliveryCovered() &&
+          this.contactPhone.valid &&
+          this.step() === 1
+        ) {
           quickPurchase.set(null);
           this.step.set(2);
         }
       });
     }
-    this.coverageChanges.pipe(
-      switchMap(cep => {
-        this.coverageRequestCep = cep;
-        this.coveredCep.set('');
-        this.deliveryQuote.set(null);
-        this.coverageMessage.set('');
-        this.coverageLoading.set(false);
-        if (!/^\d{8}$/.test(cep)) return EMPTY;
-        this.coverageLoading.set(true);
-        return this.http.get<{ priceCents: number; minDays: number; maxDays: number }>('http://localhost:8080/shipping/quote', { params: { cep } }).pipe(
-          tap(quote => {
-            if (Number.isSafeInteger(quote.priceCents) && quote.priceCents >= 0 && Number.isSafeInteger(quote.minDays) && quote.minDays >= 0 && Number.isSafeInteger(quote.maxDays) && quote.maxDays >= quote.minDays) {
-              this.deliveryQuote.set(quote);
-              this.coveredCep.set(cep);
-            } else this.coverageMessage.set('Não foi possível consultar a entrega. Tente novamente.');
-          }),
-          catchError((error: HttpErrorResponse) => {
-            this.coverageMessage.set(error.status === 404 ? 'Entrega indisponível para este CEP no momento.' : error.status === 400 ? 'Informe um CEP válido.' : 'Não foi possível consultar a entrega. Tente novamente.');
-            return EMPTY;
-          }),
-          finalize(() => this.coverageLoading.set(false)),
-        );
-      }),
-      takeUntil(this.auth.userChanged), takeUntilDestroyed(),
-    ).subscribe();
-    this.addressReload.pipe(
-      startWith(undefined),
-      switchMap(() => {
-        this.addressesLoading.set(true);
-        this.addressesError.set('');
-        return this.account.addresses().pipe(
-          tap(addresses => {
-            if (!Array.isArray(addresses)) throw new Error('Invalid addresses response');
-            this.savedAddresses.set(addresses);
-            this.addressesLoading.set(false);
-            const current = this.addressChosen ? this.selectedAddressId() : this.restoredAddressId;
-            const id = current === 0 ? 0 : addresses.find(a => a.id === current)?.id ?? addresses.find(a => a.isDefault)?.id ?? addresses[0]?.id ?? 0;
-            this.selectAddress(id);
-          }),
-          catchError(() => {
-            this.addressesError.set('Não foi possível carregar seus endereços. Tente novamente.');
-            return EMPTY;
-          }),
-          finalize(() => this.addressesLoading.set(false)),
-        );
-      }),
-      takeUntil(this.auth.userChanged), takeUntilDestroyed(),
-    ).subscribe();
-    this.account.profile().pipe(takeUntil(this.auth.userChanged), takeUntilDestroyed()).subscribe({
-      next: profile => {
-        if (this.contactPhone.pristine && mobilePhonePattern.test(profile.phone)) {
-          this.contactPhone.setValue(profile.phone.replace(/[^0-9]/g, '').slice(-11));
-        }
-      },
-      error: () => { /* A contact number may still be entered manually. */ },
-    });
+    this.coverageChanges
+      .pipe(
+        switchMap((cep) => {
+          this.coverageRequestCep = cep;
+          this.coveredCep.set('');
+          this.deliveryQuote.set(null);
+          this.coverageMessage.set('');
+          this.coverageLoading.set(false);
+          if (!/^\d{8}$/.test(cep)) return EMPTY;
+          this.coverageLoading.set(true);
+          return this.http
+            .get<{
+              priceCents: number;
+              minDays: number;
+              maxDays: number;
+            }>('http://localhost:8080/shipping/quote', { params: { cep } })
+            .pipe(
+              tap((quote) => {
+                if (
+                  Number.isSafeInteger(quote.priceCents) &&
+                  quote.priceCents >= 0 &&
+                  Number.isSafeInteger(quote.minDays) &&
+                  quote.minDays >= 0 &&
+                  Number.isSafeInteger(quote.maxDays) &&
+                  quote.maxDays >= quote.minDays
+                ) {
+                  this.deliveryQuote.set(quote);
+                  this.coveredCep.set(cep);
+                } else
+                  this.coverageMessage.set(
+                    'Não foi possível consultar a entrega. Tente novamente.',
+                  );
+              }),
+              catchError((error: HttpErrorResponse) => {
+                this.coverageMessage.set(
+                  error.status === 404
+                    ? 'Entrega indisponível para este CEP no momento.'
+                    : error.status === 400
+                      ? 'Informe um CEP válido.'
+                      : 'Não foi possível consultar a entrega. Tente novamente.',
+                );
+                return EMPTY;
+              }),
+              finalize(() => this.coverageLoading.set(false)),
+            );
+        }),
+        takeUntil(this.auth.userChanged),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
+    this.addressReload
+      .pipe(
+        startWith(undefined),
+        switchMap(() => {
+          this.addressesLoading.set(true);
+          this.addressesError.set('');
+          return this.account.addresses().pipe(
+            tap((addresses) => {
+              if (!Array.isArray(addresses))
+                throw new Error('Invalid addresses response');
+              this.savedAddresses.set(addresses);
+              this.addressesLoading.set(false);
+              const current = this.addressChosen
+                ? this.selectedAddressId()
+                : this.restoredAddressId;
+              const id =
+                current === 0
+                  ? 0
+                  : (addresses.find((a) => a.id === current)?.id ??
+                    addresses.find((a) => a.isDefault)?.id ??
+                    addresses[0]?.id ??
+                    0);
+              this.selectAddress(id);
+            }),
+            catchError(() => {
+              this.addressesError.set(
+                'Não foi possível carregar seus endereços. Tente novamente.',
+              );
+              return EMPTY;
+            }),
+            finalize(() => this.addressesLoading.set(false)),
+          );
+        }),
+        takeUntil(this.auth.userChanged),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
+    this.account
+      .profile()
+      .pipe(takeUntil(this.auth.userChanged), takeUntilDestroyed())
+      .subscribe({
+        next: (profile) => {
+          if (
+            this.contactPhone.pristine &&
+            mobilePhonePattern.test(profile.phone)
+          ) {
+            this.contactPhone.setValue(
+              profile.phone.replace(/[^0-9]/g, '').slice(-11),
+            );
+          }
+        },
+        error: () => {
+          /* A contact number may still be entered manually. */
+        },
+      });
     this.auth.userChanged.pipe(takeUntilDestroyed()).subscribe(() => {
       this.clearAddressChoice();
       this.savedAddresses.set([]);
       this.selectedAddressId.set(0);
       this.coveredCep.set('');
-        this.deliveryQuote.set(null);
+      this.deliveryQuote.set(null);
       this.postalCancelled.next();
       void this.router.navigate(['/cart']);
     });
@@ -293,9 +392,11 @@ export class CheckoutComponent {
         .pipe(takeUntilDestroyed())
         .subscribe(() => this.postalRevisions[key]++);
     }
-    this.address.controls.zipCode.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
-      if (!this.selectedAddress()) this.checkCoverage();
-    });
+    this.address.controls.zipCode.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        if (!this.selectedAddress()) this.checkCoverage();
+      });
     this.address.controls.zipCode.valueChanges
       .pipe(
         map((value) =>
@@ -366,10 +467,12 @@ export class CheckoutComponent {
       )
       .subscribe();
   }
-  retryAddresses(): void { this.addressReload.next(); }
+  retryAddresses(): void {
+    this.addressReload.next();
+  }
 
   selectAddress(id: number): void {
-    if (id !== 0 && !this.savedAddresses().some(a => a.id === id)) return;
+    if (id !== 0 && !this.savedAddresses().some((a) => a.id === id)) return;
     this.error.set('');
     this.addressChosen = true;
     this.postalCancelled.next();
@@ -381,7 +484,9 @@ export class CheckoutComponent {
   }
 
   deliveryCep(): string {
-    return (this.selectedAddress()?.zipCode ?? this.address.controls.zipCode.value).replace(/[^0-9]/g, '');
+    return (
+      this.selectedAddress()?.zipCode ?? this.address.controls.zipCode.value
+    ).replace(/[^0-9]/g, '');
   }
 
   checkCoverage(): void {
@@ -396,8 +501,12 @@ export class CheckoutComponent {
       const token = this.auth.getToken?.();
       if (!token) return null;
       const id = jwtDecode<{ userId: number }>(token).userId;
-      return Number.isSafeInteger(id) && id > 0 ? 'box.checkout.address.' + id : null;
-    } catch { return null; }
+      return Number.isSafeInteger(id) && id > 0
+        ? 'box.checkout.address.' + id
+        : null;
+    } catch {
+      return null;
+    }
   }
 
   private restoreAddressChoice(): number | null {
@@ -406,22 +515,36 @@ export class CheckoutComponent {
       const raw = key ? sessionStorage.getItem(key) : null;
       if (!raw) return null;
       const saved = JSON.parse(raw);
-      return Number.isSafeInteger(saved.id) && saved.id >= 0 && saved.expires > Date.now() ? saved.id : null;
-    } catch { return null; }
+      return Number.isSafeInteger(saved.id) &&
+        saved.id >= 0 &&
+        saved.expires > Date.now()
+        ? saved.id
+        : null;
+    } catch {
+      return null;
+    }
   }
 
   private rememberAddressChoice(id: number): void {
     try {
       const key = this.savedChoiceKey;
-      if (key) sessionStorage.setItem(key, JSON.stringify({ id, expires: Date.now() + 1800000 }));
-    } catch { return; }
+      if (key)
+        sessionStorage.setItem(
+          key,
+          JSON.stringify({ id, expires: Date.now() + 1800000 }),
+        );
+    } catch {
+      return;
+    }
   }
 
   private clearAddressChoice(): void {
     try {
       const key = this.savedChoiceKey;
       if (key) sessionStorage.removeItem(key);
-    } catch { return; }
+    } catch {
+      return;
+    }
   }
 
   togglePostalAddressEditing(): void {
@@ -443,27 +566,49 @@ export class CheckoutComponent {
   }
 
   next(): void {
-    if (this.busy() || this.addressesLoading() || this.addressesError() || ![1, 2].includes(this.step())) return;
+    if (
+      this.busy() ||
+      this.addressesLoading() ||
+      this.addressesError() ||
+      ![1, 2].includes(this.step())
+    )
+      return;
     this.address.markAllAsTouched();
     this.contactPhone.markAsTouched();
-    if ((!this.selectedAddress() && this.address.invalid) || this.contactPhone.invalid || !this.ready()) return;
+    if (
+      (!this.selectedAddress() && this.address.invalid) ||
+      this.contactPhone.invalid ||
+      !this.ready()
+    )
+      return;
     if (!this.deliveryCovered()) {
-      if (!this.coverageMessage() && !this.coverageLoading()) this.checkCoverage();
+      if (!this.coverageMessage() && !this.coverageLoading())
+        this.checkCoverage();
       return;
     }
-    if (!Object.hasOwn(this.paymentLabels, this.payment.value) || (this.payment.value==='card' && this.installments.invalid)) {this.installments.markAsTouched();return;}
+    if (
+      !Object.hasOwn(this.paymentLabels, this.payment.value) ||
+      (this.payment.value === 'card' && this.installments.invalid)
+    ) {
+      this.installments.markAsTouched();
+      return;
+    }
     this.error.set('');
     this.step.update((value) => Math.min(value + 1, 3));
   }
   confirm(): void {
     if (
       this.busy() ||
-      this.addressesLoading() || !!this.addressesError() || !this.deliveryCovered() ||
+      this.addressesLoading() ||
+      !!this.addressesError() ||
+      !this.deliveryCovered() ||
       !!this.order() ||
       !this.ready() ||
-      (!this.selectedAddress() && this.address.invalid) || this.contactPhone.invalid ||
+      (!this.selectedAddress() && this.address.invalid) ||
+      this.contactPhone.invalid ||
       this.step() !== 3 ||
-      !Object.hasOwn(this.paymentLabels, this.payment.value) || (this.payment.value==='card' && this.installments.invalid)
+      !Object.hasOwn(this.paymentLabels, this.payment.value) ||
+      (this.payment.value === 'card' && this.installments.invalid)
     )
       return;
     this.busy.set(true);
@@ -477,8 +622,12 @@ export class CheckoutComponent {
         ...(this.selectedAddress()
           ? { addressId: this.selectedAddressId() }
           : { address: this.address.getRawValue() }),
-        ...(this.saveAddress.value && !this.selectedAddress() ? { saveAddress: true } : {}),
-        ...(this.contactPhone.value ? { contactPhone: this.contactPhone.value } : {}),
+        ...(this.saveAddress.value && !this.selectedAddress()
+          ? { saveAddress: true }
+          : {}),
+        ...(this.contactPhone.value
+          ? { contactPhone: this.contactPhone.value }
+          : {}),
         paymentMethod: this.payment.value,
         expectedTotalCents: Math.round(this.checkoutTotal() * 100),
         installments: this.paymentCount(),
@@ -529,8 +678,10 @@ export class CheckoutComponent {
           );
           if (error.status === 422) {
             this.coveredCep.set('');
-        this.deliveryQuote.set(null);
-            this.coverageMessage.set(message || 'Entrega indisponível para este CEP no momento.');
+            this.deliveryQuote.set(null);
+            this.coverageMessage.set(
+              message || 'Entrega indisponível para este CEP no momento.',
+            );
             this.step.set(1);
           }
           if (error.status === 409) {

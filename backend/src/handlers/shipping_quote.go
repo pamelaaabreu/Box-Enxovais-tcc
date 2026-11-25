@@ -12,6 +12,9 @@ import (
 func QuoteShipping(database *sql.DB) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
+		if !allowMethods(w, r, http.MethodGet) {
+			return
+		}
 
 		// Recupera e valida o CEP informado na URL.
 		cep, valid := repositories.ParseShippingCEP(

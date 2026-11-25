@@ -136,7 +136,7 @@ func TestAllRouteRegistrations(t *testing.T) {
 		path    string
 		pattern string
 	}{
-		{"/products/42", "GET /products/"}, {"/api/promotions/42", "GET /api/promotions/"}, {"/uploads/example.jpg", "/uploads/"},
+		{"/products/42", "GET /products/{id}"}, {"/api/promotions/42", "GET /api/promotions/"}, {"/uploads/example.jpg", "/uploads/"},
 	} {
 		_, matched := mux.Handler(httptest.NewRequest("GET", test.path, nil))
 		if matched != test.pattern {
