@@ -1,3 +1,6 @@
+import { map } from 'rxjs';
+import { ProductReviewService } from '../../../core/services/product-review.service';
+import { ProductReview } from '../../../shared/types/product-review.types';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
@@ -27,7 +30,9 @@ export class ExperienceReviewsComponent {
   private readRequest?: Subscription;
   private readonly http = inject(HttpClient);
   private readonly alerts = inject(CustomAlertService);
-  readonly reviews = signal<Review[]>([]);
+  readonly kind = signal<'purchase' | 'product'>('purchase');
+  readonly productReviews = inject(ProductReviewService);
+  readonly reviews = signal<(Review & { product?: ProductReview })[]>([]);
   readonly loading = signal(true);
   readonly error = signal('');
   readonly pending = signal(0);
@@ -37,12 +42,15 @@ export class ExperienceReviewsComponent {
     this.load();
   }
 
+  changeKind(kind: 'purchase' | 'product') { if (this.pending() || this.kind() === kind) return; this.kind.set(kind); this.page.set(1); this.load(); }
   load() {
     this.readRequest?.unsubscribe();
     this.loading.set(true);
     this.error.set('');
-    this.readRequest = this.http
-      .get<Review[]>('http://localhost:8080/admin/experience-reviews')
+    const request = this.kind() === 'product'
+      ? this.productReviews.admin().pipe(map(items => items.map(product => ({ id: product.id, orderId: product.orderId ?? 0, overall: product.rating, navigation: null, service: null, experience: null, comment: product.comment, publicationConsent: product.publicationConsent, status: product.status!, createdAt: product.createdAt, product }))))
+      : this.http.get<Review[]>('http://localhost:8080/admin/experience-reviews');
+    this.readRequest = request
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (v) => {
@@ -56,13 +64,12 @@ export class ExperienceReviewsComponent {
       });
   }
 
-  moderate(review: Review, status: Review['status']) {
+  moderate(review: Review & { product?: ProductReview }, status: Review['status']) {
     if (this.pending()) return;
     this.pending.set(review.id);
-    this.http
-      .patch('http://localhost:8080/admin/experience-reviews/' + review.id, {
-        status,
-      })
+    const request = review.product ? this.productReviews.moderate(review.product, status)
+      : this.http.patch('http://localhost:8080/admin/experience-reviews/' + review.id, { status });
+    request
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -71,6 +78,7 @@ export class ExperienceReviewsComponent {
           );
           this.pending.set(0);
           this.alerts.success('Avaliação atualizada');
+          if (review.product) this.load();
         },
         error: (e: HttpErrorResponse) => {
           this.pending.set(0);

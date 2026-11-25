@@ -126,7 +126,11 @@ func TestBrowserAuditServer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, u := range []struct{ name, email, role string }{{"Admin Auditoria", "admin@audit.example.test", "admin"}, {"Cliente Auditoria", "cliente@audit.example.test", "customer"}} {
+	for _, u := range []struct {
+		name  string
+		email string
+		role  string
+	}{{"Admin Auditoria", "admin@audit.example.test", "admin"}, {"Cliente Auditoria", "cliente@audit.example.test", "customer"}} {
 		if _, err = database.Exec("INSERT INTO users(full_name,email,password,role) VALUES($1,$2,$3,$4)", u.name, u.email, string(hash), u.role); err != nil {
 			t.Fatal(err)
 		}

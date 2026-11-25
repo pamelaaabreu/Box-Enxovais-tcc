@@ -133,6 +133,7 @@
                 <span class="menu-label">Minha Conta</span>
                 @if (active0.isActive) { <mat-icon class="current-check" aria-hidden="true">check</mat-icon> }
               </a>
+          <a routerLink="/account" fragment="avaliacoes" (click)="isMenuOpen = false">Minhas avaliações</a>
             </li>
             <li>
               <a routerLink="/meus-pedidos" routerLinkActive="current" ariaCurrentWhenActive="page" #active1="routerLinkActive" (click)="isMenuOpen = false">

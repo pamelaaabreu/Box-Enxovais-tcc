@@ -1,3 +1,4 @@
+import { ProductReviewService } from '../../core/services/product-review.service';
 import {signal} from '@angular/core';
 import {TestBed,fakeAsync,tick,discardPeriodicTasks} from '@angular/core/testing';
 import {provideRouter,ActivatedRoute,convertToParamMap} from '@angular/router';
@@ -13,7 +14,7 @@ import {HomeCampaign,Product} from '../../shared/models';
  it('renders up to four available unique participants and hides the entire section when ineligible',()=>{
   const product=(id:number):Product=>({id,name:'Produto '+id,status:'active',price:100,quantity:2,measurements:{},promotional_price:100});
   const active=signal<HomeCampaign|null>({id:5,name:'Natal Aconchegante',description:'Coleção cadastrada',imagePath:'uploads/real.webp',startDate:new Date(Date.now()-1000).toISOString(),endDate:new Date(Date.now()+3600000).toISOString(),products:[product(1),product(1),{...product(2),quantity:0},product(3),product(4),product(5),product(6)]});
-  TestBed.configureTestingModule({providers:[provideRouter([]),{provide:CampaignService,useValue:{active,now:signal(0),eligible:(c:HomeCampaign|null)=>!!c}},{provide:CatalogService,useValue:{adapt:(p:Product)=>({...p,id:p.id!,slug:String(p.id),active:true,featured:false,category:{id:1,name:'Casa',slug:'casa'},images:[],variants:[]})}},{provide:CartService,useValue:{cart:()=>({items:[]}),pending:signal(new Set()),feedback:signal({})}},{provide:FavoritesService,useValue:{authenticated:()=>false,synchronized:()=>true,loading:()=>false,pending:()=>new Set(),errors:()=>({}),syncError:()=>'',isFavorite:()=>false}}]});
+  TestBed.configureTestingModule({providers:[provideRouter([]),{provide:ProductReviewService,useValue:{summaries:signal({}),ensureSummary:()=>{}}},{provide:CampaignService,useValue:{active,now:signal(0),eligible:(c:HomeCampaign|null)=>!!c}},{provide:CatalogService,useValue:{adapt:(p:Product)=>({...p,id:p.id!,slug:String(p.id),active:true,featured:false,category:{id:1,name:'Casa',slug:'casa'},images:[],variants:[]})}},{provide:CartService,useValue:{cart:()=>({items:[]}),pending:signal(new Set()),feedback:signal({})}},{provide:FavoritesService,useValue:{authenticated:()=>false,synchronized:()=>true,loading:()=>false,pending:()=>new Set(),errors:()=>({}),syncError:()=>'',isFavorite:()=>false}}]});
   const fixture=TestBed.createComponent(CampaignComponent);fixture.detectChanges();const root=fixture.nativeElement as HTMLElement;
   expect(root.querySelectorAll('app-product-card').length).toBe(4);
   expect(fixture.componentInstance.products().map(p=>p.id)).toEqual([1,3,4,5]);

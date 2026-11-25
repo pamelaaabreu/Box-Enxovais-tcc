@@ -73,45 +73,39 @@ func TestProductSKUPostgres(t *testing.T) {
 	service := services.ProductService{Store: repositories.ProductRepository{DB: conn}}
 	ctx := context.Background()
 	quantity := int32(3)
-	id, err := service.Create(ctx, models.Product{Name: "Código próprio", SKU: " bx-toa-999 ", Price: 20, Status: "active", Measurements: map[string]string{}}, &quantity)
+	categoryID := 13
+	id, err := service.Create(ctx, models.Product{ProductTypeID: &categoryID, Name: "Código próprio", SKU: " bx-toa-999 ", Price: 20, Status: "active", Measurements: map[string]string{}}, &quantity)
 	if err != nil {
 		t.Fatal(err)
 	}
 	detail, err := service.Get(ctx, int64(id))
-	if err != nil || len(detail) != 1 || detail[0].SKU != "BX-TOA-999" {
+	if err != nil || len(detail) != 1 || !strings.HasPrefix(detail[0].SKU, "BX-TOA-") || detail[0].SKU == "BX-TOA-999" {
 		t.Fatalf("detail SKU: %v %v", detail, err)
 	}
+	generatedSKU := detail[0].SKU
 	handler := handlers.ProductHandler{Service: service}
 	response := httptest.NewRecorder()
 	handler.GetProduct(response, httptest.NewRequest("GET", fmt.Sprintf("/products/%d", id), nil))
-	if response.Code != 200 || !strings.Contains(response.Body.String(), `"sku":"BX-TOA-999"`) {
+	if response.Code != 200 || !strings.Contains(response.Body.String(), `"sku":"`+generatedSKU+`"`) {
 		t.Fatalf("detail response: %d %s", response.Code, response.Body.String())
 	}
 	for _, scenario := range []struct {
 		sku    string
 		status int
-	}{{"BX-TOA-999", 409}, {"BX SKU", 400}} {
+	}{{"BX-TOA-999", 201}, {"BX SKU", 201}} {
 		response = httptest.NewRecorder()
-		handler.CreateProduct(response, httptest.NewRequest("POST", "/products", strings.NewReader(fmt.Sprintf(`{"name":"Teste","sku":%q,"price":20,"quantity":3,"status":"active"}`, scenario.sku))))
+		handler.CreateProduct(response, httptest.NewRequest("POST", "/products", strings.NewReader(fmt.Sprintf(`{"name":"Teste","product_type_id":13,"sku":%q,"price":20,"quantity":3,"status":"active"}`, scenario.sku))))
 		if response.Code != scenario.status {
 			t.Fatalf("HTTP SKU validation: %d", response.Code)
 		}
 	}
-	_, err = service.Create(ctx, models.Product{Name: "Duplicado", SKU: "BX-TOA-999", Price: 20, Status: "active"}, &quantity)
-	if !errors.Is(err, services.ErrProductSKUConflict) {
-		t.Fatalf("duplicate accepted: %v", err)
-	}
-	_, err = service.Create(ctx, models.Product{Name: "Inválido", SKU: "BX SKU", Price: 20, Status: "active"}, &quantity)
-	if !errors.Is(err, services.ErrProductSKU) {
-		t.Fatalf("invalid accepted: %v", err)
-	}
-	for _, term := range []string{"bx-toa-999", "Código próprio"} {
+	for _, term := range []string{strings.ToLower(generatedSKU), "Código próprio"} {
 		query, err := service.ParsePage(url.Values{"search__contains": {term}}, false)
 		if err != nil {
 			t.Fatal(err)
 		}
 		page, err := service.List(ctx, query)
-		if err != nil || len(page.Items) != 1 || page.Items[0].SKU != "BX-TOA-999" {
+		if err != nil || len(page.Items) != 1 || page.Items[0].SKU != generatedSKU {
 			t.Fatalf("search %s: %v %v", term, page, err)
 		}
 	}
@@ -127,7 +121,7 @@ func TestProductSKUPostgres(t *testing.T) {
 	if err = conn.QueryRow("SELECT sku FROM products WHERE id=405").Scan(&sku); err != nil || sku != "BX-EDR-001" {
 		t.Fatal("SKU changed on update")
 	}
-	id, err = service.Create(ctx, models.Product{Name: "Automático", Price: 20, Status: "active", Measurements: map[string]string{}}, &quantity)
+	id, err = service.Create(ctx, models.Product{ProductTypeID: &categoryID, Name: "Automático", Price: 20, Status: "active", Measurements: map[string]string{}}, &quantity)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -139,6 +133,45 @@ func TestProductSKUPostgres(t *testing.T) {
 	if response.Code != 201 {
 		t.Fatalf("automatic HTTP creation failed: %d", response.Code)
 	}
+
+	t.Run("bounded_collision_retry", func(t *testing.T) {
+		if _, err := conn.Exec(`CREATE SEQUENCE retry_sku_counter;
+   CREATE FUNCTION force_sku_collision() RETURNS trigger LANGUAGE plpgsql AS $$
+   BEGIN
+     IF nextval('retry_sku_counter') <= 2 THEN
+       RAISE EXCEPTION 'collision fixture' USING ERRCODE='23505',CONSTRAINT='products_sku_key';
+     END IF;
+     RETURN NEW;
+   END $$;
+   CREATE TRIGGER aaa_sku_collision BEFORE INSERT ON products FOR EACH ROW EXECUTE FUNCTION force_sku_collision()`); err != nil {
+			t.Fatal(err)
+		}
+		defer conn.Exec(`DROP TRIGGER aaa_sku_collision ON products; DROP FUNCTION force_sku_collision(); DROP SEQUENCE retry_sku_counter`)
+		product := models.Product{ProductTypeID: &categoryID, Name: "Retry", Price: 20, Status: "active"}
+		if _, err := service.Create(ctx, product, &quantity); err != nil {
+			t.Fatalf("retry failed: %v", err)
+		}
+		var attempts int
+		if err := conn.QueryRow(`SELECT last_value FROM retry_sku_counter`).Scan(&attempts); err != nil || attempts != 3 {
+			t.Fatalf("attempts=%d err=%v", attempts, err)
+		}
+		if _, err := conn.Exec(`ALTER SEQUENCE retry_sku_counter RESTART WITH 0 MINVALUE 0; CREATE OR REPLACE FUNCTION force_sku_collision() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN PERFORM nextval('retry_sku_counter'); RAISE EXCEPTION 'collision fixture' USING ERRCODE='23505',CONSTRAINT='products_sku_key'; END $$`); err != nil {
+			t.Fatal(err)
+		}
+		var beforeCount, afterCount int
+		if err := conn.QueryRow(`SELECT count(*) FROM products`).Scan(&beforeCount); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := service.Create(ctx, product, &quantity); !errors.Is(err, services.ErrProductSKU) {
+			t.Fatalf("expected generation failure: %v", err)
+		}
+		if err := conn.QueryRow(`SELECT count(*) FROM products`).Scan(&afterCount); err != nil || beforeCount != afterCount {
+			t.Fatal("failed retry persisted product")
+		}
+		if err := conn.QueryRow(`SELECT last_value FROM retry_sku_counter`).Scan(&attempts); err != nil || attempts != 2 {
+			t.Fatalf("retry not limited: %d %v", attempts, err)
+		}
+	})
 
 	parallelDB, err := openTestDatabase(t)
 	if err != nil {

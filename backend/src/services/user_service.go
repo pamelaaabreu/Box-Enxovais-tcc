@@ -1,10 +1,12 @@
 package services
 
 import (
-	"backend/src/models"
-	"backend/src/repositories"
 	"context"
 	"errors"
+
+	"backend/src/models"
+	"backend/src/repositories"
+
 	"github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -34,7 +36,7 @@ func (service UserService) Create(ctx context.Context, user models.CreateUserReq
 func classifyCreateUserError(err error) error {
 	var postgresError *pq.Error
 	if errors.As(err, &postgresError) && postgresError.Code == "23505" {
-		if postgresError.Constraint == "users_email_key" {
+		if postgresError.Constraint == "users_email_key" || postgresError.Constraint == "users_email_normalized_key" {
 			return ErrEmailDuplicated
 		}
 		return ErrUserDuplicated

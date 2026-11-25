@@ -6,6 +6,7 @@ import (
 	"backend/src/repositories"
 	"backend/src/services"
 	"context"
+	"encoding/json"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"net/http/httptest"
@@ -42,7 +43,7 @@ func TestDashboardPostgres(t *testing.T) {
 	}
 	exec("DELETE FROM cart_items; DELETE FROM products")
 	empty, err := repo.Dashboard(context.Background())
-	if err != nil || empty.Orders != 0 || empty.Products != 0 || string(empty.Months) != "[]" || string(empty.Categories) != "[]" {
+	if err != nil || empty.Orders != 0 || empty.Products != 0 || empty.Months == nil || len(empty.Months) != 0 || empty.Categories == nil || len(empty.Categories) != 0 {
 		t.Fatalf("invalid empty summary: %+v %v", empty, err)
 	}
 	exec(`INSERT INTO product_types VALUES(1,'Cama');
@@ -55,11 +56,12 @@ func TestDashboardPostgres(t *testing.T) {
 	if err != nil || actual.Orders != 2 || actual.RevenueCents != 2000 || actual.Products != 2 || actual.LowStock != 1 {
 		t.Fatalf("invalid summary: %+v %v", actual, err)
 	}
-	if got := string(actual.Categories); got != "[{\"name\":\"Cama\",\"units\":2}]" {
-		t.Fatalf("unexpected categories: %s", got)
+	if encoded, _ := json.Marshal(actual.Categories); string(encoded) != "[{\"name\":\"Cama\",\"units\":2}]" {
+		t.Fatalf("unexpected categories: %s", encoded)
 	}
-	if got := strings.Join(strings.Fields(string(actual.Months)), " "); got != "[{\"month\":\"2026-01\",\"total\":1,\"cancelled\":0}, {\"month\":\"2026-02\",\"total\":1,\"cancelled\":1}]" {
-		t.Fatalf("unexpected months: %s", got)
+	encoded, marshalErr := json.Marshal(actual.Months)
+	if marshalErr != nil || string(encoded) != `[{"month":"2026-01","total":1,"cancelled":0},{"month":"2026-02","total":1,"cancelled":1}]` {
+		t.Fatalf("unexpected months: %s (%v)", encoded, marshalErr)
 	}
 	t.Run("period_validation_failure_and_recovery", func(t *testing.T) {
 		token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, models.Claims{UserID: 1, Role: "admin", RegisteredClaims: jwt.RegisteredClaims{Issuer: "box-enxovais-api", ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute))}}).SignedString([]byte("dashboard-tests-only-secret"))

@@ -43,6 +43,9 @@ func TestOrderHistoryPostgres(t *testing.T) {
     `); err != nil {
 		t.Fatal(err)
 	}
+	if _, err = db.Exec(`ALTER TABLE checkout_order_items ADD COLUMN variant_id integer;ALTER TABLE product_images ADD COLUMN variant_id integer`); err != nil {
+		t.Fatal(err)
+	}
 	shipping, err := os.ReadFile("../../migrations/000051_order_shipping.up.sql")
 	if err != nil {
 		t.Fatal(err)

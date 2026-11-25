@@ -1,12 +1,15 @@
 package services
 
 import (
-	"backend/src/pagination"
-	"backend/src/repositories"
 	"fmt"
 	"net/url"
+
+	"backend/src/pagination"
+	"backend/src/repositories"
 )
 
+// Define os filtros permitidos e suas respectivas
+// expressões SQL e tipos de dados.
 var productFilterFields = map[string]pagination.FilterField{
 	"material":          {Column: "page.measurements->>'Material'", Kind: "text"},
 	"opacity":           {Column: "page.measurements->>'Opacidade'", Kind: "text"},
@@ -33,38 +36,82 @@ var productFilterFields = map[string]pagination.FilterField{
 	"updated_at":        {Column: "page.updated_at", Kind: "timestamp"},
 }
 
-func (service ProductService) ParsePage(values url.Values, promotional bool) (pagination.PageQuery, error) {
+var productSortOrders = map[string]string{
+	"price_asc":  "page.price ASC, page.id",
+	"price_desc": "page.price DESC, page.id",
+	"name":       "lower(page.name), page.id",
+	"recent":     "page.created_at DESC NULLS LAST, page.id DESC",
+}
+
+func (service ProductService) ParsePage(
+	values url.Values,
+	promotional bool,
+) (pagination.PageQuery, error) {
+
+	copied := make(url.Values, len(values))
+	for key, entries := range values {
+		copied[key] = append([]string{}, entries...)
+	}
+	values = copied
 	fields := productFilterFields
 	firstParameter := 1
+
 	if promotional {
+
+		// Cria uma cópia do map para não modificar
+		// os filtros compartilhados.
 		fields = make(map[string]pagination.FilterField, len(productFilterFields)+1)
+
 		for key, field := range productFilterFields {
 			fields[key] = field
 		}
-		fields["promotional_price"] = pagination.FilterField{Column: "page.promotional_price", Kind: "decimal"}
+
+		// Acrescenta um filtro exclusivo das promoções.
+		fields["promotional_price"] = pagination.FilterField{
+			Column: "page.promotional_price",
+			Kind:   "decimal",
+		}
+
 		firstParameter = 2
 	}
+
 	order := ""
+
+	// Processa a ordenação personalizada somente
+	// quando não se trata do catálogo promocional.
 	if entries, exists := values["sort"]; exists && !promotional {
+
+		// Impede o recebimento de múltiplas ordenações.
 		if len(entries) != 1 {
 			return pagination.PageQuery{}, fmt.Errorf("Ordenação inválida")
 		}
-		orders := map[string]string{
-			"price_asc":  "page.price ASC, page.id",
-			"price_desc": "page.price DESC, page.id",
-			"name":       "lower(page.name), page.id",
-			"recent":     "page.created_at DESC NULLS LAST, page.id DESC",
-		}
-		order = orders[entries[0]]
+
+		// Define as ordenações permitidas.
+
+		order = productSortOrders[entries[0]]
+
+		// Rejeita ordenações desconhecidas.
 		if order == "" {
 			return pagination.PageQuery{}, fmt.Errorf("Ordenação inválida")
 		}
+
+		// Remove o parâmetro já processado.
 		values.Del("sort")
 	}
+
+	// Processa os demais filtros e a paginação.
 	query, err := pagination.ParsePage(values, fields, firstParameter)
+	if err != nil {
+		return pagination.PageQuery{}, err
+	}
+
+	// Aplica a ordenação coordenada das coleções
+	// quando nenhuma ordenação explícita foi selecionada.
 	if order == "" && !promotional && (values.Has("collection") || values.Has("collection__eq")) {
 		order = repositories.CatalogCoordinatedOrder
 	}
+
 	query.Order = order
+
 	return query, err
 }

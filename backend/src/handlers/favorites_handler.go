@@ -13,58 +13,107 @@ import (
 	"strconv"
 )
 
-type FavoritesHandler struct{ Service services.FavoritesService }
+type FavoritesHandler struct {
+	Service services.FavoritesService
+}
 
 func (h FavoritesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if !allowMethods(w, r, http.MethodGet, http.MethodPut, http.MethodDelete) {
+		return
+	}
+
+	// Impede o armazenamento dos favoritos em cache.
 	w.Header().Set("Cache-Control", "no-store")
+
+	// Recupera o usuário autenticado.
 	userID, ok := middlewares.GetUserIDFromContext(r.Context())
-	if !ok {
+
+	if !ok || userID <= 0 {
 		response.Error(w, 401, "Faça login para acessar seus favoritos")
 		return
 	}
+
 	if r.Method == http.MethodGet {
+
+		// Interpreta os parâmetros da URL.
 		values, err := url.ParseQuery(r.URL.RawQuery)
+
 		if err != nil {
 			response.Error(w, 400, "Parâmetros de consulta inválidos")
 			return
 		}
+
+		// Encaminha os parâmetros ao service.
 		page, err := h.Service.List(r.Context(), userID, values)
+
 		if err != nil {
 			var validation services.ValidationError
+
 			if errors.As(err, &validation) {
 				response.Error(w, 400, validation.Error())
 				return
 			}
+
 			log.Println("Could not list favorites")
 			response.Error(w, 500, "Não foi possível carregar seus favoritos")
 			return
 		}
+
 		response.JSON(w, 200, page)
 		return
 	}
-	productID, err := strconv.ParseInt(r.PathValue("productId"), 10, 64)
-	if err != nil || productID <= 0 || productID > math.MaxInt32 {
+
+	// Valida o identificador do produto.
+	productID, err := strconv.ParseInt(
+		r.PathValue("productId"),
+		10,
+		64,
+	)
+
+	if err != nil ||
+		productID <= 0 ||
+		productID > math.MaxInt32 {
+
 		response.Error(w, 400, "Produto inválido")
 		return
 	}
+
+	// PUT representa a inclusão nos favoritos.
 	favorited := r.Method == http.MethodPut
+
 	if favorited {
-		err = h.Service.Store.Add(r.Context(), userID, productID)
+		err = h.Service.Store.Add(
+			r.Context(),
+			userID,
+			productID,
+		)
 	} else {
-		err = h.Service.Store.Remove(r.Context(), userID, productID)
+		err = h.Service.Store.Remove(
+			r.Context(),
+			userID,
+			productID,
+		)
 	}
+
+	// Trata os possíveis erros da operação.
 	if err != nil {
 		switch {
+
 		case errors.Is(err, repositories.ErrFavoriteProductNotFound):
 			response.Error(w, 404, err.Error())
+
 		case errors.Is(err, repositories.ErrFavoriteProductUnavailable):
 			response.Error(w, 409, err.Error())
+
 		default:
 			log.Println("Could not update favorite")
 			response.Error(w, 500, "Não foi possível atualizar seus favoritos")
 		}
+
 		return
 	}
+
+	// Retorna o estado atualizado do favorito.
 	response.Success(w, 200, "", struct {
 		ProductID int64 `json:"productId"`
 		Favorited bool  `json:"favorited"`

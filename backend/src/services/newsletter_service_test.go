@@ -40,9 +40,10 @@ func TestNewsletterRejectsEmptyEmail(t *testing.T) {
 	}
 }
 
-func TestNewsletterDeliveryFailureDoesNotPersist(t *testing.T) {
+func TestNewsletterDeliveryFailurePreservesSubscription(t *testing.T) {
 	calls := 0
-	service := NewsletterService{Send: func(message *gomail.Message) error {
+	store := &newsletterFakeStore{}
+	service := NewsletterService{Store: store, Send: func(message *gomail.Message) error {
 		calls++
 		if got := message.GetHeader("To"); len(got) != 1 || got[0] != "newsletter@example.invalid" {
 			t.Fatal("wrong recipient")
@@ -52,7 +53,26 @@ func TestNewsletterDeliveryFailureDoesNotPersist(t *testing.T) {
 	if err := service.Subscribe(context.Background(), "newsletter@example.invalid"); !errors.Is(err, ErrNewsletterDelivery) {
 		t.Fatalf("expected delivery error, got %v", err)
 	}
+	if !store.saved {
+		t.Fatal("subscription must persist before delivery")
+	}
 	if calls != 1 {
 		t.Fatal("expected one delivery attempt")
 	}
+}
+
+type newsletterFakeStore struct {
+	saved bool
+	err   error
+}
+
+func (store *newsletterFakeStore) SaveIfNew(_ context.Context, _ string) (bool, error) {
+	if store.err != nil {
+		return false, store.err
+	}
+	if store.saved {
+		return false, nil
+	}
+	store.saved = true
+	return true, nil
 }

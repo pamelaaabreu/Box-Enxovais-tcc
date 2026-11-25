@@ -17,27 +17,32 @@ import (
 )
 
 type adminTestPage struct {
-	Orders                     []struct{ ID int64 }
-	Total, Approved, Cancelled int
+	Orders    []struct{ ID int64 }
+	Total     int
+	Approved  int
+	Cancelled int
 }
 type adminTestDetails struct {
-	Total, Subtotal float64
-	Items           []struct {
+	Total    float64
+	Subtotal float64
+	Items    []struct {
 		UnitPrice float64
 		VariantID int64
-		Name, SKU string
+		Name      string
+		SKU       string
 	}
-	Discount, Shipping *float64
-	Address            models.ShippingAddress
-	Events             []models.AdminOrderEvent
-	CanCancel          bool
-	Status             string
+	Discount  *float64
+	Shipping  *float64
+	Address   models.ShippingAddress
+	Events    []models.AdminOrderEvent
+	CanCancel bool
+	Status    string
 }
 
 func TestAdminOrdersPostgres(t *testing.T) {
 	database, exec := checkoutTestDB(t)
 	exec(`ALTER TABLE users ADD COLUMN role text NOT NULL DEFAULT 'customer';ALTER TABLE products ADD COLUMN sku text;ALTER TABLE product_images ADD COLUMN sort_order integer NOT NULL DEFAULT 0;
- UPDATE users SET full_name=CASE id WHEN 1 THEN 'Ana Cliente' ELSE 'Bruno Cliente' END;
+ UPDATE users SET full_name=CASE id WHEN 1 THEN 'Ana Cliente' ELSE 'Bruno Cliente' END,role=CASE id WHEN 2 THEN 'admin' ELSE 'customer' END;
  UPDATE products SET sku='BX-CAM-001',price=999;
  INSERT INTO product_variants(product_id,size,price,quantity,dimensions) VALUES(1,'Queen',999,4,'240 x 260 cm');
  INSERT INTO checkout_orders(user_id,request_key,address,payment_method,total_cents,created_at,stock_debited)

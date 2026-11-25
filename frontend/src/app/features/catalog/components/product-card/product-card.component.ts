@@ -1,3 +1,4 @@
+import { ProductRatingComponent } from '../../../../shared/components/product-rating/product-rating.component';
 import { NgTemplateOutlet } from '@angular/common';
 import { FavoriteButtonComponent } from '../../../../shared/favorite-button/favorite-button.component';
 import {
@@ -19,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-product-card',
   standalone: true,
   imports: [
+    ProductRatingComponent,
     MatIconModule,
     NgTemplateOutlet,
     FavoriteButtonComponent,

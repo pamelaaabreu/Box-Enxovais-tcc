@@ -1,3 +1,4 @@
+import { MyReviewsComponent } from './my-reviews/my-reviews.component';
 import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { InlineNoticeComponent } from '../../shared/components/inline-notice/inline-notice.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -12,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CustomAlertService } from '../../core/services/custom-alert.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EMPTY, Observable, Subject, TimeoutError, catchError, finalize, of, switchMap, takeUntil, tap, timer } from 'rxjs';
 import { AccountProfile, AccountService, SavedAddress, mobilePhonePattern } from '../../core/services/account.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -20,7 +21,7 @@ import { CatalogLayoutComponent } from '../catalog/components/catalog-layout/cat
 
 @Component({
   standalone: true,
-  imports: [AdminStateComponent, InlineNoticeComponent, MatSelectModule, CatalogLayoutComponent, RouterLink, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatProgressSpinnerModule, NgxMaskDirective, NgxMaskPipe],
+  imports: [MyReviewsComponent, AdminStateComponent, InlineNoticeComponent, MatSelectModule, CatalogLayoutComponent, RouterLink, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatProgressSpinnerModule, NgxMaskDirective, NgxMaskPipe],
   providers: [provideNgxMask({ validation: false })],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss',
@@ -39,8 +40,10 @@ export class AccountComponent {
     { id: 'dados', label: 'Meus dados' },
     { id: 'enderecos', label: 'Meus endereços' },
     { id: 'seguranca', label: 'Segurança da conta' },
+    { id: 'avaliacoes', label: 'Minhas avaliações' },
   ] as const;
   readonly activeTab = signal('dados');
+  private readonly route = inject(ActivatedRoute);
   private savedProfile = '';
   get profileAge(): number | null {
     return ageOnDate(this.profile.controls.birthDate.value);
@@ -172,6 +175,9 @@ export class AccountComponent {
   ] as const;
 
   constructor() {
+    this.route.fragment.pipe(takeUntilDestroyed()).subscribe(fragment => {
+      if (fragment === 'avaliacoes') this.selectTab('avaliacoes');
+    });
     this.address.controls.label.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.customNameConfirmed.set(false));
     for (const key of this.postalFields) {
       this.address.controls[key].valueChanges.pipe(takeUntilDestroyed())

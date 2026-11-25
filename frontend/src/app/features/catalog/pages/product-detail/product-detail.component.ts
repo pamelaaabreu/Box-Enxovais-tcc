@@ -1,3 +1,5 @@
+import { ProductRatingComponent } from '../../../../shared/components/product-rating/product-rating.component';
+import { ProductReviewsComponent } from './product-reviews/product-reviews.component';
 import { AdminStateComponent } from '../../../../shared/components/admin-state/admin-state.component';
 import { CustomAlertService } from '../../../../core/services/custom-alert.service';
 import { CAMA_GROUP } from '../../data/categories';
@@ -42,7 +44,7 @@ import { QuantitySelectorComponent } from '../../components/quantity-selector/qu
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [AdminStateComponent,
+  imports: [ProductRatingComponent, ProductReviewsComponent, AdminStateComponent,
     ShippingQuoteComponent,
     CurrencyPipe,
     FavoriteButtonComponent,

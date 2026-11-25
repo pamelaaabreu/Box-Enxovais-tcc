@@ -1691,3 +1691,344 @@ Angular: 78 testes direcionados e rechecagens de 63/32 aprovados (sobrepostos). 
 Atualizados somente os 20 perfis fictícios reconhecidos no bd_box com nomes brasileiros, telefones sintéticos e e-mails @example.test. Backup validado db/backups/before-dashboard-seed-20261123-162457.dump (185.393 bytes), SHA-256 519381ebc47ffec3ffffb336b60a8abfad6665802c57c29bf5f50b2e8a900949. Comparação antes/depois confirmou as 61 tabelas protegidas e demais usuários idênticos, mesmos IDs do seed, versão 53 e dirty=false. Sem alteração de pedidos, preços, estoque, migrations ou contratos HTTP. Frontend/API principais HTTP 200, sem reinício.
 
 Evidências, arquivos, verificações funcionais/visuais e limites: [Variações e CEP](docs/validacao-visual/variacoes-faixas-cep/VALIDACAO.md) e [Clientes, badges e tabelas](docs/validacao-visual/clientes-badges-tabelas/VALIDACAO.md). As referências originais estão em referencias/ junto de cada relatório. Runtime e helpers temporários removidos após os testes; backup preservado.
+
+
+## Revisão dos models e middlewares do backend — 24/11/2026
+
+Escopo: implementação do pedido de revisão técnica, com análise de repositories, services, handlers e consumidores Angular. Contratos HTTP, regras comerciais, comentários explicativos e alterações manuais anteriores preservados. Não houve alteração de frontend, dependências, migrations ou dados comerciais nesta etapa.
+
+### Correções e organização implementadas
+
+- `Money` extraído de `cart.go` para `models/money.go`: serialização numérica JSON correta para positivos, negativos, zero, centavos e extremos de int64, sem ponto flutuante nem negação direta de MinInt64. Testes com comparação racional exata, inclusive `-92233720368547758.08` e `92233720368547758.07`.
+- `User.Password` marcado `json:"-"`. Não foi encontrada exposição ativa: login e cadastro já utilizavam DTOs separados. O ajuste impede serialização acidental futura; testes preservam o recebimento de senha em Credentials/CreateUserRequest.
+- `middlewares.go` renomeado para `admin_middleware.go`, sem mudança de pacote/imports. Bearer usa `strings.Fields`, eliminando TrimSpace/verificações de vazio redundantes. Assinatura, emissor, expiração, contexto e autorização administrativa preservados. Middleware Method não foi reintroduzido.
+- `MaxInstallments = 6`, validação por método simplificada e `ErrNegativeAmount` específico. Divisão/resto calculados uma vez; testes confirmam soma exata até MaxInt64 e preservação da rejeição de quantidades inválidas.
+- Seis coleções fixas da Dashboard substituíram RawMessage por slices de structs específicas. Preservados nomes JSON, centavos inteiros, listas vazias `[]`, timestamps textuais do PostgreSQL e productId nulo para itens históricos sem produto. Testes PostgreSQL/HTTP adaptados para os tipos e para o mesmo contrato.
+- Intervalo da Dashboard documentado como `[From, Until)`. Fallback de calendário sem pedidos passou a usar explicitamente America/Sao_Paulo, como as demais agregações, em vez do CURRENT_DATE dependente do fuso da conexão.
+- `ExperienceReview` separado em `experience_review.go`. Campo PromotionalPrice duplicado de CampaignProduct removido: utiliza o campo incorporado de Product, preservando explicitamente o fallback para preço normal na resposta de campanha.
+- Campos agrupados de structs separados por análise sintática Go, incluindo OrderFilters, ReportFilter, structs locais e fixtures relacionadas. gofmt aplicado; models/middleware não apresentam arquivos pendentes em `gofmt -l`.
+
+### Investigações e decisões preservadas
+
+| Área | Resultado e decisão |
+|---|---|
+| Produto/estoque | Stock é alias público de Quantity, preenchido pelo scanner; estoque de variante é individual. Remover uma das chaves quebraria compatibilidade, portanto ambas permanecem. |
+| Preços | float64 permanece no contrato do catálogo; service rejeita NaN, infinito, negativos/zero indevidos e mais de duas casas. Checkout calcula numeric PostgreSQL × 100 para inteiros, aplica promoções válidas, confere limites e ExpectedTotalCents. Não foi criada conversão financeira baseada no valor enviado pelo Angular. |
+| Simulated | Metadado existente das variantes, selecionado pelo repository e preservado no adaptador Angular. Não removido de forma incompatível. |
+| Concorrência de produto | Bloqueio do produto, ExpectedUpdatedAt, snapshots de variantes e preço/quantidade esperados permanecem; integrações exercitam conflitos e preservação de SKU, estoque e vínculos. |
+| Galerias | Criação, exclusão, capa e ordenação bloqueiam o produto e operam transacionalmente por galeria/variante; ExpectedIDs impede ordenação sobre snapshot desatualizado. |
+| Checkout | RequestKey é procurado por usuário sob bloqueio do carrinho; repetição reutiliza o pedido. Preços e frete são recalculados no servidor; divergência de total é rejeitada. ReceiptItems é interno, não serializado, e serve ao envio inicial do recibo; Items representa o histórico persistido. |
+| Pedidos | Itens usam preços históricos; cancelamento valida proprietário, status e baixa de estoque no servidor. OwnerID é interno, inclusive para notificação após cancelamento administrativo. Subtotal mantém compatibilidade/fallback dos pedidos antigos; ProductsSubtotal preserva o snapshot financeiro quando disponível. |
+| Totalizadores de pedidos | Total/Approved/Cancelled compartilham os mesmos filtros da listagem. Limitação arquitetural preservada: contagem e página são consultas separadas em READ COMMITTED, podendo refletir instantes diferentes durante escritas simultâneas. Um snapshot read-only REPEATABLE READ é proposta de evolução, não uma garantia afirmada nesta entrega. |
+| Clientes | CreatedAt admite NULL histórico; LastPurchase admite ausência de compra válida. TotalSpent e LastPurchase consideram apenas aprovados. WithOrders inclui qualquer histórico, inclusive somente cancelados; WithoutOrders significa nenhum pedido. Métricas/lista usam os mesmos filtros e snapshot. Rotas pessoais exigem autenticação e AdminMiddleware. |
+| Dashboard | Preset/Group e limites de datas validados no handler; fuso São Paulo e limite final exclusivo preservados. Faturamento/ticket usam aprovados, incluindo frete histórico; estoque/clientes totais são indicadores atuais, não artificialmente filtrados pelo período. Angular já trata coleções vazias. |
+| Relatórios | Paginação validada, filtros/totalizadores preservados, CSV protegido contra fórmulas, exportação de clientes continua desabilitada. ReportRow/Stats variam entre relatórios; campos zero, strings vazias e ausência de datas fazem parte do consumo atual. Especializar DTOs, remover campos ou trocar strings por time.Time exige adaptação coordenada Angular/CSV, ficando como proposta e não refatoração indiscriminada. |
+| CEP/frete | Faixas ativas, limites inclusivos, formato de CEP, ordem inicial/final, prazos e valores não negativos são validados; sobreposição ativa protegida no PostgreSQL. Ponteiros distinguem ausência de zero/false. int permanece compatível com integer do banco e limite explícito de 2147483647; migrar para int64 sem ampliar contrato/banco não traz benefício imediato. |
+| Categorias/marcas | ProductCount conta todos os produtos vinculados, inclusive inativos. Coerente com a interface administrativa e com impedir exclusão de cadastros ainda referenciados. |
+| Avaliações | CanEdit omitido equivale a falso nos condicionais Angular; permissão real é conferida por usuário autenticado e vínculo no backend. Publicação exige aprovação, consentimento e compra elegível; nomes públicos são abreviados. Unicidade, moderação, médias/contagens e distinção produto/experiência preservadas e testadas. |
+
+### Arquivos desta etapa
+
+Caminhos relativos à raiz do repositório ativo `C:/Users/vitor/Documents/Box-Enxovais-tcc`:
+
+- Novos: `backend/src/models/money.go`, `money_test.go`, `user_test.go`, `experience_review.go`.
+- Renomeado: `backend/src/middleware/middlewares.go` → `admin_middleware.go`; ajustado `auth_middleware.go`.
+- Models ajustados nesta etapa: `account.go` (somente gofmt), `cart.go`, `catalog_registration.go` (gofmt), `checkout.go` (gofmt), `dashboard.go`, `dashboard_metrics.go`, `home.go`, `order_history.go`, `payment_plan.go`, `payment_plan_test.go`, `product.go` (gofmt), `product_admin.go` (gofmt), `report.go`, `user.go`.
+- Repositories: `dashboard_repository.go`, `home_campaigns_repository.go`; somente separação de campos/gofmt em `cart_reorder.go`, `order_cancellation.go`, `product_admin.go`.
+- Somente separação de campos/gofmt em `backend/src/config/config.go`, `backend/src/handlers/dashboard_handler_test.go` e testes de rotas `admin_customers_test.go`, `admin_orders_test.go`, `audit_browser_test.go`, `cart_test.go`, `catalog_registration_test.go`, `home_test.go`, `route_helpers_test.go`, `shipping_snapshot_test.go`.
+- Testes da Dashboard adaptados: `backend/src/routes/dashboard_dates_test.go`, `dashboard_metrics_test.go`, `dashboard_test.go`.
+- Este `AUDITORIA_FINAL.md`. Outros arquivos previamente modificados pelo usuário/etapas anteriores foram preservados; não representam implementação nova desta revisão.
+
+### Validação executada
+
+| Execução | Resultado real |
+|---|---|
+| gofmt / inventário sintático | Campos agrupados separados; models e middlewares sem pendências de formatação. |
+| go vet ./... | Aprovado, sem diagnósticos. |
+| go test -json -count=1 -timeout=10m ./... | 94 testes principais aprovados; 336 incluindo subtestes; 0 falhas; 1 ignorado. |
+| go test -race -json -count=1 -timeout=10m ./... | Mesmos 94/336 aprovados, 0 falhas e 1 ignorado; nenhuma corrida detectada. CGO habilitado somente no processo, GCC 16.2.0 temporário, sem configuração permanente. |
+| PostgreSQL opt-in | 46 testes principais de integração habilitados nas duas execuções: rotas/estoque/checkout/cancelamento/promoções/CRUD/imagens/conflitos/frete/parcelamento/avaliações e importador, incluindo publicação/moderação das avaliações de experiência. |
+| Angular completo | `npx ng test --watch=false --browsers=ChromeHeadless`: 412 aprovados, 0 falhas. |
+| Build Angular | `npx ng build --configuration production`: aprovado. Aviso preexistente de Promoções: 15,79 kB para warning 14 kB; orçamento não alterado. |
+| Build Go | `go build ... ./src`: aprovado, sem implantação/reinício. |
+| Verificações funcionais | Integrações via httptest/PostgreSQL exercitaram endpoints reais da aplicação em isolamento. GET /products e /home/reviews da API 8080 e frontend 4200 responderam HTTP 200 somente por leitura. |
+
+O teste ignorado é `TestBrowserAuditServer`, servidor opt-in de auditoria de navegador, não uma integração PostgreSQL omitida. Não foi executado Playwright nem declarada aprovação visual: esta tarefa modifica a representação interna/organização do backend, sem mudanças de layout. O launcher Karma precisou encerrar seu ChromeHeadless por SIGKILL após o prazo de saída; os 412 testes já estavam aprovados e o comando terminou com código zero.
+
+### Integridade e encerramento
+
+Banco principal confirmado por leitura antes/depois: **bd_box, versão 54, dirty=false**. Assinaturas determinísticas e contagens das **64 tabelas públicas idênticas**. Nenhum pedido, produto, preço, estoque, avaliação ou outro registro comercial foi gravado nesta etapa.
+
+Migration 54 preservada byte a byte: UP SHA-256 `f7eecd558ae68bd18e4b65c20063dcb95187163f4322ca7aae9e78e8d8862f97`; DOWN `cb184dc655fde61bc0fd7b78b31a05471773886e6d499ae598bedf8626e69430`.
+
+Banco descartável `box_models_test_321703a0d6bde89b` removido após encerrar os testes. API 8080 PID 21252 e frontend 4200 PID 22424 preservados, sem reinício. Nenhum servidor temporário permanece na porta 9876. Compilador, auxiliares, binário de teste e logs temporários desta tarefa removidos após consolidação; backups, runtime ativo, arquivo repositories.zip do usuário e documentos acadêmicos preservados.
+
+Pendências não bloqueantes: especialização dos relatórios e snapshot único da paginação de pedidos, descritos acima; aviso legado do orçamento SCSS. O backend compilado não foi implantado na API em execução, pois reinício não foi solicitado nesta revisão.
+
+
+## Refatoração dos repositories — 24/11/2026
+
+Pedido executado no repositório ativo `C:/Users/vitor/Documents/Box-Enxovais-tcc`, preservando alterações anteriores e a cópia antiga Box-Enxovais-v1. Não houve alteração de Angular, contratos HTTP, regras de estoque, dados comerciais ou migrations históricas.
+
+### Implementação e problemas corrigidos
+
+- `CartRepository.Apply` tornou-se coordenador da transação. Extraídos `ensureAndLockCart`, `removeCartItem`, `readCart`, `scanCartItem`, `lockCartStock` e `calculateCartTotals`; `writeCartItem` recebe dados separados de produto/item/variante. Operações usam `CartOperation` e constantes, e `MaxCartQuantity` é compartilhado com o handler. A entrada variádica existente permanece como adaptação de compatibilidade, validando a cardinalidade e convertendo a variante para ponteiro opcional internamente.
+- Corrigidas a ausência de proteção antes de somar quantidade existente, a divisão por quantidade sem validação positiva e a ausência de checagem de overflow do total de unidades. Subtotal, total monetário e unidades agora são calculados separadamente da leitura, em centavos inteiros, com limites int64. Erros de estoque continuam compatíveis com errors.Is/Unwrap e com as mensagens anteriores.
+- Leitura do carrinho usa uma consulta com LEFT JOIN LATERAL para seleção da imagem e promoção, aliases image_path/available_stock/unit_price e ordem determinística. Não foram criadas requisições adicionais por item. Regras promocionais compartilhadas em `product_pricing.go` entre catálogo, carrinho e checkout; preço da variante permanece prioritário, sem aplicação silenciosa de desconto sobre ela.
+- Inclusão mantém UPSERT e NULL para ausência de variante; atualização usa UPDATE do item identificado e pertencente ao carrinho. Escritas permanecem atômicas, com FOR UPDATE no carrinho e FOR SHARE em produto/variante. Criação sob demanda, resposta atualizada, recompra, rollback e isolamento por usuário preservados. GET mantém o bloqueio para não intercalar com operações do próprio carrinho/checkout. Resultados SQL são fechados antes de finalizar a transação ou iniciar a escrita de recompra.
+- `AccountRepository.UpdateProfile` substituiu CASE/COALESCE aninhados por UPDATE parametrizado com colunas fixas, preservando omitido/manter, vazio/limpar quando permitido e preenchido/atualizar. CPF é normalizado; erro 23505 só é classificado como CPF duplicado nas constraints pertinentes, incluindo o nome legado `users_cpf_key`, confirmado por leitura no principal. Violações não relacionadas são propagadas. `updateAddress` foi separado da criação, sem alterar locks, propriedade ou definição/substituição de endereço padrão.
+- `rowScanner` e `queryReader` nomeiam os contratos mínimos utilizados por sql.DB/sql.Tx/scanners; `requireOneRow` distingue zero registros de multiplicidade inesperada. Recuperação/alteração de senha recusa identidade ambígua; UPDATE de múltiplos usuários sofre rollback, sem persistir hashes em várias contas.
+- Normalização de e-mail centralizada nos repositories de usuários e assinantes. Cadastro/recuperação continuam gerando hashes bcrypt nos services; testes verificam armazenamento de hash e autenticação correspondente. Newsletter mantém ON CONFLICT DO NOTHING e idempotência. Consulta do destinatário incorporada ao UserRepository, removendo apenas o arquivo redundante.
+- Favoritos passou da CTE complexa para transação explícita: bloqueia produto, valida estado, verifica favorito existente quando inativo e insere com ON CONFLICT. Removida a variável inserted sem uso. Produto ausente/indisponível mantém erros específicos; remoção continua idempotente e paginação compartilhada foi preservada.
+
+### Banco e migration necessária
+
+A leitura confirmou no principal o índice parcial `user_addresses_default_idx`, as constraints históricas e a ausência de índice único de e-mail normalizado. Foram encontrados **zero grupos de colisões** de e-mail/CPF normalizados nesse instante; não foram expostos valores pessoais.
+
+Criada **000055_normalized_contact_keys.up.sql/down.sql**, sem modificar migrations existentes. Acrescenta índices únicos em lower(btrim(email)) para users/subscribers e translate(national_id, '.- ', '') para CPF não vazio. Não atualiza, elimina ou normaliza registros existentes. UP é transacional: duplicatas impedem a aplicação e as criações parciais são revertidas. Testados duplicatas de e-mail/CPF, UP/DOWN/UP e preservação dos valores históricos no banco isolado. O service de cadastro reconhece a nova constraint de e-mail sem mudar o contrato de erro.
+
+**A migration 55 NÃO foi aplicada ao bd_box.** A garantia adicional por expressão no PostgreSQL depende de implantação posterior autorizada, com backup e nova verificação de colisões. O principal permanece em **54, dirty=false**. Não foram executados migrate force, UP/DOWN ou DML comercial no principal.
+
+### Arquivos renomeados e alterados
+
+Em `backend/src/repositories/`, receberam sufixo `_repository.go`: `account.go`, `admin_customers.go`, `admin_orders.go`, `catalog_registration.go`, `order_cancellation.go`, `order_history.go`, `product_admin.go`, `product_images_admin.go`, `product_reviews.go`, `product_variants.go`, `reports.go`, `shipping.go` e `shipping_ranges.go`.
+
+- Incorporado `user_contact_repository.go` a `user_repository.go`, preservando GetEmailRecipient.
+- Novos auxiliares: `cart_items.go`, `cart_read.go`, `product_pricing.go`, `query_interfaces.go`.
+- Refatorados `cart_repository.go`, `cart_reorder.go`, `user_repository.go`, `subscriber_repository.go`, `favorites_repository.go`, `account_repository.go`, `product_queries.go` e a consulta de preço simples em `checkout_repository.go`.
+- Parâmetros de funções individualizados nos repositories; campos e formatação padronizados com gofmt. Demais alterações nessa pasta são organização/formatação, sem mudanças de regras.
+- Ajustes diretos necessários: `backend/src/handlers/cart_handler.go`, `backend/src/services/user_service.go`.
+- Testes novos: `backend/src/repositories/cart_totals_test.go`, `backend/src/routes/repository_refactor_test.go`.
+- Migrations novas: `backend/migrations/000055_normalized_contact_keys.up.sql` e `.down.sql`.
+- Documentação: caminhos corrigidos em `backend/docs/backend-guide.md` e resultado consolidado somente neste relatório. Não há referências executáveis aos arquivos antigos nos fontes Go.
+
+### Validação real
+
+| Execução | Resultado |
+|---|---|
+| gofmt / verificação de referências | Aprovados; nenhuma pendência de gofmt nos arquivos examinados. |
+| go vet ./... | Aprovado. |
+| go test -json -count=1 -timeout=10m ./... | **99 testes principais aprovados; 357 contando subtestes; 0 falhas; 1 ignorado**. |
+| go test -race -json -count=1 -timeout=10m ./... | **99 principais / 357 com subtestes aprovados; 0 falhas; 1 ignorado; nenhuma corrida detectada**. CGO/GCC temporários, sem configuração permanente do ambiente. |
+| PostgreSQL opt-in | **49 testes principais de integração** habilitados nas duas suítes, em banco descartável separado. |
+| Regressões novas direcionadas | 3 testes PostgreSQL principais, 11 incluindo subtestes, aprovados antes das suítes completas. Casos financeiros/RowsAffected também testados sem banco. |
+| Build Go | Aprovado, sem reiniciar ou substituir a API ativa. |
+
+Cobertura: criação concorrente de endereços, padrão/substituição/propriedade, CPF concorrente, patch omitido/vazio/preenchido e valores com sintaxe SQL tratados como dados; favoritos concorrentes, produto inexistente/inativo e desativação sob bloqueio; adição/atualização concorrentes do carrinho, isolamento entre usuários, variante negativa/obrigatória e vínculos, estoque insuficiente, overflow e rollback; prioridade de imagens e promoções; e-mails normalizados, unicidade, hash e recuperação ambígua. Suítes existentes preservaram recompra, checkout, variantes, imagens e promoções.
+
+O cenário de overflow extremo exigiu remover um CHECK apenas na fixture isolada para simular dados corrompidos; a primeira tentativa foi corretamente barrada pelo CHECK. Nenhuma constraint comercial ou migration histórica foi alterada. O teste ignorado permanece `TestBrowserAuditServer`, servidor opt-in de auditoria visual; não representa integração PostgreSQL omitida. Angular/Playwright não foram reexecutados: não houve mudança de interface e o pedido desta etapa requer testes Go/integração.
+
+### Regras preservadas e pendências
+
+1. **Variantes mantêm preço próprio**, inclusive quando há promoção do produto. Alterar essa regra exige decisão comercial explícita; nenhuma mudança foi realizada.
+2. **Favorito inativo já existente retorna sucesso idempotente**; um favorito novo para produto inativo é rejeitado. Comportamento original confirmado pelos testes e preservado.
+3. **Migration 55 aguarda implantação autorizada**; não há nova garantia de índice por expressão no principal antes disso. Não foram identificadas outras divergências funcionais nos cenários executados.
+
+Banco isolado final `box_repo_test_da6d7bd2028f0d29` removido. Comparação antes/depois confirmou contagens e assinaturas idênticas das **64 tabelas públicas** do principal; hashes de todos os scripts SQL permaneceram iguais durante a validação. A primeira sessão isolada, encerrada após ajuste de fixture, também foi removida com principal inalterado. Servidores existentes preservados; nenhum servidor temporário foi iniciado. Ferramentas, binário e logs descartáveis desta etapa removidos após consolidar os resultados, preservando runtime ativo, backups, arquivos comerciais/acadêmicos e o ZIP do usuário.
+
+
+## CheckoutRepository — refatoração concluída em 24/11/2026
+
+Concluída antes de iniciar o pedido seguinte de histórico/cancelamento. Contratos HTTP/Angular, RequestKey por usuário, status de pagamento simulado, regras de preço de variantes, cobertura de entrega, snapshots e parcelamento preservados. Nenhuma migration alterada ou aplicada; 55 permanece criada/testada e pendente de autorização de implantação.
+
+**Organização:** `checkout_repository.go` mantém Get/Create e scanner/colunas compartilhados. Novos auxiliares `checkout_items.go`, `checkout_shipping.go` e `checkout_persistence.go` concentram bloqueios/leitura/cálculo, endereço/frete e gravações. Funções: scanCheckoutOrder, findExistingOrder, lockCheckoutInventory, readCheckoutItems, validateCheckoutStock, calculateCheckoutPrices, resolveShippingAddress, calculateCheckoutShipping, saveCheckoutAddress, insertCheckoutOrder, insertCheckoutOrderItems, debitCheckoutStock e clearCheckoutCart. `cart_repository.go` fornece lockCart/clearCart/touchCart compartilhados; `query_interfaces.go` ganhou rowQuerier. Models ganharam constantes OrderStatusApproved/ShippingMethodDelivery. O comentário de envio em `services/checkout_email.go` foi traduzido. Não houve renomeação de arquivos nesta etapa.
+
+**Consultas:** produtos são bloqueados por ID, depois variantes por produto/ID, antes de uma única consulta conjunta de estoque e preços. O preço usa os trechos compartilhados de `product_pricing.go`. Leituras de itens/estoque/preço passaram de `1 + 2*S + V` para três consultas, onde S=linhas simples e V=linhas com variante; idempotência, frete e gravações são contados separadamente. As gravações continuam por item, para preservar snapshots e verificar cada baixa; não se alega quantidade total constante de comandos. Eliminaram-se leituras dentro do loop, sem remover os bloqueios necessários.
+
+**Correções concretas:** validação da variante somente após obter seu bloqueio, evitando rejeição baseada em estoque antigo durante uma reposição concorrente; rejeição explícita de variante inválida/ausente quando necessária; UPDATE de estoque com condição quantity >= quantidade e requireOneRow; INSERT de itens que confere RowsAffected; proteção de frete negativo/soma e reutilização de calculateCartTotals para valores originais/atuais e overflow. ReceiptItems agora contém Subtotal e Available corretos, além de preço unitário/quantidade. Resultados SQL são fechados antes das próximas etapas.
+
+A análise identificou uma inversão potencial em cancelamentos de pedidos mistos: variante antes de outro produto, enquanto checkout bloqueava produtos antes de variantes. `order_cancellation_repository.go` passou a adquirir todos os produtos em ordem de ID antes da reposição. Teste sincronizado por bloqueio PostgreSQL comprovou checkout concorrente com cancelamento misto sem deadlock e com estoques corretos; esse alinhamento deve ser mantido na etapa seguinte.
+
+**Idempotência:** a primeira compra registrada prevalece para a mesma chave/usuário, inclusive se uma repetição válida trouxer outros valores. Retorna o pedido/parcelamento original, sem nova baixa, salvamento de endereço ou limpeza de um carrinho posteriormente preenchido. ReceiptItems permanece vazio no replay/Get para não duplicar comprovantes. Foram testadas duas chamadas HTTP concorrentes com uma única notificação, propriedade do pedido e repetição com pagamento/total/CEP diferentes. O índice UNIQUE(user_id, request_key) existente foi preservado.
+
+**Limitação confirmada, não ocultada:** ExpectedTotalCents não detecta a substituição de itens por outros de mesmo preço. O teste registra o comportamento atual sem inventar proteção. Uma solução completa exige snapshot/versionamento ou hash da revisão enviado pelo Angular (campo/header explicitamente acordado, com migração do contrato); não foi acrescentada uma exigência silenciosa à API. Não há mudança comercial de promoções: variante continua usando seu próprio preço. Duplicação de endereços compara os campos existentes e normaliza apenas espaços externos/hífen do CEP.
+
+**Validação:** gofmt e go vet ./... aprovados; go test e go test -race completos com **105 testes principais / 392 com subtestes aprovados**, zero falhas e um ignorado (`TestBrowserAuditServer`, servidor visual opt-in). **54 integrações PostgreSQL principais** habilitadas em banco isolado. Os cinco testes PostgreSQL novos tiveram 27 cenários incluindo subtestes; testes financeiros unitários cobrem centavos, desconto, negativos e extremos. Build Go aprovado. Casos novos incluem falhas/skip em INSERT de itens, baixa simples/variante e limpeza; rollback integral do endereço/pedido/estoque/carrinho; concorrência da variante, preço/promoção ativa/encerrada, endereço duplicado/estrangeiro, frete inválido/indisponível, recibos e a limitação de composição. Suites existentes de últimas unidades, cancelamento/reposição e histórico permaneceram aprovadas. Nenhuma execução Angular/Playwright: não houve alteração visual ou de frontend.
+
+**Integridade:** bd_box confirmado em **54, dirty=false**, com assinaturas/contagens das **64 tabelas públicas idênticas** antes/depois. Hashes de todos os scripts SQL, inclusive migration 55, preservados. Banco descartável `box_checkout_test_270a08ad6620df15` removido. API/frontend existentes não foram reiniciados; a versão refatorada foi compilada e exercitada via testes isolados, sem implantação no processo ativo. O compilador e os auxiliares temporários serão reutilizados durante a próxima etapa autorizada e removidos ao concluir a sequência.
+
+
+## Histórico e cancelamento — continuação de 24/11/2026
+
+Etapa executada após concluir e validar CheckoutRepository. Arquivos já estavam padronizados como `order_history_repository.go` e `order_cancellation_repository.go`; não foram renomeados novamente.
+
+- `prepareOrderFilters` centraliza pesquisa, período inclusivo/exclusivo, status e ordenação com SQL fixo/parametrizado. IDs fora de int64 geram condição sem resultados nas duas consultas, corrigindo a divergência de ParseInt entre contagem/listagem. ILIKE mantém escape literal de %, _ e barra invertida.
+- `orderHistoryQuery`, `scanOrderHistoryRow` e `readOrders` separam montagem, scanner e agrupamento. A página é selecionada antes do JOIN dos itens; datas/ID e itens têm ordenação determinística. O pacote pagination não foi imposto ao agrupamento de pedidos, pois seu scanner de uma linha por entidade não resolve essa expansão sem adaptação desnecessária.
+- `ListOrdersPage` usa transação read-only REPEATABLE READ para lista/total. Handler utiliza essa capacidade quando disponível, preservando os contratos anteriores dos stores e a resposta Angular. GetOrderDetails também usa snapshot consistente, preservando JSON do endereço, motivo e propriedade.
+- Regra de imagem compartilhada em `product_images.go` entre carrinho/histórico: variante comprada, fallback geral, capa e ID determinístico. História mantém nome/preço/quantidade persistidos e continua acessível para produtos inativos/excluídos; ProductID público permanece omitido quando não há produto ativo para acessar. Subtotal usa `calculateItemSubtotal`, compartilhado com o carrinho, com validação positiva e overflow.
+- Cancelamento representa explicitamente ator administrativo ou cliente, sem usar ownerID=0 como acesso irrestrito. Cliente exige identidade positiva/propriedade; administrador também tem papel atual conferido no banco. `ErrOrderForbidden` retorna HTTP 403, inclusive para papel revogado. A fixture administrativa passou a declarar o papel admin correspondente ao token, em vez de presumir autorização inconsistente com o banco.
+- `lockCancellationOrder` e `recordCancellation` explicitam bloqueio e registro. Status usa constantes. Pedido bloqueado serializa cancelamentos, preserva motivo/ator original e changed=false em repetição; notificações existentes dependem de changed e permanecem únicas.
+- `order_stock.go` separa readRestockItems, lockRestockProducts e restoreStockItem. Produtos são bloqueados por ID antes das variantes, preservando o protocolo do checkout. Quantidades positivas e limite nomeado MaxInt32 protegem a coluna integer; UPDATE condicionado/RowsAffected impede reposição ausente ou com overflow. Qualquer erro reverte motivo/status e reposições anteriores da transação.
+- `stock_debited` foi investigado nos consumidores de cancelamento, detalhes administrativos, destaques, avaliações de compra/produto e elegibilidade. Mantido como registro de que houve débito histórico; status aprovado/cancelado determina vigência e elegibilidade. Não foi zerado silenciosamente durante cancelamento.
+
+Arquivos desta etapa: `backend/src/repositories/order_history_repository.go`, `order_cancellation_repository.go`, novos `order_stock.go` e `product_images.go`; `cart_items.go`/`cart_read.go` por reutilização financeira/imagens; `backend/src/models/checkout.go` (constante cancelled), `backend/src/handlers/order_history.go`; testes `backend/src/routes/history_refactor_test.go` (novo), `order_history_test.go` e `admin_orders_test.go`. A fixture histórica recebeu colunas de variante que o schema atual já possui, sem alterar migrations.
+
+Testes direcionados: **31 cenários / 5 testes principais aprovados**, incluindo suítes existentes de histórico, administração e concorrência checkout/cancelamento. Regressões novas verificam nomes/IDs e int64 extremo, injeção tratada como dado, pesquisa literal, filtro período/status, contagem/página, múltiplos itens, imagem correta, histórico inativo, overflow de subtotal, cancelamento cliente/admin concorrente, papel revogado, motivo preservado, reposição única, produto/variante ausente ou com overflow, quantidade zero e rollback parcial. Suites existentes verificam propriedade e notificações únicas. Não foi criada uma alegação de teste visual nesta etapa.
+
+
+Validação final desta sequência: **gofmt, go vet ./..., go test ./..., go test -race ./... e build Go aprovados**. Nas duas suítes: **107 testes principais, 410 contando subtestes, zero falhas e um ignorado** (TestBrowserAuditServer, servidor visual opt-in). **56 testes PostgreSQL principais** habilitados; dados e schemas somente no banco descartável. Não foram executadas suítes Angular/Playwright por não haver alteração de frontend/contrato visual nesta etapa.
+
+A comparação final confirmou **bd_box 54, dirty=false**, com assinaturas e contagens idênticas das **64 tabelas públicas**; hashes de todos os scripts SQL preservados, incluindo migration 55 ainda não aplicada. Banco isolado `box_checkout_test_70c309e89174b625` removido após encerrar os testes. Não houve criação de servidor de testes nem reinício da API/frontend. Auxiliares de ambas as etapas, GCC temporário, binário de teste e logs descartáveis removidos no encerramento; runtime ativo, backups, dados comerciais e documentos preservados.
+
+Limitações/decisões mantidas: preço próprio das variantes e RequestKey com primeira compra prevalente; ExpectedTotalCents não valida composição de carrinho com mesmo preço, conforme registrado na etapa Checkout. Para testar novamente a proteção de snapshot durante uma alteração sincronizada exatamente entre as consultas, pode-se acrescentar um teste dedicado; nesta entrega o snapshot REPEATABLE READ foi implementado e as suítes funcionais/concorrentes existentes passaram, sem alegação de uma instrumentação específica dessa janela. Não há implantação da versão compilada no processo ativo sem solicitação de reinício.
+
+
+## Auditoria final da camada repositories — 24/11/2026
+
+Escopo: revisão dos **46 arquivos de produção** da camada de persistência e dependências diretas em models/services/handlers/paginação/migrations, aproveitando as etapas anteriores. Sem nova funcionalidade, dependência de projeto, mudança de layout, contrato HTTP, migration ou reinício de servidores. A API em execução não foi substituída pela versão auditada.
+
+### Arquivos analisados
+
+Todos em `backend/src/repositories/`:
+
+`account_repository.go`, `admin_customers_repository.go`, `admin_orders_repository.go`, `cart_items.go`, `cart_read.go`, `cart_reorder.go`, `cart_repository.go`, `catalog_registration_repository.go`, `checkout_items.go`, `checkout_persistence.go`, `checkout_repository.go`, `checkout_shipping.go`, `dashboard_repository.go`, `favorites_repository.go`, `home_campaigns_repository.go`, `home_categories_repository.go`, `home_products_repository.go`, `home_repository.go`, `home_reviews_repository.go`, `order_cancellation_repository.go`, `order_history_repository.go`, `order_stock.go`, `product_admin_repository.go`, `product_catalog_repository.go`, `product_creation_repository.go`, `product_image_repository.go`, `product_images.go`, `product_images_admin_repository.go`, `product_options_repository.go`, `product_pricing.go`, `product_queries.go`, `product_related_repository.go`, `product_repository.go`, `product_reviews_repository.go`, `product_variants_repository.go`, `promotion_campaign_repository.go`, `promotion_list_repository.go`, `promotion_products_repository.go`, `promotion_repository.go`, `query_interfaces.go`, `report_inventory.go`, `reports_repository.go`, `shipping_ranges_repository.go`, `shipping_repository.go`, `subscriber_repository.go`, `user_repository.go`.
+
+### Correções confirmadas e alterações por arquivo
+
+| Arquivos | Alteração e motivo |
+|---|---|
+| promotion_list_repository.go | ListCampaigns passou de uma consulta mais uma por campanha para **uma instrução com participantes agregados em JSON**. Campanhas/participantes compartilham o snapshot da instrução; preservados ordenação, datas, lista vazia e MIN por produto para compatibilidade com registros/fixtures duplicados. Não se presume unicidade do par apenas porque a tabela tem uma PK. Redução comprovada no código de roundtrips; não é alegação de benchmark de latência em produção. |
+| home_reviews_repository.go | CreateReview e Moderate deixam de ignorar erros de RowsAffected; requireOneRow diferencia ausência/duplicidade esperada de falha inesperada. Lock do pedido, ON CONFLICT por pedido, consentimento e visibilidade pública preservados. |
+| admin_orders_repository.go | Lista, contagem e indicadores passaram a read-only REPEATABLE READ, com fechamento dos rows antes do commit. Corrige possível divergência durante escritas concorrentes, preservando os mesmos filtros e JSON. |
+| product_pricing.go; product_queries.go; checkout_items.go | Substituído NewReplacer de aliases por gerador interno com whitelist estrita p/product e interpolação explícita. Regras de preço e nomes de retorno preservados; consumidores de fragmentos passaram a strings montadas sem entrada HTTP. |
+| cart_read.go | Produto com variante obrigatória ausente ou variante inválida não é mais apresentado como disponível com fallback de estoque geral. JOIN confere produto da variante. Cálculos em centavos, locks e respostas do carrinho preservados. |
+| product_images.go | itemImageSQL considera sort_order entre a capa e o ID, mantendo prioridade da variante e fallback geral. Compatibilidade com schemas sem sort_order preservada por to_jsonb. Carrinho e histórico reutilizam a mesma seleção. |
+| product_creation_repository.go | Cadastro persiste included_items e simulated das variantes, antes descartados apesar de existirem no model/schema. Valores omitidos recebem os defaults existentes. Sem regravar produtos cadastrados. |
+| product_variants_repository.go | Leitura/retorno inclui metadados; edição preserva included_items omitidos e o indicador simulated já armazenado. Valida IDs repetidos, protege soma de estoque até MaxInt32 antes da persistência final e rejeita múltiplos argumentos opcionais de comércio. updated_at do produto usa clock_timestamp, evitando horário anterior ao bloqueio em uma transação que aguardou outra edição. Troca temporária dos nomes, snapshots esperados e vínculos comerciais preservados. |
+| promotion_campaign_repository.go | Limite 100 nomeado; validCampaignPrice centraliza validação monetária. Participantes são bloqueados em ordem de productID para compatibilidade com checkout. Produtos com variantes continuam sem desconto; Products nil/vazio/preenchido mantém seu significado. |
+| promotion_products_repository.go; services/promotion_products_service.go | AddProduct bloqueia a campanha antes dos participantes, compatível com Save, e repete a validação do produto/preço sob FOR SHARE. Corrige janela entre a consulta de validação do service e a gravação. Erros concorrentes são traduzidos para erros de domínio existentes, preservando o contrato HTTP. Advisory lock e substituição transacional existentes não foram removidos. |
+| product_image_repository.go | INSERT geral/variante consolidado com NULL parametrizado. Cardinalidade do argumento opcional validada; locks, validação de pertencimento e definição de capa/posição preservados. |
+| catalog_registration_repository.go | Repository normaliza espaços do nome, como a camada de serviço já fazia; bloqueio SHARE ROW EXCLUSIVE permanece. |
+| order_stock.go | IDs de produto duplicados são retirados do array usado no bloqueio; ordem SQL por ID e atualização por variante preservadas. |
+| admin_customers_repository.go; shipping_repository.go | Reutilização das interfaces rowScanner/rowQuerier existentes; sem mudança de regras de consulta. |
+| dashboard_repository.go; product_reviews_repository.go | JSON final/colunas reindentados; mesmas expressões, chaves, critérios, valores e ordem de Scan. |
+
+Também foram ajustados espaços, quebras e indentação SQL, sem mudanças intencionais de expressão, nos arquivos restantes com consultas: account_repository, cart_items/cart_reorder/cart_repository, checkout_persistence, favorites_repository, home_campaigns/home_categories/home_products, order_cancellation/order_history, product_admin/product_catalog/product_images_admin/product_options/product_related/product_repository, reports_repository, shipping_ranges, subscriber e user_repository. Comentários explicativos do usuário foram preservados. Não houve renomeação ou exclusão de componentes/métodos públicos nesta etapa.
+
+Teste novo: `backend/src/routes/repositories_final_test.go`, restrito aos comportamentos modificados: metadados de variantes e rollback de soma, ordenação de imagem e disponibilidade, participantes/vazios/duplicatas legadas e preço promocional alterado durante a espera pelo lock. Documentação atualizada somente neste AUDITORIA_FINAL.md.
+
+### Melhorias anteriores confirmadas, não refeitas
+
+- Conta/usuários: normalização de e-mail, hash bcrypt nos services, DTOs sem senha pública, distinção de RowsAffected, patch parametrizado omitido/vazio/preenchido, CPF com onze dígitos, sequências repetidas rejeitadas e cálculo dos verificadores no handler apropriado. Não foi transferida validação matemática ao repository. Propriedade de endereços, lock da conta, índice parcial de padrão e substituição ao excluir já estavam implementados.
+- Favoritos: transação, FOR SHARE, idempotência e unicidade existentes foram mantidos. Produto inativo já favoritado continua idempotente; uma inclusão nova indisponível é recusada.
+- Carrinho/recompra: operações tipadas, adicionar versus substituir, variante pertencente/obrigatória, estoque atual, cálculo exato, overflow e isolamento por usuário já estavam implementados. Não há reserva/baixa ao adicionar ao carrinho; recompra usa preços atuais e rollback integral.
+- Checkout/cancelamento: coordenação e auxiliares recentes, idempotência, UPDATE de estoque condicionado e requireOneRow, bloqueios carrinho → produtos → variantes, recibo somente da primeira compra, parcelas e snapshots preservados. Histórico continua paginando pedidos antes do JOIN dos itens e usando filtros comuns. Cancelamento confere proprietário/administrador no backend, devolve estoque uma vez e preserva motivo/notificações. stock_debited permanece histórico.
+- Frete: ParseShippingCEP compartilhado, limites inclusivos, LPAD para zeros iniciais, validação de preços/prazos e EXCLUDE de sobreposição ativa já existentes. Ponteiros distinguem zero/false de campo ausente. PriceCents int é compatível com integer e limites explícitos; não houve migração genérica para int64.
+- Produtos: Stock continua alias de Quantity para o contrato público; menor preço/soma de variantes, dimensões e JSON preservados. Get continua slice porque os consumidores/API usam esse contrato. Nulos de datas/preço mantêm compatibilidade existente. Filtros/ordenações HTTP passam pela whitelist do service/pagination; fragmentos dinâmicos e identificadores vêm de código/metadados e usam parametrização/QuoteIdentifier.
+- Imagens: produto bloqueado, variantes pertencentes, galerias separadas, uma capa, ExpectedIDs/duplicatas e reordenação transacional preservados. sort_order foi confirmado no schema principal; to_jsonb não foi removido porque fixtures/migrations de compatibilidade continuam exercitando ausência desse campo.
+- Avaliações: aprovação/consentimento/compra válida, privacidade de nome, notas 1..5, unicidade, edição própria e retorno a pending, optimistic updated_at na moderação de produto e filtros públicos/médias preservados. Nenhuma exigência de entrega foi criada.
+- Home/catálogo: ordem de categorias, prioridade de tapetes na Decoração, diversidade ROW_NUMBER, capas alternativas, relacionados por cor/coleção/família/categoria, limite/fallback e venda válida preservados. Não houve substituição do algoritmo por recomendação genérica.
+- Dashboard/relatórios: consulta única dos indicadores, generate_series, date_trunc/fuso São Paulo, FULL JOIN histórico, indicadores sobre o conjunto filtrado, quatro relatórios e CSV permanecem. reportInventoryCTE já centraliza estoque consolidado. Clientes/contagem/lista já utilizavam snapshot consistente; cadastro de marcas/categorias mantém tabela/coluna internas, bloqueio e proteção de vínculos.
+
+### Diferenças sem alteração comercial e melhorias futuras
+
+1. **Vendas válidas:** indicadores financeiros usam status aprovado; destaques/avaliações também exigem stock_debited. Esse campo registra baixa histórica e pode ser falso em pedidos legados. A leitura do principal encontrou zero aprovados sem baixa no momento da auditoria, mas isso não autoriza eliminar compatibilidade. Não foram alterados indicadores ou regras de elegibilidade para forçar igualdade.
+2. **Estoque:** cards consolidados classificam a soma do produto; linhas/tabelas exibem a variante individual. Uma variante com uma unidade pode aparecer como última unidade mesmo com sete no total do produto. Classificações 0, 1..5 e >5 preservadas; nada foi recalculado arbitrariamente.
+3. **Campanha da Home:** o preço exibido continua sendo o menor desconto vigente do produto, não necessariamente o da campanha destacada. Trocar para preço específico da campanha exige aprovação e ajuste conjunto; comportamento documentado, não alterado.
+4. **Preço igual ao original:** participação em campanha pode ter preço igual ao original, enquanto promotion_active exige desconto estritamente menor. Isso permite campanha sem desconto, especialmente com variantes; não é contradição a ser eliminada com <= indiscriminado. Desconto em variante continua proibido.
+5. **Compatibilidade de API:** não foi mudado Get para entidade única, int/int64 em todos os contratos, Money para todos os preços do catálogo, ProductType para um novo DTO ou retorno paginado de avaliações pessoais/admin. São mudanças coordenadas, não correções locais antes do TCC. As listas de avaliações permanecem potencialmente extensas; paginação de servidor é melhoria futura.
+6. **Moderação de experiência:** aprovação sem consentimento permanece não pública, como antes. Acrescentar snapshot/updated_at ao contrato da moderação de experiência exige decisão de API/schema; não foi inventado mecanismo incompleto. A moderação de produto já possui proteção otimista.
+7. **Variádicos:** entradas públicas existentes de comércio/imagem foram preservadas como adaptadores, rejeitando mais de um opcional quando ajustadas; substituição por pointer em toda a cadeia exigiria mudar interfaces/services/testes sem ganho proporcional agora. Internamente o carrinho já usa variante opcional explícita.
+8. **Estrutura:** não foram criados DashboardRepository/ReportRepository adicionais, subclasses de relatório, wrappers genéricos ou novos componentes. Exclusão de produto mantém consultas de metadados e QuoteIdentifier para reconhecer vínculos atuais e futuros. Métodos/aliases de compatibilidade não foram removidos sem comprovação de inexistência de consumidores.
+9. **Concorrência/snapshots:** não foram removidos FOR UPDATE, FOR SHARE, advisory locks, bloqueio de tabela, expected snapshots, FKs ou transações. Persistência de itens permanece simples, sem lote que obscureça a validação individual. Não se promete ausência absoluta de deadlock em cenários não executados.
+10. **Limitação de revisão do checkout:** ExpectedTotalCents não detecta troca de composição pelo mesmo total; necessidade de versão/hash acordado com Angular permanece registrada na etapa anterior.
+11. **Desempenho:** redução de roundtrips de campanhas implementada. Consultas complexas de produtos/recomendações/relatórios não tiveram algoritmo reescrito sem benchmark de carga real. Não há alegação de EXPLAIN ANALYZE ou benchmark de produção; a eficácia funcional foi verificada nas integrações isoladas.
+
+### Pontos a revisar para apresentação
+
+Prioridade: ListCampaigns (uma instrução/snapshot); AddProduct e Save/validCampaignPrice (validação protegida e ordem de locks); saveVariants/Create (metadados, troca de nomes e soma); scanCartItem/itemImageSQL (disponibilidade e galeria); ListAdminOrders (REPEATABLE READ); CreateReview/Moderate (erros de persistência); promotionSourceFor (aliases internos). As funções anteriores Create do checkout, prepareOrderFilters, cancelOrder e restoreOrderStock permanecem referências para atomicidade/segurança.
+
+### Processo de validação e transparência
+
+A primeira suíte integrada detectou uma regressão introduzida pela formatação do placeholder dinâmico `$%d`: um espaço separou o marcador e quebrou buscas textuais do histórico. Corrigido no mesmo trecho; nenhuma validação/teste foi removido. Reexecutados os cenários afetados e as suítes completas. O primeiro banco isolado foi removido e seu controle confirmou as 64 tabelas principais inalteradas. Essa execução não foi contabilizada como aprovação.
+
+
+### Resultados finais desta auditoria
+
+| Verificação | Resultado efetivamente executado |
+|---|---|
+| gofmt / git diff --check | Aprovados, sem pendências nos arquivos desta etapa. |
+| go vet ./... | Aprovado. |
+| go test -json -count=1 -timeout=10m ./... | **108 principais + 307 subtestes = 415 aprovações; zero falhas; um ignorado**. |
+| go test -race -json -count=1 -timeout=10m ./... | **108 principais + 307 subtestes = 415 aprovações; zero falhas; um ignorado; nenhuma corrida detectada**. |
+| PostgreSQL opt-in | **57 testes principais de integração** nas duas suítes, em banco descartável separado; nenhuma integração foi apontada ao principal. |
+| Reexecução direcionada após corrigir o placeholder | Quatro testes principais / 18 contando subtestes aprovados, incluindo regressões novas, histórico e Home. |
+| go build ./... | Aprovado, incluindo os comandos do backend. Sem implantação/reinício. |
+| Angular/Playwright | Não executados nesta etapa: contratos JSON, componentes e layout não foram alterados. |
+
+O ignorado é somente TestBrowserAuditServer, servidor opcional de auditoria visual. Não se confundem os testes HTTP/SQL com aprovação visual ou benchmark de produção. CGO e GCC temporário foram utilizados apenas nos processos de teste; não houve configuração permanente ou dependência nova do projeto.
+
+### Integridade, migrations e encerramento
+
+Estado principal confirmado por leitura: **bd_box, versão 54, dirty=false**. Comparação final: assinaturas e contagens das **64 tabelas públicas idênticas**. Coluna sort_order confirmada; no instante da consulta não havia pedido aprovado com stock_debited=false. Nenhum registro comercial foi alterado pela auditoria.
+
+Todos os scripts de migrations mantiveram seus hashes durante a validação. **Migration 55 continua criada/testada, não aplicada**. As garantias adicionais de unicidade normalizada de e-mail/CPF dependem dessa implantação posterior, com autorização/backup; não se declara que o índice por expressão já está ativo no principal.
+
+Banco isolado final `box_final_repo_test_271b50df4aec6848` removido após os processos encerrarem; o primeiro `box_final_repo_test_56abf29a9802c8b3` também foi removido. Compilador portátil, executores e logs temporários foram removidos depois de consolidar este relatório. Backups, runtime ativo, imagens comerciais, arquivos acadêmicos e o ZIP do usuário foram preservados. API/frontend existentes foram mantidos, sem reinício automático.
+
+Não há decisão comercial aplicada silenciosamente. Permanecem somente as propostas/limitações descritas acima: implantação da 55, política financeira legada versus elegibilidade, preço específico de campanha, paginação/moderação de experiência e evolução de contratos. Elas não foram apresentadas como funcionalidades implementadas.
+
+## Auditoria final dos services — 24/11/2026
+
+Escopo desta etapa: revisão dos 23 arquivos de implementação existentes em `backend/src/services/`, mais o novo auxiliar `smtp.go` (24 ao final), dependências diretas dos handlers/repositories e testes pertinentes. O histórico da auditoria dos 46 repositories foi consultado e preservado. Trabalhou-se na cópia ativa `C:/Users/vitor/Documents/Box-Enxovais-tcc`, preservando os comentários e ajustes manuais encontrados. Não houve alteração de layout, contrato JSON, migration, dependência do projeto ou implantação.
+
+### Correções e decisões implementadas
+
+- **Senhas:** `isStrongPassword` é a implementação única usada pelo cadastro e pelo adaptador de recuperação `isStrongResetPassword`. Exige oito unidades UTF-16, maiúscula ASCII, minúscula ASCII, número ASCII e pelo menos um dos símbolos `?@#$%&`, com máximo de 72 bytes. Outros caracteres podem coexistir, mas não substituem essas classes. A regra corresponde aos validadores Angular existentes, incluindo sua validação separada do limite bcrypt. Hash e comparação bcrypt mantidos; nenhuma senha existente foi modificada.
+- **JWT/e-mail:** `Login` usa um único instante de emissão para calcular as duas horas de validade. HS256, issuer, subject, UserID e Role preservados e conferidos com `AuthMiddleware`. Cadastro, login, recuperação, códigos e newsletter reutilizam a normalização de e-mail (trim e minúsculas); recuperação e newsletter usam o mesmo validador de endereço simples, recusando display names. Não foram registradas credenciais.
+- **Recuperação:** limites de tentativas, validade do código/token, cooldown e tolerância de limpeza receberam constantes. Crypto/rand, hashes, comparação em tempo constante, reserva de envio, restauração do código anterior em falha SMTP, expiração, invalidação e nova checagem antes da escrita foram preservados. O consumo continua representado pelo limite de tentativas, sem acrescentar estado redundante.
+- **Newsletter:** corrige a codificação de “Bem-vindo à Box Enxovais” e “inscrição”; valida o e-mail; persiste antes de enviar. Falha no banco retorna erro e impede SMTP. `SubscriberRepository.SaveIfNew` utiliza o INSERT idempotente existente e verifica RowsAffected; `Save` permanece como adaptador de compatibilidade. Só uma inclusão nova dispara a confirmação, inclusive em requisições concorrentes. Interface mínima permite testar falhas sem SMTP real. Se o envio falhar, a inscrição permanece salva e a chamada retorna erro; repetição não duplica nem reenvia automaticamente. Essa política não promete atomicidade entre PostgreSQL e SMTP, fila ou entrega garantida.
+- **SMTP:** configuração/envio compartilhados por recuperação, newsletter e comprovantes/cancelamentos, mantendo porta 587, injeção de envio nos testes, texto/HTML, templates e assets. TLS exige no mínimo 1.2 e valida certificado/hostname, sem InsecureSkipVerify. A biblioteca já oferece timeout de conexão de dez segundos; não foi acrescentada biblioteca ou goroutine de timeout que pudesse deixar envio em segundo plano sem controle.
+- **Clientes/frete/filtros:** paginação de clientes preserva dez registros e passa a recusar página menor que um e overflow do offset. Frete trata ponteiro nil e usa math.MaxInt32. Produtos copiam url.Values e seus slices antes de remover sort, mantêm whitelist compartilhada, desempates, CatalogCoordinatedOrder e retornam imediatamente no erro de ParsePage. Favoritos continuam reservando $1 para usuário e iniciando filtros em $2. Get continua retornando slice; encaminhamentos simples não foram removidos.
+- **Produtos:** Create/Update compartilham validação dos dados gerais e de comércio. Nome/categoria/marca/status/características, limites textuais, NUL, preço positivo finito com duas casas, estoque e variantes são conferidos antes de persistir. O cadastro que antes aceitava preço zero passa a cumprir a regra positiva já exigida na edição. Variantes preservam IDs esperados, limite de 50, nomes/IDs únicos, dimensões, metadados e controle de concorrência; normalização enviada à persistência não modifica o slice recebido. NUL em nome, dimensões ou itens incluídos é recusado; soma usa int64 e respeita integer do PostgreSQL. Comércio opcional reutiliza validação e rejeita múltiplos opcionais. Preços promocionais não foram forçados à regra de preço original positivo.
+- **SKU:** o gerador oficial continua no trigger `assign_product_sku` e na sequence da migration 48. Create descarta o SKU recebido do cliente; não há gerador Angular ou segunda sequência. Colisão específica 23505/products_sku_key é repetida no máximo três vezes, com transações independentes e respeito ao cancelamento do contexto. Outras falhas não são repetidas. Falha definitiva apresenta “Não foi possível gerar o código do produto. Tente novamente.”; o alias ErrProductSKUConflict preserva o tratamento HTTP de conflito. Edição comum não regenera códigos; UNIQUE e formato no banco permanecem. Testes de busca utilizam o código realmente gerado.
+- **Uploads:** SaveImageAsset valida prefixo restrito a letras ASCII, dígitos, hífen e underscore; confere MIME detectado e extensão JPEG/PNG/WebP; limita escrita a dez MiB e remove arquivo parcial em leitura/escrita/fechamento inválidos. Mantém O_EXCL e compensação se o registro falhar. Novos diretórios/arquivos usam 0750/0640, sem mudar permissões ou caminhos das imagens existentes. A validação de conteúdo é a detecção de assinatura/MIME, não uma alegação de decodificação integral ou antivírus. Os handlers já limitavam tamanho e tipos: o service agora também protege chamadas diretas.
+- **Avaliações:** validRating e normalizeReviewComment centralizam nota 1..5, trim, máximo de mil caracteres e rejeição de NUL. Produto não cria mais um DTO ExperienceReview apenas para validar. Critérios opcionais, consentimento, moderação, propriedade, elegibilidade por compra e ausência de exigência de entrega preservados.
+- **Promoções:** AddProduct é inclusão com desconto estritamente inferior para produto simples; Save representa participantes de campanha e continua permitindo participação sem desconto, inclusive de produtos com variantes. Desconto individual de variante não foi criado. A validação definitiva continua dentro da transação/bloqueios do repository. Falha interna em ProductPromotionInfo passa a ErrPromotionLookup, enquanto produto ausente continua inválido. Update rejeita ID não positivo como campanha inexistente. Rejeição concorrente do repository também é traduzida para ErrPromotionInvalid/HTTP 400; desaparecimento da campanha para ErrPromotionNotFound. Datas locais São Paulo e RFC3339, ordem início/fim e erro de carregamento de fuso preservados. Imagens compartilham conferência MIME/extensão, aceitam leitura curta válida e verificam erro de leitura/fechamento e limite de tamanho.
+
+### Comportamentos conferidos e limitações preservadas
+
+1. **CPF:** validação matemática está em `backend/src/handlers/account.go`, funções validateProfilePatch/validCPF: normalização para onze dígitos, rejeição de repetidos e dois dígitos verificadores. Angular possui validação correspondente no fluxo da conta. Unicidade e erro de duplicidade estão em AccountRepository/índices. CPF não foi exigido no cadastro inicial. A proteção adicional de unicidade normalizada da migration 55 continua dependendo de aplicação autorizada; não se declara que ela já está ativa no principal.
+2. **Nomes:** avaliada a regra atual compartilhada com RegisterValidators.fullName: nome/sobrenome e ao menos dois caracteres por parte, sem blacklist de caracteres. Acentos, hífens, apóstrofos e partículas com duas ou mais letras não são barrados. Há uma limitação preexistente para partículas de uma letra, como “e”, e a regra ainda não recusa números em nomes. Não foi introduzida uma regra Unicode nova apenas no service, que divergiria do Angular. A evolução coordenada desse contrato/validador permanece pendente, sem alterar dados de usuários.
+3. **Recuperação em memória:** estado é local ao processo e não sobrevive a reinício/não é compartilhado entre instâncias. O mutex permanece adquirido durante a gravação da senha para impedir uso concorrente do token; uma escrita lenta pode atrasar outras recuperações. A limpeza ocorre nas tentativas de envio, sem worker permanente. Redis/armazenamento persistente ou alteração da granularidade dos locks não foram introduzidos antes do TCC.
+4. **Enumeração na recuperação:** o endpoint existente ainda distingue e-mail não encontrado (404). Não se alterou silenciosamente esse contrato com o Angular. Resposta uniforme e eventual rate limit distribuído são evolução de segurança coordenada, não funcionalidades alegadas nesta auditoria.
+5. **SMTP:** STARTTLS continua seguindo o comportamento da biblioteca/provedor configurado; não se promete TLS obrigatório se o servidor não anunciar a extensão. Não existe deadline global de leitura/escrita exposto pelo Dialer utilizado. Tornar TLS obrigatório e adotar prazo total exige mudança coordenada/testes específicos de transporte. Nenhum e-mail real foi enviado nos testes desta etapa.
+6. **Variádicos e metadados:** adaptadores públicos de comércio/variantID foram mantidos para não quebrar chamadas/contratos. Não houve troca generalizada de tipos monetários, IDs, slice de Get ou representação dos metadados. Regras comerciais e validação transacional dos repositories anteriores foram preservadas.
+
+### Arquivos e funções de referência desta etapa
+
+Implementação revisada em `backend/src/services/`: admin_customers.go, auth_service.go, checkout_email.go, emails.go, favorites_service.go, newsletter_service.go, password_reset_token.go, product_admin.go, product_creation_service.go, product_filters_service.go, product_image_service.go, product_queries_service.go, product_review_service.go, product_service.go, product_variants.go, promotion_products_service.go, promotion_service.go, promotion_validate_service.go, review_service.go, shipping_service.go, user_service.go, user_validation_service.go, verification_code.go. `smtp.go` foi criado. ProductService permanece como estrutura existente, sem novo componente/camada.
+
+Alterações funcionais concentram-se nos arquivos detalhados acima; demais mudanças nos services limitam-se à padronização de receiver/imports e preservação dos comentários. Dependências diretas alteradas: `backend/src/repositories/subscriber_repository.go`, `backend/src/handlers/newsletter.go` e `backend/src/handlers/product_create.go`. Não houve refatoração repetida dos outros repositories nem mudança de rotas.
+
+Testes criados: `backend/src/services/services_final_test.go` e `backend/src/routes/services_final_test.go`. Atualizados: newsletter_service_test.go, product_sku_test.go e product_create_test.go, preservando os cenários anteriores e ajustando fixtures para categoria/preço válidos e SKU automático. Foram acrescentados testes de regras UTF-16/ASCII/72 bytes, falhas/idempotência da newsletter, filtros sem mutação, paginação/overflow, NUL/metadados/estoque, imagem curta/mismatch/limite/falha de leitura, colisões limitadas, HTTP e validação promocional sob lock.
+
+Funções prioritárias para explicar na apresentação: ProductService.Create; assign_product_sku (migration 48); validProductDetails/validProductPrice/validateVariants/validateCommerce; NewsletterService.Subscribe/SubscriberRepository.SaveIfNew; isStrongPassword/AuthService.Login; SendPasswordResetCode/CompletePasswordReset; SaveImageAsset/validImageContent; PromotionService.AddProduct/save/validate e validação bloqueada do repository; validCPF.
+
+### Transparência da execução
+
+A preparação encontrou incompatibilidade de versão de ordenação do template1 do PostgreSQL; o banco descartável foi criado com TEMPLATE template0, sem alterar o template1 ou o principal. As primeiras execuções direcionadas identificaram uma expectativa antiga de busca por SKU manual e um handler sem a classificação ErrProductDetails; ambos foram corrigidos. As alterações/comentários manuais simultâneos foram preservados. A revisão adicional encontrou a classificação incorreta da rejeição promocional sob concorrência; corrigida e coberta com HTTP real em httptest e PostgreSQL isolado. Execuções intermediárias com falha não são contabilizadas como aprovação final.
+
+### Resultados finais efetivamente executados
+
+| Verificação | Resultado |
+|---|---|
+| gofmt e git diff --check (escopo desta etapa) | Aprovados. |
+| Regressões direcionadas finais | 7 testes principais + 42 subtestes aprovados; quatro integrações PostgreSQL. |
+| go vet ./... | Aprovado. |
+| go test -json -count=1 -timeout=10m ./... | **115 principais + 335 subtestes = 450 aprovações; zero falhas; um ignorado** (97,72 s). |
+| go test -race -json -count=1 -timeout=10m ./... | **115 principais + 335 subtestes = 450 aprovações; zero falhas; um ignorado; nenhuma corrida detectada** (135,59 s). |
+| PostgreSQL opt-in nas suítes completas | **59 testes principais de integração**, incluídos nas contagens acima, em banco separado descartável. |
+| go build ./... | Aprovado (17,94 s), sem implantação ou reinício da API. |
+| Angular / Playwright | Não executados nesta etapa: nenhum arquivo/contrato de frontend ou layout foi alterado. Não se declara aprovação visual. |
+| Disponibilidade dos processos existentes | HTTP 200 no frontend :4200 e GET /products?limit=1 da API :8080. Isso comprova disponibilidade da versão em execução, não implantação do código recém-compilado. |
+
+Único ignorado: TestBrowserAuditServer, servidor opt-in de auditoria visual. Go 1.26.11/windows/amd64; CGO_ENABLED=1 e GCC portátil 16.2.0 usados somente nos processos de validação. O arquivo do compilador foi conferido por SHA-256 antes da extração. Sem mudança permanente de ambiente, toolchain ou dependências do projeto.
+
+### Integridade e encerramento desta etapa
+
+Principal confirmado antes e depois por consultas somente de leitura: **bd_box, versão 54, dirty=false**, com assinaturas e contagens das **64 tabelas públicas idênticas**. Nenhum dado comercial foi alterado por estes testes. Hashes de todos os scripts SQL de migrations também permaneceram iguais; **migration 55 continua pendente, não aplicada**. Não foi criada migration adicional.
+
+Banco final isolado `box_services_test_fb4f01a3b1b6d1e2` removido após os testes; bancos descartáveis das tentativas anteriores também foram removidos. Executor `backend/tmp/services-final` e compilador/logs/resultados de `.artifacts/services-final` removidos após consolidar os resultados. Imagens comerciais, uploads, backups, documentos acadêmicos, ZIPs do usuário e runtime ativo foram preservados. Nenhum servidor persistente de testes foi iniciado; httptest encerrou seus servidores temporários. API PID 21252/porta 8080 e frontend PID 22424/porta 4200 foram mantidos, sem reinício.
+
+Pendências/decisões permanecem explícitas: implantação autorizada da migration 55; evolução coordenada da validação de nomes; uniformização da resposta de recuperação; persistência distribuída dos tokens; transporte SMTP com TLS obrigatório/deadline total e eventual fila de confirmação. Não foram apresentados como implementados ou como testes executados. O código Go corrigido foi compilado/testado, mas a versão do processo principal não foi substituída, conforme a restrição de não reiniciar servidores.

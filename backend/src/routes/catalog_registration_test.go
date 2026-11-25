@@ -40,7 +40,10 @@ func TestCatalogRegistrationsPostgres(t *testing.T) {
 		}
 		return w.Body.Bytes()
 	}
-	for _, spec := range []struct{ resource, column string }{{"categories", "product_type_id"}, {"brands", "brand_id"}} {
+	for _, spec := range []struct {
+		resource string
+		column   string
+	}{{"categories", "product_type_id"}, {"brands", "brand_id"}} {
 		t.Run(spec.resource, func(t *testing.T) {
 			path := "/admin/catalog/" + spec.resource
 			request("GET", path, "", "", 401)

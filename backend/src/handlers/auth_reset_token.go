@@ -4,26 +4,28 @@ import (
 	"backend/src/models"
 	"backend/src/response"
 	"backend/src/services"
-	"encoding/json"
 	"net/http"
 )
 
 type ValidateResetTokenRequest = models.ValidateResetTokenRequest
 
 func (h AuthHandler) ValidateResetToken(w http.ResponseWriter, r *http.Request) {
+	if !allowMethods(w, r, http.MethodPost) {
+		return
+	}
+	w.Header().Set("Cache-Control", "no-store")
 	var req ValidateResetTokenRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.ResetToken == "" {
+	if !decodeBody(w, r, &req, smallJSONLimit, "Token não informado") {
+		return
+	}
+	if req.ResetToken == "" {
 		response.Error(w, http.StatusBadRequest, "Token não informado")
 		return
 	}
 
 	_, status := services.CheckPasswordResetToken(req.ResetToken)
-	if status == services.PasswordResetTokenExpired {
-		response.Error(w, http.StatusGone, "Token de recuperação expirado")
-		return
-	}
 	if status != services.PasswordResetTokenValid {
-		response.Error(w, http.StatusUnauthorized, "Token de recuperação inválido")
+		resetTokenError(w, status)
 		return
 	}
 

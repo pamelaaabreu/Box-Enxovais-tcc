@@ -74,7 +74,12 @@ func TestShippingPRSeedPostgres(t *testing.T) {
 	if e = conn.QueryRowContext(ctx, "SELECT count(*) FROM shipping_ranges").Scan(&count); e != nil || count != 11 {
 		t.Fatal("seed must be idempotent", e, count)
 	}
-	for _, c := range []struct{ cep, price, min, max int }{{87502100, 1290, 1, 2}, {87400004, 1690, 2, 3}, {87480000, 1690, 2, 3}, {87485000, 1690, 2, 3}, {87535000, 1690, 2, 3}, {87538000, 1690, 2, 3}, {87550002, 1990, 3, 4}, {87560000, 1990, 3, 4}, {87200001, 2490, 3, 5}, {87701000, 2490, 3, 5}, {87065200, 2990, 4, 6}} {
+	for _, c := range []struct {
+		cep   int
+		price int
+		min   int
+		max   int
+	}{{87502100, 1290, 1, 2}, {87400004, 1690, 2, 3}, {87480000, 1690, 2, 3}, {87485000, 1690, 2, 3}, {87535000, 1690, 2, 3}, {87538000, 1690, 2, 3}, {87550002, 1990, 3, 4}, {87560000, 1990, 3, 4}, {87200001, 2490, 3, 5}, {87701000, 2490, 3, 5}, {87065200, 2990, 4, 6}} {
 		q, e := repositories.QuoteShipping(ctx, conn, c.cep)
 		if e != nil || q.PriceCents != c.price || q.MinDays != c.min || q.MaxDays != c.max {
 			t.Fatal("city quote", c.cep, q, e)

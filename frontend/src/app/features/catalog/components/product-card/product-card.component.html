@@ -127,6 +127,7 @@
     <h2>
       <a class="product-link" [routerLink]="details()">{{ displayName() }}</a>
     </h2>
+    <app-product-rating [productId]="product().id" />
     <span class="product-sku" [attr.aria-hidden]="!product().sku ? true : null">{{ product().sku ? "SKU: " + product().sku : "" }}</span>
     @if (!homeTile() && !favoritesTile() && product().brand_name; as brand) {
       @if (

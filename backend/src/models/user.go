@@ -16,7 +16,7 @@ type User struct {
 	ZipCode      string `json:"zipCode"`
 	State        string `json:"state"`
 	City         string `json:"city"`
-	Password     string `json:"password"`
+	Password     string `json:"-"`
 	Role         string `json:"role"`
 }
 

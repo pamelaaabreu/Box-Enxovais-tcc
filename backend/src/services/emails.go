@@ -18,16 +18,9 @@ func SendEmailWithTemplate(email, subject, code string) error {
 		return err
 	}
 
-	dialer := gomail.NewDialer(
-		os.Getenv("EMAIL_SMTP"),
-		587,
-		os.Getenv("EMAIL"),
-		os.Getenv("EMAIL_KEY"),
-	)
-
-	if err := dialer.DialAndSend(messageEmail); err != nil {
-		log.Printf("[EMAIL] Erro ao enviar e-mail: %v", err)
-		return fmt.Errorf("enviar e-mail: %w", err)
+	if err := sendSMTP(messageEmail); err != nil {
+		log.Println("[EMAIL] Falha no envio do e-mail")
+		return err
 	}
 
 	log.Println("[EMAIL] E-mail enviado com sucesso")

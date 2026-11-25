@@ -1,20 +1,5 @@
 package models
 
-import "strconv"
-
-// Money is always integer cents internally. JSON remains a decimal BRL number.
-type Money int64
-
-func (m Money) MarshalJSON() ([]byte, error) {
-	return []byte(strconv.FormatInt(int64(m)/100, 10) + "." + leftPadCents(int64(m)%100)), nil
-}
-func leftPadCents(value int64) string {
-	if value < 10 {
-		return "0" + strconv.FormatInt(value, 10)
-	}
-	return strconv.FormatInt(value, 10)
-}
-
 type CartItem struct {
 	VariantID int64  `json:"variantId,omitempty"`
 	ID        int64  `json:"id"`

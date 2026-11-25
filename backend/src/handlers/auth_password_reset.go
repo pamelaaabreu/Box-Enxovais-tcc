@@ -4,9 +4,10 @@ import (
 	"backend/src/models"
 	"backend/src/response"
 	"backend/src/services"
-	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
+	"strconv"
 )
 
 type ForgotPasswordRequest = models.ForgotPasswordRequest
@@ -16,42 +17,37 @@ type ResetPasswordRequest = models.ResetPasswordRequest
 type ValidateVerificationCodeRequest = models.ValidateVerificationCodeRequest
 
 func (h AuthHandler) SendVerificationCode(w http.ResponseWriter, r *http.Request) {
+	if !allowMethods(w, r, http.MethodPost) {
+		return
+	}
+	w.Header().Set("Cache-Control", "no-store")
 	var req ForgotPasswordRequest
 
-	err := json.NewDecoder(r.Body).Decode(&req)
-	if err != nil || req.Email == "" {
+	if !decodeBody(w, r, &req, smallJSONLimit, "Email inválido") {
+		return
+	}
+
+	err := h.Service.SendRecoveryCode(r.Context(), req.Email)
+	var validation services.ValidationError
+	if errors.As(err, &validation) {
 		response.Error(w, http.StatusBadRequest, "Email inválido")
 		return
 	}
-
-	err = h.Service.SendRecoveryCode(r.Context(), req.Email)
-	if err != nil {
-		var validation services.ValidationError
-		switch {
-		case errors.As(err, &validation):
-			response.Error(w, http.StatusBadRequest, "Email inválido")
-		case errors.Is(err, services.ErrUserNotFound):
-			response.Error(w, http.StatusNotFound, "Email não encontrado")
-		case errors.Is(err, services.ErrRecoveryLookup):
-			response.Error(w, http.StatusInternalServerError, "Erro ao buscar usuário")
-		case errors.Is(err, services.ErrResetCodeCooldown):
-			w.Header().Set("Retry-After", "30")
-			response.Error(w, http.StatusTooManyRequests, "Aguarde 30 segundos para reenviar")
-		default:
-			response.Error(w, http.StatusInternalServerError, "Erro ao enviar email")
-		}
-		return
+	if err != nil && !errors.Is(err, services.ErrUserNotFound) && !errors.Is(err, services.ErrResetCodeCooldown) {
+		log.Println("Falha interna na solicitação de recuperação")
 	}
-
-	response.Success(w, http.StatusOK, "Código enviado com sucesso.", nil)
+	w.Header().Set("Retry-After", strconv.Itoa(int(services.ResetResendCooldown.Seconds())))
+	response.Success(w, http.StatusOK, "Se o e-mail estiver cadastrado, você receberá um código de recuperação.", nil)
 }
 
 func (h AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
+	if !allowMethods(w, r, http.MethodPost) {
+		return
+	}
+	w.Header().Set("Cache-Control", "no-store")
 	var req ResetPasswordRequest
 
-	err := json.NewDecoder(r.Body).Decode(&req)
-	if err != nil {
-		response.Error(w, http.StatusBadRequest, "Requisição inválida")
+	if !decodeBody(w, r, &req, smallJSONLimit, "Requisição inválida") {
 		return
 	}
 
@@ -77,10 +73,17 @@ func (h AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h AuthHandler) ValidateVerificationCode(w http.ResponseWriter, r *http.Request) {
+	if !allowMethods(w, r, http.MethodPost) {
+		return
+	}
+	w.Header().Set("Cache-Control", "no-store")
 	w.Header().Set("Cache-Control", "no-store")
 	var req ValidateVerificationCodeRequest
 
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.Email == "" || req.Code == "" {
+	if !decodeBody(w, r, &req, smallJSONLimit, "Código inválido") {
+		return
+	}
+	if req.Email == "" || req.Code == "" {
 		response.Error(w, http.StatusBadRequest, "Código inválido")
 		return
 	}

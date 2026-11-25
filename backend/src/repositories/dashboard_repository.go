@@ -16,25 +16,31 @@ func (repo ProductRepository) Dashboard(ctx context.Context, periods ...models.D
 		until = result.Period.Until
 		group = result.Period.Group
 	}
-	const query = `WITH
-    orders AS
-    (SELECT *
-     FROM checkout_orders
-     WHERE ($1::timestamptz IS NULL
-            OR created_at >= $1)
-         AND ($2::timestamptz IS NULL
-              OR created_at < $2)),
-    customers AS
-    (SELECT *
-     FROM users
-     WHERE role = 'customer'),
-    new_customers AS
-    (SELECT *
-     FROM customers
-     WHERE ($1::timestamptz IS NULL
-            OR created_at >= $1)
-         AND ($2::timestamptz IS NULL
-              OR created_at < $2)),
+	const query = `
+WITH orders AS (
+    SELECT
+        *
+    FROM checkout_orders
+    WHERE ($1::timestamptz IS NULL
+        OR created_at >= $1)
+        AND ($2::timestamptz IS NULL
+        OR created_at < $2)
+),
+customers AS (
+    SELECT
+        *
+    FROM users
+    WHERE role = 'customer'
+),
+new_customers AS (
+    SELECT
+        *
+    FROM customers
+    WHERE ($1::timestamptz IS NULL
+        OR created_at >= $1)
+        AND ($2::timestamptz IS NULL
+        OR created_at < $2)
+),
 ` + reportInventoryCTE + `,
     stock_entries AS
     (SELECT
@@ -107,10 +113,10 @@ func (repo ProductRepository) Dashboard(ctx context.Context, periods ...models.D
     (SELECT
          COALESCE(($1::timestamptz AT TIME ZONE 'America/Sao_Paulo')::date,
                       (SELECT min(created_at AT TIME ZONE 'America/Sao_Paulo')::date
-                       FROM orders), CURRENT_DATE) AS lo,
+                       FROM orders), (CURRENT_TIMESTAMP AT TIME ZONE 'America/Sao_Paulo')::date) AS lo,
          COALESCE(($2::timestamptz AT TIME ZONE 'America/Sao_Paulo')::date,
                       (SELECT max(created_at AT TIME ZONE 'America/Sao_Paulo')::date + 1
-                       FROM orders), CURRENT_DATE + 1) AS hi),
+                       FROM orders), (CURRENT_TIMESTAMP AT TIME ZONE 'America/Sao_Paulo')::date + 1) AS hi),
     calendar AS
     (SELECT DISTINCT date_trunc($3, d)::date AS bucket
      FROM
@@ -174,65 +180,46 @@ func (repo ProductRepository) Dashboard(ctx context.Context, periods ...models.D
          o.created_at DESC,
          o.id DESC
      LIMIT 5)
-SELECT json_build_object('orders',
-                             (SELECT COUNT(*)
-                              FROM orders), 'approvedOrders',
-                             (SELECT COUNT(*)
-                              FROM orders
-                              WHERE status = 'simulated_approved'), 'cancelledOrders',
-                             (SELECT COUNT(*)
-                              FROM orders
-                              WHERE status = 'cancelled'), 'revenueCents',
-                             (SELECT COALESCE(SUM(total_cents), 0)
-                              FROM orders
-                              WHERE status = 'simulated_approved'), 'shippingCents',
-                             (SELECT COALESCE(SUM(shipping_cents), 0)
-                              FROM orders
-                              WHERE status = 'simulated_approved'), 'averageTicketCents',
-                             (SELECT COALESCE(round(avg(total_cents)), 0)
-                              FROM orders
-                              WHERE status = 'simulated_approved'), 'products',
-                             (SELECT COUNT(*)
-                              FROM products), 'activeProducts',
-                             (SELECT COUNT(*)
-                              FROM inventory
-                              WHERE status = 'active'), 'lowStock',
-                             (SELECT COUNT(*)
-                              FROM inventory
-                              WHERE status = 'active'
-                                  AND quantity BETWEEN 1 AND 5), 'outOfStock',
-                             (SELECT COUNT(*)
-                              FROM inventory
-                              WHERE status = 'active'
-                                  AND quantity = 0), 'customers',
-                             (SELECT COUNT(*)
-                              FROM customers), 'newCustomers',
-                             (SELECT COUNT(*)
-                              FROM new_customers), 'customersWithOrders',
-                             (SELECT COUNT(*)
-                              FROM customers c
-                              WHERE EXISTS
-                                      (SELECT 1
-                                       FROM checkout_orders o
-                                       WHERE o.user_id = c.id)), 'months', COALESCE(
-                                                                                        (SELECT json_agg(months
-                                                                                                         ORDER BY month)
-                                                                                         FROM months), '[]'), 'categories', COALESCE(
-                                                                                                                                         (SELECT json_agg(categories
-                                                                                                                                                          ORDER BY units DESC, name)
-                                                                                                                                          FROM categories), '[]'), 'series', COALESCE(
-                                                                                                                                                                                          (SELECT json_agg(series
-                                                                                                                                                                                                           ORDER BY bucket)
-                                                                                                                                                                                           FROM series), '[]'), 'topProducts', COALESCE(
-                                                                                                                                                                                                                                            (SELECT json_agg(top_products
-                                                                                                                                                                                                                                                             ORDER BY units DESC, "productId")
-                                                                                                                                                                                                                                             FROM top_products), '[]'), 'stock', COALESCE(
-                                                                                                                                                                                                                                                                                              (SELECT json_agg(stock
-                                                                                                                                                                                                                                                                                                               ORDER BY quantity, name, "productId", "variantId")
-                                                                                                                                                                                                                                                                                               FROM stock), '[]'), 'recentOrders', COALESCE(
-                                                                                                                                                                                                                                                                                                                                                (SELECT json_agg(recent
-                                                                                                                                                                                                                                                                                                                                                                 ORDER BY "createdAt" DESC, id DESC)
-                                                                                                                                                                                                                                                                                                                                                 FROM recent), '[]'))`
+SELECT json_build_object(
+    'orders',
+        (SELECT COUNT(*) FROM orders),
+    'approvedOrders',
+        (SELECT COUNT(*) FROM orders WHERE status = 'simulated_approved'),
+    'cancelledOrders',
+        (SELECT COUNT(*) FROM orders WHERE status = 'cancelled'),
+    'revenueCents',
+        (SELECT COALESCE(SUM(total_cents), 0) FROM orders WHERE status = 'simulated_approved'),
+    'shippingCents',
+        (SELECT COALESCE(SUM(shipping_cents), 0) FROM orders WHERE status = 'simulated_approved'),
+    'averageTicketCents',
+        (SELECT COALESCE(round(avg(total_cents)), 0) FROM orders WHERE status = 'simulated_approved'),
+    'products',
+        (SELECT COUNT(*) FROM products),
+    'activeProducts',
+        (SELECT COUNT(*) FROM inventory WHERE status = 'active'),
+    'lowStock',
+        (SELECT COUNT(*) FROM inventory WHERE status = 'active' AND quantity BETWEEN 1 AND 5),
+    'outOfStock',
+        (SELECT COUNT(*) FROM inventory WHERE status = 'active' AND quantity = 0),
+    'customers',
+        (SELECT COUNT(*) FROM customers),
+    'newCustomers',
+        (SELECT COUNT(*) FROM new_customers),
+    'customersWithOrders',
+        (SELECT COUNT(*) FROM customers c WHERE EXISTS (SELECT 1 FROM checkout_orders o WHERE o.user_id = c.id)),
+    'months',
+        COALESCE( (SELECT json_agg(months ORDER BY month) FROM months), '[]'),
+    'categories',
+        COALESCE( (SELECT json_agg(categories ORDER BY units DESC, name) FROM categories), '[]'),
+    'series',
+        COALESCE( (SELECT json_agg(series ORDER BY bucket) FROM series), '[]'),
+    'topProducts',
+        COALESCE( (SELECT json_agg(top_products ORDER BY units DESC, "productId") FROM top_products), '[]'),
+    'stock',
+        COALESCE( (SELECT json_agg(stock ORDER BY quantity, name, "productId", "variantId") FROM stock), '[]'),
+    'recentOrders',
+        COALESCE( (SELECT json_agg(recent ORDER BY "createdAt" DESC, id DESC) FROM recent), '[]')
+)`
 	var raw []byte
 	if err := repo.DB.QueryRowContext(ctx, query, from, until, group).Scan(&raw); err != nil {
 		return result, err

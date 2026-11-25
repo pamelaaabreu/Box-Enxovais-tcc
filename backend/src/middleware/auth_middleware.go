@@ -79,13 +79,8 @@ func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func extractBearerToken(r *http.Request) (string, bool) {
-	authHeader := strings.TrimSpace(r.Header.Get("Authorization"))
-	if authHeader == "" {
-		return "", false
-	}
-
-	// divide o cabeçalho em um slice de strings a partir de espaços vazios
-	parts := strings.Fields(authHeader)
+	// Fields remove espaços externos e nunca produz elementos vazios.
+	parts := strings.Fields(r.Header.Get("Authorization"))
 	if len(parts) != 2 {
 		return "", false
 	}
@@ -95,13 +90,7 @@ func extractBearerToken(r *http.Request) (string, bool) {
 		return "", false
 	}
 
-	
-	tokenString := strings.TrimSpace(parts[1])
-	if tokenString == "" {
-		return "", false
-	}
-
-	return tokenString, true
+	return parts[1], true
 }
 
 func handleTokenError(w http.ResponseWriter, err error) {

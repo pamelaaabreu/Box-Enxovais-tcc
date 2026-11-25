@@ -12,25 +12,28 @@ func (repo HomeRepository) Campaign(ctx context.Context) (*models.HomeCampaign, 
 	var id int
 
 	query := `
-SELECT pr.id
+SELECT
+    pr.id
 FROM promotions pr
 WHERE pr.home_featured
     AND pr.status = 'active'
     AND pr.start_date <= NOW()
     AND pr.end_date >= NOW()
-    AND EXISTS
-        (SELECT 1
-         FROM promotion_products pp
-         JOIN products p
-             ON p.id = pp.product_id
-         WHERE pp.promotion_id = pr.id
-             AND p.status = 'active'
-             AND COALESCE(
-                              (SELECT SUM(quantity)
-                               FROM product_variants
-                               WHERE product_id = p.id), p.quantity) > 0)
-ORDER BY
-    pr.start_date DESC,
+    AND EXISTS (
+    SELECT
+        1
+    FROM promotion_products pp
+    JOIN products p ON p.id = pp.product_id
+    WHERE pp.promotion_id = pr.id
+        AND p.status = 'active'
+        AND COALESCE((
+        SELECT
+            SUM(quantity)
+        FROM product_variants
+        WHERE product_id = p.id
+    ), p.quantity) > 0
+)
+ORDER BY pr.start_date DESC,
     pr.id DESC
 LIMIT 1
 `
@@ -83,15 +86,19 @@ WHERE id = $1
 	productsQuery := `SELECT
 ` + storeProductColumns + "," + storePromotionalPrice + storeProductSource + `
 WHERE p.status = 'active'
-    AND EXISTS
-        (SELECT 1
-         FROM promotion_products pp
-         WHERE pp.promotion_id = $1
-             AND pp.product_id = p.id)
-    AND COALESCE(
-                     (SELECT SUM(quantity)
-                      FROM product_variants
-                      WHERE product_id = p.id), p.quantity) > 0
+    AND EXISTS (
+    SELECT
+        1
+    FROM promotion_products pp
+    WHERE pp.promotion_id = $1
+        AND pp.product_id = p.id
+)
+    AND COALESCE((
+    SELECT
+        SUM(quantity)
+    FROM product_variants
+    WHERE product_id = p.id
+), p.quantity) > 0
 ORDER BY p.id
 `
 
@@ -113,10 +120,8 @@ ORDER BY p.id
 			value = p.Price
 		}
 
-		c.Products = append(c.Products, models.CampaignProduct{
-			Product:          p,
-			PromotionalPrice: value,
-		})
+		p.PromotionalPrice = value
+		c.Products = append(c.Products, models.CampaignProduct{Product: p})
 	}
 
 	if err = rows.Err(); err != nil {

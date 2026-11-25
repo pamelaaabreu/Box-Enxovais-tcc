@@ -128,10 +128,13 @@ func TestProductCreatePostgres(t *testing.T) {
 		}
 		return data
 	}
+	if _, err := conn.Exec(`INSERT INTO product_types(id,name) VALUES(90,'Categoria teste')`); err != nil {
+		t.Fatal(err)
+	}
 	admin := token("admin")
 	for _, quantity := range []int{0, 3} {
 		t.Run(fmt.Sprintf("accept_%d", quantity), func(t *testing.T) {
-			data := call(fmt.Sprintf(`{"name":"Test creation","price":10,"status":"active","quantity":%d,"measurements":{}}`, quantity), admin, 201)
+			data := call(fmt.Sprintf(`{"name":"Test creation","product_type_id":90,"price":10,"status":"active","quantity":%d,"measurements":{}}`, quantity), admin, 201)
 			var result struct {
 				ID int `json:"id"`
 			}
@@ -170,7 +173,7 @@ func TestProductCreatePostgres(t *testing.T) {
 			t.Fatal(err)
 		}
 		var created struct{ ID int }
-		if err := json.Unmarshal(call(`{"name":"Toalha","price":0,"quantity":5,"status":"archived","brand_id":91,"product_type_id":92,"measurements":{"Largura":"70 cm"}}`, admin, 201), &created); err != nil {
+		if err := json.Unmarshal(call(`{"name":"Toalha","price":10,"quantity":5,"status":"archived","brand_id":91,"product_type_id":92,"measurements":{"Largura":"70 cm"}}`, admin, 201), &created); err != nil {
 			t.Fatal(err)
 		}
 		upload := func(payload []byte, bearer string, want int) {

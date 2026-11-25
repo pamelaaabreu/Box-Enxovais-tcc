@@ -88,7 +88,7 @@ type EmailRecipient struct {
 
 ### Métodos e receiver
 
-Em `repositories/user_contact_repository.go`, o receiver associa o método ao repository:
+Em `repositories/user_repository.go`, o receiver associa o método ao repository:
 
 ```go
 func (repo UserRepository) GetEmailRecipient(ctx context.Context, userID int) (models.EmailRecipient, error)
@@ -98,7 +98,7 @@ func (repo UserRepository) GetEmailRecipient(ctx context.Context, userID int) (m
 
 ### Interfaces
 
-Uma interface descreve operações, sem exigir uma implementação específica. `scanCustomer`, em `repositories/admin_customers.go`, recebe `interface{ Scan(...any) error }`. Tanto uma linha individual quanto um cursor de linhas podem satisfazer esse contrato. Go verifica a compatibilidade pelos métodos, sem uma declaração `implements`.
+Uma interface descreve operações, sem exigir uma implementação específica. `scanCustomer`, em `repositories/admin_customers_repository.go`, recebe `interface{ Scan(...any) error }`. Tanto uma linha individual quanto um cursor de linhas podem satisfazer esse contrato. Go verifica a compatibilidade pelos métodos, sem uma declaração `implements`.
 
 ### Ponteiros e ausência
 
@@ -149,7 +149,7 @@ Na criação de produto, produto e variantes precisam confirmar juntos. No check
 - **SELECT / Scan:** a ordem das colunas é parte do contrato interno com o leitor Go. `storeProductColumns` deve acompanhar `scanStoreProduct`.
 - **JOIN:** combina registros relacionados. Avaliações usam `JOIN checkout_orders o ON o.id = r.order_id`; sem pedido correspondente, não há linha resultante.
 - **LEFT JOIN:** preserva o registro à esquerda mesmo sem correspondência. Relatórios utilizam isso para apresentar produtos e clientes com dados complementares opcionais.
-- **CTE / WITH:** nomeia um resultado intermediário. `repositories/reports.go` cria `orders`, `filtered` e `page`; `report_inventory.go` compartilha o cálculo de inventário.
+- **CTE / WITH:** nomeia um resultado intermediário. `repositories/reports_repository.go` cria `orders`, `filtered` e `page`; `report_inventory.go` compartilha o cálculo de inventário.
 - **CASE:** escolhe uma expressão conforme uma condição. O relatório de estoque distingue `out`, `low` e `available`; a ordenação coordenada prioriza famílias visuais.
 - **EXISTS:** testa a existência de registros. A Home exige produtos elegíveis para mostrar uma campanha.
 - **GROUP BY:** agrupa linhas para agregações, como unidades e receita por produto nos relatórios.
@@ -207,7 +207,7 @@ O executável continua sendo o pacote, por exemplo `go run ./cmd/import-catalog 
 - Handlers de faixas de CEP e cotação saíram de routes; routes mantém registro e middleware.
 - A validação das faixas passou para `services/shipping_service.go`.
 - A validação das notas e comentários passou para `services/review_service.go`.
-- A consulta SQL do destinatário saiu de `services/checkout_email.go` para `repositories/user_contact_repository.go`.
+- A consulta SQL do destinatário saiu de `services/checkout_email.go` para `repositories/user_repository.go`.
 - Validações de cadastro de usuário foram separadas da coordenação de persistência em `services/user_validation_service.go`.
 - Os contratos de recuperação/validação de senha e verificação foram movidos para `models/auth_requests.go`. Aliases nos handlers preservam os nomes Go exportados anteriores.
 - A resposta de upload foi movida para `models/product_image_upload.go`; o alias anterior também foi mantido.
@@ -234,9 +234,9 @@ Não foi criada uma validação única de senha: cadastro e recuperação possue
 | `where` | `visibilityClause` | `src/repositories/home_reviews_repository.go` | Distinguir o filtro de publicação pública. |
 | `user` | `moderatorID` | `src/handlers/home_reviews.go` | Identificar o administrador responsável pela moderação. |
 | `p`, `loc` | `period`, `location` | `src/handlers/dashboard_handler.go` | Tornar a interpretação do período legível. |
-| `source`, `rows`, `stats`, `order` | `queryPrefix`, `rowsQuery`, `statisticsQuery`, `ordering` | `src/repositories/reports.go` | Diferenciar os fragmentos SQL de resultados e entidades. |
-| `c` | `customer` | `src/repositories/admin_customers.go` | Identificar o cliente retornado por Scan. |
-| `p` | `product` | `src/services/product_admin.go` e `src/repositories/product_admin.go` | Explicitar o produto editado. |
+| `source`, `rows`, `stats`, `order` | `queryPrefix`, `rowsQuery`, `statisticsQuery`, `ordering` | `src/repositories/reports_repository.go` | Diferenciar os fragmentos SQL de resultados e entidades. |
+| `c` | `customer` | `src/repositories/admin_customers_repository.go` | Identificar o cliente retornado por Scan. |
+| `p` | `product` | `src/services/product_admin.go` e `src/repositories/product_admin_repository.go` | Explicitar o produto editado. |
 | `n` | `installmentCount` | `src/models/payment_plan.go` | Explicitar a quantidade de parcelas. |
 | `decode`, `prepare`, `option`, `existing`, `put` | `decodeManifest`, `prepareProducts`, `resolveCatalogOption`, `productExists`, `writeAsset` | `cmd/import-catalog` | Explicar a operação de cada função privada. |
 | `row`, `asset`, `product`, `manifest` | `preparedProduct`, `catalogAsset`, `manifestProduct`, `catalogManifest` | `cmd/import-catalog` | Distinguir os dados do importador dos modelos HTTP. |
@@ -273,7 +273,7 @@ A detecção dinâmica de concorrência depende de CGO e de um compilador C. O a
 - `src/models/auth_requests.go`: contratos de autenticação extraídos.
 - `src/models/email_recipient.go`: dados do destinatário.
 - `src/models/product_image_upload.go`: contrato da resposta de upload.
-- `src/repositories/user_contact_repository.go`: consulta do destinatário.
+- `src/repositories/user_repository.go`: consulta do destinatário.
 - `src/services/review_service.go`: validação de avaliações.
 - `src/services/review_service_test.go`: regressão das validações de avaliações.
 - `src/services/shipping_service.go`: validação das faixas de CEP.
@@ -324,12 +324,12 @@ src/models/report.go
 src/models/shipping_quote.go
 src/models/shipping_range.go
 src/pagination/pagination.go
-src/repositories/account.go
-src/repositories/admin_customers.go
-src/repositories/admin_orders.go
+src/repositories/account_repository.go
+src/repositories/admin_customers_repository.go
+src/repositories/admin_orders_repository.go
 src/repositories/cart_reorder.go
 src/repositories/cart_repository.go
-src/repositories/catalog_registration.go
+src/repositories/catalog_registration_repository.go
 src/repositories/checkout_repository.go
 src/repositories/dashboard_repository.go
 src/repositories/favorites_repository.go
@@ -338,25 +338,25 @@ src/repositories/home_categories_repository.go
 src/repositories/home_products_repository.go
 src/repositories/home_reviews_repository.go
 src/repositories/home_reviews_repository_test.go
-src/repositories/order_cancellation.go
-src/repositories/order_history.go
-src/repositories/product_admin.go
+src/repositories/order_cancellation_repository.go
+src/repositories/order_history_repository.go
+src/repositories/product_admin_repository.go
 src/repositories/product_catalog_repository.go
 src/repositories/product_creation_repository.go
 src/repositories/product_image_repository.go
-src/repositories/product_images_admin.go
+src/repositories/product_images_admin_repository.go
 src/repositories/product_options_repository.go
 src/repositories/product_queries.go
 src/repositories/product_related_repository.go
 src/repositories/product_repository.go
-src/repositories/product_variants.go
+src/repositories/product_variants_repository.go
 src/repositories/promotion_campaign_repository.go
 src/repositories/promotion_list_repository.go
 src/repositories/promotion_products_repository.go
 src/repositories/report_inventory.go
-src/repositories/reports.go
-src/repositories/shipping.go
-src/repositories/shipping_ranges.go
+src/repositories/reports_repository.go
+src/repositories/shipping_repository.go
+src/repositories/shipping_ranges_repository.go
 src/repositories/subscriber_repository.go
 src/repositories/user_repository.go
 src/routes/audit_browser_test.go

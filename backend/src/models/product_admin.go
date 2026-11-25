@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// DTO p/ receber atualização do produto
 type ProductUpdateRequest struct {
 	Name              string                 `json:"name"`
 	Description       string                 `json:"description"`
@@ -17,16 +18,18 @@ type ProductUpdateRequest struct {
 }
 
 type ProductImage struct {
-	ID        int64  `json:"id"`
-	Path      string `json:"path"`
+	ID   int64  `json:"id"`
+	Path string `json:"path"`
+	// identificador opcional da variante, quando nil, a imagem não pertence a uma variante específica.
 	VariantID *int64 `json:"variant_id"`
 	Primary   bool   `json:"is_primary"`
 	Position  int    `json:"position"`
 }
 
 type ProductImageOrder struct {
-	VariantID   *int64  `json:"variant_id"`
-	IDs         []int64 `json:"ids"`
+	VariantID *int64  `json:"variant_id"`
+	IDs       []int64 `json:"ids"`
+	// identificadores na ordem anterior esperada, permitindo detectar alterações concorrentes.
 	ExpectedIDs []int64 `json:"expected_ids"`
 	PrimaryID   int64   `json:"primary_id"`
 }

@@ -1,0 +1,10 @@
+@if (!state() || state()?.loading) {
+ <span class="rating-note" role="status">Carregando avaliações…</span>
+} @else if (state()?.error) {
+ <button type="button" class="rating-retry" (click)="reviews.ensureSummary(productId(), true)">Recarregar avaliações</button>
+} @else if (state()!.count) {
+ <span class="rating-summary" role="img" [attr.aria-label]="average() + ' de 5 estrelas, ' + state()!.count + ' avaliações'">
+  <span class="stars" aria-hidden="true">★★★★★<span [style.width.%]="state()!.average * 20">★★★★★</span></span>
+  <span>{{ average() }} ({{ state()!.count }} {{ state()!.count === 1 ? 'avaliação' : 'avaliações' }})</span>
+ </span>
+} @else { <span class="rating-note">Sem avaliações</span> }

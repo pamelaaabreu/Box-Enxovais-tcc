@@ -5,16 +5,18 @@ import (
 	"context"
 )
 
+// Lista as categorias de produtos em ordem alfabética.
 func (repo ProductRepository) ListTypes(ctx context.Context) ([]models.ProductType, error) {
-	return repo.listProductOptions(ctx, `SELECT
-    id,
-    name
+	return repo.listProductOptions(ctx, `
+SELECT id ,
+name
 FROM product_types
-ORDER BY
-    name,
-    id`)
+ORDER BY name ,
+    id
+`)
 }
 
+// Lista as marcas cadastradas em ordem alfabética.
 func (repo ProductRepository) ListBrands(ctx context.Context) ([]models.ProductType, error) {
 	return repo.listProductOptions(ctx, `SELECT
     id,
@@ -25,6 +27,8 @@ ORDER BY
     id`)
 }
 
+// Função auxiliar compartilhada pelas consultas de categorias e marcas,
+// evitando a duplicação da lógica de leitura dos registros.
 func (repo ProductRepository) listProductOptions(ctx context.Context, query string) ([]models.ProductType, error) {
 	rows, err := repo.DB.QueryContext(ctx, query)
 	if err != nil {
@@ -33,12 +37,16 @@ func (repo ProductRepository) listProductOptions(ctx context.Context, query stri
 	defer rows.Close()
 
 	types := []models.ProductType{}
+
 	for rows.Next() {
 		var productType models.ProductType
+
 		if err := rows.Scan(&productType.ID, &productType.Name); err != nil {
 			return nil, err
 		}
+
 		types = append(types, productType)
 	}
+
 	return types, rows.Err()
 }

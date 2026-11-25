@@ -8,21 +8,50 @@ import (
 	"net/http"
 )
 
+// Retorna uma função responsável por consultar o frete.
 func QuoteShipping(database *sql.DB) http.HandlerFunc {
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		cep, valid := repositories.ParseShippingCEP(r.URL.Query().Get("cep"))
+
+		// Recupera e valida o CEP informado na URL.
+		cep, valid := repositories.ParseShippingCEP(
+			r.URL.Query().Get("cep"),
+		)
+
 		if !valid {
-			response.Error(w, http.StatusBadRequest, "Informe um CEP válido.")
+			response.Error(
+				w,
+				http.StatusBadRequest,
+				"Informe um CEP válido.",
+			)
+
 			return
 		}
 
-		value, err := repositories.QuoteShipping(r.Context(), database, cep)
+		// Consulta a faixa de entrega correspondente.
+		value, err := repositories.QuoteShipping(
+			r.Context(),
+			database,
+			cep,
+		)
+
 		if errors.Is(err, sql.ErrNoRows) {
-			response.Error(w, http.StatusNotFound, "Entrega indisponível para este CEP no momento.")
+			response.Error(
+				w,
+				http.StatusNotFound,
+				"Entrega indisponível para este CEP no momento.",
+			)
+
 			return
 		}
+
 		if err != nil {
-			response.Error(w, http.StatusInternalServerError, "Não foi possível consultar a entrega.")
+			response.Error(
+				w,
+				http.StatusInternalServerError,
+				"Não foi possível consultar a entrega.",
+			)
+
 			return
 		}
 

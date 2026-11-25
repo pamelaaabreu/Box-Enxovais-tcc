@@ -1,3 +1,4 @@
+import { ProductReviewService } from '../../core/services/product-review.service';
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -32,7 +33,7 @@ describe('Favorites page', () => {
   };
   const cart={cart:()=>({items:[]}),pending:()=>new Set(),feedback:()=>({}),add:jasmine.createSpy('add')};
   const recommendations=jasmine.createSpy('recommendations').and.returnValue(of([]));
-  TestBed.configureTestingModule({providers:[provideRouter([]),{provide:FavoritesService,useValue:favorites},{provide:CartService,useValue:cart},{provide:CatalogService,useValue:{adapt,getRecommendations:recommendations}}]});
+  TestBed.configureTestingModule({providers:[provideRouter([]),{provide:ProductReviewService,useValue:{summaries:signal({}),ensureSummary:()=>{}}},{provide:FavoritesService,useValue:favorites},{provide:CartService,useValue:cart},{provide:CatalogService,useValue:{adapt,getRecommendations:recommendations}}]});
   TestBed.overrideComponent(FavoritesComponent,{remove:{imports:[CatalogLayoutComponent]},add:{imports:[TestFavoritesLayoutComponent]}});
   const fixture=TestBed.createComponent(FavoritesComponent);
   return {fixture,root:fixture.nativeElement as HTMLElement,favorites,cart,recommendations};

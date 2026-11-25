@@ -1,5 +1,6 @@
 package models
 
+// config. das faixas de cep
 type ShippingRange struct {
 	ID         int64  `json:"id"`
 	Name       string `json:"name"`

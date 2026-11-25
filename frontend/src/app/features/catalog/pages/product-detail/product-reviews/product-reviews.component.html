@@ -1,0 +1,5 @@
+<section aria-labelledby="product-reviews-title"><header><h2 id="product-reviews-title">Avaliações de quem comprou</h2><a routerLink="/account" fragment="avaliacoes">Minhas avaliações</a></header>
+ @if (loading()) { <app-admin-state kind="loading" layout="compact" title="Carregando avaliações…" /> }
+ @else if (error()) { <app-admin-state kind="error" layout="compact" title="Não foi possível carregar as avaliações" actionLabel="Tentar novamente" (action)="load()" /> }
+ @else { @for (review of reviews(); track review.id) { <article><div><strong>{{ review.customerName }}</strong><span class="stars" role="img" [attr.aria-label]="review.rating + ' de 5 estrelas'">@for (n of [1,2,3,4,5]; track n) { <span aria-hidden="true">{{ n <= review.rating ? '★' : '☆' }}</span> }</span><time>{{ review.createdAt | date:'dd/MM/yyyy' }}</time></div><p>{{ review.comment || 'Sem comentário.' }}</p></article> } @empty { <app-admin-state layout="compact" title="Este produto ainda não recebeu avaliações publicadas" description="Quem comprou pode compartilhar sua opinião em Minha conta." /> } }
+</section>

@@ -574,5 +574,6 @@
         </div>
       </div>
     </section>
+    <section id="avaliacoes" role="tabpanel" aria-labelledby="tab-avaliacoes" [hidden]="activeTab() !== 'avaliacoes'"><h2><span class="section-icon"><mat-icon aria-hidden="true">rate_review</mat-icon></span>Minhas avaliações</h2><div class="section-body">@if (activeTab() === 'avaliacoes') { <app-my-reviews /> }</div></section>
   </main>
 </app-catalog-layout>

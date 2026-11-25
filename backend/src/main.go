@@ -91,6 +91,11 @@ func run() error {
 	homeRepository := repositories.HomeRepository{DB: database}
 	home := handlers.HomeHandler{Store: homeRepository}
 
+	// Avaliações específicas de produtos preservam as avaliações de experiência.
+	productReviewRepository := repositories.ProductReviewRepository{DB: database}
+	productReviewService := services.ProductReviewService{Store: productReviewRepository}
+	productReviews := handlers.ProductReviewHandler{Service: productReviewService}
+
 	// Favoritos e carrinho, incluindo recompra de pedidos.
 	favoritesRepository := repositories.FavoritesRepository{DB: database}
 	favoritesService := services.FavoritesService{Store: favoritesRepository}
@@ -145,6 +150,7 @@ func run() error {
 	routes.InitRoutesAdminOrders(mux, adminOrders)
 	routes.InitRoutesHome(mux, home)
 	routes.InitRoutesReviews(mux, home)
+	routes.InitRoutesProductReviews(mux, productReviews)
 	routes.InitRoutesShipping(mux, quoteShipping, listShippingRanges, saveShippingRange, deleteShippingRange)
 	routes.InitRoutesNewsletter(mux, newsletter)
 	routes.InitRoutesPromotions(mux, promotions, products)

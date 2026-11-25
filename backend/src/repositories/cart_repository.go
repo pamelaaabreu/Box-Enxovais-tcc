@@ -6,14 +6,13 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"math"
 )
 
 var ErrCartItemNotFound = errors.New("Item não encontrado no seu carrinho")
 var ErrCartProduct = errors.New("Produto indisponível para compra")
 var ErrCartQuantity = errors.New("Quantidade inválida ou estoque insuficiente")
 
-// Keep the existing conflict classification, with a useful current-stock message.
+// struct para erro
 type CartStockError struct{ Stock int64 }
 
 func (err CartStockError) Error() string {
@@ -25,134 +24,72 @@ func (err CartStockError) Error() string {
 	}
 	return fmt.Sprintf("Só temos %d unidades disponíveis", err.Stock)
 }
-func (err CartStockError) Unwrap() error { return ErrCartQuantity }
+
+// associa o erro específico de estoque ao erro genérico ErrCartQuantity
+func (err CartStockError) Unwrap() error {
+	return ErrCartQuantity
+}
 
 type CartRepository struct{ DB *sql.DB }
 
-// Every operation locks the user's cart, serializing adds/updates even across
-// server instances. Products are never reserved by merely placing them in a cart.
-func (repo CartRepository) Apply(ctx context.Context, userID int, operation string, id, quantity int64, variants ...int64) (models.Cart, error) {
+type CartOperation string
+
+const (
+	CartAdd         CartOperation = "add"
+	CartUpdate      CartOperation = "update"
+	CartRemove      CartOperation = "remove"
+	CartClear       CartOperation = "clear"
+	CartReorder     CartOperation = "reorder"
+	CartGet         CartOperation = "get"
+	MaxCartQuantity int64         = 1000000
+)
+
+// Apply mantém a entrada existente; os IDs são separados ao coordenar cada operação.
+func (repo CartRepository) Apply(ctx context.Context, userID int, operation CartOperation, targetID int64, quantity int64, variants ...int64) (models.Cart, error) {
 	empty := models.Cart{Items: []models.CartItem{}}
+	if len(variants) > 1 {
+		return empty, ErrCartProduct
+	}
+	var variantID *int64
+	if len(variants) == 1 && variants[0] != 0 {
+		if variants[0] < 0 {
+			return empty, ErrCartProduct
+		}
+		variantID = &variants[0]
+	}
 	tx, err := repo.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return empty, err
 	}
 	defer tx.Rollback()
-	_, err = tx.ExecContext(ctx, `INSERT INTO carts(user_id)
-VALUES($1) ON CONFLICT(user_id) DO NOTHING`, userID)
-	if err != nil {
-		return empty, err
-	}
-	var cartID int64
-	err = tx.QueryRowContext(ctx, `SELECT id
-FROM carts
-WHERE user_id = $1
-FOR UPDATE`, userID).Scan(&cartID)
+	cartID, err := ensureAndLockCart(ctx, tx, userID)
 	if err != nil {
 		return empty, err
 	}
 	switch operation {
-	case "add", "update":
-		var variantID int64
-		if len(variants) > 0 {
-			variantID = variants[0]
-		}
-		err = writeCartItem(ctx, tx, cartID, operation, id, quantity, variantID)
-	case "reorder":
-		err = reorderItems(ctx, tx, userID, cartID, id)
-	case "remove":
-		var result sql.Result
-		result, err = tx.ExecContext(ctx, `DELETE
-FROM cart_items
-WHERE id = $1
-    AND cart_id = $2`, id, cartID)
-		if err == nil {
-			n, e := result.RowsAffected()
-			if e != nil {
-				return empty, e
-			}
-			if n == 0 {
-				return empty, ErrCartItemNotFound
-			}
-		}
-	case "clear":
-		_, err = tx.ExecContext(ctx, `DELETE
-FROM cart_items
-WHERE cart_id = $1`, cartID)
-	case "get":
+	case CartAdd:
+		err = writeCartItem(ctx, tx, cartID, CartAdd, cartItemChange{ProductID: targetID, VariantID: variantID, Quantity: quantity})
+	case CartUpdate:
+		err = writeCartItem(ctx, tx, cartID, CartUpdate, cartItemChange{CartItemID: targetID, Quantity: quantity})
+	case CartReorder:
+		err = reorderItems(ctx, tx, userID, cartID, targetID)
+	case CartRemove:
+		err = removeCartItem(ctx, tx, cartID, targetID)
+	case CartClear:
+		err = clearCart(ctx, tx, cartID)
+	case CartGet:
 	default:
 		return empty, errors.New("invalid cart operation")
 	}
 	if err != nil {
 		return empty, err
 	}
-	if operation != "get" {
-		if _, err = tx.ExecContext(ctx, `UPDATE carts
-SET updated_at = NOW()
-WHERE id = $1`, cartID); err != nil {
+	if operation != CartGet {
+		if err = touchCart(ctx, tx, cartID); err != nil {
 			return empty, err
 		}
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT
-    i.id,
-    p.id,
-    COALESCE(i.variant_id, 0),
-    p.name || COALESCE(' — ' || v.size, ''),
-    COALESCE(
-                 (SELECT image_path
-                  FROM product_images
-                  WHERE product_id = p.id
-                      AND (variant_id = i.variant_id
-                           OR variant_id IS NULL)
-                  ORDER BY variant_id IS NULL, is_primary DESC NULLS LAST, id
-                  LIMIT 1),''),
-    i.quantity,
-    COALESCE(v.quantity, p.quantity),
-    p.status,
-    (COALESCE(v.price, LEAST(p.price, COALESCE(
-                                                   (SELECT MIN(pp.promotional_price)
-                                                    FROM promotion_products pp
-                                                    JOIN promotions pr
-                                                        ON pr.id = pp.promotion_id
-                                                    WHERE pp.product_id = p.id
-                                                        AND pr.status = 'active'
-                                                        AND pr.start_date <= NOW()
-                                                        AND pr.end_date >= NOW()
-                                                        AND pp.promotional_price >= 0),p.price))) * 100)::bigint
-FROM cart_items i
-JOIN products p
-    ON p.id = i.product_id
-LEFT JOIN product_variants v
-    ON v.id = i.variant_id
-WHERE i.cart_id = $1
-ORDER BY i.id`, cartID)
-	if err != nil {
-		return empty, err
-	}
-	cart := empty
-	for rows.Next() {
-		var item models.CartItem
-		var status string
-		if err = rows.Scan(&item.ID, &item.ProductID, &item.VariantID, &item.Name, &item.Image, &item.Quantity, &item.Stock, &status, &item.UnitPrice); err != nil {
-			rows.Close()
-			return empty, err
-		}
-		if item.UnitPrice < 0 || int64(item.UnitPrice) > math.MaxInt64/item.Quantity {
-			rows.Close()
-			return empty, errors.New("invalid price")
-		}
-		item.Available = status == "active" && item.Stock >= item.Quantity
-		item.Subtotal = item.UnitPrice * models.Money(item.Quantity)
-		if cart.Total > models.Money(math.MaxInt64)-item.Subtotal {
-			rows.Close()
-			return empty, errors.New("cart total overflow")
-		}
-		cart.Total += item.Subtotal
-		cart.TotalItems += item.Quantity
-		cart.Items = append(cart.Items, item)
-	}
-	err = rows.Err()
-	rows.Close()
+	cart, err := readCart(ctx, tx, cartID)
 	if err != nil {
 		return empty, err
 	}
@@ -161,84 +98,41 @@ ORDER BY i.id`, cartID)
 	}
 	return cart, nil
 }
-
-func writeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, operation string, id, quantity, variantID int64) error {
-	if quantity < 1 || quantity > 1000000 {
-		return ErrCartQuantity
+func ensureAndLockCart(ctx context.Context, tx *sql.Tx, userID int) (int64, error) {
+	if _, err := tx.ExecContext(ctx, `
+INSERT INTO carts(user_id)
+VALUES ($1) ON CONFLICT(user_id) DO NOTHING
+`, userID); err != nil {
+		return 0, err
 	}
-	productID := id
-	if operation == "update" {
-		err := tx.QueryRowContext(ctx, `SELECT
-    product_id,
-    COALESCE(variant_id, 0)
-FROM cart_items
-WHERE id = $1
-    AND cart_id = $2`, id, cartID).Scan(&productID, &variantID)
-		if errors.Is(err, sql.ErrNoRows) {
-			return ErrCartItemNotFound
-		}
-		if err != nil {
-			return err
-		}
-	}
-	var stock int64
-	var status string
-	var hasVariants bool
-	err := tx.QueryRowContext(ctx, `SELECT
-    quantity,
-    status,
-    EXISTS
-    (SELECT 1
-     FROM product_variants
-     WHERE product_id = $1)
-FROM products
-WHERE id = $1
-    FOR SHARE`, productID).Scan(&stock, &status, &hasVariants)
-	if errors.Is(err, sql.ErrNoRows) {
-		return ErrCartProduct
-	}
+	return lockCart(ctx, tx, userID)
+}
+func lockCart(ctx context.Context, tx *sql.Tx, userID int) (int64, error) {
+	var cartID int64
+	// Inclusive GET participa do bloqueio para não intercalar com checkout/esvaziamento.
+	err := tx.QueryRowContext(ctx, `SELECT id FROM carts WHERE user_id=$1 FOR UPDATE`, userID).Scan(&cartID)
+	return cartID, err
+}
+func clearCart(ctx context.Context, tx *sql.Tx, cartID int64) error {
+	_, err := tx.ExecContext(ctx, `DELETE FROM cart_items WHERE cart_id=$1`, cartID)
+	return err
+}
+func touchCart(ctx context.Context, tx *sql.Tx, cartID int64) error {
+	result, err := tx.ExecContext(ctx, `UPDATE carts SET updated_at=NOW() WHERE id=$1`, cartID)
 	if err != nil {
 		return err
 	}
-	if status != "active" || (operation == "add" && variantID == 0 && hasVariants) {
-		return ErrCartProduct
+	return requireOneRow(result)
+}
+
+func removeCartItem(ctx context.Context, tx *sql.Tx, cartID int64, cartItemID int64) error {
+	result, err := tx.ExecContext(ctx, `DELETE FROM cart_items WHERE id=$1 AND cart_id=$2`, cartItemID, cartID)
+	if err != nil {
+		return err
 	}
-	if variantID > 0 {
-		err = tx.QueryRowContext(ctx, `SELECT quantity
-FROM product_variants
-WHERE id = $1
-    AND product_id = $2
-    FOR SHARE`, variantID, productID).Scan(&stock)
-		if errors.Is(err, sql.ErrNoRows) {
-			return ErrCartProduct
-		}
-		if err != nil {
-			return err
-		}
+	err = requireOneRow(result)
+	if errors.Is(err, sql.ErrNoRows) {
+		return ErrCartItemNotFound
 	}
-	if operation == "add" {
-		var existing int64
-		err = tx.QueryRowContext(ctx, `SELECT quantity
-FROM cart_items
-WHERE cart_id = $1
-    AND product_id = $2
-    AND COALESCE(variant_id, 0) = $3`, cartID, productID, variantID).Scan(&existing)
-		if err != nil && !errors.Is(err, sql.ErrNoRows) {
-			return err
-		}
-		quantity += existing
-	}
-	if quantity > stock {
-		return CartStockError{Stock: stock}
-	}
-	if quantity > 1000000 {
-		return ErrCartQuantity
-	}
-	_, err = tx.ExecContext(ctx, `INSERT INTO cart_items(cart_id, product_id, variant_id, quantity)
-VALUES($1,$2,NULLIF($3,0),$4) ON CONFLICT(cart_id, product_id, COALESCE(variant_id, 0)) DO
-UPDATE
-SET
-    quantity = EXCLUDED.quantity,
-    updated_at = NOW()`, cartID, productID, variantID, quantity)
 	return err
 }

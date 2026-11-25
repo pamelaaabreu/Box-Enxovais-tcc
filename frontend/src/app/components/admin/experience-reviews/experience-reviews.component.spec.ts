@@ -41,4 +41,13 @@ describe('ExperienceReviewsComponent', () => {
     f.destroy();
     expect(pending.cancelled).toBeTrue();
   });
+  it('reuses moderation actions for products and sends the reviewed version timestamp', () => {
+    const fixture=TestBed.createComponent(ExperienceReviewsComponent),http=TestBed.inject(HttpTestingController);
+    http.expectOne('http://localhost:8080/admin/experience-reviews').flush([]);
+    fixture.componentInstance.changeKind('product');
+    const product={id:7,productId:1,productName:'Edredom',rating:5,comment:'Ótimo',publicationConsent:true,status:'pending',createdAt:'2026-11-24T00:00:00Z',updatedAt:'2026-11-24T00:00:00Z'};
+    http.expectOne('http://localhost:8080/admin/product-reviews').flush([product]);fixture.detectChanges();expect(fixture.nativeElement.textContent).toContain('Edredom');
+    fixture.componentInstance.moderate(fixture.componentInstance.reviews()[0],'approved');
+    const request=http.expectOne('http://localhost:8080/admin/product-reviews/7');expect(request.request.body).toEqual({status:'approved',expectedUpdatedAt:product.updatedAt});request.flush({});http.expectOne('http://localhost:8080/admin/product-reviews').flush([{...product,status:'approved'}]);
+  });
 });

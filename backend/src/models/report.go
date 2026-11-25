@@ -1,10 +1,15 @@
 package models
 
 type ReportFilter struct {
-	Kind, Search, Status, Sort string
-	Page, PageSize             int
-	Period                     DashboardPeriod
+	Kind     string
+	Search   string
+	Status   string
+	Sort     string
+	Page     int
+	PageSize int
+	Period   DashboardPeriod
 }
+
 type ReportRow struct {
 	ID                    int64   `json:"id"`
 	Name                  string  `json:"name"`
@@ -26,6 +31,7 @@ type ReportRow struct {
 	Share                 float64 `json:"share"`
 	Archived              bool    `json:"archived"`
 }
+
 type Report struct {
 	Rows     []ReportRow      `json:"rows"`
 	Total    int64            `json:"total"`

@@ -14,19 +14,9 @@ func (repo HomeRepository) Highlights(ctx context.Context) ([]models.Product, bo
 SELECT
 ` + storeProductColumns + `,
 		       ` + storePromotionalPrice + storeProductSource + `
-JOIN
-    (SELECT
-         i.product_id,
-         SUM(i.quantity)::bigint AS sold
-     FROM checkout_order_items i
-     JOIN checkout_orders o
-         ON o.id = i.order_id
-     WHERE o.status = 'simulated_approved'
-         AND o.stock_debited
-     GROUP BY i.product_id) AS sales ON sales.product_id = p.id
+JOIN(SELECT i.product_id, SUM(i.quantity)::bigint AS sold FROM checkout_order_items i JOIN checkout_orders o ON o.id = i.order_id WHERE o.status = 'simulated_approved' AND o.stock_debited GROUP BY i.product_id) AS sales ON sales.product_id = p.id
 WHERE p.status = 'active'
-ORDER BY
-    sales.sold DESC,
+ORDER BY sales.sold DESC,
     p.id
 LIMIT 6
 `
@@ -105,45 +95,39 @@ SELECT
         ELSE 0
     END AS repeats_image
 ` + storeProductSource + `
-WHERE p.status = 'active' ), ranked AS
-        (SELECT
-             candidates.*,
-             ROW_NUMBER() OVER (PARTITION BY home_category
-                                ORDER BY repeats_image, id) AS category_position
-         FROM candidates
-         WHERE quantity > 0)
+WHERE p.status = 'active'),
+ranked AS (
     SELECT
-        id,
-        name,
-        description,
-        care_instructions,
-        measurements,
-        price,
-        quantity,
-        status,
-        product_type_id,
-        category_name,
-        image_paths,
-        variants,
-        brand_id,
-        brand_name,
-        purchase_summary,
-        created_at,
-        updated_at,
-        sku,
-        promotional_price
-    FROM ranked
-ORDER BY
-    category_position,
-    CASE home_category
-        WHEN 'Cama' THEN 1
-        WHEN 'Travesseiros' THEN 2
-        WHEN 'Toalhas' THEN 3
-        WHEN 'Almofadas' THEN 4
-        WHEN 'Mesa' THEN 5
-        WHEN 'Decoração' THEN 6
-        ELSE 7
-    END,
+        candidates.*,
+        ROW_NUMBER() OVER (PARTITION BY home_category
+    ORDER BY repeats_image,
+        id) AS category_position
+    FROM candidates
+    WHERE quantity > 0
+)
+SELECT
+    id,
+    name,
+    description,
+    care_instructions,
+    measurements,
+    price,
+    quantity,
+    status,
+    product_type_id,
+    category_name,
+    image_paths,
+    variants,
+    brand_id,
+    brand_name,
+    purchase_summary,
+    created_at,
+    updated_at,
+    sku,
+    promotional_price
+FROM ranked
+ORDER BY category_position,
+    CASE home_category WHEN 'Cama' THEN 1 WHEN 'Travesseiros' THEN 2 WHEN 'Toalhas' THEN 3 WHEN 'Almofadas' THEN 4 WHEN 'Mesa' THEN 5 WHEN 'Decoração' THEN 6 ELSE 7 END,
     id
 LIMIT 4
 `

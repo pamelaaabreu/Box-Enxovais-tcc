@@ -1,5 +1,11 @@
 package models
 
+const (
+	OrderStatusApproved    = "simulated_approved"
+	OrderStatusCancelled   = "cancelled"
+	ShippingMethodDelivery = "delivery"
+)
+
 type ShippingAddress struct {
 	Recipient    string `json:"recipient"`
 	ZipCode      string `json:"zipCode"`
@@ -11,15 +17,16 @@ type ShippingAddress struct {
 	State        string `json:"state"`
 }
 
+// DTO p/ finalizar a compra
 type CheckoutRequest struct {
 	AddressID          int64           `json:"addressId"`
 	SaveAddress        bool            `json:"saveAddress"`
 	ContactPhone       string          `json:"contactPhone"`
-	RequestKey         string          `json:"requestKey"`
+	RequestKey         string          `json:"requestKey"` // evita que uma solicitação seja processada mais de uma vez.
 	Address            ShippingAddress `json:"address"`
 	PaymentMethod      string          `json:"paymentMethod"`
 	Installments       *int            `json:"installments"`
-	ExpectedTotalCents int64           `json:"expectedTotalCents"`
+	ExpectedTotalCents int64           `json:"expectedTotalCents"` // valor que o cliente paga, evitando divergência de valor.
 }
 
 type OrderCharges struct {

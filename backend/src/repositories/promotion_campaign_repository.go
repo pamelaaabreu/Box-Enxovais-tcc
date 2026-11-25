@@ -6,21 +6,20 @@ import (
 	"database/sql"
 	"errors"
 	"math"
+	"sort"
 )
 
 func (repo PromotionRepository) Create(ctx context.Context, request models.CreatePromotionRequest) (int, error) {
 	var id int
 	err := repo.DB.QueryRowContext(ctx, `
-INSERT INTO promotions (
-    name,
-    status,
-    start_date,
-    end_date,
-    description,
-    image_path,
-    home_featured
-)
-VALUES ($1, $2, $3, $4, $5, $6, $7)
+INSERT INTO promotions(name, status, start_date, end_date, description, image_path, home_featured)
+VALUES ($1,
+$2,
+$3,
+$4,
+$5,
+$6,
+$7)
 RETURNING id
 `, request.Name, request.Status, request.StartDate, request.EndDate, request.Description, request.ImagePath, request.HomeFeatured).Scan(&id)
 	return id, err
@@ -29,13 +28,16 @@ RETURNING id
 func (repo PromotionRepository) FindActiveID(ctx context.Context, name string) (int, error) {
 	var id int
 	err := repo.DB.QueryRowContext(ctx, `
-SELECT id
+SELECT
+    id
 FROM promotions
 WHERE name = $1
     AND status = 'active'
 `, name).Scan(&id)
 	return id, err
 }
+
+const maxCampaignParticipants = 100
 
 var ErrCampaignInvalid = errors.New("invalid campaign participants")
 
@@ -52,11 +54,14 @@ SELECT pg_advisory_xact_lock(hashtext(lower($1)))
 	}
 	var duplicate bool
 	if err = tx.QueryRowContext(ctx, `
-SELECT EXISTS
-    (SELECT 1
-     FROM promotions
-     WHERE lower(name) = lower($1)
-         AND id <> $2)
+SELECT
+    EXISTS (
+    SELECT
+        1
+    FROM promotions
+    WHERE lower(name) = lower($1)
+        AND id <> $2
+)
 `, request.Name, id).Scan(&duplicate); err != nil {
 		return 0, err
 	}
@@ -65,29 +70,26 @@ SELECT EXISTS
 	}
 	if id == 0 {
 		err = tx.QueryRowContext(ctx, `
-INSERT INTO promotions (
-    name,
-    status,
-    start_date,
-    end_date,
-    description,
-    image_path,
-    home_featured
-)
-VALUES ($1, $2, $3, $4, $5, $6, $7)
+INSERT INTO promotions(name, status, start_date, end_date, description, image_path, home_featured)
+VALUES ($1,
+$2,
+$3,
+$4,
+$5,
+$6,
+$7)
 RETURNING id
 `, request.Name, request.Status, request.StartDate, request.EndDate, request.Description, request.ImagePath, request.HomeFeatured).Scan(&id)
 	} else {
 		result, e := tx.ExecContext(ctx, `
 UPDATE promotions
-SET
-    name = $1,
-    status = $2,
-    start_date = $3,
-    end_date = $4,
-    description = $5,
-    image_path = $6,
-    home_featured = $7
+SET name = $1,
+status = $2,
+start_date = $3,
+end_date = $4,
+description = $5,
+image_path = $6,
+home_featured = $7
 WHERE id = $8
 `, request.Name, request.Status, request.StartDate, request.EndDate, request.Description, request.ImagePath, request.HomeFeatured, id)
 		if e != nil {
@@ -105,7 +107,7 @@ WHERE id = $8
 		return 0, err
 	}
 	if request.Products != nil {
-		if len(*request.Products) > 100 {
+		if len(*request.Products) > maxCampaignParticipants {
 			return 0, ErrCampaignInvalid
 		}
 		if _, err = tx.ExecContext(ctx, `
@@ -116,7 +118,9 @@ WHERE promotion_id = $1
 			return 0, err
 		}
 		seen := map[int]bool{}
-		for _, item := range *request.Products {
+		items := append([]models.PromotionParticipant{}, (*request.Products)...)
+		sort.Slice(items, func(i int, j int) bool { return items[i].ProductID < items[j].ProductID })
+		for _, item := range items {
 			if item.ProductID <= 0 || seen[item.ProductID] {
 				return 0, ErrCampaignInvalid
 			}
@@ -126,14 +130,15 @@ WHERE promotion_id = $1
 			err = tx.QueryRowContext(ctx, `
 SELECT
     p.price,
-    EXISTS
-    (SELECT 1
-     FROM product_variants v
-     WHERE v.product_id = p.id)
+    EXISTS (
+    SELECT
+        1
+    FROM product_variants v
+    WHERE v.product_id = p.id
+)
 FROM products p
 WHERE id = $1
-    AND status = 'active'
-    FOR SHARE
+    AND status = 'active' FOR SHARE
 `, item.ProductID).Scan(&base, &variants)
 			if errors.Is(err, sql.ErrNoRows) {
 				return 0, ErrCampaignInvalid
@@ -144,13 +149,15 @@ WHERE id = $1
 			value := base
 			if item.PromotionalPrice != nil {
 				value = *item.PromotionalPrice
-				if math.IsNaN(value) || math.IsInf(value, 0) || value < 0 || value > base || math.Abs(value*100-math.Round(value*100)) > 0.00001 || (variants && value < base) {
+				if !validCampaignPrice(value, base, variants) {
 					return 0, ErrCampaignInvalid
 				}
 			}
 			if _, err = tx.ExecContext(ctx, `
-INSERT INTO promotion_products (promotion_id, product_id, promotional_price)
-VALUES ($1, $2, $3)
+INSERT INTO promotion_products(promotion_id, product_id, promotional_price)
+VALUES ($1,
+$2,
+$3)
 `, id, item.ProductID, value); err != nil {
 				return 0, err
 			}
@@ -160,4 +167,8 @@ VALUES ($1, $2, $3)
 		return 0, err
 	}
 	return id, nil
+}
+
+func validCampaignPrice(value float64, base float64, variants bool) bool {
+	return !math.IsNaN(value) && !math.IsInf(value, 0) && value >= 0 && value <= base && math.Abs(value*100-math.Round(value*100)) <= 0.00001 && (!variants || value == base)
 }

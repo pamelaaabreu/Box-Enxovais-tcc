@@ -1,11 +1,15 @@
 <section class="registrations">
   <app-admin-page-header
-    title="Avaliações de compra"
+    title="Avaliações"
     description="Modere opiniões vinculadas a compras concluídas."
     icon="rate_review"
     [breadcrumb]="[{ label: 'Avaliações de compra' }]"
   />
 
+  <div class="review-kind" role="group" aria-label="Tipo de avaliação">
+    <button type="button" [attr.aria-pressed]="kind() === 'purchase'" [disabled]="pending() !== 0" (click)="changeKind('purchase')">Experiência de compra</button>
+    <button type="button" [attr.aria-pressed]="kind() === 'product'" [disabled]="pending() !== 0" (click)="changeKind('product')">Produtos</button>
+  </div>
   @if (loading()) {
     <app-admin-state kind="loading" title="Carregando avaliações…" />
   } @else if (error()) {
@@ -29,7 +33,7 @@
             <header class="review-heading">
               <div class="review-identity-text">
                 <h3 [id]="'review-title-' + review.id">
-                  Pedido #{{ review.orderId }}
+                  {{ review.product ? review.product.productName : 'Pedido #' + review.orderId }}
                 </h3>
                 <span class="review-date"
                   >Avaliado em {{ review.createdAt | date: "dd/MM/yyyy" }}</span

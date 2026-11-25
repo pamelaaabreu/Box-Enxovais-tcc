@@ -60,8 +60,9 @@ func TestHomePostgres(t *testing.T) {
 	}
 	exec(`INSERT INTO checkout_orders(user_id,request_key,address,payment_method,status,total_cents,stock_debited) VALUES(1,'valid','{}','pix','simulated_approved',10000,true),(1,'cancelled','{}','pix','cancelled',10000,false),(1,'not-debited','{}','pix','simulated_approved',10000,false);INSERT INTO checkout_order_items(order_id,product_id,name,quantity,unit_price_cents,variant_id) VALUES(1,2,'Casal',2,2000,1),(1,2,'Queen',3,4000,2),(1,1,'Outro',1,1000,NULL),(1,3,'Inativo',100,5000,NULL),(2,1,'Cancelado',100,1000,NULL),(3,1,'Sem baixa',100,1000,NULL);`)
 	for _, test := range []struct {
-		user, total int
-		filters     models.OrderFilters
+		user    int
+		total   int
+		filters models.OrderFilters
 	}{{1, 3, models.OrderFilters{}}, {1, 1, models.OrderFilters{CancelledOnly: true}}, {1, 1, models.OrderFilters{Search: "#1"}}, {1, 1, models.OrderFilters{Search: "Casal"}}, {2, 0, models.OrderFilters{}}} {
 		n, e := (repositories.CheckoutRepository{DB: d}).CountOrders(context.Background(), test.user, test.filters)
 		if e != nil || n != test.total {

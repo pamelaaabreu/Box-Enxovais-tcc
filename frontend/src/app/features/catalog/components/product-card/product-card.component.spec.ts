@@ -1,3 +1,4 @@
+import { ProductReviewService } from '../../../../core/services/product-review.service';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -24,6 +25,7 @@ describe('ProductCardComponent', () => {
     const toggle = jasmine.createSpy('toggle').and.callFake(() => isFavorite.update(value => !value));
     TestBed.configureTestingModule({ providers: [
       provideRouter([]),
+      {provide:ProductReviewService,useValue:{summaries:signal({}),ensureSummary:()=>{}}},
       { provide: CartService, useValue: { pending, cart: () => ({ items: items() }), add, feedback } },
       { provide: FavoritesService, useValue: {
         pending: () => new Set(), authenticated: () => true, loading: () => false,
@@ -54,7 +56,8 @@ describe('ProductCardComponent', () => {
       fixture.componentRef.setInput(variation, true);
       fixture.detectChanges();
       const sku = host.querySelector<HTMLElement>('.product-sku')!;
-      expect(host.querySelector('h2')?.nextElementSibling).toBe(sku);
+      expect(host.querySelector('h2')?.nextElementSibling?.tagName).toBe('APP-PRODUCT-RATING');
+      expect(host.querySelector('app-product-rating')?.nextElementSibling).toBe(sku);
       expect(sku.textContent).toBe('SKU: BX-CAM-012');
       expect(getComputedStyle(sku).whiteSpace).toBe('nowrap');
       fixture.componentRef.setInput(variation, false);

@@ -1,3 +1,5 @@
+import { ProductReviewService } from '../../../../core/services/product-review.service';
+import { signal } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideNgxMask } from 'ngx-mask';
 import { CustomAlertService } from '../../../../core/services/custom-alert.service';
@@ -57,6 +59,7 @@ describe('Product stock experience',()=>{
  beforeEach(()=>{
   product={id:42,name:'Produto',stock:10,quantity:10,status:'active',price:129.9,images:[],variants:[],category:{id:1,name:'Cama',slug:'cama'},measurements:{}} as unknown as CatalogProduct;
   TestBed.configureTestingModule({imports:[NoopAnimationsModule],providers:[provideRouter([]),provideHttpClient(),provideHttpClientTesting(),provideNgxMask(),
+ {provide:ProductReviewService,useValue:{summaries:signal({}),ensureSummary:()=>{},changed:new Subject<void>(),publicReviews:()=>of([])}},
    {provide:AuthService,useValue:{getToken:()=> 'test',userChanged:new Subject<void>()}},
    {provide:CatalogService,useValue:{getProductBySlug:()=>of(product),getRecommendations:()=>of([])}},
   ]});
@@ -216,7 +219,8 @@ describe('Product stock experience',()=>{
   const fixture = render();
   const page = fixture.componentInstance;
   expect(fixture.nativeElement.querySelector('#product-title').textContent.trim()).toBe('Jogo de Cama');
-  expect(fixture.nativeElement.querySelector('#product-title').nextElementSibling.tagName).toBe('APP-PRODUCT-PRICE');
+  expect(fixture.nativeElement.querySelector('#product-title').nextElementSibling.tagName).toBe('APP-PRODUCT-RATING');
+  expect(fixture.nativeElement.querySelector('app-product-price')).not.toBeNull();
   expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('Percal de algodão');
   expect(fixture.nativeElement.querySelector('.detail-panel').textContent).not.toContain('Este produto faz parte do catálogo da marca');
   expect(fixture.nativeElement.querySelector('.purchase-description').textContent).toContain('Folhagens');
@@ -234,7 +238,8 @@ describe('Product stock experience',()=>{
   product.brand_name = 'Box Enxovais';
   const fixture = render();
   expect(fixture.nativeElement.querySelector('#product-title').textContent.trim()).toBe('Edredom');
-  expect(fixture.nativeElement.querySelector('#product-title').nextElementSibling.tagName).toBe('APP-PRODUCT-PRICE');
+  expect(fixture.nativeElement.querySelector('#product-title').nextElementSibling.tagName).toBe('APP-PRODUCT-RATING');
+  expect(fixture.nativeElement.querySelector('app-product-price')).not.toBeNull();
   expect(fixture.nativeElement.querySelector('.detail-panel').textContent).toContain('100% algodão');
   expect(fixture.nativeElement.querySelector('.purchase-description')).toBeNull();
  });

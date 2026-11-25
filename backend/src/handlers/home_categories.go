@@ -6,10 +6,17 @@ import (
 )
 
 func (h HomeHandler) Categories(w http.ResponseWriter, r *http.Request) {
+	if !allowMethods(w, r, http.MethodGet) {
+		return
+	}
+
+	// Recupera as categorias e suas imagens representativas.
 	v, e := h.Store.Categories(r.Context())
+
 	if e != nil {
 		response.Error(w, 500, "Não foi possível carregar as categorias.")
 		return
 	}
+
 	response.JSON(w, 200, v)
 }

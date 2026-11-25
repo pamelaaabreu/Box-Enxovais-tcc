@@ -13,6 +13,14 @@ import (
 
 // Recovery state is process-local. All transitions share one lock, including
 // exchanging a code, resending and committing a password update.
+const (
+	resetCodeAttempts   = 5
+	resetCodeLifetime   = 5 * time.Minute
+	resetTokenLifetime  = 10 * time.Minute
+	resetResendCooldown = 30 * time.Second
+	resetCleanupGrace   = 10 * time.Minute
+)
+
 var recoveryMu sync.Mutex
 var verificationCodes = make(map[string]verificationData)
 var pendingCodeEmails = make(map[string]bool)
@@ -53,12 +61,12 @@ func SendPasswordResetCode(email string, send func(string) error) error {
 	recoveryMu.Lock()
 	now := time.Now()
 	for key, data := range verificationCodes {
-		if now.After(data.ExpiresAt.Add(10 * time.Minute)) {
+		if now.After(data.ExpiresAt.Add(resetCleanupGrace)) {
 			delete(verificationCodes, key)
 		}
 	}
 	for key, data := range passwordResetTokens {
-		if now.After(data.ExpiresAt.Add(10 * time.Minute)) {
+		if now.After(data.ExpiresAt.Add(resetCleanupGrace)) {
 			delete(passwordResetTokens, key)
 		}
 	}
@@ -80,8 +88,8 @@ func SendPasswordResetCode(email string, send func(string) error) error {
 	recoveryMu.Lock()
 	defer recoveryMu.Unlock()
 	verificationCodes[email] = verificationData{
-		Hash: sha256.Sum256([]byte(code)), ExpiresAt: time.Now().Add(5 * time.Minute),
-		ResendAt: time.Now().Add(30 * time.Second),
+		Hash: sha256.Sum256([]byte(code)), ExpiresAt: time.Now().Add(resetCodeLifetime),
+		ResendAt: time.Now().Add(resetResendCooldown),
 	}
 	invalidateResetTokens(email)
 	return nil
@@ -99,7 +107,7 @@ func ExchangeVerificationCode(email, code string) (string, VerificationCodeStatu
 	if !data.ExpiresAt.After(time.Now()) {
 		return "", VerificationCodeExpired, nil
 	}
-	if data.Attempts >= 5 {
+	if data.Attempts >= resetCodeAttempts {
 		return "", VerificationCodeInvalid, nil
 	}
 	hash := sha256.Sum256([]byte(strings.ToUpper(strings.TrimSpace(code))))
@@ -113,11 +121,14 @@ func ExchangeVerificationCode(email, code string) (string, VerificationCodeStatu
 		return "", VerificationCodeInvalid, err
 	}
 	// Retain the resend deadline while preventing reuse of the verified code.
-	data.Attempts = 5
+	data.Attempts = resetCodeAttempts
 	verificationCodes[email] = data
 	return token, VerificationCodeValid, nil
 }
 
 func normalizeVerificationEmail(email string) string {
-	return strings.ToLower(strings.TrimSpace(email))
+	return normalizeEmail(email)
 }
+
+// Compartilhado com o cabeçalho HTTP, sem alterar a política de reenvio.
+const ResetResendCooldown = resetResendCooldown

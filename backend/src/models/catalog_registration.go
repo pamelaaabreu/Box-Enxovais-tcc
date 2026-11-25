@@ -2,5 +2,5 @@ package models
 
 type CatalogRegistration struct {
 	ProductType
-	ProductCount int64 `json:"productCount"`
+	ProductCount int64 `json:"productCount"` // quantidade de produtos vinculados ao registro.
 }

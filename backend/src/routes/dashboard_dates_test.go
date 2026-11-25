@@ -81,14 +81,12 @@ func TestDashboardDateFiltersPostgres(t *testing.T) {
 			if err := json.Unmarshal(recorder.Body.Bytes(), &result); err != nil {
 				t.Fatal(err)
 			}
-			var points []struct {
-				Bucket                          string
-				Orders, RevenueCents, Customers int64
+			points := result.Series
+			type totals struct {
+				orders    int64
+				revenue   int64
+				customers int64
 			}
-			if err := json.Unmarshal(result.Series, &points); err != nil {
-				t.Fatal(err)
-			}
-			type totals struct{ orders, revenue, customers int64 }
 			expected := map[string]totals{}
 			for day := result.Period.From.In(location); day.Before(result.Period.Until); day = day.AddDate(0, 0, 1) {
 				key := day.Format(time.DateOnly)

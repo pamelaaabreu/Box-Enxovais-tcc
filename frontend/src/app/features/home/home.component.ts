@@ -1,3 +1,4 @@
+import { TestimonialsComponent } from '../testimonials/testimonials.component';
 import { TrustBarComponent } from '../../components/trust-bar/trust-bar.component';
 import {
   Component,
@@ -32,6 +33,7 @@ import { NewsletterComponent } from '../newsletter/newsletter.component';
     ShopByCategoryComponent,
     CampaignComponent,
     NewsletterComponent,
+    TestimonialsComponent,
   ],
   styleUrl: './home.component.scss',
   encapsulation: ViewEncapsulation.Emulated,

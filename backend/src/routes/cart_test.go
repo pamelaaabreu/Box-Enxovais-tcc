@@ -195,7 +195,11 @@ func TestCartPostgres(t *testing.T) {
 		if _, err := conn.Exec(`UPDATE products SET quantity=$1 WHERE id=1`, test.stock); err != nil {
 			t.Fatal(err)
 		}
-		for _, request := range []struct{ method, path, body string }{{"POST", "/cart/items", `{"productId":1,"quantity":1}`}, {"PATCH", fmt.Sprintf("/cart/items/%d", cart.Items[0].ID), `{"quantity":6}`}} {
+		for _, request := range []struct {
+			method string
+			path   string
+			body   string
+		}{{"POST", "/cart/items", `{"productId":1,"quantity":1}`}, {"PATCH", fmt.Sprintf("/cart/items/%d", cart.Items[0].ID), `{"quantity":6}`}} {
 			r := httptest.NewRequest(request.method, request.path, strings.NewReader(request.body))
 			r.Header.Set("Authorization", "Bearer "+tokens[1])
 			w := httptest.NewRecorder()

@@ -30,9 +30,10 @@ func routeToken(t *testing.T, role string) string {
 func TestRouteHelpers(t *testing.T) {
 	t.Setenv("JWT_SECRET", "route-registration-test-only")
 	for _, registration := range []struct {
-		name                string
-		register            func(*http.ServeMux, string, http.HandlerFunc)
-		anonymous, customer int
+		name      string
+		register  func(*http.ServeMux, string, http.HandlerFunc)
+		anonymous int
+		customer  int
 	}{
 		{"public", publicRoute, 204, 204},
 		{"authenticated", authenticatedRoute, 401, 204},
@@ -96,6 +97,7 @@ func TestAllRouteRegistrations(t *testing.T) {
 	InitRoutesAdminOrders(mux, handlers.AdminOrdersHandler{})
 	InitRoutesHome(mux, home)
 	InitRoutesReviews(mux, home)
+	InitRoutesProductReviews(mux, handlers.ProductReviewHandler{})
 	InitRoutesNewsletter(mux, handlers.NewsletterHandler{})
 	InitRoutesPromotions(mux, handlers.PromotionHandler{}, products)
 	noContent := func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(204) }
@@ -130,7 +132,10 @@ func TestAllRouteRegistrations(t *testing.T) {
 			t.Errorf("%s matched %q", pattern, matched)
 		}
 	}
-	for _, test := range []struct{ path, pattern string }{
+	for _, test := range []struct {
+		path    string
+		pattern string
+	}{
 		{"/products/42", "GET /products/"}, {"/api/promotions/42", "GET /api/promotions/"}, {"/uploads/example.jpg", "/uploads/"},
 	} {
 		_, matched := mux.Handler(httptest.NewRequest("GET", test.path, nil))

@@ -24,7 +24,10 @@ func publicRoute(mux *http.ServeMux, pattern string, handler http.HandlerFunc) {
 }
 
 func authenticatedRoute(mux *http.ServeMux, pattern string, handler http.HandlerFunc) {
-	publicRoute(mux, pattern, middlewares.AuthMiddleware(handler))
+	publicRoute(mux, pattern, func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-store")
+		middlewares.AuthMiddleware(handler)(w, r)
+	})
 }
 
 func adminRoute(mux *http.ServeMux, pattern string, handler http.HandlerFunc) {

@@ -1,48 +1,72 @@
 package services
 
 import (
-	"backend/src/models"
 	"context"
 	"errors"
-	"regexp"
 	"strings"
+
+	"backend/src/models"
 
 	"github.com/lib/pq"
 )
 
 var ErrProductQuantity = errors.New("Informe uma quantidade em estoque inteira entre 0 e 2147483647")
+var ErrProductSKU = errors.New("Não foi possível gerar o código do produto. Tente novamente.")
+var ErrProductSKUConflict = ErrProductSKU
 
-var ErrProductSKU = errors.New("Informe um SKU de 3 a 32 caracteres, usando letras, números e hífens.")
-var ErrProductSKUConflict = errors.New("Este SKU já está cadastrado. Informe outro código.")
-var productSKUFormat = regexp.MustCompile(`^[A-Z0-9]+(-[A-Z0-9]+)*$`)
+const maxSKUGenerationAttempts = 3
 
 func (service ProductService) Create(ctx context.Context, product models.Product, quantity *int32) (int, error) {
+	product.Name = strings.TrimSpace(product.Name)
+	categoryID := 0
+	if product.ProductTypeID != nil {
+		categoryID = *product.ProductTypeID
+	}
+	description := ""
+	if product.Description != nil {
+		description = *product.Description
+	}
+	care := ""
+	if product.CareInstructions != nil {
+		care = *product.CareInstructions
+	}
+	if !validProductDetails(product.Name, description, care, categoryID, product.BrandID, product.Status, product.Measurements) {
+		return 0, ErrProductDetails
+	}
+	product.Variants = normalizeVariants(product.Variants)
 	if err := validateVariants(product.Variants, true); err != nil {
 		return 0, err
 	}
 	if len(product.Variants) > 0 {
-		total := int32(0)
+		var total int64
 		product.Price = product.Variants[0].Price
-		for _, v := range product.Variants {
-			total += int32(v.Stock)
-			if v.Price < product.Price {
-				product.Price = v.Price
+		for _, variant := range product.Variants {
+			total += int64(variant.Stock)
+			if variant.Price < product.Price {
+				product.Price = variant.Price
 			}
 		}
-		quantity = &total
+		value := int32(total)
+		quantity = &value
 	}
 	if quantity == nil || *quantity < 0 {
 		return 0, ErrProductQuantity
 	}
 	product.Quantity = int(*quantity)
-	product.SKU = strings.ToUpper(strings.TrimSpace(product.SKU))
-	if product.SKU != "" && (len(product.SKU) < 3 || len(product.SKU) > 32 || !productSKUFormat.MatchString(product.SKU)) {
-		return 0, ErrProductSKU
+	if !validProductPrice(product.Price) {
+		return 0, ErrProductDetails
 	}
-	id, err := service.Store.Create(ctx, product)
-	var databaseError *pq.Error
-	if errors.As(err, &databaseError) && databaseError.Code == "23505" && databaseError.Constraint == "products_sku_key" {
-		return 0, ErrProductSKUConflict
+	// O trigger/sequence da migration 48 é o único gerador oficial.
+	product.SKU = ""
+	for attempt := 0; attempt < maxSKUGenerationAttempts; attempt++ {
+		id, err := service.Store.Create(ctx, product)
+		var pg *pq.Error
+		if !errors.As(err, &pg) || pg.Code != "23505" || pg.Constraint != "products_sku_key" {
+			return id, err
+		}
+		if err = ctx.Err(); err != nil {
+			return 0, err
+		}
 	}
-	return id, err
+	return 0, ErrProductSKU
 }

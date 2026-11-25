@@ -28,3 +28,25 @@ func TestInstallmentArithmetic(t *testing.T) {
 		}
 	}
 }
+
+func TestNegativeInstallmentAmount(t *testing.T) {
+	if _, err := SplitInstallments(-1, 1); err != ErrNegativeAmount {
+		t.Fatalf("erro: %v", err)
+	}
+	if _, err := SplitInstallments(-1, 0); err != ErrInstallments {
+		t.Fatalf("quantidade inválida: %v", err)
+	}
+	for count := 1; count <= MaxInstallments; count++ {
+		amounts, err := SplitInstallments(Money(9223372036854775807), count)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var total Money
+		for _, amount := range amounts {
+			total += amount
+		}
+		if total != Money(9223372036854775807) {
+			t.Fatal("perda de centavos")
+		}
+	}
+}

@@ -7,7 +7,8 @@ type OrderFilters struct {
 	Search        string
 	CancelledOnly bool
 	Oldest        bool
-	From, Until   *time.Time
+	From          *time.Time
+	Until         *time.Time
 }
 
 type OrderHistoryEntry struct {

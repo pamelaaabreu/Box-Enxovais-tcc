@@ -387,3 +387,5 @@ app-pagination {
     transition: none;
   }
 }
+
+.review-kind{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.review-kind button{padding:10px 16px;border:1px solid #a9b59c;border-radius:24px;background:transparent;font:500 13px Montserrat,sans-serif;color:#3d4836;cursor:pointer}.review-kind button[aria-pressed="true"]{background:#3d4836;color:white}

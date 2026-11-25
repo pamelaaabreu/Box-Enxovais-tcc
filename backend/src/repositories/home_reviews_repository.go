@@ -14,7 +14,8 @@ func (repo HomeRepository) Reviews(ctx context.Context, admin bool) ([]models.Ex
 WHERE r.status = 'approved'
     AND r.publication_consent
     AND o.status = 'simulated_approved'
-    AND o.stock_debited`
+    AND o.stock_debited
+`
 	if admin {
 		visibilityClause = ""
 	}
@@ -31,8 +32,7 @@ SELECT
     r.status,
     r.created_at
 FROM purchase_experience_reviews r
-JOIN checkout_orders o
-    ON o.id = r.order_id
+JOIN checkout_orders o ON o.id = r.order_id
 ` + visibilityClause + `
 ORDER BY
     r.created_at DESC,
@@ -62,7 +62,8 @@ func (repo HomeRepository) OrderReview(ctx context.Context, userID int, orderID 
 	var eligible bool
 	err := repo.DB.QueryRowContext(ctx, `
 SELECT
-    status = 'simulated_approved' AND stock_debited
+    status = 'simulated_approved'
+    AND stock_debited
 FROM checkout_orders
 WHERE id = $1
     AND user_id = $2
@@ -108,11 +109,11 @@ func (repo HomeRepository) CreateReview(ctx context.Context, userID int, orderID
 	var eligible bool
 	err = tx.QueryRowContext(ctx, `
 SELECT
-    status = 'simulated_approved' AND stock_debited
+    status = 'simulated_approved'
+    AND stock_debited
 FROM checkout_orders
 WHERE id = $1
-    AND user_id = $2
-FOR UPDATE
+    AND user_id = $2 FOR UPDATE
 `, orderID, userID).Scan(&eligible)
 	if err != nil {
 		return err
@@ -121,25 +122,23 @@ FOR UPDATE
 		return sql.ErrNoRows
 	}
 	result, err := tx.ExecContext(ctx, `
-INSERT INTO purchase_experience_reviews (
-    order_id,
-    user_id,
-    overall,
-    navigation,
-    service,
-    experience,
-    comment,
-    publication_consent
-)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-ON CONFLICT (order_id) DO NOTHING
+INSERT INTO purchase_experience_reviews(order_id, user_id, overall, navigation, service, experience, comment, publication_consent)
+VALUES ($1,
+$2,
+$3,
+$4,
+$5,
+$6,
+$7,
+$8) ON CONFLICT(order_id) DO NOTHING
 `, orderID, userID, review.Overall, review.Navigation, review.Service, review.Experience, review.Comment, review.Consent)
 	if err != nil {
 		return err
 	}
-	affectedRows, _ := result.RowsAffected()
-	if affectedRows == 0 {
+	if err = requireOneRow(result); errors.Is(err, sql.ErrNoRows) {
 		return ErrReviewDuplicate
+	} else if err != nil {
+		return err
 	}
 	return tx.Commit()
 }
@@ -147,18 +146,13 @@ ON CONFLICT (order_id) DO NOTHING
 func (repo HomeRepository) Moderate(ctx context.Context, reviewID int64, moderatorID int, status string) error {
 	result, err := repo.DB.ExecContext(ctx, `
 UPDATE purchase_experience_reviews
-SET
-    status = $1,
-    moderated_at = now(),
-    moderated_by = $2
+SET status = $1,
+moderated_at = now(),
+moderated_by = $2
 WHERE id = $3
 `, status, moderatorID, reviewID)
 	if err != nil {
 		return err
 	}
-	affectedRows, _ := result.RowsAffected()
-	if affectedRows == 0 {
-		return sql.ErrNoRows
-	}
-	return nil
+	return requireOneRow(result)
 }

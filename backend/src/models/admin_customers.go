@@ -12,14 +12,16 @@ type AdminCustomer struct {
 	ValidOrders     int        `json:"validOrders"`
 	CancelledOrders int        `json:"cancelledOrders"`
 	TotalSpent      Money      `json:"totalSpent"`
-	LastPurchase    *time.Time `json:"lastPurchase"`
+	LastPurchase    *time.Time `json:"lastPurchase"` // um cliente pode estar cadastrado sem nunca ter feito uma compra.
 }
+
 type AdminCustomerPage struct {
 	Customers     []AdminCustomer `json:"customers"`
 	Total         int             `json:"total"`
 	WithOrders    int             `json:"withOrders"`
 	WithoutOrders int             `json:"withoutOrders"`
 }
+
 type AdminCustomerDetails struct {
 	AdminCustomer
 	Addresses []UserAddress `json:"addresses"`

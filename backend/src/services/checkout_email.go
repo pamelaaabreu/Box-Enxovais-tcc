@@ -1,22 +1,22 @@
 package services
 
 import (
-	"backend/src/models"
-	"backend/src/repositories"
 	"bytes"
 	"context"
 	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
-	"os"
 	"strings"
 	"time"
+
+	"backend/src/models"
+	"backend/src/repositories"
 
 	"gopkg.in/gomail.v2"
 )
 
-// SendCheckoutReceipt is called only for the request that committed a new order.
+// Envia o comprovante somente para a requisição que confirmou um pedido novo.
 func SendCheckoutReceipt(database *sql.DB, userID int, order models.CheckoutOrder) {
 	sendOrderEmail(database, userID, order, false)
 }
@@ -61,8 +61,8 @@ func sendOrderMessage(email, name string, order models.CheckoutOrder, cancelled 
 	}{name, order}); err != nil {
 		return fmt.Errorf("renderização")
 	}
-	from, host, key := os.Getenv("EMAIL"), os.Getenv("EMAIL_SMTP"), os.Getenv("EMAIL_KEY")
-	if from == "" || host == "" || key == "" {
+	_, from, _, err := smtpConfiguration()
+	if err != nil {
 		return fmt.Errorf("configuração SMTP")
 	}
 
@@ -88,7 +88,7 @@ func sendOrderMessage(email, name string, order models.CheckoutOrder, cancelled 
 		"Content-ID":          {"<checkout-logo-white.png>"},
 		"Content-Disposition": {"inline"},
 	}))
-	if err := gomail.NewDialer(host, 587, from, key).DialAndSend(msg); err != nil {
+	if err := sendSMTP(msg); err != nil {
 		return fmt.Errorf("envio SMTP")
 	}
 	return nil

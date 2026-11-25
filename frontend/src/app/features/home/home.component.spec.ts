@@ -12,7 +12,7 @@ describe('Home composition',()=>{
   TestBed.overrideComponent(HomeComponent,{set:{imports:[],schemas:[NO_ERRORS_SCHEMA]}});
   const fixture=TestBed.createComponent(HomeComponent);fixture.detectChanges();
   const root=fixture.nativeElement as HTMLElement;
-  expect([...root.querySelector('.home-content')!.children].map(el=>el.tagName.toLowerCase())).toEqual(['app-carousel','app-trust-bar','app-shop-by-category','app-featured-products','app-campaign']);
+  expect([...root.querySelector('.home-content')!.children].map(el=>el.tagName.toLowerCase())).toEqual(['app-carousel','app-trust-bar','app-shop-by-category','app-featured-products','app-campaign','app-testimonials']);
   expect(root.querySelector('.collection-grid')).toBeNull();expect(root.querySelector('.quality-section')).toBeNull();
   const newsletter=root.querySelector('app-newsletter')!;
   expect(newsletter.closest('.home-content')).toBeNull();

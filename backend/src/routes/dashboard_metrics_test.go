@@ -4,7 +4,6 @@ import (
 	"backend/src/models"
 	"backend/src/repositories"
 	"context"
-	"encoding/json"
 	"testing"
 	"time"
 )
@@ -43,11 +42,8 @@ func TestDashboardMetricsPostgres(t *testing.T) {
 		}
 	})
 	t.Run("series_matches_cards_with_zero_gaps", func(t *testing.T) {
-		var points []struct {
-			Bucket                                               string
-			Orders, Approved, Cancelled, RevenueCents, Customers int64
-		}
-		if json.Unmarshal(data.Series, &points) != nil || len(points) != 31 {
+		points := data.Series
+		if len(points) != 31 {
 			t.Fatal("daily calendar mismatch")
 		}
 		var orders, revenue, clients int64
@@ -61,19 +57,13 @@ func TestDashboardMetricsPostgres(t *testing.T) {
 		}
 	})
 	t.Run("archived_products_keep_historical_name_and_units", func(t *testing.T) {
-		var top []struct {
-			ProductID, Units int
-			Name             string
-			Archived         bool
-		}
-		json.Unmarshal(data.TopProducts, &top)
-		if len(top) != 2 || top[1].ProductID != 2 || top[1].Units != 3 || top[1].Name != "Nome histórico arquivado" || !top[1].Archived {
-			t.Fatalf("incorrect ranking: %s", data.TopProducts)
+		top := data.TopProducts
+		if len(top) != 2 || top[1].ProductID == nil || *top[1].ProductID != 2 || top[1].Units != 3 || top[1].Name != "Nome histórico arquivado" || !top[1].Archived {
+			t.Fatalf("incorrect ranking: %+v", data.TopProducts)
 		}
 	})
 	t.Run("individual_variant_stock_and_no_catalog_price_recalculation", func(t *testing.T) {
-		var stock []struct{ ProductID, VariantID, Quantity, TotalQuantity int }
-		json.Unmarshal(data.Stock, &stock)
+		stock := data.Stock
 		found := false
 		for _, p := range stock {
 			if p.ProductID == 5 && p.Quantity == 0 && p.TotalQuantity == 10 {
@@ -91,8 +81,7 @@ func TestDashboardMetricsPostgres(t *testing.T) {
 		if e != nil {
 			t.Fatal(e)
 		}
-		var points []any
-		json.Unmarshal(monthly.Series, &points)
+		points := monthly.Series
 		if len(points) != 1 || monthly.RevenueCents != 7101 {
 			t.Fatal("monthly grouping mismatch")
 		}

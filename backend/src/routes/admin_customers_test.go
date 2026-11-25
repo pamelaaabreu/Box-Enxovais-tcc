@@ -56,8 +56,10 @@ func TestAdminCustomersPostgres(t *testing.T) {
 		raw := call("GET", "/admin/customers", "admin", 200)
 		var e struct {
 			Data struct {
-				Total, WithOrders, WithoutOrders int
-				Customers                        []struct {
+				Total         int
+				WithOrders    int
+				WithoutOrders int
+				Customers     []struct {
 					ID         int
 					TotalSpent float64
 				}
@@ -99,11 +101,13 @@ func TestAdminCustomersPostgres(t *testing.T) {
 	t.Run("detail_address_historical_spending_cancel_excluded", func(t *testing.T) {
 		var e struct {
 			Data struct {
-				Name                                 string
-				Orders, ValidOrders, CancelledOrders int
-				TotalSpent                           float64
-				LastPurchase                         *time.Time
-				Addresses                            []models.UserAddress
+				Name            string
+				Orders          int
+				ValidOrders     int
+				CancelledOrders int
+				TotalSpent      float64
+				LastPurchase    *time.Time
+				Addresses       []models.UserAddress
 			}
 		}
 		json.Unmarshal(call("GET", "/admin/customers/1", "admin", 200), &e)
@@ -115,10 +119,11 @@ func TestAdminCustomersPostgres(t *testing.T) {
 		exec("UPDATE users SET created_at=NULL WHERE id=4")
 		var e struct {
 			Data struct {
-				Orders                  int
-				TotalSpent              float64
-				CreatedAt, LastPurchase *time.Time
-				Addresses               []models.UserAddress
+				Orders       int
+				TotalSpent   float64
+				CreatedAt    *time.Time
+				LastPurchase *time.Time
+				Addresses    []models.UserAddress
 			}
 		}
 		json.Unmarshal(call("GET", "/admin/customers/4", "admin", 200), &e)
@@ -131,8 +136,9 @@ func TestAdminCustomersPostgres(t *testing.T) {
 			Data struct {
 				Total  int
 				Orders []struct {
-					ID, CustomerID int
-					Status         string
+					ID         int
+					CustomerID int
+					Status     string
 				}
 			}
 		}

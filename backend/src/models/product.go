@@ -43,7 +43,8 @@ type Product struct {
 }
 
 type PromotionParticipant struct {
-	ProductID        int      `json:"product_id"`
+	ProductID int `json:"product_id"`
+	// Permite diferenciar um preço não informado de um preço informado como zero.
 	PromotionalPrice *float64 `json:"promotional_price"`
 }
 
@@ -71,6 +72,7 @@ type AddToPromotionRequest struct {
 	PromotionalPrice float64 `json:"promotional_price"`
 }
 
+// Representa uma alteração nas informações comerciais do produto, validando alterações de concorrência de produto.
 type ProductCommerceChange struct {
 	Price            float64 `json:"price"`
 	Quantity         int     `json:"quantity"`

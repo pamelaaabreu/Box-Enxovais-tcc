@@ -13,21 +13,21 @@ import (
 )
 
 type Config struct {
-	Database          db.Config
-	HTTPAddr          string
-	CORSOrigin        string
-	UploadDir         string
-	JWTSecret         string
+	Database   db.Config
+	HTTPAddr   string
+	CORSOrigin string
+	UploadDir  string
+	JWTSecret  string
 	// Tempo máx. para receber os cabeçalhos da requisição HTTP.
 	ReadHeaderTimeout time.Duration
 	// Tempo máx. para ler a requisição HTTP completa.
-	ReadTimeout       time.Duration 
+	ReadTimeout time.Duration
 	// Prazo máx. para escrever a resposta HTTP.
-	WriteTimeout      time.Duration
+	WriteTimeout time.Duration
 	// Tempo máx. que uma conexão pode ficar sem atividade.
-	IdleTimeout       time.Duration 
+	IdleTimeout time.Duration
 	// Tempo máx. de espera p/ finalizar req. durante o desligamento.
-	ShutdownTimeout   time.Duration 
+	ShutdownTimeout time.Duration
 }
 
 func Load(envFiles ...string) (Config, error) {
@@ -36,7 +36,7 @@ func Load(envFiles ...string) (Config, error) {
 			return Config{}, errors.New("arquivo .env obrigatório não encontrado")
 		}
 		return Config{}, errors.New("não foi possível carregar o arquivo .env")
-	}  
+	}
 
 	cfg := Config{
 		HTTPAddr:   envOrDefault("HTTP_ADDR", ":8080"),
@@ -54,7 +54,10 @@ func Load(envFiles ...string) (Config, error) {
 
 	missing := []string{}
 	// _ ignora índice da posição; range percorre os elementos do slice.
-	for _, field := range []struct{ name, value string }{
+	for _, field := range []struct {
+		name  string
+		value string
+	}{
 		{"DB_HOST", cfg.Database.Host},
 		{"DB_PORT", os.Getenv("DB_PORT")},
 		{"DB_USER", cfg.Database.User},
@@ -87,7 +90,7 @@ func Load(envFiles ...string) (Config, error) {
 		name     string
 		fallback time.Duration
 		// * armazena o endereço da variável e obtém o endereço de memória do campo
-		target   *time.Duration 
+		target *time.Duration
 	}{
 		{"HTTP_READ_HEADER_TIMEOUT", 5 * time.Second, &cfg.ReadHeaderTimeout},
 		{"HTTP_READ_TIMEOUT", 30 * time.Second, &cfg.ReadTimeout},

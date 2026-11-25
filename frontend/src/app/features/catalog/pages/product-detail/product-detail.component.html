@@ -45,6 +45,7 @@
             }
           </div>
           <h1 id="product-title">{{ product.name }}</h1>
+          <app-product-rating [productId]="product.id" />
           @if (product.sku) { <p class="product-sku">SKU: {{ product.sku }}</p> }
           <app-product-price
             [emphasized]="true"
@@ -376,6 +377,7 @@
           </section>
         </mat-tab>
       </mat-tab-group>
+      <app-product-reviews [productId]="product.id" />
       @if (recommendations().length) {
         <section
           class="recommendations"
