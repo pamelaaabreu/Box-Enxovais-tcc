@@ -32,6 +32,7 @@ type ReviewableProduct struct {
 	ImagePath   string `json:"imagePath"`
 }
 type ProductReviewSummary struct {
-	Average float64 `json:"average"`
-	Count   int     `json:"count"`
+	Distribution []int64 `json:"distribution,omitempty"`
+	Average      float64 `json:"average"`
+	Count        int     `json:"count"`
 }

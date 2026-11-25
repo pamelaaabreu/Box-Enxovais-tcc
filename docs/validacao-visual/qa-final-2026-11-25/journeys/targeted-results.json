@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Favorito persistido e carrinho real com variante",
+    "status": "passed"
+  },
+  {
+    "name": "Checkout completo pela interface com frete e Pix",
+    "status": "passed"
+  },
+  {
+    "name": "Idempotencia backend e cancelamento sem reposicao dupla",
+    "status": "failed",
+    "error": "Expected values to be strictly equal:\n\n400 !== 200\n"
+  },
+  {
+    "name": "Descarte com ambas acoes e sem persistir alteracoes",
+    "status": "passed"
+  }
+]

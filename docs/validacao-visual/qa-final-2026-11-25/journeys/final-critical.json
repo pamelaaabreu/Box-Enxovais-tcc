@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Checkout UI card e persistencia do pagamento/frete",
+    "status": "passed",
+    "note": "UI checkout confirmed; persisted order 45 rechecked against actual shipping contract (BRL)."
+  },
+  {
+    "name": "Checkout UI boleto e persistencia do pagamento/frete",
+    "status": "passed",
+    "note": "UI checkout confirmed; persisted order 46 rechecked against actual shipping contract (BRL)."
+  },
+  {
+    "name": "Avaliacao de experiencia pela interface",
+    "status": "passed"
+  },
+  {
+    "name": "Arquivamento seguro de produto com historico comercial",
+    "status": "passed",
+    "note": "Archived, excluded from public listing, SKU/history retained; direct detail remains readable by existing design."
+  }
+]

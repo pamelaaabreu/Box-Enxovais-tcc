@@ -1,0 +1,68 @@
+[
+  {
+    "route": "/inicio",
+    "violations": [],
+    "passes": 28,
+    "incomplete": 2
+  },
+  {
+    "route": "/login",
+    "violations": [],
+    "passes": 26,
+    "incomplete": 2
+  },
+  {
+    "route": "/cadastro",
+    "violations": [],
+    "passes": 26,
+    "incomplete": 2
+  },
+  {
+    "route": "/categoria/todos",
+    "violations": [],
+    "passes": 28,
+    "incomplete": 2
+  },
+  {
+    "route": "/produto/edredom-2",
+    "violations": [],
+    "passes": 32,
+    "incomplete": 2
+  },
+  {
+    "route": "/admin/dashboard",
+    "violations": [],
+    "passes": 28,
+    "incomplete": 3
+  },
+  {
+    "route": "/admin/produtos",
+    "violations": [],
+    "passes": 28,
+    "incomplete": 1
+  },
+  {
+    "route": "/admin/produtos/1/editar",
+    "violations": [],
+    "passes": 31,
+    "incomplete": 1
+  },
+  {
+    "route": "/admin/promocoes/1/editar",
+    "violations": [],
+    "passes": 28,
+    "incomplete": 1
+  },
+  {
+    "route": "/admin/pedidos",
+    "violations": [],
+    "passes": 25,
+    "incomplete": 2
+  },
+  {
+    "route": "/admin/relatorios",
+    "violations": [],
+    "passes": 25,
+    "incomplete": 2
+  }
+]

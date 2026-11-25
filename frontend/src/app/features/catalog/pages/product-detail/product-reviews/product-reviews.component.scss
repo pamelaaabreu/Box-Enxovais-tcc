@@ -1,14 +1,13 @@
 :host {
   display: block;
-  margin: 32px 0;
-  color: #3d4836;
   font-family: Montserrat, sans-serif;
+  color: #3d4836;
 }
 section {
-  padding: 24px;
-  border: 1px solid #dce0d3;
-  border-radius: 18px;
-  background: #fffefb;
+  padding: clamp(18px, 3vw, 36px);
+  border: 1px solid #dedbce;
+  border-radius: 20px;
+  background: #fffdf8;
 }
 header {
   display: flex;
@@ -16,49 +15,134 @@ header {
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 12px;
 }
 h2 {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 24px;
   margin: 0;
 }
-a {
+header a {
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: underline;
   color: inherit;
+}
+.review-overview {
+  display: grid;
+  grid-template-columns: minmax(170px, 1fr) minmax(180px, 1.3fr) minmax(
+      220px,
+      1.2fr
+    );
+  gap: 28px;
+  align-items: center;
+  margin: 32px 0;
+}
+.average-card {
+  background: #f3f2eb;
+  border-radius: 18px;
+  padding: 24px;
+  text-align: center;
+  display: grid;
+  gap: 10px;
+}
+.average-card > strong {
+  font-size: 48px;
+}
+.average-card .empty-average {
+  font-size: 16px;
+}
+.stars {
+  color: #a77624;
+  white-space: nowrap;
+  font-size: 24px;
+}
+.distribution > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
   font-size: 13px;
 }
+.distribution progress {
+  flex: 1;
+  width: 100%;
+  min-width: 30px;
+  height: 9px;
+  accent-color: #b58a39;
+}
+.review-cta a {
+  display: inline-block;
+  color: inherit;
+  margin: 8px 12px 0 0;
+}
+.review-primary {
+  background: #3d4836;
+  color: white !important;
+  padding: 14px 22px;
+  border-radius: 28px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.published-reviews {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
 article {
-  padding: 18px 0;
-  border-top: 1px solid #dce0d3;
+  padding: 22px;
+  border: 1px solid #dedbce;
+  border-radius: 18px;
+  background: #faf9f5;
+  overflow-wrap: anywhere;
 }
 article > div {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
+  align-items: center;
 }
-strong {
-  font-size: 14px;
+article strong {
+  font-size: 13px;
 }
 time {
   font-size: 12px;
-  color: #626c58;
 }
-.stars {
-  color: #667255;
-  letter-spacing: 1px;
-}
-p {
-  font-size: 14px;
+article p {
   line-height: 1.7;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+}
+.review-steps {
+  border-top: 1px solid #dedbce;
+  display: flex;
+  gap: 20px;
+  padding-top: 24px;
+}
+.review-steps span {
+  flex: 1;
+  font-size: 13px;
+}
+.review-steps b {
+  display: block;
+  margin-bottom: 8px;
+}
+@media (max-width: 1024px) {
+  .review-overview {
+    grid-template-columns: 1fr 1fr;
+  }
+  .review-cta {
+    grid-column: 1/-1;
+  }
+  .published-reviews {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 @media (max-width: 600px) {
-  section {
-    padding: 16px;
+  .review-overview,
+  .published-reviews {
+    grid-template-columns: 1fr;
+  }
+  .review-steps {
+    flex-direction: column;
   }
   h2 {
-    font-size: 18px;
+    font-size: 21px;
   }
 }

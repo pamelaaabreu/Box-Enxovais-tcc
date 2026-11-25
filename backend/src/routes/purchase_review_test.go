@@ -117,7 +117,7 @@ func TestPurchaseReviewPostgres(t *testing.T) {
 		t.Fatal("cancel", e)
 	}
 	check("POST", path, `{"overall":5}`, customer, 404)
-	check("GET", path, "", customer, 404)
+	check("GET", path, "", customer, 200)
 	public, e = (repositories.HomeRepository{DB: d}).Reviews(context.Background(), false)
 	if e != nil || len(public) != 0 {
 		t.Fatal("cancelled review is public", e)

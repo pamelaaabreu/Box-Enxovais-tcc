@@ -116,7 +116,7 @@
         class="price-badge"
         [price]="displayPrice()"
         [originalPrice]="discounted() ? product().price : null"
-        [showInstallments]="false"
+        [showInstallments]="true"
       />
     }
   </div>
@@ -151,7 +151,7 @@
       <app-product-price
         [price]="displayPrice()"
         [originalPrice]="discounted() ? product().price : null"
-        [showInstallments]="false"
+        [showInstallments]="true"
       />
     }
     @if (!compact()) {

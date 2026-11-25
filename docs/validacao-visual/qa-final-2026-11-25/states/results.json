@@ -1,0 +1,57 @@
+[
+  {
+    "name": "products",
+    "scenario": "503 e retry",
+    "status": "passed"
+  },
+  {
+    "name": "orders",
+    "scenario": "503 e retry",
+    "status": "passed"
+  },
+  {
+    "name": "customers",
+    "scenario": "503 e retry",
+    "status": "passed"
+  },
+  {
+    "name": "dashboard",
+    "scenario": "503 e retry",
+    "status": "passed"
+  },
+  {
+    "name": "reports",
+    "scenario": "503 e retry",
+    "status": "passed"
+  },
+  {
+    "name": "promotions",
+    "scenario": "503 e retry",
+    "status": "passed"
+  },
+  {
+    "name": "shipping",
+    "scenario": "503 e retry",
+    "status": "passed"
+  },
+  {
+    "name": "reviews",
+    "scenario": "503 e retry",
+    "status": "passed"
+  },
+  {
+    "name": "dashboard",
+    "scenario": "periodo sem dados real",
+    "sharedEmptyStates": 7,
+    "status": "passed"
+  },
+  {
+    "name": "sidebar",
+    "scenario": "Enter Escape retorno foco",
+    "status": "passed"
+  },
+  {
+    "status": "failed",
+    "error": "The expression evaluated to a falsy value:\n\n  assert(await dialog.evaluate(e=>e.contains(document.activeElement)))\n"
+  }
+]

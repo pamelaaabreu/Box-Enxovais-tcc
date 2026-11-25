@@ -18,3 +18,12 @@ describe('installments', () => {
     expect(() => splitInstallments(100, 7)).toThrowError(RangeError);
   });
 });
+
+import { installmentOption } from './installments';
+describe('Installment option labels', () => {
+  it('reports exact ranges and singular cash label', () => {
+    expect(installmentOption(57270, 4)).toContain('de R$ 143,17 a R$ 143,18');
+    expect(installmentOption(57270, 6)).toContain('6x de R$ 95,45');
+    expect(installmentOption(57270, 1)).toContain('À vista no cartão');
+  });
+});

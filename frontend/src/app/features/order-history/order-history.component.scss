@@ -844,3 +844,34 @@ small {
     gap: 6px;
   }
 }
+
+.detail-experience {
+  margin: 0;
+  max-width: none;
+  min-width: 0;
+}
+.detail-side {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+}
+.detail-side .detail-item {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+}
+.detail-side .detail-item-total {
+  grid-column: 2;
+}
+.detail-side .detail-summary dd {
+  font-size: 14px;
+  font-weight: 500;
+}
+.cancellation-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 10px 0 8px;
+}
+.cancellation-fields {
+  overflow: visible;
+}

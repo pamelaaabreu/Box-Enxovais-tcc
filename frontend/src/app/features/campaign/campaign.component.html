@@ -1,7 +1,7 @@
 <ng-template #content>
   @if (campaign(); as campaign) {
     <section class="campaign" aria-labelledby="campaign-heading">
-      <header>
+      <header [hidden]="!fullPage">
         <p class="eyebrow">Coleção especial</p>
         @if (fullPage) {
           <h1 id="campaign-heading">{{ campaign.name }}</h1>
@@ -10,6 +10,14 @@
         }
         <p>{{ campaign.description }}</p>
       </header>
+      @if (!fullPage) {
+        <app-campaign-banner
+          [name]="campaign.name"
+          [description]="campaign.description"
+          [image]="assets.resolve(campaign.imagePath)"
+          [link]="'/campanha/' + campaign.id"
+        />
+      }
       @if (fullPage) {
         <div class="campaign-search">
           <label for="campaign-search">Buscar nesta coleção</label>

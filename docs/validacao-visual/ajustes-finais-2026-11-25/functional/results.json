@@ -1,0 +1,36 @@
+{
+  "results": [
+    {
+      "name": "F01 - Fixtures isoladas, dois clientes e produto com variante",
+      "status": "passed"
+    },
+    {
+      "name": "F02 - Compra real pela UI, Material 4 parcelas, frete e telefone snapshot",
+      "status": "passed"
+    },
+    {
+      "name": "F03 - Pendência pertence somente ao comprador e avaliação produto pela UI",
+      "status": "passed"
+    },
+    {
+      "name": "F04 - Aprovação administrativa aparece no produto, cards e distribuição reais",
+      "status": "passed"
+    },
+    {
+      "name": "F05 - Edição reabre moderação, revogação e privada não publicável por UI/API",
+      "status": "passed"
+    },
+    {
+      "name": "F06 - Experiência separada, edição sem duplicar e consentimento na Home",
+      "status": "passed"
+    },
+    {
+      "name": "F07 - Cancelamento concorrente, estoque reposto uma vez e avaliação nova bloqueada",
+      "status": "passed"
+    }
+  ],
+  "errors": [
+    "Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.",
+    "Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document."
+  ]
+}

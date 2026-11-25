@@ -1,0 +1,42 @@
+{
+  "method": "Actual Chromium screenshots opened and visually inspected; no blanket approval for uninspected screenshots.",
+  "reviewed": [
+    "home/banner-0-1440.png",
+    "home/banner-1-768.png",
+    "home/banner-2-390.png",
+    "admin/dashboard-1440.png",
+    "admin/products-390.png",
+    "admin/orders-1440.png",
+    "admin/customer-detail-390.png",
+    "admin/promotion-edit-390.png",
+    "admin/shipping-1440.png",
+    "admin/reports-390.png",
+    "admin/images-1440.png",
+    "public/product-390.png",
+    "public/account-Meus-enderecos-360.png",
+    "public/history-1440.png",
+    "public/success-390.png",
+    "public/success-1440.png",
+    "admin/product-new-390.png",
+    "admin/variants-1440.png",
+    "admin/order-detail-390.png",
+    "admin/reviews-1440.png",
+    "admin/categories-1440.png",
+    "admin/brands-390.png",
+    "admin/customers-1440.png",
+    "admin/promotion-detail-390.png",
+    "admin/promotion-new-1440.png",
+    "admin/reports-1440.png",
+    "admin/shipping-390.png",
+    "admin/product-edit-390.png"
+  ],
+  "corrected": [
+    "Home banner asset paths",
+    "Checkout confirmation SVG path"
+  ],
+  "remaining": [
+    "Footer institutional links point to #",
+    "No formal screen reader or WCAG certification",
+    "Not every captured viewport manually inspected"
+  ]
+}

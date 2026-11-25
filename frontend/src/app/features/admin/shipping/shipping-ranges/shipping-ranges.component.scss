@@ -50,7 +50,7 @@ mat-select {
 input[aria-invalid="true"] {
   border-color: #ac5846;
 }
-button {
+button:not([mat-menu-item]) {
   display: inline-flex;
   align-items: center;
   justify-content: center;

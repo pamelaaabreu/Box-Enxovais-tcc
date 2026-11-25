@@ -1,0 +1,1000 @@
+{
+  "pages": [
+    {
+      "name": "dashboard",
+      "path": "/admin/dashboard",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "products",
+      "path": "/admin/produtos",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "product-edit",
+      "path": "/admin/produtos/1/editar",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "images",
+      "path": "/admin/produtos/1/imagens",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "variants",
+      "path": "/admin/produtos/2/variacoes",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "product-new",
+      "path": "/admin/produtos/novo",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "orders",
+      "path": "/admin/pedidos",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "order-detail",
+      "path": "/admin/pedidos/44",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "customers",
+      "path": "/admin/clientes",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "customer-detail",
+      "path": "/admin/clientes/58",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "reports",
+      "path": "/admin/relatorios",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "promotions",
+      "path": "/admin/promocoes",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "promotion-new",
+      "path": "/admin/promocoes/nova",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "promotion-edit",
+      "path": "/admin/promocoes/1/editar",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "promotion-detail",
+      "path": "/admin/promocoes/1",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "reviews",
+      "path": "/admin/avaliacoes",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "categories",
+      "path": "/admin/cadastros/categorias",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "brands",
+      "path": "/admin/cadastros/marcas",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "shipping",
+      "path": "/admin/cadastros/faixas-cep",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "dashboard",
+      "path": "/admin/dashboard",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "products",
+      "path": "/admin/produtos",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "product-edit",
+      "path": "/admin/produtos/1/editar",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "images",
+      "path": "/admin/produtos/1/imagens",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "variants",
+      "path": "/admin/produtos/2/variacoes",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "product-new",
+      "path": "/admin/produtos/novo",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "orders",
+      "path": "/admin/pedidos",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "order-detail",
+      "path": "/admin/pedidos/44",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "customers",
+      "path": "/admin/clientes",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "customer-detail",
+      "path": "/admin/clientes/58",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "reports",
+      "path": "/admin/relatorios",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "promotions",
+      "path": "/admin/promocoes",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "promotion-new",
+      "path": "/admin/promocoes/nova",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "promotion-edit",
+      "path": "/admin/promocoes/1/editar",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "promotion-detail",
+      "path": "/admin/promocoes/1",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "reviews",
+      "path": "/admin/avaliacoes",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "categories",
+      "path": "/admin/cadastros/categorias",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "brands",
+      "path": "/admin/cadastros/marcas",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "shipping",
+      "path": "/admin/cadastros/faixas-cep",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "dashboard",
+      "path": "/admin/dashboard",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "products",
+      "path": "/admin/produtos",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "product-edit",
+      "path": "/admin/produtos/1/editar",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "images",
+      "path": "/admin/produtos/1/imagens",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "variants",
+      "path": "/admin/produtos/2/variacoes",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "product-new",
+      "path": "/admin/produtos/novo",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "orders",
+      "path": "/admin/pedidos",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "order-detail",
+      "path": "/admin/pedidos/44",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "customers",
+      "path": "/admin/clientes",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "customer-detail",
+      "path": "/admin/clientes/58",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "reports",
+      "path": "/admin/relatorios",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "promotions",
+      "path": "/admin/promocoes",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "promotion-new",
+      "path": "/admin/promocoes/nova",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "promotion-edit",
+      "path": "/admin/promocoes/1/editar",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "promotion-detail",
+      "path": "/admin/promocoes/1",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "reviews",
+      "path": "/admin/avaliacoes",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "categories",
+      "path": "/admin/cadastros/categorias",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "brands",
+      "path": "/admin/cadastros/marcas",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "shipping",
+      "path": "/admin/cadastros/faixas-cep",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "dashboard",
+      "path": "/admin/dashboard",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "products",
+      "path": "/admin/produtos",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "product-edit",
+      "path": "/admin/produtos/1/editar",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "images",
+      "path": "/admin/produtos/1/imagens",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "variants",
+      "path": "/admin/produtos/2/variacoes",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "product-new",
+      "path": "/admin/produtos/novo",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "orders",
+      "path": "/admin/pedidos",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "order-detail",
+      "path": "/admin/pedidos/44",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "customers",
+      "path": "/admin/clientes",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "customer-detail",
+      "path": "/admin/clientes/58",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "reports",
+      "path": "/admin/relatorios",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "promotions",
+      "path": "/admin/promocoes",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "promotion-new",
+      "path": "/admin/promocoes/nova",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "promotion-edit",
+      "path": "/admin/promocoes/1/editar",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "promotion-detail",
+      "path": "/admin/promocoes/1",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "reviews",
+      "path": "/admin/avaliacoes",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "categories",
+      "path": "/admin/cadastros/categorias",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "brands",
+      "path": "/admin/cadastros/marcas",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "shipping",
+      "path": "/admin/cadastros/faixas-cep",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "dashboard",
+      "path": "/admin/dashboard",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "products",
+      "path": "/admin/produtos",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "product-edit",
+      "path": "/admin/produtos/1/editar",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "images",
+      "path": "/admin/produtos/1/imagens",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "variants",
+      "path": "/admin/produtos/2/variacoes",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "product-new",
+      "path": "/admin/produtos/novo",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "orders",
+      "path": "/admin/pedidos",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "order-detail",
+      "path": "/admin/pedidos/44",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "customers",
+      "path": "/admin/clientes",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "customer-detail",
+      "path": "/admin/clientes/58",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "reports",
+      "path": "/admin/relatorios",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "promotions",
+      "path": "/admin/promocoes",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "promotion-new",
+      "path": "/admin/promocoes/nova",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "promotion-edit",
+      "path": "/admin/promocoes/1/editar",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "promotion-detail",
+      "path": "/admin/promocoes/1",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "reviews",
+      "path": "/admin/avaliacoes",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "categories",
+      "path": "/admin/cadastros/categorias",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "brands",
+      "path": "/admin/cadastros/marcas",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "shipping",
+      "path": "/admin/cadastros/faixas-cep",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "dashboard",
+      "path": "/admin/dashboard",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "products",
+      "path": "/admin/produtos",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "product-edit",
+      "path": "/admin/produtos/1/editar",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "images",
+      "path": "/admin/produtos/1/imagens",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "variants",
+      "path": "/admin/produtos/2/variacoes",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "product-new",
+      "path": "/admin/produtos/novo",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "orders",
+      "path": "/admin/pedidos",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "order-detail",
+      "path": "/admin/pedidos/44",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "customers",
+      "path": "/admin/clientes",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "customer-detail",
+      "path": "/admin/clientes/58",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "reports",
+      "path": "/admin/relatorios",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "promotions",
+      "path": "/admin/promocoes",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "promotion-new",
+      "path": "/admin/promocoes/nova",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "promotion-edit",
+      "path": "/admin/promocoes/1/editar",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "promotion-detail",
+      "path": "/admin/promocoes/1",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "reviews",
+      "path": "/admin/avaliacoes",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "categories",
+      "path": "/admin/cadastros/categorias",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "brands",
+      "path": "/admin/cadastros/marcas",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "shipping",
+      "path": "/admin/cadastros/faixas-cep",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "dashboard",
+      "path": "/admin/dashboard",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "products",
+      "path": "/admin/produtos",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "product-edit",
+      "path": "/admin/produtos/1/editar",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "images",
+      "path": "/admin/produtos/1/imagens",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "variants",
+      "path": "/admin/produtos/2/variacoes",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "product-new",
+      "path": "/admin/produtos/novo",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "orders",
+      "path": "/admin/pedidos",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "order-detail",
+      "path": "/admin/pedidos/44",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "customers",
+      "path": "/admin/clientes",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "customer-detail",
+      "path": "/admin/clientes/58",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "reports",
+      "path": "/admin/relatorios",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "promotions",
+      "path": "/admin/promocoes",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "promotion-new",
+      "path": "/admin/promocoes/nova",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "promotion-edit",
+      "path": "/admin/promocoes/1/editar",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "promotion-detail",
+      "path": "/admin/promocoes/1",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "reviews",
+      "path": "/admin/avaliacoes",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "categories",
+      "path": "/admin/cadastros/categorias",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "brands",
+      "path": "/admin/cadastros/marcas",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "shipping",
+      "path": "/admin/cadastros/faixas-cep",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "dashboard",
+      "path": "/admin/dashboard",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "products",
+      "path": "/admin/produtos",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "product-edit",
+      "path": "/admin/produtos/1/editar",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "images",
+      "path": "/admin/produtos/1/imagens",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "variants",
+      "path": "/admin/produtos/2/variacoes",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "product-new",
+      "path": "/admin/produtos/novo",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "orders",
+      "path": "/admin/pedidos",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "order-detail",
+      "path": "/admin/pedidos/44",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "customers",
+      "path": "/admin/clientes",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "customer-detail",
+      "path": "/admin/clientes/58",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "reports",
+      "path": "/admin/relatorios",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "promotions",
+      "path": "/admin/promocoes",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "promotion-new",
+      "path": "/admin/promocoes/nova",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "promotion-edit",
+      "path": "/admin/promocoes/1/editar",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "promotion-detail",
+      "path": "/admin/promocoes/1",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "reviews",
+      "path": "/admin/avaliacoes",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "categories",
+      "path": "/admin/cadastros/categorias",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "brands",
+      "path": "/admin/cadastros/marcas",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "shipping",
+      "path": "/admin/cadastros/faixas-cep",
+      "width": 360,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "network": [],
+  "aliases": [
+    {
+      "old": "/admin/metrics",
+      "current": "/admin/dashboard",
+      "result": "passed"
+    },
+    {
+      "old": "/admin/products",
+      "current": "/admin/produtos",
+      "result": "passed"
+    },
+    {
+      "old": "/admin/products/1/edit",
+      "current": "/admin/produtos/1/editar",
+      "result": "passed"
+    },
+    {
+      "old": "/admin/products/1/images",
+      "current": "/admin/produtos/1/imagens",
+      "result": "passed"
+    },
+    {
+      "old": "/admin/products/2/variants",
+      "current": "/admin/produtos/2/variacoes",
+      "result": "passed"
+    },
+    {
+      "old": "/admin/customers",
+      "current": "/admin/clientes",
+      "result": "passed"
+    },
+    {
+      "old": "/admin/orders",
+      "current": "/admin/pedidos",
+      "result": "passed"
+    },
+    {
+      "old": "/admin/reports",
+      "current": "/admin/relatorios",
+      "result": "passed"
+    },
+    {
+      "old": "/admin/promotions",
+      "current": "/admin/promocoes",
+      "result": "passed"
+    },
+    {
+      "old": "/admin/catalog/categories",
+      "current": "/admin/cadastros/categorias",
+      "result": "passed"
+    },
+    {
+      "old": "/admin/catalog/brands",
+      "current": "/admin/cadastros/marcas",
+      "result": "passed"
+    },
+    {
+      "old": "/admin/catalog/shipping-ranges",
+      "current": "/admin/cadastros/faixas-cep",
+      "result": "passed"
+    },
+    {
+      "old": "/product-register",
+      "current": "/admin/produtos/novo",
+      "result": "passed"
+    },
+    {
+      "old": "/image-upload/1",
+      "current": "/admin/produtos/1/imagens",
+      "result": "passed"
+    },
+    {
+      "old": "/promotion-register",
+      "current": "/admin/promocoes/nova",
+      "result": "passed"
+    },
+    {
+      "old": "/add-to-promotion",
+      "current": "/admin/promocoes",
+      "result": "passed"
+    }
+  ]
+}

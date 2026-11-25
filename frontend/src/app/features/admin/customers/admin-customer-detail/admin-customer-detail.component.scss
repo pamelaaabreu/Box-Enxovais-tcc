@@ -1,1 +1,38 @@
 @use "../styles/customer-layout";
+
+.customer-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+.customer-avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  background: #3d4836;
+  color: white;
+  border-radius: 50%;
+  font-weight: 600;
+}
+.detail-grid {
+  align-items: stretch;
+}
+.addresses-empty {
+  border: 1px solid #dedbce;
+  border-radius: 18px;
+  background: #fffdf8;
+  display: grid;
+  place-items: center;
+}
+@media (max-width: 1100px) {
+  .customer-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 500px) {
+  .customer-kpis {
+    grid-template-columns: 1fr;
+  }
+}

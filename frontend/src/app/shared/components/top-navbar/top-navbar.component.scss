@@ -405,3 +405,53 @@ button.search-icon:focus-visible {
   outline: 2px solid #667255;
   outline-offset: 3px;
 }
+
+.search-bar {
+  position: relative;
+}
+.search-preview {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #fffdf8;
+  border: 1px solid #d8d6c9;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px #28342420;
+  padding: 10px;
+  max-height: 480px;
+  overflow: auto;
+  z-index: 1100;
+}
+.search-preview > a {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  align-items: center;
+  color: #3d4836;
+  text-decoration: none;
+  font:
+    500 13px Montserrat,
+    sans-serif;
+}
+.search-preview > a:hover,
+.search-preview > a:focus-visible,
+.search-preview > a[aria-selected="true"] {
+  background: #edf0e6;
+}
+.search-preview img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.search-preview strong {
+  display: block;
+  margin-top: 4px;
+}
+.search-preview p {
+  font-size: 13px;
+  padding: 10px;
+}

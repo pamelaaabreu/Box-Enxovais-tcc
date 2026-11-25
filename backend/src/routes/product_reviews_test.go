@@ -114,7 +114,7 @@ func TestProductReviewsPostgres(t *testing.T) {
 				t.Fatal("private review information exposed")
 			}
 		}
-		if !strings.Contains(public, "Ana S.") {
+		if !strings.Contains(public, "Cliente verificado") {
 			t.Fatal("privacy-preserving name missing")
 		}
 		home := call("GET", "/home/product-reviews", "", "", 200).Body.String()

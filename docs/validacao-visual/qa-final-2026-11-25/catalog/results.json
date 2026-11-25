@@ -1,0 +1,3332 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "url": "/produto/jogo-de-cama-essencia-floral-verde-oliva-1",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 2,
+      "url": "/produto/edredom-essencia-floral-verde-suave-2",
+      "gallery": 5,
+      "variants": 3,
+      "result": "passed"
+    },
+    {
+      "id": 3,
+      "url": "/produto/jogo-de-cama-essencia-floral-botanico-3",
+      "gallery": 5,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 4,
+      "url": "/produto/jogo-de-cama-aurora-floral-vermelho-4",
+      "gallery": 5,
+      "variants": 3,
+      "result": "passed"
+    },
+    {
+      "id": 5,
+      "url": "/produto/jogo-de-cama-aurora-floral-vinho-5",
+      "gallery": 5,
+      "variants": 3,
+      "result": "passed"
+    },
+    {
+      "id": 6,
+      "url": "/produto/jogo-de-cama-serenidade-azul-6",
+      "gallery": 5,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 7,
+      "url": "/produto/jogo-de-cama-serenidade-azul-claro-7",
+      "gallery": 5,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 8,
+      "url": "/produto/edredom-aconchego-creme-8",
+      "gallery": 4,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 9,
+      "url": "/produto/edredom-aconchego-marrom-cacau-9",
+      "gallery": 4,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 10,
+      "url": "/produto/edredom-aconchego-verde-oliva-10",
+      "gallery": 4,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 11,
+      "url": "/produto/edredom-geometrico-azul-petroleo-11",
+      "gallery": 4,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 12,
+      "url": "/produto/edredom-geometrico-rosa-nude-12",
+      "gallery": 4,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 13,
+      "url": "/produto/edredom-geometrico-verde-salvia-13",
+      "gallery": 4,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 14,
+      "url": "/produto/edredom-jardim-azul-lavanda-14",
+      "gallery": 4,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 15,
+      "url": "/produto/edredom-jardim-verde-musgo-15",
+      "gallery": 4,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 16,
+      "url": "/produto/cobre-leito-natural-verde-botanico-16",
+      "gallery": 5,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 17,
+      "url": "/produto/cobre-leito-natural-folhagens-suaves-17",
+      "gallery": 5,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 18,
+      "url": "/produto/cobre-leito-natural-botanico-neutro-18",
+      "gallery": 4,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 19,
+      "url": "/produto/colcha-provence-lilas-19",
+      "gallery": 4,
+      "variants": 3,
+      "result": "passed"
+    },
+    {
+      "id": 20,
+      "url": "/produto/colcha-provence-rosa-20",
+      "gallery": 4,
+      "variants": 3,
+      "result": "passed"
+    },
+    {
+      "id": 21,
+      "url": "/produto/manta-tricot-conforto-areia-21",
+      "gallery": 4,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 22,
+      "url": "/produto/manta-tricot-conforto-verde-oliva-22",
+      "gallery": 4,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 23,
+      "url": "/produto/manta-tricot-conforto-terracota-23",
+      "gallery": 4,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 24,
+      "url": "/produto/peseira-textura-off-white-24",
+      "gallery": 4,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 25,
+      "url": "/produto/peseira-textura-azul-acinzentado-25",
+      "gallery": 4,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 26,
+      "url": "/produto/peseira-textura-marrom-taupe-26",
+      "gallery": 4,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 27,
+      "url": "/produto/protetor-softcare-100-impermeavel-1-peca-27",
+      "gallery": 6,
+      "variants": 3,
+      "result": "passed"
+    },
+    {
+      "id": 28,
+      "url": "/produto/protetor-care-100-impermeavel-1-peca-28",
+      "gallery": 5,
+      "variants": 3,
+      "result": "passed"
+    },
+    {
+      "id": 30,
+      "url": "/produto/travesseiro-aconchego-firme-30",
+      "gallery": 0,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 31,
+      "url": "/produto/travesseiro-conforto-duplo-31",
+      "gallery": 0,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 32,
+      "url": "/produto/travesseiro-memoria-fresca-32",
+      "gallery": 0,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 33,
+      "url": "/produto/travesseiro-curva-serena-33",
+      "gallery": 0,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 34,
+      "url": "/produto/travesseiro-pluma-serena-34",
+      "gallery": 0,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 35,
+      "url": "/produto/travesseiro-contorno-suave-35",
+      "gallery": 0,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 36,
+      "url": "/produto/travesseiro-nuvem-leve-36",
+      "gallery": 0,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 37,
+      "url": "/produto/travesseiro-memoria-classica-37",
+      "gallery": 0,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 38,
+      "url": "/produto/travesseiro-apoio-versatil-38",
+      "gallery": 0,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 39,
+      "url": "/produto/travesseiro-apoio-lateral-39",
+      "gallery": 0,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 40,
+      "url": "/produto/travesseiro-brisa-macia-40",
+      "gallery": 0,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 41,
+      "url": "/produto/travesseiro-memoria-compacta-41",
+      "gallery": 0,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 78,
+      "url": "/produto/edredom-essencia-floral-verde-oliva-78",
+      "gallery": 5,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 79,
+      "url": "/produto/edredom-essencia-floral-botanico-79",
+      "gallery": 5,
+      "variants": 3,
+      "result": "passed"
+    },
+    {
+      "id": 80,
+      "url": "/produto/edredom-aurora-floral-vermelho-80",
+      "gallery": 5,
+      "variants": 3,
+      "result": "passed"
+    },
+    {
+      "id": 81,
+      "url": "/produto/edredom-aurora-floral-vinho-81",
+      "gallery": 5,
+      "variants": 3,
+      "result": "passed"
+    },
+    {
+      "id": 82,
+      "url": "/produto/edredom-serenidade-azul-82",
+      "gallery": 5,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 83,
+      "url": "/produto/edredom-serenidade-azul-claro-83",
+      "gallery": 5,
+      "variants": 2,
+      "result": "passed"
+    },
+    {
+      "id": 94,
+      "url": "/produto/toalha-de-banho-essencia-areia-100-algodao-94",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 95,
+      "url": "/produto/jogo-de-toalhas-spa-terracota-5-pecas-95",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 96,
+      "url": "/produto/jogo-de-toalhas-lavanda-4-pecas-96",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 97,
+      "url": "/produto/jogo-de-toalhas-salvia-e-creme-5-pecas-97",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 98,
+      "url": "/produto/toalha-de-banho-verde-salvia-100-algodao-98",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 99,
+      "url": "/produto/jogo-de-toalhas-azul-po-5-pecas-99",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 100,
+      "url": "/produto/jogo-de-toalhas-blush-5-pecas-100",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 101,
+      "url": "/produto/jogo-de-toalhas-aconchego-neutro-5-pecas-101",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 102,
+      "url": "/produto/toalha-de-banho-branca-premium-100-algodao-102",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 103,
+      "url": "/produto/trio-de-toalhas-spa-neutras-3-pecas-103",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 104,
+      "url": "/produto/capa-de-almofada-trelica-creme-104",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 105,
+      "url": "/produto/capa-de-almofada-trelica-nude-105",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 106,
+      "url": "/produto/capa-de-almofada-trelica-salvia-106",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 107,
+      "url": "/produto/capa-de-almofada-trico-canelado-azul-serenidade-107",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 108,
+      "url": "/produto/capa-de-almofada-trico-canelado-mostarda-108",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 109,
+      "url": "/produto/capa-de-almofada-trico-losangos-areia-109",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 110,
+      "url": "/produto/capa-de-almofada-trico-losangos-oliva-110",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 111,
+      "url": "/produto/capa-de-almofada-trico-losangos-terracota-111",
+      "gallery": 5,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 112,
+      "url": "/produto/caminho-de-mesa-essencia-oliva-112",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 113,
+      "url": "/produto/caminho-de-mesa-natural-areia-113",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 114,
+      "url": "/produto/caminho-de-mesa-terracota-114",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 115,
+      "url": "/produto/jogo-americano-essencia-oliva-4-pecas-115",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 116,
+      "url": "/produto/jogo-americano-natural-areia-6-pecas-116",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 117,
+      "url": "/produto/jogo-americano-terracota-4-pecas-117",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 118,
+      "url": "/produto/jogo-americano-terracota-6-pecas-118",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 119,
+      "url": "/produto/toalha-de-mesa-essencia-oliva-119",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 120,
+      "url": "/produto/toalha-de-mesa-natural-areia-120",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 121,
+      "url": "/produto/toalha-de-mesa-terracota-121",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 122,
+      "url": "/produto/cortina-blackout-grafite-122",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 123,
+      "url": "/produto/cortina-blackout-taupe-123",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 124,
+      "url": "/produto/cortina-geometrica-cinza-124",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 125,
+      "url": "/produto/cortina-linho-natural-areia-125",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 126,
+      "url": "/produto/cortina-texturizada-ondas-bege-126",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 127,
+      "url": "/produto/cortina-trama-natural-bege-127",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 128,
+      "url": "/produto/cortina-verde-salvia-128",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 129,
+      "url": "/produto/cortina-voil-branco-leve-129",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 130,
+      "url": "/produto/cortina-voil-floral-perola-130",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 131,
+      "url": "/produto/tapete-botanico-azul-sereno-1-peca-131",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 132,
+      "url": "/produto/tapete-boucle-areia-1-peca-132",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 133,
+      "url": "/produto/tapete-geometrico-nude-1-peca-133",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 134,
+      "url": "/produto/tapete-geometrico-preto-e-cinza-1-peca-134",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 135,
+      "url": "/produto/tapete-organico-terracota-1-peca-135",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 136,
+      "url": "/produto/tapete-saida-de-box-canelado-creme-1-peca-136",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 137,
+      "url": "/produto/tapete-saida-de-box-grafite-e-preto-1-peca-137",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 138,
+      "url": "/produto/tapete-saida-de-box-losangos-preto-1-peca-138",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 139,
+      "url": "/produto/tapete-saida-de-box-moldura-oliva-1-peca-139",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 140,
+      "url": "/produto/tapete-saida-de-box-ondas-areia-1-peca-140",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 141,
+      "url": "/produto/tapete-saida-de-box-ondas-terracota-1-peca-141",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 142,
+      "url": "/produto/tapete-saida-de-box-trelica-azul-1-peca-142",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 143,
+      "url": "/produto/tapete-trama-verde-salvia-1-peca-143",
+      "gallery": 3,
+      "variants": 0,
+      "result": "passed"
+    },
+    {
+      "id": 144,
+      "url": "/produto/edredom-malha-floral-vinho-200-fios-100-algodao-1-peca-144",
+      "gallery": 3,
+      "variants": 3,
+      "result": "passed"
+    }
+  ],
+  "categories": [
+    {
+      "slug": "todos",
+      "pageVisits": 72,
+      "result": "passed"
+    },
+    {
+      "slug": "almofadas",
+      "pageVisits": 8,
+      "result": "passed"
+    },
+    {
+      "slug": "cama-colchas-e-cobre-leitos--3",
+      "pageVisits": 8,
+      "result": "passed"
+    },
+    {
+      "slug": "cama-edredons--2",
+      "pageVisits": 16,
+      "result": "passed"
+    },
+    {
+      "slug": "cama-jogos-de-cama--1",
+      "pageVisits": 8,
+      "result": "passed"
+    },
+    {
+      "slug": "cama-mantas-e-peseiras--4",
+      "pageVisits": 8,
+      "result": "passed"
+    },
+    {
+      "slug": "cama-protetores-de-colchao--5",
+      "pageVisits": 8,
+      "result": "passed"
+    },
+    {
+      "slug": "decoracao",
+      "pageVisits": 16,
+      "result": "passed"
+    },
+    {
+      "slug": "mesa",
+      "pageVisits": 8,
+      "result": "passed"
+    },
+    {
+      "slug": "toalhas",
+      "pageVisits": 8,
+      "result": "passed"
+    },
+    {
+      "slug": "travesseiros",
+      "pageVisits": 8,
+      "result": "passed"
+    },
+    {
+      "slug": "cama",
+      "pageVisits": 24,
+      "result": "passed"
+    }
+  ],
+  "images": [
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-oliva-completo-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-oliva-completo-02-lateral.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-oliva-completo-03-fronha.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-oliva-completo-04-lencol.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-oliva-completo-05-elastico.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-essencia-floral-verde-oliva-01-frontal.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-detalhe-023-2-capa-640.jpg",
+      "w": 320,
+      "h": 240,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-botanico-ambiente-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-essencia-floral-botanico-01-frontal.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:4200/logotipo-branca.svg",
+      "w": 500,
+      "h": 500,
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "url": "http://localhost:4200/payment/mastercard.svg",
+      "w": 774,
+      "h": 457,
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "url": "http://localhost:4200/payment/paypal.svg",
+      "w": 527,
+      "h": 140,
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "url": "http://localhost:4200/payment/pix.svg?v=2",
+      "w": 899,
+      "h": 318,
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-detalhe-023-2-capa-1448.jpg",
+      "w": 720,
+      "h": 540,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-detalhe-023-2-1.jpg",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-detalhe-023-2-2.jpg",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-detalhe-023-2-3.jpg",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-detalhe-023-2-4.jpg",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-botanico-ambiente-02-lateral.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-botanico-ambiente-03-fronha.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-botanico-ambiente-04-lencol.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-botanico-ambiente-05-elastico.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/aurora-vermelho-ambiente-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/aurora-vermelho-ambiente-02-lateral.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/aurora-vermelho-liso-03-fronhas.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/aurora-vermelho-liso-04-lencol.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/aurora-vermelho-liso-05-elastico.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-aurora-floral-vermelho-01-frontal.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-vinho-ambiente-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-aurora-floral-vinho-01-frontal.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-vinho-ambiente-02-lateral.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-vinho-ambiente-03-fronha.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-vinho-ambiente-04-lencol.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-vinho-ambiente-05-elastico.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-serenidade-azul-completo-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-serenidade-azul-completo-02-lateral.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-serenidade-azul-completo-03-fronha.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-serenidade-azul-completo-04-lencol.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-serenidade-azul-completo-05-elastico.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-serenidade-azul-01-frontal.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-serenidade-azul-claro-completo-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-serenidade-azul-claro-01-frontal.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-natural-verde-botanico-ambiente-neutro.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-serenidade-azul-claro-completo-02-lateral.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-serenidade-azul-claro-completo-03-fronha.png",
+      "w": 1402,
+      "h": 1122,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-serenidade-azul-claro-completo-04-lencol.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/jogo-cama-serenidade-azul-claro-completo-05-elastico.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-8-01.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-8-1.webp",
+      "w": 984,
+      "h": 400,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-8-03.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-8-04.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-9-01.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-10-01.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-creme-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-canelado-creme-capa-card.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-9-1.webp",
+      "w": 984,
+      "h": 400,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-9-03.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-9-04.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-11-01.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-10-1.webp",
+      "w": 984,
+      "h": 400,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-10-03.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-10-04.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-manta-tricot-conforto-verde-oliva--6aad74b8e610295cf0a60a5b4bc7a4dabd5adbba559aeca6cc5fe5204defe448.jpg",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-11-1.webp",
+      "w": 984,
+      "h": 400,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-11-03.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-11-04.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-geometrico-rosa-nude.webp",
+      "w": 742,
+      "h": 990,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-13-01.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-detalhe-023-12-1.jpg",
+      "w": 1085,
+      "h": 1449,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-detalhe-023-12-2.jpg",
+      "w": 1085,
+      "h": 1449,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-12-04.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-13-1.webp",
+      "w": 984,
+      "h": 400,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-13-03.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-caimento-13-04.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-salvia-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalogo-ambiente-14.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-14-1.webp",
+      "w": 820,
+      "h": 265,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-14-2.webp",
+      "w": 820,
+      "h": 272,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-14-3.webp",
+      "w": 640,
+      "h": 279,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalogo-ambiente-15.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-15-1.webp",
+      "w": 820,
+      "h": 265,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-15-2.webp",
+      "w": 820,
+      "h": 272,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-15-3.webp",
+      "w": 640,
+      "h": 279,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-natural-verde-botanico--5b7de09f869a38c13c1973bfe8872773924b1a11ea54a894b64baacbf319f98e.jpg",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-16-1.webp",
+      "w": 802,
+      "h": 489,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-16-2.webp",
+      "w": 802,
+      "h": 502,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-16-3.webp",
+      "w": 627,
+      "h": 514,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-natural-folhagens-suaves-ambiente-neutro.png",
+      "w": 1312,
+      "h": 1199,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-natural-botanico-neutro-ambiente-neutro.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-natural-folhagens-suaves--15d61b5157a1605794196683432f93a1c761139e0ef38fc965091bf76d61c5bf.jpg",
+      "w": 1312,
+      "h": 1199,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-17-1.webp",
+      "w": 840,
+      "h": 468,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-17-2.webp",
+      "w": 840,
+      "h": 479,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-17-3.webp",
+      "w": 656,
+      "h": 492,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/cama-natural-botanico-neutro-dobrado.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-18-2.webp",
+      "w": 802,
+      "h": 502,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-18-3.webp",
+      "w": 627,
+      "h": 514,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-provence-floral-lilas--8df03f7e1c2b3eabbc31eeed9690685c53fd5567ea7a146c6e912bac2406f858.jpg",
+      "w": 1312,
+      "h": 1199,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-19-1.webp",
+      "w": 840,
+      "h": 468,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-19-2.webp",
+      "w": 840,
+      "h": 479,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-19-3.webp",
+      "w": 656,
+      "h": 492,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-provence-floral-rosa--4d13fcd03b6656aa9933bfe23135e3eb035532e6c1a252d6136b7c8918b3c36f.jpg",
+      "w": 1312,
+      "h": 1199,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-20-1.webp",
+      "w": 840,
+      "h": 468,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-20-2.webp",
+      "w": 840,
+      "h": 479,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-20-3.webp",
+      "w": 656,
+      "h": 492,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-manta-tricot-conforto-areia--871ea993801711f992836c74786676473a0084b21964ac2efcbd170d1ea7bd96.jpg",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-21-1.webp",
+      "w": 718,
+      "h": 547,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-21-2.webp",
+      "w": 718,
+      "h": 561,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-21-3.webp",
+      "w": 561,
+      "h": 575,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-manta-tricot-conforto-terracota--539889fbebb8d5c278ef45c04944e151f7673f715cb263c2b6f27f64e94fef14.jpg",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-01-01-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-areia-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-22-1.webp",
+      "w": 718,
+      "h": 547,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-22-2.webp",
+      "w": 718,
+      "h": 561,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-22-3.webp",
+      "w": 561,
+      "h": 575,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-23-1.webp",
+      "w": 718,
+      "h": 547,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-23-2.webp",
+      "w": 718,
+      "h": 561,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-23-3.webp",
+      "w": 561,
+      "h": 575,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-02-01-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-terracota-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-peseira-textura-off-white--1446e3c36a14f1d2339ee852baa3edd8004b4e00115fc8bdcd7f2a17581c38f1.jpg",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-24-1.webp",
+      "w": 718,
+      "h": 547,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-24-2.webp",
+      "w": 718,
+      "h": 561,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-24-3.webp",
+      "w": 561,
+      "h": 575,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-peseira-textura-azul-acinzentado--c70340c740758d83047e8c57da500f6ac5518afa882e62d8020f474a3ab2c989.jpg",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-peseira-textura-marrom-taupe--4499e3be80c08b64d7a5c3e368a363979fd451e2776c822d07ee8cde6b21f7f7.jpg",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-25-1.webp",
+      "w": 718,
+      "h": 547,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-25-2.webp",
+      "w": 718,
+      "h": 561,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-25-3.webp",
+      "w": 561,
+      "h": 575,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-26-1.webp",
+      "w": 718,
+      "h": 547,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-26-2.webp",
+      "w": 718,
+      "h": 561,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-26-3.webp",
+      "w": 561,
+      "h": 575,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalogo-ambiente-27.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-softcare--a6d82dda50c1f5c0fddfc478ac6cc21d49f78acfb0b9a4730777de3d8fb7ca71.jpg",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-softcare--ce886aae7f2b3ce169a613115671ca2223c66b0f8a7246361ec36f89965ab20a.jpg",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-27-1.webp",
+      "w": 718,
+      "h": 547,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-27-2.webp",
+      "w": 718,
+      "h": 561,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-27-3.webp",
+      "w": 561,
+      "h": 575,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalogo-ambiente-28.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/catalog-cama-protege--d3bbe96322e74b671dc121358107481d4756b09bc95971bc2d33dc524c760e67.jpg",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-28-1.webp",
+      "w": 718,
+      "h": 547,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-28-2.webp",
+      "w": 718,
+      "h": 561,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/box-detail-017-28-3.webp",
+      "w": 561,
+      "h": 575,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-3.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-6.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-8.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-1.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-5.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-11.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-9.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-4.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-12.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-10.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-2.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/travesseiro-demo-7.png",
+      "w": 1536,
+      "h": 1024,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-essencia-floral-verde-oliva-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-essencia-floral-verde-oliva-03-dobrado.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-essencia-floral-verde-oliva-04-estampa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-essencia-floral-verde-oliva-05-acabamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-essencia-floral-botanico-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-essencia-floral-botanico-03-dobrado.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-essencia-floral-botanico-04-estampa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-essencia-floral-botanico-05-acabamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-aurora-floral-vermelho-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-aurora-floral-vermelho-03-dobrado.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-aurora-floral-vermelho-04-estampa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-aurora-floral-vermelho-05-acabamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-aurora-floral-vinho-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-aurora-floral-vinho-03-dobrado.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-aurora-floral-vinho-04-estampa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-aurora-floral-vinho-05-acabamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-serenidade-azul-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-serenidade-azul-03-dobrado.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-serenidade-azul-04-estampa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-serenidade-azul-05-acabamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-serenidade-azul-claro-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-serenidade-azul-claro-03-dobrado.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-serenidade-azul-claro-04-estampa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/edredom-coordenado-serenidade-azul-claro-05-acabamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-01-02-pendurada.webp",
+      "w": 1086,
+      "h": 1448,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-01-03-dobrada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-01-04-felpa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-01-05-composicao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-03-01-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-04-01-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-05-01-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-02-02-pendurada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-02-03-dobrada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-02-04-felpa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-02-05-composicao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-10-01-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-03-02-pendurada.webp",
+      "w": 1086,
+      "h": 1448,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-03-03-dobrada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-03-04-felpa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-03-05-composicao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-04-02-pendurada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-04-03-dobrada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-04-04-felpa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-04-05-composicao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-05-02-pendurada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-05-03-dobrada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-05-04-felpa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-05-05-composicao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-06-01-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-06-02-pendurada.webp",
+      "w": 1086,
+      "h": 1448,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-06-03-dobrada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-06-04-felpa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-06-05-composicao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-07-01-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-07-02-pendurada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-07-03-dobrada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-07-04-felpa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-07-05-composicao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-08-01-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-08-02-pendurada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-08-03-dobrada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-08-04-felpa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-08-05-composicao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-09-01-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-09-02-pendurada.webp",
+      "w": 1086,
+      "h": 1448,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-09-03-dobrada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-09-04-felpa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-09-05-composicao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-10-02-pendurada.webp",
+      "w": 1086,
+      "h": 1448,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-10-03-dobrada.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-10-04-felpa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/toalhas-2026-10-05-composicao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-creme-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-creme-03-trama.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-creme-04-fechamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-creme-05-sem-enchimento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-nude-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-nude-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-nude-03-trama.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-nude-04-fechamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-nude-05-sem-enchimento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-salvia-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-salvia-03-trama.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-salvia-04-fechamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-trelica-salvia-05-sem-enchimento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-canelado-azul-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-canelado-azul-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-canelado-azul-03-trama.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-canelado-azul-04-fechamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-canelado-azul-05-sem-enchimento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-canelado-mostarda-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-canelado-mostarda-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-canelado-mostarda-03-trama.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-canelado-mostarda-04-fechamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-canelado-mostarda-05-sem-enchimento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-areia-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-areia-03-trama.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-areia-04-fechamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-areia-05-sem-enchimento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-oliva-01-capa.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-oliva-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-oliva-03-trama.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-oliva-04-fechamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-oliva-05-sem-enchimento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-terracota-02-lateral.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-terracota-03-trama.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-terracota-04-fechamento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/almofadas-2026-capa-tricot-losangos-terracota-05-sem-enchimento.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-essencia-oliva-01.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-caminho-de-mesa-essencia-oliva-objetiva.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-essencia-oliva-03-trama.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-essencia-oliva-4-pecas-ambientacao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-toalha-de-mesa-essencia-oliva-ambientacao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-caminho-de-mesa-natural-areia-ambientacao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-caminho-de-mesa-terracota-ambientacao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-natural-areia-01.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-natural-areia-03-trama.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-natural-areia-6-pecas-ambientacao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-natural-areia-01.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-terracota-01.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-caminho-de-mesa-terracota-03-trama.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-terracota-4-pecas-01.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-terracota-6-pecas-ambientacao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-toalha-de-mesa-terracota-ambientacao.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-essencia-oliva-4-pecas-01.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-essencia-oliva-4-pecas-03-trama.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-natural-areia-6-pecas-01.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-natural-areia-6-pecas-03-trama.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-jogo-americano-terracota-4-pecas-objetiva.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-terracota-4-pecas-03-trama.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-terracota-6-pecas-01.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-jogo-americano-terracota-6-pecas-03-trama.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-essencia-oliva-01.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-essencia-oliva-03-trama.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-galerias-041-toalha-de-mesa-natural-areia-objetiva.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-natural-areia-03-trama.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-terracota-01.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/mesa-2026-toalha-de-mesa-terracota-03-trama.png",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-blackout-grafite-01.webp",
+      "w": 374,
+      "h": 331,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-blackout-grafite-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-blackout-grafite-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-botanico-azul-01.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-boucle-areia-01.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-geometrico-nude-01.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-geometrico-preto-cinza-01.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-blackout-taupe-01.webp",
+      "w": 374,
+      "h": 331,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-blackout-taupe-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-blackout-taupe-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-geometrica-cinza-01.webp",
+      "w": 374,
+      "h": 332,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-geometrica-cinza-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-geometrica-cinza-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-linho-natural-areia-01.webp",
+      "w": 374,
+      "h": 331,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-linho-natural-areia-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-linho-natural-areia-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-relevo-ondas-bege-01.webp",
+      "w": 374,
+      "h": 331,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-relevo-ondas-bege-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-relevo-ondas-bege-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-trama-natural-bege-01.webp",
+      "w": 374,
+      "h": 332,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-trama-natural-bege-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-trama-natural-bege-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-verde-salvia-01.webp",
+      "w": 374,
+      "h": 332,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-verde-salvia-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-verde-salvia-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-trama-salvia-01.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-voil-branco-01.webp",
+      "w": 374,
+      "h": 332,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-voil-branco-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-voil-branco-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-voil-floral-perola-01.webp",
+      "w": 374,
+      "h": 331,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-voil-floral-perola-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-cortina-voil-floral-perola-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-botanico-azul-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-botanico-azul-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-boucle-areia-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-boucle-areia-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-geometrico-nude-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-geometrico-nude-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-geometrico-preto-cinza-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-geometrico-preto-cinza-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-organico-terracota-01.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-organico-terracota-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-organico-terracota-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-canelado-creme-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-canelado-creme-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-canelado-creme-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-grafite-preto-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-grafite-preto-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-grafite-preto-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-losangos-preto-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-losangos-preto-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-losangos-preto-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-moldura-oliva-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-moldura-oliva-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-moldura-oliva-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-ondas-areia-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-ondas-areia-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-ondas-areia-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-ondas-terracota-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-ondas-terracota-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-ondas-terracota-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-trelica-azul-capa.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-trelica-azul-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-box-trelica-azul-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-trama-salvia-02-produto.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-2026-tapete-trama-salvia-03-detalhe.webp",
+      "w": 1254,
+      "h": 1254,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/144_1795301898152685700.png",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/144_1795301905229490900.png",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/144_1795301910368850200.png",
+      "w": 1122,
+      "h": 1402,
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-grafite-preto-capa-card.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-losangos-preto-capa-card.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-moldura-oliva-capa-card.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-ondas-areia-capa-card.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-ondas-terracota-capa-card.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "url": "http://localhost:8080/uploads/decoracao-tapete-046-trelica-azul-capa-card.webp",
+      "w": 1448,
+      "h": 1086,
+      "status": 200,
+      "contentType": "image/webp"
+    }
+  ],
+  "errors": [],
+  "network": [],
+  "widths": [
+    1920,
+    1440,
+    1280,
+    1024,
+    768,
+    430,
+    390,
+    360
+  ],
+  "automationIssues": [
+    "Preview inicial em origem CORS nao permitida; corrigida a origem de leitura.",
+    "decode() de logo durante lazy loading: espera sincronizada e rechecagem da imagem atual, sem mudar a aplicacao."
+  ]
+}

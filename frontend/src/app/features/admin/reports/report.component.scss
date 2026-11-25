@@ -203,3 +203,18 @@ a {
     white-space: normal;
   }
 }
+
+.heading-hint {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  padding: 0;
+  cursor: help;
+}
+td a {
+  color: #3d4836;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

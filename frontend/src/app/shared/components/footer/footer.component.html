@@ -18,15 +18,15 @@
 
         <ul class="nav-links">
           <li>
-            <a href="#">Sobre Nós</a>
+            <a routerLink="/sobre-nos">Sobre Nós</a>
           </li>
 
           <li>
-            <a href="#">Blog</a>
+            <a routerLink="/blog">Blog</a>
           </li>
 
           <li>
-            <a href="#">Trocas e Devoluções</a>
+            <a routerLink="/trocas-e-devolucoes">Trocas e Devoluções</a>
           </li>
         </ul>
       </div>
@@ -36,15 +36,15 @@
 
         <ul class="nav-links">
           <li>
-            <a href="#">Ajuda e FAQ</a>
+            <a routerLink="/ajuda">Ajuda e FAQ</a>
           </li>
 
           <li>
-            <a href="#">Fale Conosco</a>
+            <a routerLink="/contato">Fale Conosco</a>
           </li>
 
           <li>
-            <a href="#">Política de Privacidade</a>
+            <a routerLink="/privacidade">Política de Privacidade</a>
           </li>
         </ul>
       </div>
@@ -60,9 +60,12 @@
               class="payment-logo"
             />
 
-            <img src="/payment/paypal.svg" alt="PayPal" class="payment-logo" />
+            <img src="/payment/visa.webp" alt="Visa" class="payment-logo" />
 
-            <img src="/payment/pix.svg?v=2" alt="Pix" class="payment-logo" />
+            <img src="/payment/elo.webp" alt="Elo" class="payment-logo" /><span
+              class="payment-boleto"
+              >▥ Boleto</span
+            ><img src="/payment/pix.svg?v=2" alt="Pix" class="payment-logo" />
           </div>
         </div>
       </div>
@@ -70,8 +73,9 @@
 
     <div class="footer-legal">
       <p class="company-meta"><b>©</b> Todos os direitos reservados.</p>
-      <p><b>CNPJ:</b> TL.GAR.OHS/3A3P-29</p>
-      <p><b>Endereço:</b> Rua Marialva, 9850 - São Paulo / SP</p>
+      <p>Projeto acadêmico · identidade empresarial fictícia</p>
+      <p>Ambiente de demonstração, sem operação comercial real.</p>
+      <a routerLink="/termos-de-uso">Termos de Uso</a>
     </div>
   </div>
 </footer>

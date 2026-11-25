@@ -18,30 +18,82 @@
       (action)="load()"
     />
   } @else {
-    @for (review of reviews(); track review.id) {
-      <article>
-        <div>
-          <strong>{{ review.customerName }}</strong
-          ><span
-            class="stars"
-            role="img"
-            [attr.aria-label]="review.rating + ' de 5 estrelas'"
+    <div class="review-overview">
+      <div class="average-card">
+        @if (reviews().length) {
+          <strong>{{ summary()?.average | number: "1.1-1" : "pt-BR" }}</strong
+          ><app-product-rating [productId]="productId" /><span
+            >{{ summary()?.count }}
+            {{ summary()?.count === 1 ? "avaliação" : "avaliações" }}</span
           >
-            @for (n of [1, 2, 3, 4, 5]; track n) {
-              <span aria-hidden="true">{{
-                n <= review.rating ? "★" : "☆"
-              }}</span>
-            }</span
-          ><time>{{ review.createdAt | date: "dd/MM/yyyy" }}</time>
+        } @else {
+          <span>Nota dos compradores</span
+          ><span class="stars" aria-hidden="true">☆☆☆☆☆</span
+          ><strong class="empty-average">Ainda sem avaliações</strong>
+        }
+      </div>
+      @if (reviews().length) {
+        <div class="distribution" aria-label="Distribuição das avaliações">
+          @for (n of [5, 4, 3, 2, 1]; track n) {
+            <div>
+              <span>{{ n }} {{ n === 1 ? "estrela" : "estrelas" }}</span
+              ><progress
+                [value]="percent(n)"
+                max="100"
+                [attr.aria-label]="n + ' estrelas: ' + count(n)"
+              ></progress
+              ><span>{{ count(n) }}</span>
+            </div>
+          }
         </div>
-        <p>{{ review.comment || "Sem comentário." }}</p>
-      </article>
-    } @empty {
-      <app-admin-state
-        layout="compact"
-        title="Este produto ainda não recebeu avaliações publicadas"
-        description="Quem comprou pode compartilhar sua opinião em Minha conta."
-      />
+      }
+      <div class="review-cta">
+        <h3>
+          {{
+            reviews().length
+              ? "Comprou este produto? Conte como foi."
+              : "Seja a primeira pessoa a avaliar este produto"
+          }}
+        </h3>
+        <p>
+          Quem comprou pode avaliar. Publicamos opiniões anônimas autorizadas
+          após moderação.
+        </p>
+        <a
+          routerLink="/minha-conta"
+          fragment="avaliacoes"
+          class="review-primary"
+          >Avaliar minha compra</a
+        ><a routerLink="/meus-pedidos">Ver minhas compras</a>
+      </div>
+    </div>
+    <div class="published-reviews">
+      @for (review of reviews(); track review.id) {
+        <article>
+          <div>
+            <strong>{{ review.customerName }}</strong
+            ><span
+              class="stars"
+              role="img"
+              [attr.aria-label]="review.rating + ' de 5 estrelas'"
+            >
+              @for (n of [1, 2, 3, 4, 5]; track n) {
+                <span aria-hidden="true">{{
+                  n <= review.rating ? "★" : "☆"
+                }}</span>
+              }</span
+            ><time>{{ review.createdAt | date: "dd/MM/yyyy" }}</time>
+          </div>
+          <p>{{ review.comment || "Sem comentário." }}</p>
+        </article>
+      }
+    </div>
+    @if (!reviews().length) {
+      <div class="review-steps">
+        <span><b>1 · Compre</b> Finalize seu pedido na loja.</span
+        ><span><b>2 · Avalie</b> Conte sua opinião em Minha conta.</span
+        ><span><b>3 · Publicamos</b> Após consentimento e moderação.</span>
+      </div>
     }
   }
 </section>

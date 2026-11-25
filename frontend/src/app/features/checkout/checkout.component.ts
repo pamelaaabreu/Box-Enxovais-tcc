@@ -9,7 +9,10 @@ import {
   ConfirmedOrder,
   ShippingQuote,
 } from '../../shared/types/checkout/checkout';
-import { installmentSummary } from '../../shared/utils/installments';
+import {
+  installmentOption,
+  installmentSummary,
+} from '../../shared/utils/installments';
 import {
   Component,
   DestroyRef,
@@ -72,6 +75,7 @@ import type { PostalField } from '../../shared/types/shipping/postal-field';
   styleUrl: './checkout.component.scss',
 })
 export class CheckoutComponent {
+  private readonly checkoutDraft = inject(CheckoutService).draft;
   private readonly assetUrls = inject(AssetUrlService);
   readonly cart = inject(CartService);
   private readonly checkoutApi = inject(CheckoutService);
@@ -238,6 +242,24 @@ export class CheckoutComponent {
   paymentCount(): number {
     return this.payment.value === 'card' ? this.installments.value : 1;
   }
+  optionLabel(count: number): string {
+    return installmentOption(Math.round(this.checkoutTotal() * 100), count);
+  }
+  manageAddresses(): void {
+    this.checkoutApiDraft();
+    void this.router.navigate(['/minha-conta'], {
+      fragment: 'enderecos',
+      queryParams: {
+        retorno: 'checkout',
+        endereco: this.selectedAddressId() || null,
+      },
+    });
+  }
+  private checkoutApiDraft(): void {
+    this.checkoutDraft.addressId = this.selectedAddressId();
+    this.checkoutDraft.phone = this.contactPhone.value;
+    this.checkoutDraft.address = this.address.getRawValue();
+  }
   planLabel(count: number = this.paymentCount()): string {
     return installmentSummary(Math.round(this.checkoutTotal() * 100), count);
   }
@@ -323,6 +345,12 @@ export class CheckoutComponent {
         takeUntilDestroyed(),
       )
       .subscribe();
+    if (this.checkoutDraft.phone) {
+      this.contactPhone.setValue(this.checkoutDraft.phone);
+      this.contactPhone.markAsDirty();
+    }
+    if (this.checkoutDraft.address)
+      this.address.patchValue(this.checkoutDraft.address);
     this.addressReload
       .pipe(
         startWith(undefined),
@@ -337,7 +365,7 @@ export class CheckoutComponent {
               this.addressesLoading.set(false);
               const current = this.addressChosen
                 ? this.selectedAddressId()
-                : this.restoredAddressId;
+                : (this.checkoutDraft.addressId ?? this.restoredAddressId);
               const id =
                 current === 0
                   ? 0
@@ -379,6 +407,9 @@ export class CheckoutComponent {
         },
       });
     this.auth.userChanged.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.checkoutDraft.phone = '';
+      this.checkoutDraft.addressId = undefined;
+      this.checkoutDraft.address = undefined;
       this.clearAddressChoice();
       this.savedAddresses.set([]);
       this.selectedAddressId.set(0);

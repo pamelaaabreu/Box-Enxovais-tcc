@@ -1,3 +1,4 @@
+import { ExperienceReview } from '../../shared/types/experience-review.types';
 import { PurchaseReviewService } from '../../core/services/purchase-review.service';
 import { AdminStateComponent } from '../../shared/components/admin-state/admin-state.component';
 import { InlineNoticeComponent } from '../../shared/components/inline-notice/inline-notice.component';
@@ -34,6 +35,17 @@ export class PurchaseReviewComponent implements OnChanges {
   private readRequest?: Subscription;
   private writeRequest?: Subscription;
   private loadedOrderId = 0;
+  @Input() compact = false;
+  readonly review = signal<ExperienceReview | null>(null);
+  readonly editing = signal(false);
+  readonly dismissed = signal(false);
+  readonly topics = [
+    { id: 'navigation', label: 'Navegação no site' },
+    { id: 'product_information', label: 'Informações do produto' },
+    { id: 'checkout', label: 'Finalização da compra' },
+    { id: 'payment', label: 'Formas de pagamento' },
+    { id: 'shipping', label: 'Clareza do frete e prazo' },
+  ];
   readonly readError = signal(false);
   readonly unavailable = signal(false);
   readonly loading = signal(true);
@@ -44,6 +56,8 @@ export class PurchaseReviewComponent implements OnChanges {
   readonly ratings = [1, 2, 3, 4, 5];
   readonly form = inject(FormBuilder).nonNullable.group({
     overall: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
+    experience: [null as number | null, [Validators.min(1), Validators.max(5)]],
+    topics: [[] as string[]],
     comment: ['', Validators.maxLength(1000)],
     publicationConsent: false,
   });
@@ -77,10 +91,20 @@ export class PurchaseReviewComponent implements OnChanges {
       .subscribe({
         next: (review) => {
           this.loading.set(false);
-          if (review)
+          this.review.set(review);
+          this.editing.set(false);
+          if (review) {
+            this.form.patchValue({
+              overall: review.overall,
+              experience: review.experience,
+              topics: review.topics ?? [],
+              comment: review.comment,
+              publicationConsent: review.publicationConsent,
+            });
             this.saved.set(
               'Você já avaliou este pedido. Obrigado por compartilhar sua experiência.',
             );
+          }
         },
         error: (error: HttpErrorResponse) => {
           this.loading.set(false);
@@ -91,13 +115,28 @@ export class PurchaseReviewComponent implements OnChanges {
       });
   }
 
+  toggleTopic(id: string): void {
+    const control = this.form.controls.topics;
+    control.setValue(
+      control.value.includes(id)
+        ? control.value.filter((x) => x !== id)
+        : [...control.value, id],
+    );
+  }
+  topicLabel(id: string): string {
+    return this.topics.find((x) => x.id === id)?.label ?? id;
+  }
+  startEdit(): void {
+    this.editing.set(true);
+    this.saved.set('');
+  }
   submit(): void {
     if (
       this.sending() ||
       this.loading() ||
       this.readError() ||
       this.unavailable() ||
-      this.saved()
+      (this.saved() && !this.editing())
     )
       return;
     if (this.form.invalid) {
@@ -108,14 +147,12 @@ export class PurchaseReviewComponent implements OnChanges {
     this.sending.set(true);
     this.submitError.set('');
     this.writeRequest = this.reviewApi
-      .save(orderId, this.form.getRawValue())
+      .save(orderId, this.form.getRawValue(), !!this.review())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.sending.set(false);
-          this.saved.set(
-            'Obrigado por avaliar sua experiência! Sua avaliação foi recebida para moderação.',
-          );
+          this.loadReview();
         },
         error: (error: HttpErrorResponse) => {
           this.sending.set(false);

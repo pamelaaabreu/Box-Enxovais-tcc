@@ -175,107 +175,115 @@
           }
 
           <div class="detail-grid">
-            <section class="order detail-panel detail-products">
-              <h2>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  aria-hidden="true"
-                >
-                  <path d="m3 7 9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4m-9 4v10" />
-                </svg>
-                Produtos do pedido
-                <small class="detail-count"
-                  >{{ units(order) }}
-                  {{ units(order) === 1 ? "item" : "itens" }}</small
-                >
-              </h2>
-              @for (item of order.items; track item.id) {
-                <div class="detail-item">
-                  <ng-container
-                    [ngTemplateOutlet]="thumbnail"
-                    [ngTemplateOutletContext]="{ $implicit: item }"
-                  />
-                  <div>
-                    <strong>{{ item.name }}</strong>
-                    <div class="detail-item-meta">
-                      <span>Qtd.: {{ item.quantity }}</span>
-                      <span
-                        >{{
-                          item.unitPrice
-                            | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-                        }}
-                        / un.</span
-                      >
-                    </div>
-                    @if (item.productId) {
-                      <a [routerLink]="['/produto', item.productId]"
-                        >Ver produto →</a
-                      >
-                    }
-                  </div>
-                  <div class="detail-item-total">
-                    <small>Subtotal do item</small
-                    ><strong>{{
-                      item.subtotal
-                        | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
-                    }}</strong>
-                  </div>
-                </div>
-              }
-              <p class="detail-product-count">
-                {{ order.items.length }}
-                {{ order.items.length === 1 ? "produto" : "produtos" }} ·
-                {{ units(order) }}
-                {{ units(order) === 1 ? "unidade" : "unidades" }}
-              </p>
-            </section>
-            <section class="order detail-panel detail-delivery">
-              <h2>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM15 10a3 3 0 1 0-6 0 3 3 0 0 0 6 0Z"
-                  />
-                </svg>
-                Endereço de entrega
-              </h2>
-              <dl class="detail-address">
-                <div>
-                  <dt>Destinatário</dt>
-                  <dd>{{ order.address.recipient }}</dd>
-                </div>
-                <div>
-                  <dt>CEP</dt>
-                  <dd>{{ order.address.zipCode }}</dd>
-                </div>
-                <div class="detail-street">
-                  <dt>Endereço</dt>
-                  <dd>
-                    {{ order.address.street }}, {{ order.address.number }}
-                    @if (order.address.complement) {
-                      — {{ order.address.complement }}
-                    }
-                  </dd>
-                </div>
-                <div>
-                  <dt>Bairro</dt>
-                  <dd>{{ order.address.neighborhood }}</dd>
-                </div>
-                <div>
-                  <dt>Cidade / UF</dt>
-                  <dd>{{ order.address.city }} — {{ order.address.state }}</dd>
-                </div>
-              </dl>
-            </section>
+            <app-purchase-review
+              class="detail-experience"
+              [orderId]="order.id"
+              [compact]="true"
+            />
             <div class="detail-side">
+              <section class="order detail-panel detail-products">
+                <h2>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m3 7 9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4m-9 4v10" />
+                  </svg>
+                  Produtos do pedido
+                  <small class="detail-count"
+                    >{{ units(order) }}
+                    {{ units(order) === 1 ? "item" : "itens" }}</small
+                  >
+                </h2>
+                @for (item of order.items; track item.id) {
+                  <div class="detail-item">
+                    <ng-container
+                      [ngTemplateOutlet]="thumbnail"
+                      [ngTemplateOutletContext]="{ $implicit: item }"
+                    />
+                    <div>
+                      <strong>{{ item.name }}</strong>
+                      <div class="detail-item-meta">
+                        <span>Qtd.: {{ item.quantity }}</span>
+                        <span
+                          >{{
+                            item.unitPrice
+                              | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                          }}
+                          / un.</span
+                        >
+                      </div>
+                      @if (item.productId) {
+                        <a [routerLink]="['/produto', item.productId]"
+                          >Ver produto →</a
+                        >
+                      }
+                    </div>
+                    <div class="detail-item-total">
+                      <small>Subtotal do item</small
+                      ><strong>{{
+                        item.subtotal
+                          | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                      }}</strong>
+                    </div>
+                  </div>
+                }
+                <p class="detail-product-count">
+                  {{ order.items.length }}
+                  {{ order.items.length === 1 ? "produto" : "produtos" }} ·
+                  {{ units(order) }}
+                  {{ units(order) === 1 ? "unidade" : "unidades" }}
+                </p>
+              </section>
+              <section class="order detail-panel detail-delivery">
+                <h2>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM15 10a3 3 0 1 0-6 0 3 3 0 0 0 6 0Z"
+                    />
+                  </svg>
+                  Endereço de entrega
+                </h2>
+                <dl class="detail-address">
+                  <div>
+                    <dt>Destinatário</dt>
+                    <dd>{{ order.address.recipient }}</dd>
+                  </div>
+                  <div>
+                    <dt>CEP</dt>
+                    <dd>{{ order.address.zipCode }}</dd>
+                  </div>
+                  <div class="detail-street">
+                    <dt>Endereço</dt>
+                    <dd>
+                      {{ order.address.street }}, {{ order.address.number }}
+                      @if (order.address.complement) {
+                        — {{ order.address.complement }}
+                      }
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Bairro</dt>
+                    <dd>{{ order.address.neighborhood }}</dd>
+                  </div>
+                  <div>
+                    <dt>Cidade / UF</dt>
+                    <dd>
+                      {{ order.address.city }} — {{ order.address.state }}
+                    </dd>
+                  </div>
+                </dl>
+              </section>
+
               <section class="order detail-panel detail-summary">
                 <h2>Resumo do pedido</h2>
                 <dl>
@@ -399,9 +407,13 @@
                     class="cancellation-fields"
                     [attr.inert]="cancelling() ? '' : null"
                   >
-                    <mat-form-field appearance="outline" floatLabel="always">
-                      <mat-label>Motivo do cancelamento</mat-label>
+                    <label
+                      class="cancellation-label"
+                      id="cancellation-reason-label"
+                      >Motivo do cancelamento *</label
+                    ><mat-form-field appearance="outline" floatLabel="always">
                       <mat-select
+                        aria-labelledby="cancellation-reason-label"
                         [formControl]="cancellationReason"
                         panelClass="box-form-options"
                         required

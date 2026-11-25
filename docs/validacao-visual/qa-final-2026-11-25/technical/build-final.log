@@ -1,0 +1,42 @@
+
+> frontend@0.0.0 build
+> ng build
+
+> Building...
+√ Building...
+Initial chunk files   | Names                    |  Raw size | Estimated transfer size
+chunk-X343AJY5.js     | -                        | 167.98 kB |                49.40 kB
+chunk-QNBOVTCU.js     | -                        | 132.49 kB |                34.56 kB
+styles-FVX4ZP5Y.css   | styles                   |  91.16 kB |                14.66 kB
+polyfills-5CFQRCPP.js | polyfills                |  34.59 kB |                11.33 kB
+chunk-4BJPZW2Z.js     | -                        |   9.23 kB |                 3.12 kB
+main-TGP62PEO.js      | main                     |   8.95 kB |                 2.90 kB
+chunk-QHAOY5JS.js     | -                        |   6.05 kB |                 1.83 kB
+chunk-YRGK2CXG.js     | -                        | 951 bytes |               951 bytes
+chunk-JKOY2XUY.js     | -                        | 899 bytes |               899 bytes
+chunk-I7VWKHZJ.js     | -                        | 220 bytes |               220 bytes
+
+                      | Initial total            | 452.52 kB |               119.87 kB
+
+Lazy chunk files      | Names                    |  Raw size | Estimated transfer size
+chunk-7XTBTMTC.js     | admin-routes             | 935.27 kB |               233.95 kB
+chunk-2ZDAGVDI.js     | -                        |  96.63 kB |                17.33 kB
+chunk-ELX6UEHS.js     | account-component        |  67.71 kB |                15.95 kB
+chunk-FQDD6FSX.js     | browser                  |  67.60 kB |                17.73 kB
+chunk-2NQ2EEPG.js     | order-history-component  |  55.81 kB |                12.37 kB
+chunk-QEMSIALU.js     | -                        |  52.90 kB |                10.13 kB
+chunk-WUTEB4HI.js     | checkout-component       |  51.89 kB |                11.76 kB
+chunk-JBOTUBEH.js     | -                        |  51.02 kB |                13.35 kB
+chunk-GBFQWVCU.js     | -                        |  50.35 kB |                11.46 kB
+chunk-U2U46APT.js     | product-detail-component |  50.19 kB |                12.29 kB
+chunk-T6BDSKOA.js     | -                        |  44.01 kB |                10.20 kB
+chunk-VKEUSC52.js     | -                        |  42.85 kB |                 9.19 kB
+chunk-TVCK5PHQ.js     | reset-password-component |  42.26 kB |                 8.62 kB
+chunk-RC2WSCOA.js     | -                        |  41.62 kB |                 9.69 kB
+chunk-PUS5EDVA.js     | -                        |  40.77 kB |                 9.91 kB
+...and 46 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [34.028 seconds]
+
+Output location: C:\Users\vitor\Documents\Box-Enxovais-tcc\frontend\dist\frontend
+

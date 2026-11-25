@@ -58,7 +58,7 @@ SELECT
     id,
     name,
     description,
-    image_path,
+    coalesce(nullif(image_path,''),(SELECT i.image_path FROM promotion_products pp JOIN products p ON p.id=pp.product_id JOIN product_images i ON i.product_id=p.id WHERE pp.promotion_id=promotions.id AND p.status='active' ORDER BY p.id,i.is_primary DESC,i.id LIMIT 1),''),
     start_date,
     end_date
 FROM promotions

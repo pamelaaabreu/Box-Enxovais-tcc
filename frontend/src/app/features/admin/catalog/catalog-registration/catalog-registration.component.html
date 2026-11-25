@@ -95,29 +95,81 @@
       (action)="load()"
     />
   } @else if (filtered().length) {
-    <ul class="registration-list">
-      @for (item of paged(); track item.id) {
-        <li class="registration-item">
-          <div class="item-content">
-            <strong>{{ item.name }}</strong>
-            <small>{{ item.productCount }} produto(s) vinculado(s)</small>
-          </div>
-          <div class="actions item-actions">
-            <button mat-stroked-button type="button" (click)="start(item)">
-              Editar
-            </button>
-            <button
-              mat-stroked-button
-              type="button"
-              [disabled]="item.productCount > 0"
-              (click)="remove(item)"
-            >
-              Excluir
-            </button>
-          </div>
-        </li>
-      }
-    </ul>
+    <app-admin-data-table [label]="title"
+      ><table>
+        <thead>
+          <tr>
+            <th>{{ noun === "categoria" ? "Categoria" : "Marca" }}</th>
+            <th>Produtos vinculados</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of paged(); track item.id; let i = $index) {
+            @if (noun === "categoria" && groupStart(item, i)) {
+              <tr class="category-group">
+                <td colspan="3">
+                  <button
+                    type="button"
+                    [attr.aria-expanded]="
+                      !collapsed().includes(groupName(item))
+                    "
+                    (click)="toggleGroup(groupName(item))"
+                  >
+                    {{ collapsed().includes(groupName(item)) ? "›" : "⌄" }}
+                    {{ groupName(item) }} ·
+                    {{ groupCount(groupName(item)) }} produtos
+                  </button>
+                </td>
+              </tr>
+            }
+            @if (
+              noun !== "categoria" || !collapsed().includes(groupName(item))
+            ) {
+              <tr>
+                <td data-label="Nome">
+                  <strong>{{ item.name.split(" / ").at(-1) }}</strong>
+                </td>
+                <td data-label="Produtos vinculados">
+                  <progress
+                    [value]="productPercent(item)"
+                    max="100"
+                    [attr.aria-label]="
+                      item.productCount + ' produtos vinculados'
+                    "
+                  ></progress>
+                  {{ item.productCount }}
+                  {{ item.productCount === 1 ? "produto" : "produtos" }}
+                </td>
+                <td data-label="Ações">
+                  <div class="actions">
+                    <button
+                      mat-stroked-button
+                      type="button"
+                      (click)="start(item)"
+                    >
+                      Editar</button
+                    ><button
+                      mat-stroked-button
+                      class="danger"
+                      type="button"
+                      [disabled]="item.productCount > 0"
+                      (click)="remove(item)"
+                    >
+                      Excluir
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table></app-admin-data-table
+    >
+    <p class="note">
+      Cadastros com produtos vinculados são preservados. Reatribua os produtos
+      antes de excluir.
+    </p>
     <app-pagination
       [page]="currentPage()"
       [total]="filtered().length"

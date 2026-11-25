@@ -87,9 +87,21 @@ export class AccountComponent {
     { id: 'seguranca', label: 'Segurança da conta' },
     { id: 'avaliacoes', label: 'Minhas avaliações' },
   ] as const;
+  readonly checkoutReturn =
+    inject(ActivatedRoute).snapshot.queryParamMap.get('retorno') === 'checkout';
   readonly activeTab = signal('dados');
   private readonly route = inject(ActivatedRoute);
   private savedProfile = '';
+  private readonly profileRevision = signal(0);
+  private profileSnapshot(): string {
+    const v = this.profile.getRawValue();
+    return JSON.stringify({
+      ...v,
+      name: v.name.trim(),
+      phone: v.phone.replace(/\D/g, ''),
+      nationalId: v.nationalId.replace(/\D/g, ''),
+    });
+  }
   get profileAge(): number | null {
     return ageOnDate(this.profile.controls.birthDate.value);
   }
@@ -97,7 +109,8 @@ export class AccountComponent {
   readonly confirmedProfile = signal<AccountProfile | null>(null);
   readonly editingProfile = signal(false);
   get hasProfileChanges(): boolean {
-    return JSON.stringify(this.profile.getRawValue()) !== this.savedProfile;
+    this.profileRevision();
+    return this.profileSnapshot() !== this.savedProfile;
   }
 
   readonly savedName = signal('');
@@ -224,6 +237,7 @@ export class AccountComponent {
     state: 0,
   };
   private addressId: number | null = null;
+  private addressDeepLinkHandled = false;
   readonly profile = this.fb.group({
     name: [
       '',
@@ -270,6 +284,9 @@ export class AccountComponent {
   ] as const;
 
   constructor() {
+    this.profile.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.profileRevision.update((x) => x + 1));
     this.route.fragment.pipe(takeUntilDestroyed()).subscribe((fragment) => {
       if (fragment === 'avaliacoes') this.selectTab('avaliacoes');
     });
@@ -326,7 +343,7 @@ export class AccountComponent {
       nationalId: profile.nationalId ?? '',
       birthDate: profile.birthDate?.split('-').reverse().join('/') ?? '',
     });
-    this.savedProfile = JSON.stringify(this.profile.getRawValue());
+    this.savedProfile = this.profileSnapshot();
   }
 
   editProfile(): void {
@@ -672,7 +689,9 @@ export class AccountComponent {
             }),
           ),
         ),
-        tap((addresses) => this.addresses.set(addresses)),
+        tap((addresses) => {
+          this.addresses.set(addresses);
+        }),
         finalize(() => this.settingDefaultId.set(null)),
       ),
       () => this.alerts.success('Endereço padrão atualizado!'),
@@ -689,6 +708,12 @@ export class AccountComponent {
           this.addressesError.set('');
           this.addresses.set(addresses);
           this.addressesLoaded.set(true);
+          const id = Number(this.route.snapshot.queryParamMap.get('endereco'));
+          const owned = addresses.find((a) => a.id === id);
+          if (this.checkoutReturn && owned && !this.addressDeepLinkHandled) {
+            this.addressDeepLinkHandled = true;
+            this.editAddress(owned);
+          }
         },
         error: () =>
           this.addressesError.set('Não foi possível carregar seus endereços.'),

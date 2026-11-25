@@ -34,6 +34,7 @@ describe('CatalogService API mapping', () => {
       category_name: 'Roupa de banho',
       product_type_id: 82,
     } as Parameters<CatalogService['adapt']>[0]);
+    expect(product.measurements).toEqual({});
     expect(
       await firstValueFrom(service.getCategoryBySlug(product.category.slug)),
     ).toEqual(product.category);

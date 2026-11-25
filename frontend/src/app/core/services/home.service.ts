@@ -1,3 +1,4 @@
+import { ExperienceReview } from '../../shared/types/experience-review.types';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL, apiEndpoint } from '../config/api.config';
@@ -8,6 +9,11 @@ import type { HomeCategory } from '../../shared/types/catalog/home-category';
 export class HomeService {
   private readonly http = inject(HttpClient);
   private readonly base = inject(API_BASE_URL);
+  reviews() {
+    return this.http.get<ExperienceReview[]>(
+      apiEndpoint(this.base, 'home/reviews'),
+    );
+  }
   featured() {
     return this.http.get<{ products: Product[] }>(
       apiEndpoint(this.base, 'home/featured'),

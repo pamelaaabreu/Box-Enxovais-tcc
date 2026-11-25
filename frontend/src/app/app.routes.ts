@@ -3,6 +3,107 @@ import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 import { AdminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
+  {
+    path: 'sobre-nos',
+    loadComponent: () =>
+      import(
+        './features/institutional/institutional-page/institutional-page.component'
+      ).then((m) => m.InstitutionalPageComponent),
+    data: {
+      title: 'Sobre Nós',
+      paragraphs: [
+        'A Box Enxovais é uma loja fictícia desenvolvida para um Trabalho de Conclusão de Curso. O projeto explora uma compra acolhedora, acessível e organizada de artigos para o lar.',
+        'Catálogo, administração e jornadas de compra demonstram recursos de software. Não há operação comercial real ou promessa de entrega por esta página.',
+      ],
+    },
+  },
+  {
+    path: 'blog',
+    loadComponent: () =>
+      import(
+        './features/institutional/institutional-page/institutional-page.component'
+      ).then((m) => m.InstitutionalPageComponent),
+    data: {
+      title: 'Blog',
+      paragraphs: [
+        'Casa bem vivida: pequenas mudanças de textura e cor podem tornar o descanso mais acolhedor. Combine tons neutros com detalhes que expressem sua personalidade.',
+        'Cuidado com os enxovais: consulte as instruções do fabricante na página de cada produto. Separe tecidos delicados e evite produtos de limpeza incompatíveis. Conteúdo editorial acadêmico, sem aconselhamento comercial.',
+      ],
+    },
+  },
+  {
+    path: 'trocas-e-devolucoes',
+    loadComponent: () =>
+      import(
+        './features/institutional/institutional-page/institutional-page.component'
+      ).then((m) => m.InstitutionalPageComponent),
+    data: {
+      title: 'Trocas e Devoluções',
+      paragraphs: [
+        'Neste ambiente acadêmico, pedidos e pagamentos são simulados. O cancelamento disponível em Meus pedidos demonstra a preservação do histórico e a atualização do estoque.',
+        'Esta página não estabelece política jurídica de uma empresa real. Uma futura operação comercial precisaria divulgar seus canais, condições e obrigações aplicáveis antes de atender consumidores.',
+      ],
+    },
+  },
+  {
+    path: 'ajuda',
+    loadComponent: () =>
+      import(
+        './features/institutional/institutional-page/institutional-page.component'
+      ).then((m) => m.InstitutionalPageComponent),
+    data: {
+      title: 'Ajuda e FAQ',
+      paragraphs: [
+        'Como encontrar produtos? Use a pesquisa por nome ou SKU e as categorias da navegação. Escolha o tamanho disponível antes de adicionar ao carrinho.',
+        'Como consultar pedidos? Entre na sua conta e acesse Meus pedidos. O frete é validado pelo CEP informado na entrega. Pagamentos são simulados e não solicitam dados reais de cartão.',
+        'Como avaliar? Produtos comprados em pedidos elegíveis aparecem em Minha conta > Minhas avaliações. Avaliar o produto é diferente de avaliar a experiência na loja.',
+      ],
+    },
+  },
+  {
+    path: 'contato',
+    loadComponent: () =>
+      import(
+        './features/institutional/institutional-page/institutional-page.component'
+      ).then((m) => m.InstitutionalPageComponent),
+    data: {
+      title: 'Fale Conosco',
+      paragraphs: [
+        'Esta é uma página informativa de um projeto acadêmico. Não existe atendimento comercial ativo nem formulário de envio nesta página.',
+        'Para demonstrações, consulte Ajuda e FAQ e os detalhes de seus pedidos. Não envie dados pessoais ou de pagamento para contatos fictícios apresentados em materiais de exemplo.',
+      ],
+    },
+  },
+  {
+    path: 'privacidade',
+    loadComponent: () =>
+      import(
+        './features/institutional/institutional-page/institutional-page.component'
+      ).then((m) => m.InstitutionalPageComponent),
+    data: {
+      title: 'Política de Privacidade',
+      paragraphs: [
+        'O sistema acadêmico utiliza dados de conta, endereços e histórico para demonstrar autenticação e compra. Utilize dados de teste ao participar de uma demonstração autorizada.',
+        'Avaliações só são publicadas anonimamente quando autorizadas pelo cliente e aprovadas pela moderação. A autorização pode ser revogada editando a avaliação. Dados de cadastro não são publicados como identificação do autor.',
+        'Não há pagamento real. Não informe dados bancários. Esta descrição técnica não substitui uma política jurídica para uma operação comercial.',
+      ],
+    },
+  },
+  {
+    path: 'termos-de-uso',
+    loadComponent: () =>
+      import(
+        './features/institutional/institutional-page/institutional-page.component'
+      ).then((m) => m.InstitutionalPageComponent),
+    data: {
+      title: 'Termos de Uso',
+      paragraphs: [
+        'Ao utilizar a demonstração, você reconhece que a Box Enxovais é um projeto acadêmico, com pedidos e pagamentos simulados, sem compra ou cobrança real.',
+        'Use somente informações próprias em ambientes autorizados ou dados fictícios em testes. Não forneça dados reais de cartão. A conta dá acesso apenas às suas informações e compras.',
+        'As avaliações devem se referir às compras elegíveis. A publicação anônima depende de consentimento e moderação. Este texto descreve a demonstração e não constitui contrato comercial de uma loja ativa.',
+      ],
+    },
+  },
   { path: 'account', redirectTo: 'minha-conta', pathMatch: 'full' },
   {
     path: 'checkout/success/:id',

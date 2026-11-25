@@ -1,13 +1,9 @@
-@if (originalPrice() !== null) {
+@if (originalPrice() !== null && originalPrice()! > price()) {
   <del>{{
     originalPrice() | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
   }}</del>
 }
 <strong>{{ price() | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR" }}</strong>
 @if (showInstallments()) {
-  <span
-    >ou 4x de
-    {{ price() / 4 | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR" }} sem
-    juros</span
-  >
+  <span>{{ installmentLabel() }}</span>
 }

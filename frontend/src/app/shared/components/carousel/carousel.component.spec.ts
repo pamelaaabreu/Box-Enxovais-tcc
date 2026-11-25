@@ -54,9 +54,9 @@ describe('Home carousel', () => {
         e.getAttribute('src'),
       ),
     ).toEqual([
-      '/inicio/banner-natal.webp',
-      '/inicio/banner-banho-fotografico.webp',
-      '/inicio/banner-almofadas-fotografico.webp',
+      '/home/banner-natal.webp',
+      '/home/banner-banho-fotografico.webp',
+      '/home/banner-almofadas-fotografico.webp',
     ]);
     expect(root.querySelector('app-trust-bar')).toBeNull();
     expect(root.querySelectorAll('.banner__christmas-detail').length).toBe(0);

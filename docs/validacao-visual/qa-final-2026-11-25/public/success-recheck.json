@@ -1,0 +1,42 @@
+[
+  {
+    "width": 1920,
+    "status": "passed",
+    "asset": "/checkout/confirmed-order.svg"
+  },
+  {
+    "width": 1440,
+    "status": "passed",
+    "asset": "/checkout/confirmed-order.svg"
+  },
+  {
+    "width": 1280,
+    "status": "passed",
+    "asset": "/checkout/confirmed-order.svg"
+  },
+  {
+    "width": 1024,
+    "status": "passed",
+    "asset": "/checkout/confirmed-order.svg"
+  },
+  {
+    "width": 768,
+    "status": "passed",
+    "asset": "/checkout/confirmed-order.svg"
+  },
+  {
+    "width": 430,
+    "status": "passed",
+    "asset": "/checkout/confirmed-order.svg"
+  },
+  {
+    "width": 390,
+    "status": "passed",
+    "asset": "/checkout/confirmed-order.svg"
+  },
+  {
+    "width": 360,
+    "status": "passed",
+    "asset": "/checkout/confirmed-order.svg"
+  }
+]

@@ -14,6 +14,16 @@
   >
     <input
       #productQuery
+      (input)="changeSearch(productQuery.value)"
+      (keydown)="searchKey($event)"
+      (focus)="searchTerm() && searchOpen.set(true)"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-controls="search-preview"
+      [attr.aria-expanded]="searchOpen()"
+      [attr.aria-activedescendant]="
+        activeResult() >= 0 ? 'search-result-' + activeResult() : null
+      "
       type="search"
       maxlength="120"
       aria-label="Buscar produtos"
@@ -36,6 +46,59 @@
         <path d="m21 21-4.3-4.3" />
       </svg>
     </button>
+    @if (searchOpen()) {
+      <div
+        id="search-preview"
+        class="search-preview"
+        role="listbox"
+        aria-label="Sugestões de produtos"
+      >
+        @if (searchLoading()) {
+          <p role="status">Buscando produtos…</p>
+        } @else if (searchError()) {
+          <p role="status">Não foi possível pesquisar. Tente novamente.</p>
+          <button
+            type="button"
+            (click)="changeSearch(''); changeSearch(productQuery.value)"
+          >
+            Tentar novamente
+          </button>
+        } @else {
+          @for (product of searchResults(); track product.id; let i = $index) {
+            <a
+              [id]="'search-result-' + i"
+              role="option"
+              [attr.aria-selected]="activeResult() === i"
+              [routerLink]="['/produto', product.slug]"
+              (click)="searchOpen.set(false)"
+            >
+              @if (product.images[0]) {
+                <img [src]="product.images[0].url" alt="" />
+              }
+              <span
+                >{{ product.name
+                }}<strong>{{
+                  (product.promotion_active
+                    ? product.promotional_price
+                    : product.price
+                  ) | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+                }}</strong></span
+              ></a
+            >
+          } @empty {
+            <p role="status">Nenhum produto encontrado.</p>
+          }
+          <a
+            role="option"
+            [attr.aria-selected]="false"
+            routerLink="/categoria/todos"
+            [queryParams]="{ q: searchTerm() }"
+            (click)="searchOpen.set(false)"
+            >Ver todos os resultados</a
+          >
+        }
+      </div>
+    }
   </form>
 
   <div class="account-cart">
@@ -151,7 +214,8 @@
                 routerLink="/minha-conta"
                 fragment="avaliacoes"
                 (click)="isMenuOpen = false"
-                >Minhas avaliações</a
+                ><mat-icon aria-hidden="true">rate_review</mat-icon>Minhas
+                avaliações</a
               >
             </li>
             <li>

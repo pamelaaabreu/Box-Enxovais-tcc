@@ -1,0 +1,14 @@
+- Generating browser application bundles (phase: setup)...
+√ Browser application bundle generation complete.
+25 11 2026 03:24:16.625:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9876/
+25 11 2026 03:24:16.634:INFO [launcher]: Launching browsers ChromeHeadless with concurrency unlimited
+25 11 2026 03:24:16.791:INFO [launcher]: Starting browser ChromeHeadless
+25 11 2026 03:24:18.472:INFO [Chrome Headless 158.0.0.0 (Windows 10)]: Connected on socket EJjYrhpgu5SIQkhOAAAA with id 45060680
+Chrome Headless 158.0.0.0 (Windows 10): Executed 0 of 3[32m SUCCESS[39m (0 secs / 0 secs)
+[1A[2KChrome Headless 158.0.0.0 (Windows 10): Executed 1 of 3[32m SUCCESS[39m (0 secs / 0.296 secs)
+[1A[2KChrome Headless 158.0.0.0 (Windows 10): Executed 2 of 3[32m SUCCESS[39m (0 secs / 0.317 secs)
+[1A[2KChrome Headless 158.0.0.0 (Windows 10): Executed 3 of 3[32m SUCCESS[39m (0 secs / 0.393 secs)
+[1A[2KChrome Headless 158.0.0.0 (Windows 10): Executed 3 of 3[32m SUCCESS[39m (0.42 secs / 0.393 secs)
+[32mTOTAL: 3 SUCCESS[39m
+√ Browser application bundle generation complete.
+√ Browser application bundle generation complete.

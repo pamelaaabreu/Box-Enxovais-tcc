@@ -1,0 +1,10 @@
+{
+  "removedFiles": 9959,
+  "removedBytes": 1203114244.0,
+  "preserved": [
+    "consistent-copy.dump",
+    "state.json",
+    "isolated test reproduction scripts",
+    "final evidence and technical logs"
+  ]
+}

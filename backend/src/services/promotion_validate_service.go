@@ -72,7 +72,7 @@ func (service PromotionService) validate(ctx context.Context, request models.Cre
 	// Campanhas destacadas na Home precisam
 	// possuir descrição e imagem.
 	if request.HomeFeatured &&
-		(request.Description == "" || request.ImagePath == "") {
+		request.Description == "" {
 
 		return request, ErrPromotionInvalid
 	}

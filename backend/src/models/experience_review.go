@@ -3,6 +3,8 @@ package models
 import "time"
 
 type ExperienceReview struct {
+	CanEdit    bool      `json:"canEdit"`
+	Topics     []string  `json:"topics"`
 	ID         int64     `json:"id"`
 	OrderID    int64     `json:"orderId,omitempty"`
 	Overall    int       `json:"overall"`

@@ -1,4 +1,4 @@
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ProductReviewService } from '../../../core/services/product-review.service';
 import { ProductReview } from '../../../shared/types/product-review.types';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
@@ -54,7 +54,7 @@ export class ExperienceReviewsComponent {
     this.readRequest?.unsubscribe();
     this.loading.set(true);
     this.error.set('');
-    const request =
+    const request: Observable<(Review & { product?: ProductReview })[]> =
       this.kind() === 'product'
         ? this.productReviews.admin().pipe(
             map((items) =>
@@ -92,7 +92,8 @@ export class ExperienceReviewsComponent {
     review: Review & { product?: ProductReview },
     status: Review['status'],
   ) {
-    if (this.pending()) return;
+    if (this.pending() || (status === 'approved' && !review.publicationConsent))
+      return;
     this.pending.set(review.id);
     const request = review.product
       ? this.productReviews.moderate(review.product, status)

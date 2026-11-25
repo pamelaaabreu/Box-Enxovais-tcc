@@ -62,7 +62,7 @@ func (repo ProductReviewRepository) list(ctx context.Context, condition string, 
 			return nil, err
 		}
 		if public {
-			item.CustomerName = privateReviewName(name)
+			item.CustomerName = "Cliente verificado"
 			item.OrderID = 0
 			item.Status = ""
 			item.CanEdit = false
@@ -104,7 +104,7 @@ func (repo ProductReviewRepository) Summaries(ctx context.Context, ids []int64) 
 SELECT
     r.product_id,
     avg(r.rating)::float8,
-    count(*)
+    count(*),ARRAY[count(*) FILTER(WHERE r.rating=1),count(*) FILTER(WHERE r.rating=2),count(*) FILTER(WHERE r.rating=3),count(*) FILTER(WHERE r.rating=4),count(*) FILTER(WHERE r.rating=5)]
 FROM product_reviews r
 JOIN checkout_orders o ON o.id = r.order_id
 WHERE
@@ -116,7 +116,7 @@ WHERE
 	for rows.Next() {
 		var id int64
 		var summary models.ProductReviewSummary
-		if err = rows.Scan(&id, &summary.Average, &summary.Count); err != nil {
+		if err = rows.Scan(&id, &summary.Average, &summary.Count, pq.Array(&summary.Distribution)); err != nil {
 			return nil, err
 		}
 		result[id] = summary
@@ -269,7 +269,7 @@ updated_at = clock_timestamp()
 WHERE id = $3
     AND updated_at = $4
     AND ($1 <> 'approved'
-    OR publication_consent)
+    OR (publication_consent AND EXISTS(SELECT 1 FROM checkout_orders o WHERE o.id=product_reviews.order_id AND o.user_id=product_reviews.user_id AND o.status='simulated_approved' AND o.stock_debited)))
 `, status, moderatorID, id, expected)
 	if err != nil {
 		return err

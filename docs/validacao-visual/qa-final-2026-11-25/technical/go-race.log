@@ -1,0 +1,13 @@
+ok  	backend/cmd/import-catalog	4.320s
+?   	backend/cmd/seed-dashboard	[no test files]
+ok  	backend/src	2.272s
+?   	backend/src/config	[no test files]
+?   	backend/src/db	[no test files]
+ok  	backend/src/handlers	4.715s
+ok  	backend/src/middleware	2.133s
+ok  	backend/src/models	1.857s
+ok  	backend/src/pagination	1.772s
+ok  	backend/src/repositories	4.053s
+ok  	backend/src/response	2.063s
+ok  	backend/src/routes	91.026s
+ok  	backend/src/services	3.484s

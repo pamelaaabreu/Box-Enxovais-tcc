@@ -1,3 +1,4 @@
+import { HintDirective } from '../../../shared/directives/hint.directive';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { AdminFiltersComponent } from '../../../shared/components/admin-filters/admin-filters.component';
 import type { AdminFilterField } from '../../../shared/types/ui/admin-filters';
@@ -19,6 +20,7 @@ registerLocaleData(localePt, 'pt-BR');
 @Component({
   selector: 'app-report',
   imports: [
+    HintDirective,
     StatusBadgeComponent,
     AdminFiltersComponent,
     AdminKpiCardComponent,
@@ -273,19 +275,28 @@ export class ReportComponent {
         },
       });
   }
-  export() {
-    if (this.kind() === 'customers' || this.exporting()) return;
+  export(format: 'csv' | 'xlsx' = 'csv') {
+    if (this.exporting()) return;
     this.exporting.set(true);
     this.exportError.set('');
     this.download = this.reports
-      .export(this.kind(), this.applied)
+      .export(this.kind(), { ...this.applied, format })
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (blob) => {
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = 'relatorio-' + this.kind() + '.csv';
+          a.download =
+            'relatorio-' +
+            {
+              sales: 'vendas',
+              products: 'produtos',
+              customers: 'clientes',
+              stock: 'estoque',
+            }[this.kind()] +
+            '.' +
+            format;
           a.click();
           setTimeout(() => URL.revokeObjectURL(url), 1000);
           this.exporting.set(false);

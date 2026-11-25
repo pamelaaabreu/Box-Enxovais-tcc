@@ -12,7 +12,7 @@
       padding: 0;
       background-color: #ffffff;
       color: #3d4836;
-      font-family: Georgia, &quot;Times New Roman&quot;, serif;
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 15px;
       line-height: 1.6;
       -webkit-text-size-adjust: 100%;
@@ -82,10 +82,10 @@
               <td style="padding: 40px 34px 38px; background-color: #fffdf8">
                 <!-- Título -->
                 <h1
-                  style="
+                  style="font-family:Georgia,serif;Times New Roman&quot;, serif; 
                     margin: 0 0 18px;
                     color: #33412f;
-                    font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                    
                     font-size: 27px;
                     font-weight: 700;
                     line-height: 1.35;
@@ -99,7 +99,7 @@
                   style="
                     margin: 0 0 28px;
                     color: #485143;
-                    font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                    font-family: Arial, Helvetica, sans-serif;
                     font-size: 15px;
                     font-weight: 400;
                     line-height: 1.9;
@@ -162,8 +162,7 @@
                           padding: 15px 18px;
                           background-color: #eee9dd;
                           color: #3d4836;
-                          font-family:
-                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-family: Arial, Helvetica, sans-serif;
                           font-size: 12px;
                           font-weight: 700;
                           line-height: 1.5;
@@ -185,8 +184,7 @@
                           padding: 15px 8px;
                           background-color: #eee9dd;
                           color: #3d4836;
-                          font-family:
-                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-family: Arial, Helvetica, sans-serif;
                           font-size: 12px;
                           font-weight: 700;
                           line-height: 1.5;
@@ -211,8 +209,7 @@
                           padding: 22px 18px;
                           background-color: #fffaf1;
                           color: #3d4836;
-                          font-family:
-                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-family: Arial, Helvetica, sans-serif;
                           font-size: 14px;
                           font-weight: 400;
                           line-height: 1.8;
@@ -233,8 +230,7 @@
                           padding: 22px 8px;
                           background-color: #fffaf1;
                           color: #3d4836;
-                          font-family:
-                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-family: Arial, Helvetica, sans-serif;
                           font-size: 14px;
                           font-weight: 400;
                           line-height: 1.8;
@@ -250,6 +246,7 @@
                   </tbody>
                 </table>
 
+<table role="presentation" width="100%" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;margin-top:22px;border-collapse:collapse"><tr><td>Subtotal dos produtos</td><td align="right">{{if .Order.ProductsSubtotal}}{{money .Order.ProductsSubtotal}}{{else}}Não registrado{{end}}</td></tr><tr><td>Descontos</td><td align="right">{{if .Order.Discount}}{{money .Order.Discount}}{{else}}Não registrados{{end}}</td></tr><tr><td>Frete</td><td align="right">{{if .Order.Shipping}}{{money .Order.Shipping}}{{else}}Não registrado{{end}}</td></tr></table>
                 <!-- Total do pedido -->
                 <table
                   role="presentation"
@@ -271,8 +268,7 @@
                         padding: 24px 20px;
                         background-color: #3f4e3c;
                         color: #ffffff;
-                        font-family:
-                          Georgia, &quot;Times New Roman&quot;, serif;
+                        font-family: Arial, Helvetica, sans-serif;
                         font-size: 16px;
                         font-weight: 700;
                         line-height: 1.5;
@@ -281,7 +277,7 @@
                         border-right: 1px solid #73806a;
                       "
                     >
-                      Total do pedido
+                      Valor do pedido cancelado
                     </td>
 
                     <td
@@ -291,21 +287,21 @@
                         padding: 24px 20px;
                         background-color: #3f4e3c;
                         color: #ffffff;
-                        font-family:
-                          Georgia, &quot;Times New Roman&quot;, serif;
+                        font-family: Arial, Helvetica, sans-serif;
                         font-size: 22px;
                         font-weight: 700;
                         line-height: 1.4;
                         text-align: right;
                         vertical-align: middle;
-                        white-space: nowrap;
+                        white-space: normal;
                       "
                     >
                       {{money .Order.Total}}
- {{if .Order.Installments}}<p>Pagamento em {{.Order.Installments}} parcela(s), sem juros.</p><p>{{range .Order.InstallmentAmounts}}{{money .}} · {{end}}</p>{{end}}
                     </td>
                   </tr>
                 </table>
+                <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:400;line-height:1.6;color:#485143">{{plan .Order}}</p>
+                <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#5e6658">Ambiente acadêmico — pagamento simulado. Nenhuma cobrança real.</p>
               </td>
             </tr>
 
@@ -318,7 +314,7 @@
                   background-color: #3f4e3c;
                   border-radius: 0 0 14px 14px;
                   color: #ffffff;
-                  font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                  font-family: Arial, Helvetica, sans-serif;
                   font-size: 12px;
                   font-weight: 400;
                   line-height: 1.7;

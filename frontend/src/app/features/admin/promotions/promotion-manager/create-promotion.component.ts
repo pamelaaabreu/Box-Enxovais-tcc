@@ -1,3 +1,5 @@
+import { CampaignBannerComponent } from '../../../../shared/components/campaign-banner/campaign-banner.component';
+import { HintDirective } from '../../../../shared/directives/hint.directive';
 import type { DiscountMode } from '../../../../shared/types/promotions/promotion';
 import { API_BASE_URL, apiEndpoint } from '../../../../core/config/api.config';
 import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
@@ -54,6 +56,8 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
 
   imports: [
+    CampaignBannerComponent,
+    HintDirective,
     StatusBadgeComponent,
     CampaignSummaryComponent,
     AdminStateComponent,
@@ -259,7 +263,10 @@ export class CreatePromotionComponent implements OnInit {
     };
   }
 
+  private timelineNow = Date.now();
+
   refresh(): void {
+    this.timelineNow = Date.now();
     this.campaignsError = '';
 
     this.campaignsLoading = true;
@@ -563,7 +570,7 @@ export class CreatePromotionComponent implements OnInit {
       return;
     }
 
-    if (this.promotionData.home_featured && !this.promotionData.image_path) {
+    if (this.promotionData.home_featured && !this.effectiveImagePath) {
       this.activeTab = 2;
 
       this.alerts.error(
@@ -748,10 +755,28 @@ export class CreatePromotionComponent implements OnInit {
     return parts.join(' · ');
   }
 
+  get effectiveImagePath(): string {
+    return (
+      this.promotionData.image_path ||
+      [...(this.promotionData.products ?? [])]
+        .sort((a, b) => a.product_id - b.product_id)
+        .map((item) => this.product(item.product_id))
+        .find((p) => p?.status === 'active' && p.image_paths?.length)
+        ?.image_paths?.[0] ||
+      ''
+    );
+  }
+  campaignProgress(campaign: PromotionRecord): number {
+    const start = Date.parse(campaign.start_date),
+      end = Date.parse(campaign.end_date);
+    return end > start
+      ? Math.max(0, Math.min(100, ((this.timelineNow - start) * 100) / (end - start)))
+      : 0;
+  }
   get hasValidImage(): boolean {
     return (
-      !!this.promotionData.image_path &&
-      !this.failedImages.has(this.promotionData.image_path)
+      !!this.effectiveImagePath &&
+      !this.failedImages.has(this.effectiveImagePath)
     );
   }
 
@@ -798,7 +823,7 @@ export class CreatePromotionComponent implements OnInit {
         ? 'Os produtos da campanha precisam estar ativos e em estoque para aparecer na Home.'
         : 'Adicione produtos para exibir esta campanha na Home.';
 
-    if (this.generalError || !this.promotionData.image_path)
+    if (this.generalError || !this.effectiveImagePath)
       return 'Complete os dados e a imagem para apresentar na Home.';
 
     const now = Date.now();
@@ -1001,7 +1026,7 @@ export class CreatePromotionComponent implements OnInit {
             (item) => this.product(item.product_id)?.status !== 'active',
           )
         : index === 2
-          ? !!this.promotionData.home_featured && !this.promotionData.image_path
+          ? !!this.promotionData.home_featured && !this.effectiveImagePath
           : !!this.promotionData.products?.some((item) =>
               this.invalidPrice(item.product_id),
             );

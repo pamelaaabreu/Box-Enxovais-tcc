@@ -1,0 +1,18 @@
+<div class="campaign-banner">
+  @if (image() && failed() !== image()) {
+    <img [src]="image()" alt="" (error)="failed.set(image())" />
+  }
+  <div class="campaign-copy">
+    <span>Campanha</span>
+    <h2>{{ name() || "Nome da campanha" }}</h2>
+    <p>{{ description() || "Defina o texto da campanha na aba Geral." }}</p>
+    @if (link()) {
+      <a [routerLink]="link()">Ver ofertas</a>
+    } @else {
+      <span class="cta-preview">Ver ofertas</span>
+    }
+  </div>
+  @if (!image() || failed() === image()) {
+    <span class="image-pending">Imagem da campanha pendente</span>
+  }
+</div>

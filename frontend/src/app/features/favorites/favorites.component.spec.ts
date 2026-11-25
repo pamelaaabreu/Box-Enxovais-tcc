@@ -200,7 +200,7 @@ describe('Favorites page', () => {
     );
     expect(
       cards[0]
-        .querySelector('app-product-price')
+        .querySelector('app-product-price strong')
         ?.textContent?.replace(/\s+/g, ' '),
     ).toBe('R$ 100,00');
     expect(cards[1].querySelector('.card-actions a')).toBeNull();

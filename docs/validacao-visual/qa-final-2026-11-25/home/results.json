@@ -1,0 +1,917 @@
+{
+  "bannerChecks": 48,
+  "results": [
+    {
+      "origin": "http://localhost:4200",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://localhost:4200/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1892,
+        "height": 560,
+        "top": 252.6875,
+        "right": 1906,
+        "bottom": 812.6875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://localhost:4200/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1892,
+        "height": 560,
+        "top": 252.6875,
+        "right": 1906,
+        "bottom": 812.6875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://localhost:4200/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1892,
+        "height": 560,
+        "top": 252.6875,
+        "right": 1906,
+        "bottom": 812.6875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://localhost:4200/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1412,
+        "height": 525.59375,
+        "top": 252.6875,
+        "right": 1426,
+        "bottom": 778.28125,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://localhost:4200/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1412,
+        "height": 525.59375,
+        "top": 252.6875,
+        "right": 1426,
+        "bottom": 778.28125,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://localhost:4200/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1412,
+        "height": 525.59375,
+        "top": 252.6875,
+        "right": 1426,
+        "bottom": 778.28125,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://localhost:4200/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 14,
+        "y": 268.6875,
+        "width": 1252,
+        "height": 467.1875,
+        "top": 268.6875,
+        "right": 1266,
+        "bottom": 735.875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://localhost:4200/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 268.6875,
+        "width": 1252,
+        "height": 467.1875,
+        "top": 268.6875,
+        "right": 1266,
+        "bottom": 735.875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://localhost:4200/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 268.6875,
+        "width": 1252,
+        "height": 467.1875,
+        "top": 268.6875,
+        "right": 1266,
+        "bottom": 735.875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://localhost:4200/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 14,
+        "y": 268,
+        "width": 996,
+        "height": 400,
+        "top": 268,
+        "right": 1010,
+        "bottom": 668,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://localhost:4200/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 268,
+        "width": 996,
+        "height": 400,
+        "top": 268,
+        "right": 1010,
+        "bottom": 668,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://localhost:4200/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 268,
+        "width": 996,
+        "height": 400,
+        "top": 268,
+        "right": 1010,
+        "bottom": 668,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://localhost:4200/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 14,
+        "y": 355.5,
+        "width": 740,
+        "height": 400,
+        "top": 355.5,
+        "right": 754,
+        "bottom": 755.5,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://localhost:4200/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 355.5,
+        "width": 740,
+        "height": 400,
+        "top": 355.5,
+        "right": 754,
+        "bottom": 755.5,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://localhost:4200/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 355.5,
+        "width": 740,
+        "height": 400,
+        "top": 355.5,
+        "right": 754,
+        "bottom": 755.5,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://localhost:4200/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 406,
+        "height": 440,
+        "top": 286.6875,
+        "right": 418,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://localhost:4200/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 406,
+        "height": 440,
+        "top": 286.6875,
+        "right": 418,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://localhost:4200/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 406,
+        "height": 440,
+        "top": 286.6875,
+        "right": 418,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://localhost:4200/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 366,
+        "height": 440,
+        "top": 286.6875,
+        "right": 378,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://localhost:4200/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 366,
+        "height": 440,
+        "top": 286.6875,
+        "right": 378,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://localhost:4200/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 366,
+        "height": 440,
+        "top": 286.6875,
+        "right": 378,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://localhost:4200/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 12,
+        "y": 282,
+        "width": 336,
+        "height": 440,
+        "top": 282,
+        "right": 348,
+        "bottom": 722,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://localhost:4200/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 282,
+        "width": 336,
+        "height": 440,
+        "top": 282,
+        "right": 348,
+        "bottom": 722,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://localhost:4200",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://localhost:4200/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 282,
+        "width": 336,
+        "height": 440,
+        "top": 282,
+        "right": 348,
+        "bottom": 722,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://127.0.0.1:4206/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1892,
+        "height": 560,
+        "top": 252.6875,
+        "right": 1906,
+        "bottom": 812.6875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://127.0.0.1:4206/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1892,
+        "height": 560,
+        "top": 252.6875,
+        "right": 1906,
+        "bottom": 812.6875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://127.0.0.1:4206/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1892,
+        "height": 560,
+        "top": 252.6875,
+        "right": 1906,
+        "bottom": 812.6875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://127.0.0.1:4206/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1412,
+        "height": 525.59375,
+        "top": 252.6875,
+        "right": 1426,
+        "bottom": 778.28125,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://127.0.0.1:4206/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1412,
+        "height": 525.59375,
+        "top": 252.6875,
+        "right": 1426,
+        "bottom": 778.28125,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://127.0.0.1:4206/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 252.6875,
+        "width": 1412,
+        "height": 525.59375,
+        "top": 252.6875,
+        "right": 1426,
+        "bottom": 778.28125,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://127.0.0.1:4206/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 14,
+        "y": 268.6875,
+        "width": 1252,
+        "height": 467.1875,
+        "top": 268.6875,
+        "right": 1266,
+        "bottom": 735.875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://127.0.0.1:4206/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 268.6875,
+        "width": 1252,
+        "height": 467.1875,
+        "top": 268.6875,
+        "right": 1266,
+        "bottom": 735.875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://127.0.0.1:4206/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 268.6875,
+        "width": 1252,
+        "height": 467.1875,
+        "top": 268.6875,
+        "right": 1266,
+        "bottom": 735.875,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://127.0.0.1:4206/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 14,
+        "y": 268,
+        "width": 996,
+        "height": 400,
+        "top": 268,
+        "right": 1010,
+        "bottom": 668,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://127.0.0.1:4206/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 268,
+        "width": 996,
+        "height": 400,
+        "top": 268,
+        "right": 1010,
+        "bottom": 668,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://127.0.0.1:4206/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 268,
+        "width": 996,
+        "height": 400,
+        "top": 268,
+        "right": 1010,
+        "bottom": 668,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://127.0.0.1:4206/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 14,
+        "y": 355.5,
+        "width": 740,
+        "height": 400,
+        "top": 355.5,
+        "right": 754,
+        "bottom": 755.5,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://127.0.0.1:4206/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 355.5,
+        "width": 740,
+        "height": 400,
+        "top": 355.5,
+        "right": 754,
+        "bottom": 755.5,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://127.0.0.1:4206/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 14,
+        "y": 355.5,
+        "width": 740,
+        "height": 400,
+        "top": 355.5,
+        "right": 754,
+        "bottom": 755.5,
+        "left": 14
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://127.0.0.1:4206/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 406,
+        "height": 440,
+        "top": 286.6875,
+        "right": 418,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://127.0.0.1:4206/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 406,
+        "height": 440,
+        "top": 286.6875,
+        "right": 418,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://127.0.0.1:4206/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 406,
+        "height": 440,
+        "top": 286.6875,
+        "right": 418,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://127.0.0.1:4206/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 366,
+        "height": 440,
+        "top": 286.6875,
+        "right": 378,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://127.0.0.1:4206/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 366,
+        "height": 440,
+        "top": 286.6875,
+        "right": 378,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://127.0.0.1:4206/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 286.6875,
+        "width": 366,
+        "height": 440,
+        "top": 286.6875,
+        "right": 378,
+        "bottom": 726.6875,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 1898,
+      "banner": 0,
+      "src": "http://127.0.0.1:4206/home/banner-natal.webp",
+      "height": 829,
+      "box": {
+        "x": 12,
+        "y": 282,
+        "width": 336,
+        "height": 440,
+        "top": 282,
+        "right": 348,
+        "bottom": 722,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 1,
+      "src": "http://127.0.0.1:4206/home/banner-banho-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 282,
+        "width": 336,
+        "height": 440,
+        "top": 282,
+        "right": 348,
+        "bottom": 722,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    },
+    {
+      "origin": "http://127.0.0.1:4206",
+      "width": 2172,
+      "banner": 2,
+      "src": "http://127.0.0.1:4206/home/banner-almofadas-fotografico.webp",
+      "height": 724,
+      "box": {
+        "x": 12,
+        "y": 282,
+        "width": 336,
+        "height": 440,
+        "top": 282,
+        "right": 348,
+        "bottom": 722,
+        "left": 12
+      },
+      "status": 200,
+      "contentType": "image/webp"
+    }
+  ]
+}

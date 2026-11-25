@@ -41,6 +41,14 @@ func ValidateExperienceReview(review *models.ExperienceReview) error {
 		}
 	}
 
+	allowed := map[string]bool{"navigation": true, "product_information": true, "checkout": true, "payment": true, "shipping": true}
+	seen := map[string]bool{}
+	for _, topic := range review.Topics {
+		if !allowed[topic] || seen[topic] {
+			return errors.New("Selecione critérios válidos, sem repetições.")
+		}
+		seen[topic] = true
+	}
 	comment, err := normalizeReviewComment(review.Comment)
 	if err != nil {
 		return err

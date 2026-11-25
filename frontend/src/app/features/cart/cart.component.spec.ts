@@ -40,6 +40,14 @@ describe('CartComponent', () => {
       'Seu carrinho está vazio',
     );
     expect(fixture.nativeElement.querySelector('.summary')).toBeNull();
+    http
+      .match((r) => r.url === 'http://localhost:8080/products')
+      .forEach((r) =>
+        r.flush({
+          items: [],
+          pagination: { limit: 100, offset: 0, total: 0, hasMore: false },
+        }),
+      );
     http.verify();
   });
   it('blocks increases for an unavailable item and refreshes stock from the API', () => {
@@ -117,6 +125,14 @@ describe('CartComponent', () => {
     });
     fixture.detectChanges();
     expect(increase().disabled).toBeTrue();
+    http
+      .match((r) => r.url === 'http://localhost:8080/products')
+      .forEach((r) =>
+        r.flush({
+          items: [],
+          pagination: { limit: 100, offset: 0, total: 0, hasMore: false },
+        }),
+      );
     http.verify();
   });
 });

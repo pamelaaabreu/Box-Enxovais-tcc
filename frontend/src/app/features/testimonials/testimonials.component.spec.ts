@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import {
@@ -17,24 +17,27 @@ describe('Product testimonials', () => {
     }),
   );
   afterEach(() => TestBed.inject(HttpTestingController).verify());
-  it('hides the section when there are no eligible reviews', () => {
+  it('hides the section when there are no eligible reviews', fakeAsync(() => {
     const fixture = TestBed.createComponent(TestimonialsComponent);
+    tick(0);
     TestBed.inject(HttpTestingController)
-      .expectOne('http://localhost:8080/home/product-reviews')
+      .expectOne('http://localhost:8080/home/reviews')
       .flush([]);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('section')).toBeNull();
-  });
-  it('renders real customer and product data from the API', () => {
+    fixture.destroy();
+  }));
+  it('renders real customer and product data from the API', fakeAsync(() => {
     const fixture = TestBed.createComponent(TestimonialsComponent);
+    tick(0);
     TestBed.inject(HttpTestingController)
-      .expectOne('http://localhost:8080/home/product-reviews')
+      .expectOne('http://localhost:8080/home/reviews')
       .flush([
         {
           id: 1,
           productId: 7,
           productName: 'Edredom Floral',
-          rating: 5,
+          overall: 5,
           comment: 'Excelente qualidade',
           customerName: 'Ana S.',
         },
@@ -43,9 +46,8 @@ describe('Product testimonials', () => {
     expect(fixture.nativeElement.textContent).toContain(
       'Quem comprou, recomenda',
     );
-    expect(fixture.nativeElement.textContent).toContain('Ana S.');
-    expect(fixture.nativeElement.querySelector('a').getAttribute('href')).toBe(
-      '/produto/edredom-floral-7',
-    );
-  });
+    expect(fixture.nativeElement.textContent).toContain('Cliente verificado');
+    expect(fixture.nativeElement.textContent).not.toContain('Ana S.');
+    fixture.destroy();
+  }));
 });

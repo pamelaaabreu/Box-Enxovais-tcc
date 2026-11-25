@@ -77,6 +77,9 @@ describe('CheckoutSuccessComponent', () => {
     });
     fixture.detectChanges();
     expect(page.textContent).toContain('Seu pedido foi realizado!');
+    expect(page.querySelector('img')?.getAttribute('src')).toBe(
+      '/checkout/confirmed-order.svg',
+    );
     expect(
       Array.from(page.querySelectorAll('.success-actions a'), (link) =>
         link.getAttribute('href'),
@@ -85,7 +88,7 @@ describe('CheckoutSuccessComponent', () => {
     http.expectOne('http://localhost:8080/orders/7/review').flush(null);
     fixture.detectChanges();
     expect(
-      page.querySelectorAll('app-purchase-review input[type=radio]').length,
+      page.querySelectorAll('app-purchase-review input[name=overall]').length,
     ).toBe(5);
     expect(page.textContent).toContain('Conte como foi sua experiência');
     http.expectNone((request) => request.method === 'POST');

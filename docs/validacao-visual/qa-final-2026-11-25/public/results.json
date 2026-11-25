@@ -1,0 +1,727 @@
+{
+  "visits": [
+    {
+      "name": "home",
+      "path": "/inicio",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "path": "/login",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "register",
+      "path": "/cadastro",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "recovery",
+      "path": "/recuperar-senha",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "product",
+      "path": "/produto/edredom-2",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "campaign",
+      "path": "/campanha/1",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "404",
+      "path": "/404",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "home",
+      "path": "/inicio",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "path": "/login",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "register",
+      "path": "/cadastro",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "recovery",
+      "path": "/recuperar-senha",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "product",
+      "path": "/produto/edredom-2",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "campaign",
+      "path": "/campanha/1",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "404",
+      "path": "/404",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "home",
+      "path": "/inicio",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "path": "/login",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "register",
+      "path": "/cadastro",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "recovery",
+      "path": "/recuperar-senha",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "product",
+      "path": "/produto/edredom-2",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "campaign",
+      "path": "/campanha/1",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "404",
+      "path": "/404",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "home",
+      "path": "/inicio",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "path": "/login",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "register",
+      "path": "/cadastro",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "recovery",
+      "path": "/recuperar-senha",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "product",
+      "path": "/produto/edredom-2",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "campaign",
+      "path": "/campanha/1",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "404",
+      "path": "/404",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "home",
+      "path": "/inicio",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "path": "/login",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "register",
+      "path": "/cadastro",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "recovery",
+      "path": "/recuperar-senha",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "product",
+      "path": "/produto/edredom-2",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "campaign",
+      "path": "/campanha/1",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "404",
+      "path": "/404",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "home",
+      "path": "/inicio",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "path": "/login",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "register",
+      "path": "/cadastro",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "recovery",
+      "path": "/recuperar-senha",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "product",
+      "path": "/produto/edredom-2",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "campaign",
+      "path": "/campanha/1",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "404",
+      "path": "/404",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "home",
+      "path": "/inicio",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "path": "/login",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "register",
+      "path": "/cadastro",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "recovery",
+      "path": "/recuperar-senha",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "product",
+      "path": "/produto/edredom-2",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "campaign",
+      "path": "/campanha/1",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "404",
+      "path": "/404",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "home",
+      "path": "/inicio",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "login",
+      "path": "/login",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "register",
+      "path": "/cadastro",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "recovery",
+      "path": "/recuperar-senha",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "product",
+      "path": "/produto/edredom-2",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "campaign",
+      "path": "/campanha/1",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "404",
+      "path": "/404",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "account",
+      "path": "/minha-conta",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "favorites",
+      "path": "/favoritos",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "cart",
+      "path": "/carrinho",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "checkout",
+      "path": "/finalizar-compra",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "history",
+      "path": "/meus-pedidos",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "order",
+      "path": "/meus-pedidos/42",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "success",
+      "path": "/finalizar-compra/sucesso/42",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "name": "account",
+      "path": "/minha-conta",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "favorites",
+      "path": "/favoritos",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "cart",
+      "path": "/carrinho",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "checkout",
+      "path": "/finalizar-compra",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "history",
+      "path": "/meus-pedidos",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "order",
+      "path": "/meus-pedidos/42",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "success",
+      "path": "/finalizar-compra/sucesso/42",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "account",
+      "path": "/minha-conta",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "favorites",
+      "path": "/favoritos",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "cart",
+      "path": "/carrinho",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "checkout",
+      "path": "/finalizar-compra",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "history",
+      "path": "/meus-pedidos",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "order",
+      "path": "/meus-pedidos/42",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "success",
+      "path": "/finalizar-compra/sucesso/42",
+      "width": 1280,
+      "overflow": false
+    },
+    {
+      "name": "account",
+      "path": "/minha-conta",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "favorites",
+      "path": "/favoritos",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "cart",
+      "path": "/carrinho",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "checkout",
+      "path": "/finalizar-compra",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "history",
+      "path": "/meus-pedidos",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "order",
+      "path": "/meus-pedidos/42",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "success",
+      "path": "/finalizar-compra/sucesso/42",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "name": "account",
+      "path": "/minha-conta",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "favorites",
+      "path": "/favoritos",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "cart",
+      "path": "/carrinho",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "checkout",
+      "path": "/finalizar-compra",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "history",
+      "path": "/meus-pedidos",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "order",
+      "path": "/meus-pedidos/42",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "success",
+      "path": "/finalizar-compra/sucesso/42",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "name": "account",
+      "path": "/minha-conta",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "favorites",
+      "path": "/favoritos",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "cart",
+      "path": "/carrinho",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "checkout",
+      "path": "/finalizar-compra",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "history",
+      "path": "/meus-pedidos",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "order",
+      "path": "/meus-pedidos/42",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "success",
+      "path": "/finalizar-compra/sucesso/42",
+      "width": 430,
+      "overflow": false
+    },
+    {
+      "name": "account",
+      "path": "/minha-conta",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "favorites",
+      "path": "/favoritos",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "cart",
+      "path": "/carrinho",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "checkout",
+      "path": "/finalizar-compra",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "history",
+      "path": "/meus-pedidos",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "order",
+      "path": "/meus-pedidos/42",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "success",
+      "path": "/finalizar-compra/sucesso/42",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "account",
+      "path": "/minha-conta",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "favorites",
+      "path": "/favoritos",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "cart",
+      "path": "/carrinho",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "checkout",
+      "path": "/finalizar-compra",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "history",
+      "path": "/meus-pedidos",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "order",
+      "path": "/meus-pedidos/42",
+      "width": 360,
+      "overflow": false
+    },
+    {
+      "name": "success",
+      "path": "/finalizar-compra/sucesso/42",
+      "width": 360,
+      "overflow": false
+    }
+  ],
+  "aliases": [
+    {
+      "old": "/home",
+      "current": "/inicio",
+      "status": "passed"
+    },
+    {
+      "old": "/register",
+      "current": "/cadastro",
+      "status": "passed"
+    },
+    {
+      "old": "/forgot-password",
+      "current": "/recuperar-senha",
+      "status": "passed"
+    },
+    {
+      "old": "/cart",
+      "current": "/login",
+      "status": "passed"
+    },
+    {
+      "old": "/account",
+      "current": "/login",
+      "status": "passed"
+    },
+    {
+      "old": "/favorites",
+      "current": "/login",
+      "status": "passed"
+    },
+    {
+      "old": "/checkout",
+      "current": "/login",
+      "status": "passed"
+    },
+    {
+      "old": "/admin/dashboard",
+      "current": "/login",
+      "status": "passed"
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Sobre Nós",
+    "Blog",
+    "Trocas e Devoluções",
+    "Ajuda e FAQ",
+    "Fale Conosco",
+    "Política de Privacidade"
+  ]
+}

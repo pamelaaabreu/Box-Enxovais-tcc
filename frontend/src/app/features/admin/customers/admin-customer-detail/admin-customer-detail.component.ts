@@ -1,3 +1,6 @@
+import { AdminKpiCardComponent } from '../../../../shared/components/admin-kpi-card/admin-kpi-card.component';
+import { ExperienceReviewService } from '../../experience-reviews/services/experience-review.service';
+import { ExperienceReview } from '../../../../shared/types/experience-review.types';
 import { AdminDataTableComponent } from '../../../../shared/components/admin-data-table/admin-data-table.component';
 import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
 import {
@@ -28,6 +31,7 @@ registerLocaleData(localePt, 'pt-BR');
   standalone: true,
   providers: [{ provide: LOCALE_ID, useValue: 'pt-BR' }],
   imports: [
+    AdminKpiCardComponent,
     AdminDataTableComponent,
     StatusBadgeComponent,
     CurrencyPipe,
@@ -41,6 +45,31 @@ registerLocaleData(localePt, 'pt-BR');
   styleUrl: './admin-customer-detail.component.scss',
 })
 export class AdminCustomerDetailComponent {
+  private readonly reviewsApi = inject(ExperienceReviewService);
+  readonly reviewsError = signal(false);
+  readonly reviewStates = signal<ExperienceReview[]>([]);
+  initials(): string {
+    return (this.customer()?.name ?? '')
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((x) => x[0])
+      .filter((_, i, a) => i === 0 || i === a.length - 1)
+      .join('')
+      .toUpperCase();
+  }
+  reviewLabel(orderId: number): string {
+    if (this.reviewsError()) return 'Consulta indisponível';
+    const r = this.reviewStates().find((r) => r.orderId === orderId);
+    return !r
+      ? 'Não avaliou'
+      : !r.publicationConsent
+        ? 'Privada'
+        : r.status === 'approved'
+          ? 'Aprovada'
+          : r.status === 'rejected'
+            ? 'Não publicada'
+            : 'Em moderação';
+  }
   private readonly api = inject(AdminCustomersService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -64,6 +93,13 @@ export class AdminCustomerDetailComponent {
   readonly statusLabel = orderStatus;
   readonly paymentLabel = orderPayment;
   constructor() {
+    this.reviewsApi
+      .list()
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: (items) => this.reviewStates.set(items),
+        error: () => this.reviewsError.set(true),
+      });
     this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((p) => {
       this.id = p.get('id') ?? '';
       this.load();

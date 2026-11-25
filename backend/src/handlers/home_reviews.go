@@ -47,7 +47,7 @@ func (h HomeHandler) AdminReviews(w http.ResponseWriter, r *http.Request) {
 
 // Consulta ou cadastra uma avaliação de compra.
 func (h HomeHandler) Review(w http.ResponseWriter, r *http.Request) {
-	if !allowMethods(w, r, http.MethodGet, http.MethodPost) {
+	if !allowMethods(w, r, http.MethodGet, http.MethodPost, http.MethodPatch) {
 		return
 	}
 
@@ -106,7 +106,11 @@ func (h HomeHandler) Review(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Persiste a avaliação.
-	err = h.Store.CreateReview(
+	saveReview := h.Store.CreateReview
+	if r.Method == http.MethodPatch {
+		saveReview = h.Store.UpdateReview
+	}
+	err = saveReview(
 		r.Context(),
 		userID,
 		orderID,
@@ -129,7 +133,11 @@ func (h HomeHandler) Review(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.JSON(w, http.StatusCreated, map[string]string{
+	status := http.StatusCreated
+	if r.Method == http.MethodPatch {
+		status = http.StatusOK
+	}
+	response.JSON(w, status, map[string]string{
 		"message": "Avaliação recebida para moderação.",
 	})
 }
@@ -193,4 +201,18 @@ func (h HomeHandler) Moderate(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, map[string]string{
 		"message": "Avaliação atualizada.",
 	})
+}
+
+func (h HomeHandler) MyReviews(w http.ResponseWriter, r *http.Request) {
+	userID, ok := middlewares.GetUserIDFromContext(r.Context())
+	if !ok || userID <= 0 {
+		response.Error(w, 401, "Faça login para continuar.")
+		return
+	}
+	items, err := h.Store.MyReviews(r.Context(), userID)
+	if err != nil {
+		response.Error(w, 500, "Não foi possível carregar suas experiências.")
+		return
+	}
+	response.JSON(w, 200, items)
 }

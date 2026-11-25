@@ -4,7 +4,7 @@
 
 Atualização documental: 25/11/2026. Frontend Angular 19 organizado em core/features/shared, admin standalone e rotas portuguesas com aliases compatíveis. Go 1.26.11/net/http e contratos HTTP preservados. Última rodada: 433 Angular, Go normal/race com PostgreSQL isolado, vet e builds aprovados. Banco principal confirmado em 54, dirty=false na preparação, com hashes públicos idênticos ao encerrar; nenhuma migration aplicada nesta auditoria. A 55 permanece pendente.
 
-Resultados funcionais, acessibilidade e inspeção visual são categorias distintas. Há limitações reais: fila SMTP em memória, aviso CSS de Promoções, ausência de certificação WCAG/SMTP real e cobertura visual não universal. Evidências e detalhes atuais estão na seção de conclusão Angular ao final. Não somar números de rodadas históricas.
+Resultados funcionais, acessibilidade e inspeção visual são categorias distintas. Há limitações reais: fila SMTP em memória e ausência de certificação WCAG/SMTP real e cobertura visual não universal. Evidências e detalhes atuais estão na seção de conclusão Angular ao final. Não somar números de rodadas históricas.
 
 ## Índice por camada
 
@@ -2307,3 +2307,83 @@ Inventário das principais mudanças de código da auditoria Angular (não da re
 Newsletter Go: criados services/newsletter_recovery.go, services/newsletter_recovery_test.go e handlers/newsletter_privacy_test.go; alterados services/newsletter_service.go, handlers/newsletter.go e src/main.go. Teste reproduzível novo frontend/e2e/frontend-audit.cjs; harness Go existente recebeu isolamento explícito. Testes Angular, rotas, configuração, consumidores e templates afetados foram atualizados e constam no diff. Nenhuma dependência/package-lock/go.mod/go.sum foi alterada por esta etapa.
 
 Pendências preservadas por estabilidade: candidatos legados não excluídos; componentes extensos funcionais mantidos após extrair HTTP/contratos/builders; aviso CSS Promoções; recuperação SMTP não durável e sem implantação nesta auditoria; revisão visual não universal/certificação assistiva não executada. Propostas de backup/versionamento e limpeza de candidatos de mídia aguardam decisão específica. Não houve implantação automática, reinício dos servidores do usuário ou mudança do banco principal.
+
+## CSS de Promoções — aviso corrigido em 25/11/2026
+
+Alterados exclusivamente create-promotion.component.scss, seu template e referências de seletores no spec. Consolidadas declarações compartilhadas, eliminadas sobrescritas/seletores obsoletos e simplificados nomes internos de classes com a mesma especificidade. Nenhuma regra foi transferida para estilos globais; angular.json/budgets e lógica TypeScript preservados.
+
+CSS minificado: **15.809 → 13.805 bytes**, redução de12,7%, abaixo do warning14kB. Build de produção aprovado **sem warnings**;27 testes existentes do componente aprovados. Esses resultados substituem a pendência CSS anterior, sem somar testes a rodadas históricas.
+
+Chromium real com respostas de teste interceptadas, nenhuma chamada de escrita ou uso do banco: listagem, quatro abas e dois seletores em1440/1024/768/390. **28 comparações antes/depois** com todos os estilos calculados e dimensões iguais; os28 PNG também são byte a byte idênticos. Mais8 capturas conferiram seletores preenchidos. Inspeção visual efetiva: Geral1440, Produtos390, Descontos768, Imagens1024, listagem1440, seletor390 e biblioteca1440; hierarquia, alinhamentos, espaçamentos e cores preservados. Dez evidências selecionadas em docs/validacao-visual/promocoes-css-2026-11-25/. Dados e imagens sintéticos verificam layout, não fotografia comercial.
+
+Preview4206 encerrado após a conferência; auxiliares descartáveis removidos, mantendo servidores4200/8080 do usuário. Nenhuma alteração de backend, banco, API ou cadastro comercial.
+
+## Auditoria final de QA e aceitação — preparação para defesa do TCC
+
+Rodada de 25/11/2026, retomada dos checkpoints existentes, sem reiniciar auditorias já concluídas. **APROVADO COM RESSALVAS para validação manual**, restrito à cobertura descrita abaixo. Nenhum defeito crítico/alto de aplicação permanece identificado nos cenários concluídos; isso não significa ausência absoluta de bugs nem aprovação universal de todas as combinações de uso.
+
+### Ambiente e isolamento
+
+Repositório efetivo: `C:/Users/vitor/Documents/Box-Enxovais-tcc`. Angular 19.2, Chrome/Chromium real 158, Playwright local, Node 24.15, Go efetivamente executado 1.26.11, PostgreSQL 17.4, schema 54/dirty=false. Nenhuma migration aplicada. Produção Angular servida em 4206 e API real em 8086, contra cópia consistente `box_frontend_audit_qa_1795583167`, usuários anonimizados e cópia própria dos uploads. Proxy local 8896 direcionou exclusivamente a API da automação à cópia, mantendo sandbox do Chromium e TLS; nenhum mecanismo de segurança foi desativado. SMTP foi capturado/suprimido no harness; sem envio externo ou pagamento real.
+
+Backup privado da cópia: `.artifacts/qa-final/consistent-copy.dump`, 191.481 bytes, SHA-256 `b7f1a57b6d346722bc76b096982567221ccfc22c73c5952d547062f2b87cdf2e`, validado por listagem e leitura integral. Contém dados originais e não deve ser publicado/versionado. Código de reprodução e checkpoints permanecem privados/ignorados pelo Git.
+
+O bloqueio operacional anterior foi a rejeição do revisor automático por limite/créditos do workspace: o comando não executou, sem indicação de risco do comando. A retomada funcionou após nova solicitação do usuário. Não foi necessário contornar segurança nem utilizar a ferramenta de interação do Chrome bloqueada anteriormente.
+
+### Defeitos corrigidos e arquivos
+
+1. Banners da Home retornavam 404 após tradução de rotas: `/inicio/banner-*.webp` não corresponde a `public/home`. Corrigidos somente os três caminhos para `/home/` em `frontend/src/app/shared/components/carousel/carousel.component.ts` e seu spec. Fotografias físicas e SCSS preservados.
+2. Inspeção real da captura de confirmação revelou SVG quebrado, apesar de axe/renderização passarem. Corrigido `/finalizar-compra/confirmed-order.svg` para `/checkout/confirmed-order.svg` em `frontend/src/app/features/checkout/checkout-success/checkout-success.component.html`; asserção adicionada ao spec existente. Sem redesign.
+
+Documentação/evidências: esta seção, `docs/QA_CHECKLIST_MANUAL.md` e `docs/validacao-visual/qa-final-2026-11-25/`. Não houve alteração de Go, contratos, migrations, preços ou estoques do principal nesta etapa. Ajustes manuais de SCSS preservados. A correção anterior do aviso CSS de Promoções permanece validada na seção precedente.
+
+### Testes técnicos executados
+
+| Verificação | Resultado real |
+|---|---|
+| Angular completo após última correção | **433 aprovados, zero falhas**; `technical/angular-final.log` |
+| CheckoutSuccess direcionado | **3 aprovados**; sobrepostos à suíte completa, não somar |
+| Carousel direcionado | 1 aprovado, também sobreposto |
+| TypeScript `--noEmit` | Exit 0 |
+| Build Angular produção final | Exit 0, 34,028 s; sem warning de budget e sem aumento de limite |
+| Go `test ./...` com opt-ins PostgreSQL na cópia | Exit 0, 10 packages com testes aprovados; 3 packages sem testes. Log não enumera testes individuais, portanto não atribuir contagem inventada |
+| Go `test -race ./...` com PostgreSQL e CGO | Exit 0, mesmos packages aprovados, sem corrida reportada |
+| `go vet ./...` / `go build ./...` | Ambos exit 0 |
+| gofmt somente conferência | Um arquivo preexistente fora do escopo: `backend/src/db/conn.go`; não reformatado |
+| `git diff --check` | Exit 0; avisos de conversão LF/CRLF não são falhas |
+
+CGO foi habilitado somente no processo de teste, com GCC portátil w64devkit 2.11.0; nenhuma configuração permanente do ambiente mudou. Testes PostgreSQL abrangem concorrência de estoque, checkout, cancelamento, integridade, promoções, avaliações, parcelamento e segurança das rotas. As rodadas de testes anteriores não foram somadas às atuais.
+
+### Testes funcionais e rotas
+
+Inventariadas e navegadas **79 entradas de rotas**, incluindo containers, aliases, parâmetros, guards e wildcard. Esse número não representa 79 telas distintas. `coverage.json` registra caminho concreto, destino final e escopo. Páginas protegidas de recuperação podem redirecionar sem estado válido; recuperação completa foi verificada pela API com código capturado. Inventário complementar reúne 92 padrões HTTP literais/expandidos; não implica 92 jornadas de navegador independentes.
+
+Consolidação `functional-final.json`: **27 grupos funcionais aprovados, zero reprovados finais, dois grupos antigos substituídos por cenários direcionados**. Grupos podem conter várias asserções e misturam UI/API explicitamente; não são contagens de testes unitários. Incluem login, cadastro e recuperação, newsletter idempotente, CRUD simples, edição pela UI e conflito 409, SKU estável, variantes/agregados, upload/capa/ordem/remoção, categorias/marcas, favoritos/carrinho/estoque, checkout completo Pix/cartão 6x/boleto, persistência de frete/total, idempotência/cancelamento/reposição única, descarte em ambas ações, exclusão sem vínculos, arquivamento com histórico, endereços/propriedade, CEP/sobreposição, campanha sem timestamps de gravação, avaliações próprias/moderação/agregados e quatro relatórios/CSV disponíveis. Todos os cenários de escrita ocorreram exclusivamente na cópia.
+
+Falhas intermediárias foram preservadas nos JSON originais para rastreabilidade: seletor Cancelar era link, cadastro troca aba sem trocar URL, DELETE retorna 204 em cadastros, produto 1 não tem variantes, cancelamento exige reasonCode/reasonDetails, shipping histórico está em reais, pagamento usa property binding Angular e esperas de animação. Corrigidos os testes, não a aplicação. A última edição confirmou persistência, SKU e rejeição de timestamp antigo com payload completo. Produto arquivado saiu da listagem e reteve histórico; detalhe direto continua legível por decisão existente.
+
+Dashboard: seis agregados SQL independentes conciliados com resposta da API no mesmo snapshot (`metrics-sql.json`/`metrics-api.json`); alterações posteriores do banco de testes não invalidam aquela conciliação. Erros 503/retry de oito módulos foram injetados deliberadamente e identificados como testes de falha; chamadas normais usaram a API real. Sete estados vazios do Dashboard foram exercitados com período real sem dados.
+
+### Catálogo, responsividade e inspeção visual
+
+**97 produtos publicados**, 12 catálogos/grupos, todas as galerias e seleções habilitadas percorridas em Chromium real; **367 URLs de imagens comerciais** verificadas por HTTP/MIME e decodificação. Home: 48 verificações de banner (3 × 8 larguras × dev/produção). Confirmação: SVG decodificado e HTTP 200 em oito larguras após correção.
+
+Larguras: **1920, 1440, 1280, 1024, 768, 430, 390, 360 px**. Admin: 152 visitas (19 páginas × 8); público/conta: 112 visitas (14 × 8). Sem overflow de página ou erros JS inesperados nesses registros. Alias e catálogo possuem suas próprias execuções; não somar como telas únicas.
+
+151 PNG preservados nesta rodada. **Captura não significa aprovação visual**: `visual-inspection.json` distingue os recortes efetivamente abertos/inspecionados. Foram examinadas Home/fotos, produto/recomendações, conta/endereços, histórico, confirmação antes/depois, Dashboard/ECharts, produtos, edição/criação/variantes/galeria, pedidos/detalhes, clientes/detalhes, relatórios, campanhas, avaliações, categorias, marcas e faixas CEP em recortes desktop/mobile. Conferidos tipografia, hierarquia, cores, geometria dos estados, bordas, alinhamentos e proporções. Não foi inspecionada manualmente cada captura em cada largura. Fotos lazy abaixo da dobra precisam de rolagem; captura de listagem sem rolar não prova falha de asset.
+
+### Acessibilidade, ressalvas e integridade
+
+Axe-core 4.10.3: **11 páginas, zero violações nas regras WCAG A/AA selecionadas**; resultados e verificações incompletas em `accessibility.json`. Menu por Enter/Escape, retorno de foco, contenção do diálogo e dropdown Montserrat passaram no recheck. Não houve certificação WCAG nem jornada integral com leitor de tela. A imagem quebrada não foi detectada por axe: a revisão visual foi indispensável.
+
+Ressalvas: seis links institucionais do rodapé ainda são `#`; funcionalidades institucionais novas não foram criadas. SMTP externo, pagamento real, recuperação durável de fila e certificação assistiva não executados. A fila SMTP em memória e a política de arquivos órfãos/versionamento continuam com as limitações/propostas já documentadas; nenhuma imagem ou candidato legado foi excluído automaticamente. Uma jornada pela API não deve ser apresentada como clique a clique de todos os formulários. O checklist manual explicita a revisão final do apresentador.
+
+Comparação de integridade: **zero das 64 tabelas do principal modificadas** no intervalo auditado; 443 uploads com nomes e SHA-256 idênticos, nenhum adicionado/removido. Evidência `integrity.json`. Nenhum dado comercial foi revertido ou escrito pelo harness. Encerramento e estado final dos processos são registrados abaixo após a limpeza.
+
+### Encerramento confirmado
+
+Banco descartável removido após encerrar conexões. Preview 4206, API isolada 8086, proxy 8896 e seus processos filhos encerrados por IDs e ascendência registrados; nunca por nome global. **Frontend original 4200/PID 32808 e API original 8080/PID 24720 preservados**, ambos HTTP 200 em consultas de leitura. Principal permanece schema54/dirty=false, zero tabelas alteradas na comparação final. Nenhum reinício de backend, migration ou implantação adicional necessário para estas correções de assets; build de produção está gerado e o servidor de desenvolvimento utiliza os arquivos atuais.
+
+Limpeza exclusivamente do ambiente desta auditoria: **9.959 arquivos descartáveis, 1.203.114.244 bytes (~1,12 GiB)**, incluindo compilador C portátil, instalação temporária do axe, cópia de uploads do teste, logs intermediários duplicados e código de recuperação/MIME capturado. Backup privado validado, checkpoints/scripts de reprodução, imagens comerciais originais, documentos acadêmicos e evidências finais preservados. Não houve exclusão fora do repositório. `cleanup.json`, `stopped-processes.json` e `final-state.json` registram o fechamento.
+
+Entrega: 79 entradas de rotas navegadas; 27 grupos funcionais finais aprovados (dois grupos intermediários substituídos), 433 Angular aprovados, Go/PG/race/vet/build aprovados e produção Angular aprovada. Ressalvas e limites de cobertura acima permanecem explícitos. Próximo passo do responsável: executar `docs/QA_CHECKLIST_MANUAL.md` no ambiente apropriado; a aceitação humana não foi marcada automaticamente.

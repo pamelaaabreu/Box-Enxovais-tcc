@@ -19,6 +19,10 @@
       (cancelled)="cancel()"
     />
   } @else {
+    <h3>Minhas avaliações de produtos</h3>
+    <p>
+      Notas dos produtos adquiridos, separadas da experiência de compra na loja.
+    </p>
     <div class="reviews-list">
       @for (
         review of reviews().slice((page() - 1) * 10, page() * 10);
@@ -52,11 +56,13 @@
           <p class="comment">{{ review.comment || "Sem comentário." }}</p>
           <div class="review-footer">
             <span>{{
-              review.status === "approved"
-                ? "Aprovada"
-                : review.status === "rejected"
-                  ? "Não publicada"
-                  : "Aguardando moderação"
+              !review.publicationConsent
+                ? "Privada"
+                : review.status === "approved"
+                  ? "Aprovada"
+                  : review.status === "rejected"
+                    ? "Não publicada"
+                    : "Aguardando moderação"
             }}</span>
             @if (review.canEdit) {
               <button type="button" (click)="edit(review)">
@@ -67,7 +73,8 @@
         </article>
       } @empty {
         <app-admin-state
-          title="Você ainda não avaliou nenhum produto"
+          layout="compact"
+          title="Nenhuma avaliação de produto realizada"
           description="Produtos de compras aprovadas ficam disponíveis para avaliação abaixo."
         />
       }
@@ -82,7 +89,7 @@
     }
     @if (products().length) {
       <section class="reviewable">
-        <h3>Produtos que você pode avaliar</h3>
+        <h3>Pendentes · Produtos que você pode avaliar</h3>
         <div class="reviewable-list">
           @for (product of products(); track product.productId) {
             <button type="button" (click)="start(product)">
@@ -102,4 +109,48 @@
       </section>
     }
   }
+}
+
+@if (!loading() && !error()) {
+  <section class="purchase-experiences">
+    <h3>Experiências de compra</h3>
+    <p>
+      Avaliações da loja vinculadas aos seus pedidos. Elas não alteram a nota
+      dos produtos.
+    </p>
+    @for (review of experiences(); track review.id) {
+      <article>
+        <strong>Pedido #{{ review.orderId }} · {{ review.overall }}/5</strong>
+        <p>{{ review.comment || "Sem comentário." }}</p>
+        <p>
+          {{
+            review.publicationConsent
+              ? "Publicação anônima autorizada"
+              : "Privada"
+          }}
+          ·
+          {{
+            review.status === "approved"
+              ? "Aprovada"
+              : review.status === "rejected"
+                ? "Não publicada"
+                : "Aguardando moderação"
+          }}
+        </p>
+        <button type="button" (click)="selectedOrder.set(review.orderId)">
+          Consultar / editar experiência
+        </button>
+      </article>
+    } @empty {
+      <app-admin-state
+        layout="compact"
+        title="Nenhuma experiência de compra avaliada"
+        description="Você pode avaliar a loja no detalhe de um pedido concluído."
+      />
+    }
+    <a routerLink="/meus-pedidos">Ver minhas compras</a>
+    @if (selectedOrder()) {
+      <app-purchase-review [orderId]="selectedOrder()" />
+    }
+  </section>
 }

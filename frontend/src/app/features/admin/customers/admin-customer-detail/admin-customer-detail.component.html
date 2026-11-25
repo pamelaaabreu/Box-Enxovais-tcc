@@ -1,12 +1,23 @@
 <app-admin-page-header
   [title]="customer()?.name || 'Detalhes do cliente'"
-  description="Dados cadastrais e histórico de compras."
+  [description]="
+    (customer()?.email || '') +
+    ' · ' +
+    (customer()?.phone || 'Telefone não informado')
+  "
   icon="person_outline"
   [breadcrumb]="[
     { label: 'Clientes', url: '/admin/clientes' },
     { label: customer()?.name || 'Detalhes' },
   ]"
-/>
+>
+  <span header-label class="customer-avatar" aria-hidden="true">{{
+    initials()
+  }}</span
+  ><a header-actions class="action" routerLink="/admin/clientes"
+    >Voltar aos clientes</a
+  ></app-admin-page-header
+>
 @if (loading()) {
   <app-admin-state kind="loading" title="Carregando cliente" />
 } @else if (missing()) {
@@ -26,6 +37,30 @@
   />
 } @else {
   @if (customer(); as c) {
+    <div class="customer-kpis">
+      <app-admin-kpi-card
+        title="Total gasto"
+        [value]="c.totalSpent"
+        format="currency"
+        variant="featured"
+        description="Pedidos aprovados, sem cancelamentos"
+      /><app-admin-kpi-card
+        title="Pedidos válidos"
+        [value]="c.validOrders"
+        [description]="c.orders + ' pedido(s) no total'"
+      /><app-admin-kpi-card
+        title="Cancelados"
+        [value]="c.cancelledOrders"
+      /><app-admin-kpi-card
+        title="Última compra válida"
+        [value]="
+          c.lastPurchase
+            ? (c.lastPurchase | date: 'dd/MM/yyyy' : '-0300')!
+            : 'Nenhuma'
+        "
+        format="text"
+      />
+    </div>
     <div class="detail-grid">
       <section class="panel">
         <h2>Dados cadastrais</h2>
@@ -54,75 +89,43 @@
           </div>
         </dl>
       </section>
-      <section class="panel purchase-summary">
-        <h2>Resumo de compras</h2>
-        <dl>
-          <div>
-            <dt>Total de pedidos</dt>
-            <dd>{{ c.orders }}</dd>
+      @if (!c.addresses.length) {
+        <section class="addresses-empty" aria-label="Endereços cadastrados">
+          <app-admin-state
+            layout="compact"
+            title="Nenhum endereço cadastrado"
+            description="Este cliente ainda não possui endereços salvos."
+          />
+        </section>
+      } @else {
+        <section class="panel">
+          <h2>Endereços cadastrados</h2>
+          <div class="address-grid">
+            @for (a of c.addresses; track a.id) {
+              <article class="address">
+                <h3>
+                  {{ a.label }}
+                  @if (a.isDefault) {
+                    <app-status-badge tone="neutral"
+                      >Principal</app-status-badge
+                    >
+                  }
+                </h3>
+                <address>
+                  <strong>{{ a.recipient }}</strong
+                  ><br />{{ a.street }}, {{ a.number }}
+                  @if (a.complement) {
+                    — {{ a.complement }}
+                  }
+                  <br />{{ a.neighborhood }}<br />{{ a.city }} — {{ a.state
+                  }}<br />CEP: {{ a.zipCode }}
+                </address>
+              </article>
+            }
           </div>
-          <div>
-            <dt>Pedidos válidos</dt>
-            <dd>{{ c.validOrders }}</dd>
-          </div>
-          <div>
-            <dt>Cancelados</dt>
-            <dd>{{ c.cancelledOrders }}</dd>
-          </div>
-          <div class="total">
-            <dt>Total gasto</dt>
-            <dd>{{ c.totalSpent | currency: "BRL" }}</dd>
-          </div>
-          <div>
-            <dt>Última compra válida</dt>
-            <dd>
-              {{
-                c.lastPurchase
-                  ? (c.lastPurchase | date: "dd/MM/yyyy HH:mm" : "-0300")
-                  : "Nenhuma compra válida"
-              }}
-            </dd>
-          </div>
-        </dl>
-        <p class="note">
-          Valores históricos dos pedidos aprovados, sem incluir cancelamentos.
-        </p>
-      </section>
+        </section>
+      }
     </div>
-    @if (!c.addresses.length) {
-      <section class="addresses-empty" aria-label="Endereços cadastrados">
-        <app-admin-state
-          layout="compact"
-          title="Nenhum endereço cadastrado"
-          description="Este cliente ainda não possui endereços salvos."
-        />
-      </section>
-    } @else {
-      <section class="panel">
-        <h2>Endereços cadastrados</h2>
-        <div class="address-grid">
-          @for (a of c.addresses; track a.id) {
-            <article class="address">
-              <h3>
-                {{ a.label }}
-                @if (a.isDefault) {
-                  <app-status-badge tone="neutral">Principal</app-status-badge>
-                }
-              </h3>
-              <address>
-                <strong>{{ a.recipient }}</strong
-                ><br />{{ a.street }}, {{ a.number }}
-                @if (a.complement) {
-                  — {{ a.complement }}
-                }
-                <br />{{ a.neighborhood }}<br />{{ a.city }} — {{ a.state
-                }}<br />CEP: {{ a.zipCode }}
-              </address>
-            </article>
-          }
-        </div>
-      </section>
-    }
     <section class="panel">
       <h2>Histórico de pedidos</h2>
       @if (ordersLoading()) {
@@ -150,6 +153,7 @@
                 <th scope="col">Total</th>
                 <th scope="col">Pagamento</th>
                 <th scope="col">Status</th>
+                <th scope="col">Avaliação</th>
                 <th scope="col">Ações</th>
               </tr>
             </thead>
@@ -169,6 +173,11 @@
                       [tone]="o.status === 'cancelled' ? 'danger' : 'success'"
                       >{{ statusLabel(o.status) }}</app-status-badge
                     >
+                  </td>
+                  <td data-label="Avaliação">
+                    <app-status-badge tone="neutral">{{
+                      reviewLabel(o.id)
+                    }}</app-status-badge>
                   </td>
                   <td>
                     <a

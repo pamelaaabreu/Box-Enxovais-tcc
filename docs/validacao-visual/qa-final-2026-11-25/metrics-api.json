@@ -1,0 +1,454 @@
+{
+  "orders": 41,
+  "approvedOrders": 35,
+  "cancelledOrders": 6,
+  "shippingCents": 91850,
+  "revenueCents": 952460,
+  "averageTicketCents": 27213,
+  "products": 103,
+  "activeProducts": 102,
+  "lowStock": 11,
+  "outOfStock": 3,
+  "customers": 22,
+  "newCustomers": 20,
+  "customersWithOrders": 15,
+  "months": [
+    {
+      "month": "2026-10",
+      "total": 5,
+      "cancelled": 1
+    },
+    {
+      "month": "2026-11",
+      "total": 36,
+      "cancelled": 5
+    }
+  ],
+  "categories": [
+    {
+      "name": "Cama / Edredons",
+      "units": 10
+    },
+    {
+      "name": "Cama / Jogos de cama",
+      "units": 6
+    },
+    {
+      "name": "Decoração",
+      "units": 6
+    },
+    {
+      "name": "Cama / Colchas e cobre-leitos",
+      "units": 5
+    },
+    {
+      "name": "Travesseiros",
+      "units": 4
+    },
+    {
+      "name": "Mesa",
+      "units": 3
+    },
+    {
+      "name": "Toalhas",
+      "units": 3
+    },
+    {
+      "name": "Almofadas",
+      "units": 1
+    },
+    {
+      "name": "Cama / Protetores de colchão",
+      "units": 1
+    }
+  ],
+  "series": [
+    {
+      "bucket": "2026-10-27",
+      "orders": 3,
+      "approved": 2,
+      "cancelled": 1,
+      "revenueCents": 48960,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-10-28",
+      "orders": 0,
+      "approved": 0,
+      "cancelled": 0,
+      "revenueCents": 0,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-10-29",
+      "orders": 1,
+      "approved": 1,
+      "cancelled": 0,
+      "revenueCents": 18980,
+      "customers": 0
+    },
+    {
+      "bucket": "2026-10-30",
+      "orders": 1,
+      "approved": 1,
+      "cancelled": 0,
+      "revenueCents": 24980,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-10-31",
+      "orders": 0,
+      "approved": 0,
+      "cancelled": 0,
+      "revenueCents": 0,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-01",
+      "orders": 2,
+      "approved": 2,
+      "cancelled": 0,
+      "revenueCents": 53960,
+      "customers": 0
+    },
+    {
+      "bucket": "2026-11-02",
+      "orders": 1,
+      "approved": 1,
+      "cancelled": 0,
+      "revenueCents": 31980,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-03",
+      "orders": 0,
+      "approved": 0,
+      "cancelled": 0,
+      "revenueCents": 0,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-04",
+      "orders": 3,
+      "approved": 2,
+      "cancelled": 1,
+      "revenueCents": 34960,
+      "customers": 0
+    },
+    {
+      "bucket": "2026-11-05",
+      "orders": 1,
+      "approved": 1,
+      "cancelled": 0,
+      "revenueCents": 26980,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-06",
+      "orders": 0,
+      "approved": 0,
+      "cancelled": 0,
+      "revenueCents": 0,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-07",
+      "orders": 1,
+      "approved": 1,
+      "cancelled": 0,
+      "revenueCents": 17980,
+      "customers": 0
+    },
+    {
+      "bucket": "2026-11-08",
+      "orders": 2,
+      "approved": 1,
+      "cancelled": 1,
+      "revenueCents": 32980,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-09",
+      "orders": 0,
+      "approved": 0,
+      "cancelled": 0,
+      "revenueCents": 0,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-10",
+      "orders": 1,
+      "approved": 1,
+      "cancelled": 0,
+      "revenueCents": 10980,
+      "customers": 0
+    },
+    {
+      "bucket": "2026-11-11",
+      "orders": 3,
+      "approved": 3,
+      "cancelled": 0,
+      "revenueCents": 67940,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-12",
+      "orders": 0,
+      "approved": 0,
+      "cancelled": 0,
+      "revenueCents": 0,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-13",
+      "orders": 1,
+      "approved": 1,
+      "cancelled": 0,
+      "revenueCents": 37980,
+      "customers": 0
+    },
+    {
+      "bucket": "2026-11-14",
+      "orders": 1,
+      "approved": 0,
+      "cancelled": 1,
+      "revenueCents": 0,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-15",
+      "orders": 2,
+      "approved": 2,
+      "cancelled": 0,
+      "revenueCents": 53960,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-16",
+      "orders": 0,
+      "approved": 0,
+      "cancelled": 0,
+      "revenueCents": 0,
+      "customers": 0
+    },
+    {
+      "bucket": "2026-11-17",
+      "orders": 2,
+      "approved": 2,
+      "cancelled": 0,
+      "revenueCents": 34960,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-18",
+      "orders": 1,
+      "approved": 1,
+      "cancelled": 0,
+      "revenueCents": 26980,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-19",
+      "orders": 1,
+      "approved": 0,
+      "cancelled": 1,
+      "revenueCents": 0,
+      "customers": 0
+    },
+    {
+      "bucket": "2026-11-20",
+      "orders": 1,
+      "approved": 1,
+      "cancelled": 0,
+      "revenueCents": 25980,
+      "customers": 1
+    },
+    {
+      "bucket": "2026-11-21",
+      "orders": 3,
+      "approved": 3,
+      "cancelled": 0,
+      "revenueCents": 126520,
+      "customers": 0
+    },
+    {
+      "bucket": "2026-11-22",
+      "orders": 6,
+      "approved": 6,
+      "cancelled": 0,
+      "revenueCents": 207160,
+      "customers": 2
+    },
+    {
+      "bucket": "2026-11-23",
+      "orders": 0,
+      "approved": 0,
+      "cancelled": 0,
+      "revenueCents": 0,
+      "customers": 0
+    },
+    {
+      "bucket": "2026-11-24",
+      "orders": 1,
+      "approved": 1,
+      "cancelled": 0,
+      "revenueCents": 17280,
+      "customers": 0
+    },
+    {
+      "bucket": "2026-11-25",
+      "orders": 3,
+      "approved": 2,
+      "cancelled": 1,
+      "revenueCents": 50960,
+      "customers": 1
+    }
+  ],
+  "topProducts": [
+    {
+      "productId": 2,
+      "name": "Edredom Essência Floral Verde Suave 200 Fios — Solteiro",
+      "units": 3,
+      "revenueCents": 71970,
+      "archived": false
+    },
+    {
+      "productId": 3,
+      "name": "Jogo de Cama Percal Essência Floral Botânico 100% Algodão — Solteiro",
+      "units": 3,
+      "revenueCents": 71970,
+      "archived": false
+    },
+    {
+      "productId": 16,
+      "name": "Cobre-Leito Natural Verde Botânico 100% Algodão — Queen",
+      "units": 3,
+      "revenueCents": 69970,
+      "archived": false
+    },
+    {
+      "productId": 78,
+      "name": "Edredom Essência Floral Verde Oliva 200 Fios — Solteiro",
+      "units": 3,
+      "revenueCents": 86970,
+      "archived": false
+    },
+    {
+      "productId": 19,
+      "name": "Colcha Provence Lilás PERCAL 200 FIOS — Casal",
+      "units": 2,
+      "revenueCents": 53980,
+      "archived": false
+    }
+  ],
+  "stock": [
+    {
+      "productId": 78,
+      "variantId": 51,
+      "name": "Edredom Essência Floral Verde Oliva 200 Fios",
+      "size": "Solteiro",
+      "quantity": 0,
+      "totalQuantity": 5
+    },
+    {
+      "productId": 2,
+      "variantId": 1,
+      "name": "Edredom Essência Floral Verde Suave 200 Fios",
+      "size": "Solteiro",
+      "quantity": 0,
+      "totalQuantity": 5
+    },
+    {
+      "productId": 3,
+      "variantId": 4,
+      "name": "Jogo de Cama Percal Essência Floral Botânico 100% Algodão",
+      "size": "Solteiro",
+      "quantity": 0,
+      "totalQuantity": 5
+    },
+    {
+      "productId": 31,
+      "variantId": 0,
+      "name": "Travesseiro Conforto Duplo",
+      "size": "",
+      "quantity": 0,
+      "totalQuantity": 0
+    },
+    {
+      "productId": 33,
+      "variantId": 0,
+      "name": "Travesseiro Curva Serena",
+      "size": "",
+      "quantity": 0,
+      "totalQuantity": 0
+    },
+    {
+      "productId": 34,
+      "variantId": 0,
+      "name": "Travesseiro Pluma Serena",
+      "size": "",
+      "quantity": 0,
+      "totalQuantity": 0
+    },
+    {
+      "productId": 5,
+      "variantId": 12,
+      "name": "Jogo de Cama Aurora Floral Vinho 100% Algodão",
+      "size": "King",
+      "quantity": 1,
+      "totalQuantity": 7
+    },
+    {
+      "productId": 41,
+      "variantId": 0,
+      "name": "Travesseiro Memória Compacta",
+      "size": "",
+      "quantity": 1,
+      "totalQuantity": 1
+    }
+  ],
+  "recentOrders": [
+    {
+      "id": 44,
+      "customer": "Cliente QA 58",
+      "createdAt": "2026-11-25T02:37:04.944952-03:00",
+      "totalCents": 27280,
+      "status": "cancelled"
+    },
+    {
+      "id": 43,
+      "customer": "Cliente QA 58",
+      "createdAt": "2026-11-25T02:36:22.320346-03:00",
+      "totalCents": 25280,
+      "status": "simulated_approved"
+    },
+    {
+      "id": 42,
+      "customer": "Cliente QA 58",
+      "createdAt": "2026-11-25T02:36:21.798941-03:00",
+      "totalCents": 25680,
+      "status": "simulated_approved"
+    },
+    {
+      "id": 41,
+      "customer": "Cliente QA 50",
+      "createdAt": "2026-11-24T12:15:13.738625-03:00",
+      "totalCents": 17280,
+      "status": "simulated_approved"
+    },
+    {
+      "id": 40,
+      "customer": "Cliente QA 78",
+      "createdAt": "2026-11-22T15:35:00-03:00",
+      "totalCents": 28980,
+      "status": "simulated_approved"
+    }
+  ],
+  "period": {
+    "preset": "30d",
+    "from": "2026-10-27T00:00:00-03:00",
+    "until": "2026-11-26T00:00:00-03:00",
+    "group": "day",
+    "timezone": "America/Sao_Paulo"
+  }
+}

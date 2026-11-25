@@ -150,7 +150,7 @@ func TestReportsPostgres(t *testing.T) {
 		return w
 	}
 	query := "?period=custom&dateFrom=2026-01-01&dateTo=2026-01-31&pageSize=1&page=2"
-	t.Run("protected_queries_exports_and_no_customer_export", func(t *testing.T) {
+	t.Run("protected_queries_and_authorized_customer_exports", func(t *testing.T) {
 		for _, k := range []string{"sales", "products", "customers", "stock"} {
 			for role, want := range map[string]int{"": 401, "customer": 403, "admin": 200} {
 				if w := call("/admin/reports/"+k+query, role); w.Code != want {
@@ -158,8 +158,10 @@ func TestReportsPostgres(t *testing.T) {
 				}
 			}
 		}
-		if call("/admin/reports/customers/export", "admin").Code != 404 {
-			t.Fatal("PII export exposed")
+		for role, want := range map[string]int{"": 401, "customer": 403, "admin": 200} {
+			if call("/admin/reports/customers/export", role).Code != want {
+				t.Fatal("customer export authorization")
+			}
 		}
 	})
 	t.Run("csv_full_filtered_excel_safe_and_no_pii", func(t *testing.T) {

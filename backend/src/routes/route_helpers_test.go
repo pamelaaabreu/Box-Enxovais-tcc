@@ -164,11 +164,7 @@ func TestAllRouteRegistrations(t *testing.T) {
 		for _, suffix := range []string{"", "/export"} {
 			path := "/admin/reports/" + kind + suffix
 			_, matched := mux.Handler(httptest.NewRequest("GET", path, nil))
-			if kind == "customers" && suffix == "/export" {
-				if matched != "" {
-					t.Fatal("customer export must remain disabled")
-				}
-			} else if matched != "GET "+path {
+			if matched != "GET "+path {
 				t.Errorf("report %s not registered", path)
 			}
 		}

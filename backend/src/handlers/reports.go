@@ -124,12 +124,6 @@ func (h ProductHandler) Report(kind string, export bool) http.HandlerFunc {
 			return
 		}
 
-		// Impede a exportação do relatório de clientes.
-		if export && kind == "customers" {
-			response.Error(w, http.StatusNotFound, "Exportação indisponível.")
-			return
-		}
-
 		// Define um timeout para a consulta.
 		ctx, cancel := context.WithTimeout(
 			r.Context(),
@@ -163,14 +157,28 @@ func (h ProductHandler) Report(kind string, export bool) http.HandlerFunc {
 			return
 		}
 
+		format := r.URL.Query().Get("format")
+		if format != "" && format != "csv" && format != "xlsx" {
+			response.Error(w, 400, "Formato de exportação inválido.")
+			return
+		}
 		content, err := buildReportCSV(kind, data.Rows)
+		if err == nil && format == "xlsx" {
+			content, err = buildReportXLSX(content)
+		}
 		if err != nil {
 			log.Println("Falha ao preparar CSV")
 			response.Error(w, http.StatusInternalServerError, "Não foi possível preparar o relatório.")
 			return
 		}
 		w.Header().Set("Content-Type", "text/csv; charset=utf-8")
-		w.Header().Set("Content-Disposition", `attachment; filename="relatorio-`+kind+`.csv"`)
+		extension := "csv"
+		if format == "xlsx" {
+			extension = "xlsx"
+			w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+		}
+		names := map[string]string{"sales": "vendas", "products": "produtos", "customers": "clientes", "stock": "estoque"}
+		w.Header().Set("Content-Disposition", `attachment; filename="relatorio-`+names[kind]+`.`+extension+`"`)
 		if err := writeReportCSV(w, content); err != nil {
 			log.Println("Falha na transmissão do CSV")
 		}
@@ -289,6 +297,8 @@ func buildReportCSV(kind string, rows []models.ReportRow) ([]byte, error) {
 			"Participação (%)",
 		}
 
+	case "customers":
+		header = []string{"Cliente", "E-mail", "Pedidos aprovados", "Total gasto (R$)", "Última compra (São Paulo)"}
 	case "stock":
 		header = []string{
 			"Produto",
@@ -354,6 +364,16 @@ func buildReportCSV(kind string, rows []models.ReportRow) ([]byte, error) {
 				),
 			}
 
+		case "customers":
+			last := ""
+			if v.LastPurchase != "" {
+				date, e := time.Parse(time.RFC3339Nano, v.LastPurchase)
+				if e != nil {
+					return nil, e
+				}
+				last = date.In(loc).Format("02/01/2006 15:04")
+			}
+			row = []string{v.Name, v.Email, strconv.FormatInt(v.Orders, 10), reportMoney(v.RevenueCents), last}
 		case "stock":
 
 			row = []string{

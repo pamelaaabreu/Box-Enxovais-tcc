@@ -35,6 +35,7 @@ describe('MyReviewsComponent', () => {
     const http = TestBed.inject(HttpTestingController);
     http.expectOne('http://localhost:8080/me/product-reviews').flush(items);
     http.expectOne('http://localhost:8080/me/review-products').flush([]);
+    http.expectOne('http://localhost:8080/me/experience-reviews').flush([]);
     fixture.detectChanges();
     return { fixture, http, root: fixture.nativeElement as HTMLElement };
   }
@@ -67,6 +68,7 @@ describe('MyReviewsComponent', () => {
       .expectOne('http://localhost:8080/me/product-reviews')
       .flush([{ ...review, comment: 'Mais detalhes', status: 'pending' }]);
     http.expectOne('http://localhost:8080/me/review-products').flush([]);
+    http.expectOne('http://localhost:8080/me/experience-reviews').flush([]);
     fixture.detectChanges();
     expect(fixture.componentInstance.reviews().length).toBe(1);
     expect(root.textContent).toContain('Mais detalhes');
@@ -75,7 +77,7 @@ describe('MyReviewsComponent', () => {
   it('uses the shared empty state', () => {
     const { root } = load([]);
     expect(root.querySelector('app-admin-state')).not.toBeNull();
-    expect(root.textContent).toContain('Você ainda não avaliou');
+    expect(root.textContent).toContain('Nenhuma avaliação de produto');
   });
   it('uses the shared error state and supports reload', () => {
     const fixture = TestBed.createComponent(MyReviewsComponent);
@@ -84,6 +86,7 @@ describe('MyReviewsComponent', () => {
       .expectOne('http://localhost:8080/me/product-reviews')
       .flush({}, { status: 500, statusText: 'Error' });
     http.match('http://localhost:8080/me/review-products');
+    http.match('http://localhost:8080/me/experience-reviews');
     fixture.detectChanges();
     expect(
       fixture.nativeElement.querySelector('app-admin-state'),

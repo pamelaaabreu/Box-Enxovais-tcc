@@ -1,3 +1,4 @@
+import { AdminDataTableComponent } from '../../../../shared/components/admin-data-table/admin-data-table.component';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { AdminStateComponent } from '../../../../shared/components/admin-state/admin-state.component';
 import { AdminPageHeaderComponent } from '../../../../shared/components/admin-page-header/admin-page-header.component';
@@ -23,6 +24,7 @@ import type { Registration } from '../../../../shared/types/catalog/registration
 @Component({
   selector: 'app-catalog-registration',
   imports: [
+    AdminDataTableComponent,
     PaginationComponent,
     AdminStateComponent,
     AdminPageHeaderComponent,
@@ -74,6 +76,32 @@ export class CatalogRegistrationComponent {
       item.name.toLocaleLowerCase('pt-BR').includes(term),
     );
   });
+  readonly collapsed = signal<string[]>([]);
+  toggleGroup(group: string): void {
+    this.collapsed.update((xs) =>
+      xs.includes(group) ? xs.filter((x) => x !== group) : [...xs, group],
+    );
+  }
+  groupName(item: Registration): string {
+    return item.name.includes(' / ')
+      ? item.name.split(' / ')[0]
+      : 'Outras ' + this.title.toLowerCase();
+  }
+  groupStart(item: Registration, index: number): boolean {
+    return (
+      index === 0 ||
+      this.groupName(this.paged()[index - 1]) !== this.groupName(item)
+    );
+  }
+  groupCount(name: string): number {
+    return this.filtered()
+      .filter((x) => this.groupName(x) === name)
+      .reduce((sum, x) => sum + x.productCount, 0);
+  }
+  productPercent(item: Registration): number {
+    const max = Math.max(1, ...this.items().map((x) => x.productCount));
+    return (item.productCount * 100) / max;
+  }
   name = '';
   private id: number | null = null;
 

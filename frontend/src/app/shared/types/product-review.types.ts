@@ -25,6 +25,7 @@ export interface ProductReviewInput {
   publicationConsent: boolean;
 }
 export interface ReviewSummary {
+  distribution?: number[];
   average: number;
   count: number;
 }

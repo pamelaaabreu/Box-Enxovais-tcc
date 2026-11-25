@@ -1,3 +1,4 @@
+import { ExperienceReviewService } from '../../experience-reviews/services/experience-review.service';
 import { TestBed } from '@angular/core/testing';
 import {
   ActivatedRoute,
@@ -49,6 +50,7 @@ describe('AdminCustomerDetailComponent', () => {
       imports: [AdminCustomerDetailComponent],
       providers: [
         provideRouter([]),
+        { provide: ExperienceReviewService, useValue: { list: () => of([]) } },
         {
           provide: ActivatedRoute,
           useValue: {

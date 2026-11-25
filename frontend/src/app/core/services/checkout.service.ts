@@ -1,3 +1,5 @@
+import { AuthService } from './auth.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL, apiEndpoint } from '../config/api.config';
@@ -8,6 +10,20 @@ import type {
 } from '../../shared/types/checkout/checkout';
 @Injectable({ providedIn: 'root' })
 export class CheckoutService {
+  readonly draft: {
+    addressId?: number;
+    phone: string;
+    address?: Record<string, string>;
+  } = { phone: '' };
+  constructor() {
+    inject(AuthService)
+      .userChanged.pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.draft.phone = '';
+        this.draft.addressId = undefined;
+        this.draft.address = undefined;
+      });
+  }
   private readonly http = inject(HttpClient);
   private readonly base = inject(API_BASE_URL);
   confirm(input: CheckoutRequest) {

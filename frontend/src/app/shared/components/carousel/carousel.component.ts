@@ -36,7 +36,7 @@ export class CarouselComponent {
       description: 'Celebre os momentos especiais com enxovais que acolhem.',
       cta: 'Explorar coleção',
       link: '/categoria/cama',
-      image: '/inicio/banner-natal.webp',
+      image: '/home/banner-natal.webp',
       alt: 'Cama com edredom floral, dobra vermelha lisa e árvore de Natal desfocada',
     },
     {
@@ -51,7 +51,7 @@ export class CarouselComponent {
         'Toalhas macias que transformam pequenos cuidados em momentos especiais.',
       cta: 'Ver toalhas',
       link: '/categoria/toalhas',
-      image: '/inicio/banner-banho-fotografico.webp',
+      image: '/home/banner-banho-fotografico.webp',
       alt: 'Toalhas creme e verde-oliva com textura em destaque',
     },
     {
@@ -66,7 +66,7 @@ export class CarouselComponent {
         'Capas de almofadas e texturas que trazem personalidade ao seu lar.',
       cta: 'Ver almofadas',
       link: '/categoria/almofadas',
-      image: '/inicio/banner-almofadas-fotografico.webp',
+      image: '/home/banner-almofadas-fotografico.webp',
       alt: 'Almofadas creme e verde-oliva em sofá claro',
     },
   ];

@@ -104,12 +104,14 @@ describe('ProductCardComponent', () => {
       'Cor: Verde Oliva',
     );
     expect(
-      host.querySelector('.price-badge')?.textContent?.replace(/\s+/g, ' '),
+      host
+        .querySelector('.price-badge strong')
+        ?.textContent?.replace(/\s+/g, ' '),
     ).toBe('R$ 239,90');
     expect(host.querySelector('.card-actions a')?.getAttribute('href')).toBe(
       '/produto/essencia-verde-oliva',
     );
-    expect(host.textContent).not.toContain('sem juros');
+    expect(host.textContent).toContain('sem juros');
   });
 
   it('keeps SKU below the title in every product-card variation and reserves only one compact line', () => {

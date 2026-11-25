@@ -1,0 +1,15 @@
+<app-catalog-layout
+  ><article>
+    <nav aria-label="Localização">
+      <a routerLink="/inicio">Início</a> / {{ page.title }}
+    </nav>
+    <h1>{{ page.title }}</h1>
+    <p class="academic">
+      Box Enxovais · projeto acadêmico de comércio eletrônico
+    </p>
+    @for (text of page.paragraphs; track text) {
+      <p>{{ text }}</p>
+    }
+    <a routerLink="/inicio">Voltar à loja</a>
+  </article></app-catalog-layout
+>

@@ -1,3 +1,4 @@
+import { installmentOption } from '../../../../shared/utils/installments';
 import { CurrencyPipe, registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
@@ -14,6 +15,9 @@ registerLocaleData(localePt, 'pt-BR');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductPriceComponent {
+  installmentLabel(): string {
+    return installmentOption(Math.round(this.price() * 100), 6);
+  }
   readonly showInstallments = input(true);
   readonly emphasized = input(false);
   readonly price = input.required<number>();

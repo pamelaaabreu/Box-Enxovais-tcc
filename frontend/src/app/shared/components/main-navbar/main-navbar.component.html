@@ -39,16 +39,61 @@
       </svg>
     </button>
     <ul id="category-links" class="nav-menu" [class.is-open]="isMenuOpen">
-      <li class="nav-item" *ngFor="let category of categories">
-        <a
-          [routerLink]="['/categoria', category.slug]"
-          class="nav-link"
-          routerLinkActive="is-active"
-          ariaCurrentWhenActive="page"
-          (click)="closeMenu()"
-          ><span class="nav-label">{{ category.name }}</span></a
+      @for (category of categories(); track category.slug) {
+        <li
+          class="nav-item"
+          (mouseenter)="openCategory.set(category.slug)"
+          (mouseleave)="openCategory.set('')"
+          (focusout)="closeCategory($event)"
+          (keydown.escape)="openCategory.set('')"
         >
-      </li>
+          <button
+            type="button"
+            class="nav-link"
+            [attr.aria-expanded]="openCategory() === category.slug"
+            (focus)="openCategory.set(category.slug)"
+            (click)="openCategory.set(category.slug)"
+          >
+            {{ category.name }}
+          </button>
+          @if (openCategory() === category.slug) {
+            <div class="category-dropdown">
+              <a
+                [routerLink]="['/categoria', category.slug]"
+                (click)="closeMenu()"
+                >Ver todos em {{ category.name }}</a
+              >
+              @for (child of category.children; track child.slug) {
+                <section>
+                  <a
+                    class="subcategory"
+                    [routerLink]="['/categoria', child.slug]"
+                    (click)="closeMenu()"
+                    >{{ child.name }}</a
+                  >
+                  @for (
+                    product of child.products.slice(0, 6);
+                    track product.id
+                  ) {
+                    <a
+                      [routerLink]="['/produto', product.slug]"
+                      (click)="closeMenu()"
+                      >{{ product.name }}</a
+                    >
+                  }
+                  @if (child.products.length > 6) {
+                    <a
+                      [routerLink]="['/categoria', child.slug]"
+                      (click)="closeMenu()"
+                      >Ver todos os produtos</a
+                    >
+                  }
+                </section>
+              }
+            </div>
+          }
+        </li>
+      }
     </ul>
   </nav>
 </header>

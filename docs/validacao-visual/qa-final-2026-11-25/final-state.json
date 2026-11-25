@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-25",
+  "principal": {
+    "database": "bd_box",
+    "schema": 54,
+    "dirty": false,
+    "changedTables": 0,
+    "uploadsUnchanged": 443
+  },
+  "temporary": {
+    "databaseRemoved": "box_frontend_audit_qa_1795583167",
+    "portsClosed": [
+      4206,
+      8086,
+      8896
+    ]
+  },
+  "preservedServers": {
+    "4200": 32808,
+    "8080": 24720
+  },
+  "http": {
+    "frontend": 200,
+    "backend": 200
+  },
+  "deployment": "Frontend source/dev updated; production build generated. No backend restart or migration required."
+}

@@ -1,0 +1,1460 @@
+{
+  "routes": [
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/account",
+      "redirect": "minha-conta",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/account",
+      "finalPath": "/minha-conta",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/checkout/success/:id",
+      "redirect": "finalizar-compra/sucesso/:id",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/checkout/success/42",
+      "finalPath": "/finalizar-compra/sucesso/42",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/checkout",
+      "redirect": "finalizar-compra",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/checkout",
+      "finalPath": "/finalizar-compra",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/favorites",
+      "redirect": "favoritos",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/favorites",
+      "finalPath": "/favoritos",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/cart",
+      "redirect": "carrinho",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/cart",
+      "finalPath": "/carrinho",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/home",
+      "redirect": "inicio",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/home",
+      "finalPath": "/inicio",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/forgot-password",
+      "redirect": "recuperar-senha",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/forgot-password",
+      "finalPath": "/recuperar-senha",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/verify-code",
+      "redirect": "verificar-codigo",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/verify-code",
+      "finalPath": "/recuperar-senha",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/reset-password",
+      "redirect": "redefinir-senha",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/reset-password",
+      "finalPath": "/redefinir-senha",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/register",
+      "redirect": "cadastro",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/register",
+      "finalPath": "/cadastro",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/minha-conta",
+      "redirect": null,
+      "guard": true,
+      "status": "navigated",
+      "testedPath": "/minha-conta",
+      "finalPath": "/minha-conta",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/meus-pedidos",
+      "redirect": null,
+      "guard": true,
+      "status": "navigated",
+      "testedPath": "/meus-pedidos",
+      "finalPath": "/meus-pedidos",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/meus-pedidos/:id",
+      "redirect": null,
+      "guard": true,
+      "status": "navigated",
+      "testedPath": "/meus-pedidos/42",
+      "finalPath": "/meus-pedidos/42",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/finalizar-compra/sucesso/:id",
+      "redirect": null,
+      "guard": true,
+      "status": "navigated",
+      "testedPath": "/finalizar-compra/sucesso/42",
+      "finalPath": "/finalizar-compra/sucesso/42",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/finalizar-compra",
+      "redirect": null,
+      "guard": true,
+      "status": "navigated",
+      "testedPath": "/finalizar-compra",
+      "finalPath": "/finalizar-compra",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/favoritos",
+      "redirect": null,
+      "guard": true,
+      "status": "navigated",
+      "testedPath": "/favoritos",
+      "finalPath": "/favoritos",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/carrinho",
+      "redirect": null,
+      "guard": true,
+      "status": "navigated",
+      "testedPath": "/carrinho",
+      "finalPath": "/carrinho",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/",
+      "redirect": "inicio",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/",
+      "finalPath": "/inicio",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/inicio",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/inicio",
+      "finalPath": "/inicio",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/campanha/:id",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/campanha/1",
+      "finalPath": "/campanha/1",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/categoria/:slug",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/categoria/todos",
+      "finalPath": "/categoria/todos",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/produto/:slug",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/produto/edredom-2",
+      "finalPath": "/produto/edredom-2",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/recuperar-senha",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/recuperar-senha",
+      "finalPath": "/recuperar-senha",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/verificar-codigo",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/verificar-codigo",
+      "finalPath": "/recuperar-senha",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/redefinir-senha",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/redefinir-senha",
+      "finalPath": "/redefinir-senha",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/image-upload/:id",
+      "redirect": "admin/produtos/:id/imagens",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/image-upload/1",
+      "finalPath": "/admin/produtos/1/imagens",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/product-register",
+      "redirect": "admin/produtos/novo",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/product-register",
+      "finalPath": "/admin/produtos/novo",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/promotion-register",
+      "redirect": "admin/promocoes/nova",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/promotion-register",
+      "finalPath": "/admin/promocoes/nova",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/add-to-promotion",
+      "redirect": "admin/promocoes",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/add-to-promotion",
+      "finalPath": "/admin/promocoes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/admin",
+      "redirect": null,
+      "guard": true,
+      "status": "navigated",
+      "testedPath": "/admin",
+      "finalPath": "/admin/dashboard",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/404",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/404",
+      "finalPath": "/404",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/**",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/qa-route-inexistente",
+      "finalPath": "/qa-route-inexistente",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/",
+      "redirect": null,
+      "guard": true,
+      "status": "navigated",
+      "testedPath": "/admin/",
+      "finalPath": "/admin/dashboard",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/customers",
+      "redirect": "clientes",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/customers",
+      "finalPath": "/admin/clientes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/orders",
+      "redirect": "pedidos",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/orders",
+      "finalPath": "/admin/pedidos",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/experience-reviews",
+      "redirect": "avaliacoes",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/experience-reviews",
+      "finalPath": "/admin/avaliacoes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/products",
+      "redirect": "produtos",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/products",
+      "finalPath": "/admin/produtos",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promotions",
+      "redirect": "promocoes",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promotions",
+      "finalPath": "/admin/promocoes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/catalog",
+      "redirect": "cadastros",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/catalog",
+      "finalPath": "/admin/cadastros",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/reports",
+      "redirect": "relatorios",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/reports",
+      "finalPath": "/admin/relatorios",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/clientes",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/clientes",
+      "finalPath": "/admin/clientes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/clientes/:id",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/clientes/58",
+      "finalPath": "/admin/clientes/58",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/pedidos",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/pedidos",
+      "finalPath": "/admin/pedidos",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/pedidos/:id",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/pedidos/42",
+      "finalPath": "/admin/pedidos/42",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/avaliacoes",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/avaliacoes",
+      "finalPath": "/admin/avaliacoes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/",
+      "redirect": "dashboard",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/",
+      "finalPath": "/admin/dashboard",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/dashboard",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/dashboard",
+      "finalPath": "/admin/dashboard",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/metrics",
+      "redirect": "dashboard",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/metrics",
+      "finalPath": "/admin/dashboard",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/produtos",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/produtos",
+      "finalPath": "/admin/produtos",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/produtos/:id/edit",
+      "redirect": ":id/editar",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/produtos/1/edit",
+      "finalPath": "/admin/produtos/1/editar",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/produtos/:id/images",
+      "redirect": ":id/imagens",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/produtos/1/images",
+      "finalPath": "/admin/produtos/1/imagens",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/produtos/:id/variants",
+      "redirect": ":id/variacoes",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/produtos/1/variants",
+      "finalPath": "/admin/produtos/1/variacoes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/produtos/manage",
+      "redirect": "novo",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/produtos/manage",
+      "finalPath": "/admin/produtos/novo",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/produtos/:id/editar",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/produtos/1/editar",
+      "finalPath": "/admin/produtos/1/editar",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/produtos/:id/imagens",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/produtos/1/imagens",
+      "finalPath": "/admin/produtos/1/imagens",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/produtos/:id/variacoes",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/produtos/1/variacoes",
+      "finalPath": "/admin/produtos/1/variacoes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/produtos/",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/produtos/",
+      "finalPath": "/admin/produtos",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/produtos/novo",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/produtos/novo",
+      "finalPath": "/admin/produtos/novo",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promocoes",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promocoes",
+      "finalPath": "/admin/promocoes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promocoes/:id/edit",
+      "redirect": ":id/editar",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promocoes/1/edit",
+      "finalPath": "/admin/promocoes/1/editar",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promocoes/new",
+      "redirect": "nova",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promocoes/new",
+      "finalPath": "/admin/promocoes/nova",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promocoes/create",
+      "redirect": "nova",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promocoes/create",
+      "finalPath": "/admin/promocoes/nova",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promocoes/add-product",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promocoes/add-product",
+      "finalPath": "/admin/promocoes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promocoes/",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promocoes/",
+      "finalPath": "/admin/promocoes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promocoes/criar",
+      "redirect": "nova",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promocoes/criar",
+      "finalPath": "/admin/promocoes/nova",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promocoes/adicionar-produto",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promocoes/adicionar-produto",
+      "finalPath": "/admin/promocoes",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promocoes/nova",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promocoes/nova",
+      "finalPath": "/admin/promocoes/nova",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promocoes/:id/editar",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promocoes/1/editar",
+      "finalPath": "/admin/promocoes/1/editar",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/promocoes/:id",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/promocoes/1",
+      "finalPath": "/admin/promocoes/1",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/cadastros",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/cadastros",
+      "finalPath": "/admin/cadastros",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/cadastros/categories",
+      "redirect": "categorias",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/cadastros/categories",
+      "finalPath": "/admin/cadastros/categorias",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/cadastros/brands",
+      "redirect": "marcas",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/cadastros/brands",
+      "finalPath": "/admin/cadastros/marcas",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/cadastros/shipping-ranges",
+      "redirect": "faixas-cep",
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/cadastros/shipping-ranges",
+      "finalPath": "/admin/cadastros/faixas-cep",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/cadastros/categorias",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/cadastros/categorias",
+      "finalPath": "/admin/cadastros/categorias",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/cadastros/marcas",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/cadastros/marcas",
+      "finalPath": "/admin/cadastros/marcas",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/cadastros/faixas-cep",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/cadastros/faixas-cep",
+      "finalPath": "/admin/cadastros/faixas-cep",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/features/admin/admin.routes.ts",
+      "path": "/admin/relatorios",
+      "redirect": null,
+      "guard": false,
+      "status": "navigated",
+      "testedPath": "/admin/relatorios",
+      "finalPath": "/admin/relatorios",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/login",
+      "matcher": true,
+      "status": "navigated",
+      "testedPath": "/login",
+      "finalPath": "/login",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    },
+    {
+      "file": "frontend/src/app/app.routes.ts",
+      "path": "/cadastro",
+      "matcher": true,
+      "status": "navigated",
+      "testedPath": "/cadastro",
+      "finalPath": "/cadastro",
+      "scope": "route rendering/redirect; functional coverage recorded separately"
+    }
+  ],
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/me",
+      "file": "account.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me",
+      "file": "account.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/me/addresses",
+      "file": "account.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/me/addresses",
+      "file": "account.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/addresses/{id}",
+      "file": "account.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "DELETE",
+      "path": "/me/addresses/{id}",
+      "file": "account.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PUT",
+      "path": "/me/addresses/{id}/default",
+      "file": "account.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/customers",
+      "file": "admin_customers.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/customers/{id}",
+      "file": "admin_customers.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/customers/{id}/orders",
+      "file": "admin_customers.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/orders",
+      "file": "admin_orders.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/orders/{id}",
+      "file": "admin_orders.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/orders/{id}/cancel",
+      "file": "admin_orders.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/register",
+      "file": "auth.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/login",
+      "file": "auth.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/send-reset-token",
+      "file": "auth.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/validate-reset-code",
+      "file": "auth.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/validate-reset-token",
+      "file": "auth.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/reset-password",
+      "file": "auth.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/cart",
+      "file": "cart.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/cart/items",
+      "file": "cart.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PATCH",
+      "path": "/cart/items/{id}",
+      "file": "cart.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "DELETE",
+      "path": "/cart/items/{id}",
+      "file": "cart.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "DELETE",
+      "path": "/cart",
+      "file": "cart.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/cart/orders/{orderID}",
+      "file": "cart.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/checkout",
+      "file": "checkout.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/checkout/success/{id}",
+      "file": "checkout.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/dashboard",
+      "file": "dashboard.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/favorites",
+      "file": "favorites.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PUT",
+      "path": "/favorites/{productId}",
+      "file": "favorites.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "DELETE",
+      "path": "/favorites/{productId}",
+      "file": "favorites.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/home/highlights",
+      "file": "home.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/home/featured",
+      "file": "home.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/home/categories",
+      "file": "home.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/home/campaign",
+      "file": "home.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/campaigns/{id}",
+      "file": "home.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/api/newsletter/subscribe",
+      "file": "newsletter.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/orders",
+      "file": "orders.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/orders/{id}",
+      "file": "orders.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/orders/{id}/cancel",
+      "file": "orders.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/products/{id}",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/products/{id}",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/products/{id}",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/products/{id}/images",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/products/{id}/images",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/products/{id}/images/{imageId}",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/products/{id}/variants",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/products",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/products/brands",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/products",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/products/categories",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/upload-image",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/products",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/related",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/products/",
+      "file": "products.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/me/product-reviews",
+      "file": "product_reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/me/review-products",
+      "file": "product_reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/products/{id}/reviews",
+      "file": "product_reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PATCH",
+      "path": "/me/product-reviews/{id}",
+      "file": "product_reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/products/review-summaries",
+      "file": "product_reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/products/{id}/reviews",
+      "file": "product_reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/home/product-reviews",
+      "file": "product_reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/product-reviews",
+      "file": "product_reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/product-reviews/{id}",
+      "file": "product_reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/api/promotions/create",
+      "file": "promotions.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/promotions",
+      "file": "promotions.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/promotions/image",
+      "file": "promotions.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/promotions/{id}",
+      "file": "promotions.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/api/promotions/add",
+      "file": "promotions.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/api/promotions/",
+      "file": "promotions.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/home/reviews",
+      "file": "reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/orders/{id}/review",
+      "file": "reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "POST",
+      "path": "/orders/{id}/review",
+      "file": "reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/experience-reviews",
+      "file": "reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/experience-reviews/{id}",
+      "file": "reviews.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/shipping/quote",
+      "file": "shipping.go",
+      "coverage": "integration suite / specific journeys; not every endpoint independently exercised by browser"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/catalog/categories",
+      "file": "products.go",
+      "coverage": "API CRUD isolated"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/catalog/categories",
+      "file": "products.go",
+      "coverage": "API CRUD isolated"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/catalog/categories/{id}",
+      "file": "products.go",
+      "coverage": "API CRUD isolated"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/catalog/categories/{id}",
+      "file": "products.go",
+      "coverage": "API CRUD isolated"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/catalog/brands",
+      "file": "products.go",
+      "coverage": "API CRUD isolated"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/catalog/brands",
+      "file": "products.go",
+      "coverage": "API CRUD isolated"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/catalog/brands/{id}",
+      "file": "products.go",
+      "coverage": "API CRUD isolated"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/catalog/brands/{id}",
+      "file": "products.go",
+      "coverage": "API CRUD isolated"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/reports/sales",
+      "file": "reports.go",
+      "coverage": "API isolated"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/reports/sales/export",
+      "file": "reports.go",
+      "coverage": "API isolated"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/reports/products",
+      "file": "reports.go",
+      "coverage": "API isolated"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/reports/products/export",
+      "file": "reports.go",
+      "coverage": "API isolated"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/reports/customers",
+      "file": "reports.go",
+      "coverage": "API isolated"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/reports/stock",
+      "file": "reports.go",
+      "coverage": "API isolated"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/reports/stock/export",
+      "file": "reports.go",
+      "coverage": "API isolated"
+    }
+  ],
+  "components": [
+    "frontend/src/app/app.component.ts",
+    "frontend/src/app/features/account/account.component.ts",
+    "frontend/src/app/features/account/my-reviews/my-reviews.component.ts",
+    "frontend/src/app/features/account/product-review-form/product-review-form.component.ts",
+    "frontend/src/app/features/add-to-promotion/add-to-promotion.component.ts",
+    "frontend/src/app/features/admin/catalog/catalog-registration/catalog-registration.component.ts",
+    "frontend/src/app/features/admin/customers/admin-customer-detail/admin-customer-detail.component.ts",
+    "frontend/src/app/features/admin/customers/admin-customers/admin-customers.component.ts",
+    "frontend/src/app/features/admin/dashboard/dashboard.component.ts",
+    "frontend/src/app/features/admin/experience-reviews/experience-reviews.component.ts",
+    "frontend/src/app/features/admin/layout/admin.component.ts",
+    "frontend/src/app/features/admin/orders/admin-order-detail/admin-order-detail.component.ts",
+    "frontend/src/app/features/admin/orders/admin-orders/admin-orders.component.ts",
+    "frontend/src/app/features/admin/products/product-list/product.component.ts",
+    "frontend/src/app/features/admin/products/product-manage/images/product-image-upload/product-image-upload.component.ts",
+    "frontend/src/app/features/admin/products/product-manage/product-manage.component.ts",
+    "frontend/src/app/features/admin/products/product-manage/product-variants-page/product-variants-page.component.ts",
+    "frontend/src/app/features/admin/products/product-manage/register/product-create/product-create.component.ts",
+    "frontend/src/app/features/admin/promotions/legacy/promotion.component.ts",
+    "frontend/src/app/features/admin/promotions/promotion-manager/campaign-summary/campaign-summary.component.ts",
+    "frontend/src/app/features/admin/promotions/promotion-manager/create-promotion.component.ts",
+    "frontend/src/app/features/admin/reports/report.component.ts",
+    "frontend/src/app/features/admin/shipping/shipping-ranges/shipping-ranges.component.ts",
+    "frontend/src/app/features/authentication/auth/auth.component.ts",
+    "frontend/src/app/features/authentication/forgot-password/forgot-password.component.ts",
+    "frontend/src/app/features/authentication/reset-password/reset-password.component.ts",
+    "frontend/src/app/features/campaign/campaign.component.ts",
+    "frontend/src/app/features/cart/cart.component.ts",
+    "frontend/src/app/features/catalog/components/breadcrumbs/breadcrumbs.component.ts",
+    "frontend/src/app/features/catalog/components/catalog-layout/catalog-layout.component.ts",
+    "frontend/src/app/features/catalog/components/catalog-toolbar/catalog-toolbar.component.ts",
+    "frontend/src/app/features/catalog/components/product-card/product-card.component.ts",
+    "frontend/src/app/features/catalog/components/product-filters/product-filters.component.ts",
+    "frontend/src/app/features/catalog/components/product-gallery/product-gallery.component.ts",
+    "frontend/src/app/features/catalog/components/product-grid/product-grid.component.ts",
+    "frontend/src/app/features/catalog/components/product-media/product-media.component.ts",
+    "frontend/src/app/features/catalog/components/product-price/product-price.component.ts",
+    "frontend/src/app/features/catalog/components/product-sort/product-sort.component.ts",
+    "frontend/src/app/features/catalog/components/quantity-selector/quantity-selector.component.ts",
+    "frontend/src/app/features/catalog/pages/category/category.component.ts",
+    "frontend/src/app/features/catalog/pages/product-detail/product-detail.component.ts",
+    "frontend/src/app/features/catalog/pages/product-detail/product-reviews/product-reviews.component.ts",
+    "frontend/src/app/features/catalog/pages/product-detail/shipping-quote/shipping-quote.component.ts",
+    "frontend/src/app/features/checkout/checkout-success/checkout-success.component.ts",
+    "frontend/src/app/features/checkout/checkout.component.ts",
+    "frontend/src/app/features/favorites/favorites.component.ts",
+    "frontend/src/app/features/featured-products/featured-products.component.ts",
+    "frontend/src/app/features/home/home.component.ts",
+    "frontend/src/app/features/newsletter/newsletter.component.ts",
+    "frontend/src/app/features/not-found/not-found.component.ts",
+    "frontend/src/app/features/order-history/order-history.component.ts",
+    "frontend/src/app/features/promo-grid/promo-grid.component.ts",
+    "frontend/src/app/features/purchase-review/purchase-review.component.ts",
+    "frontend/src/app/features/shop-by-category/shop-by-category.component.ts",
+    "frontend/src/app/features/testimonials/testimonials.component.ts",
+    "frontend/src/app/shared/components/admin-data-table/admin-data-table.component.ts",
+    "frontend/src/app/shared/components/admin-filters/admin-filters.component.ts",
+    "frontend/src/app/shared/components/admin-kpi-card/admin-kpi-card.component.ts",
+    "frontend/src/app/shared/components/admin-page-header/admin-page-header.component.ts",
+    "frontend/src/app/shared/components/admin-state/admin-state.component.ts",
+    "frontend/src/app/shared/components/bar-chart/bar-chart.component.ts",
+    "frontend/src/app/shared/components/carousel/carousel.component.ts",
+    "frontend/src/app/shared/components/chart/chart.component.ts",
+    "frontend/src/app/shared/components/confirm-dialog/confirm-dialog.component.ts",
+    "frontend/src/app/shared/components/echart/echart.component.ts",
+    "frontend/src/app/shared/components/favorite-button/favorite-button.component.ts",
+    "frontend/src/app/shared/components/footer/footer.component.ts",
+    "frontend/src/app/shared/components/inline-notice/inline-notice.component.ts",
+    "frontend/src/app/shared/components/main-navbar/main-navbar.component.ts",
+    "frontend/src/app/shared/components/pagination/pagination.component.ts",
+    "frontend/src/app/shared/components/period-filter/period-filter.component.ts",
+    "frontend/src/app/shared/components/product-commerce-summary/product-commerce-summary.component.ts",
+    "frontend/src/app/shared/components/product-rating/product-rating.component.ts",
+    "frontend/src/app/shared/components/product-sku/product-sku.component.ts",
+    "frontend/src/app/shared/components/product-variants/product-variants.component.ts",
+    "frontend/src/app/shared/components/show-password/show-password.component.ts",
+    "frontend/src/app/shared/components/status-badge/status-badge.component.ts",
+    "frontend/src/app/shared/components/top-navbar/top-navbar.component.ts",
+    "frontend/src/app/shared/components/top-welcome-header/top-welcome-header.component.ts",
+    "frontend/src/app/shared/components/trust-bar/trust-bar.component.ts",
+    "frontend/src/app/shared/custom-alert/custom-alert.component.ts",
+    "frontend/src/app/shared/ui/cards/cards.component.ts",
+    "frontend/src/app/shared/ui/titulo-decorado/titulo-decorado.component.ts"
+  ],
+  "services": [
+    "frontend/src/app/core/services/account.service.ts",
+    "frontend/src/app/core/services/auth.service.ts",
+    "frontend/src/app/core/services/campaign.service.ts",
+    "frontend/src/app/core/services/cart.service.ts",
+    "frontend/src/app/core/services/checkout.service.ts",
+    "frontend/src/app/core/services/custom-alert.service.ts",
+    "frontend/src/app/core/services/customer-orders.service.ts",
+    "frontend/src/app/core/services/favorites.service.ts",
+    "frontend/src/app/core/services/home.service.ts",
+    "frontend/src/app/core/services/pagination.service.ts",
+    "frontend/src/app/core/services/product-review.service.ts",
+    "frontend/src/app/core/services/product.service.ts",
+    "frontend/src/app/core/services/promotion.service.ts",
+    "frontend/src/app/core/services/purchase-review.service.ts",
+    "frontend/src/app/core/services/shipping.service.ts",
+    "frontend/src/app/core/services/sweet-alert.service.ts",
+    "frontend/src/app/core/services/upload.service.ts",
+    "frontend/src/app/features/admin/customers/services/admin-customers.service.ts",
+    "frontend/src/app/features/admin/dashboard/services/dashboard.service.ts",
+    "frontend/src/app/features/admin/experience-reviews/services/experience-review.service.ts",
+    "frontend/src/app/features/admin/orders/services/admin-orders.service.ts",
+    "frontend/src/app/features/admin/reports/services/report.service.ts",
+    "frontend/src/app/features/catalog/services/catalog.service.ts",
+    "frontend/src/app/features/newsletter/services/newsletter.service.ts",
+    "frontend/src/app/shared/components/confirm-dialog/confirm-dialog.service.ts",
+    "frontend/src/app/shared/services/admin-navigation.service.ts",
+    "frontend/src/app/shared/services/asset-url.service.ts"
+  ]
+}

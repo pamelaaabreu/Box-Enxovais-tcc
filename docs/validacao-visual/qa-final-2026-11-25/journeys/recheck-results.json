@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Login administrativo real e rota portuguesa",
+    "status": "passed"
+  },
+  {
+    "name": "Edicao sem trocar SKU e conflito de concorrencia",
+    "status": "failed",
+    "error": "The expression evaluated to a falsy value:\n\n  assert(id)\n"
+  },
+  {
+    "name": "Variantes e estoque agregado no backend real",
+    "status": "passed"
+  },
+  {
+    "name": "CRUD categories",
+    "status": "passed"
+  },
+  {
+    "name": "CRUD brands",
+    "status": "passed"
+  },
+  {
+    "name": "Newsletter idempotente, privacidade e MIME local",
+    "status": "passed"
+  },
+  {
+    "name": "Login cliente e bloqueio administrativo real",
+    "status": "passed"
+  },
+  {
+    "name": "Favoritos, carrinho e limites no ambiente isolado",
+    "status": "failed",
+    "error": "The expression evaluated to a falsy value:\n\n  assert((await client.locator('body').innerText()).includes('Essência Floral'))\n"
+  },
+  {
+    "name": "CEP, frete, checkout backend, idempotencia e cancelamento",
+    "status": "failed",
+    "error": "Cannot read properties of undefined (reading 'length')"
+  },
+  {
+    "name": "Exclusao produto sem vinculos e autorizacao",
+    "status": "failed",
+    "error": "The expression evaluated to a falsy value:\n\n  assert(id)\n"
+  }
+]

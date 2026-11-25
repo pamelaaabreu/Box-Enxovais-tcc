@@ -1,35 +1,24 @@
 import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { catchError, of, startWith, switchMap } from 'rxjs';
-import { ProductReviewService } from '../../core/services/product-review.service';
+import { timer, switchMap, catchError, of, map } from 'rxjs';
+import { HomeService } from '../../core/services/home.service';
 @Component({
   selector: 'app-testimonials',
   standalone: true,
-  imports: [MatIconModule, RouterLink],
+  imports: [MatIconModule],
   templateUrl: './testimonials.component.html',
   styleUrl: './testimonials.component.scss',
 })
 export class TestimonialsComponent {
-  readonly service = inject(ProductReviewService);
+  private readonly home = inject(HomeService);
   readonly reviews = toSignal(
-    this.service.changed.pipe(
-      startWith(undefined),
-      switchMap(() => this.service.home().pipe(catchError(() => of([])))),
+    timer(0, 30000).pipe(
+      switchMap(() => this.home.reviews().pipe(catchError(() => of([])))),
+      map((items) =>
+        items.filter((r) => r.overall >= 4 && r.comment.trim()).slice(0, 6),
+      ),
     ),
     { initialValue: [] },
   );
-  productSlug(name: string, id: number) {
-    return (
-      name
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '') +
-      '-' +
-      id
-    );
-  }
 }

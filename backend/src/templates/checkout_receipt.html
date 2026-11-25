@@ -12,7 +12,7 @@
       padding: 0;
       background-color: #ffffff;
       color: #3d4836;
-      font-family: Georgia, &quot;Times New Roman&quot;, serif;
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 15px;
       line-height: 1.6;
       -webkit-text-size-adjust: 100%;
@@ -92,10 +92,10 @@
               >
                 <!-- Título -->
                 <h1
-                  style="
+                  style="font-family:Georgia,serif;Times New Roman&quot;, serif; 
                     margin: 0 0 18px;
                     color: #33412f;
-                    font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                    
                     font-size: 27px;
                     font-weight: 700;
                     line-height: 1.35;
@@ -109,7 +109,7 @@
                   style="
                     margin: 0 0 28px;
                     color: #485143;
-                    font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                    font-family: Arial, Helvetica, sans-serif;
                     font-size: 15px;
                     font-weight: 400;
                     line-height: 1.9;
@@ -149,10 +149,10 @@
 
                 <!-- Subtítulo -->
                 <h2
-                  style="
+                  style="font-family:Georgia,serif;Times New Roman&quot;, serif; 
                     margin: 0 0 22px;
                     color: #3d4836;
-                    font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                    
                     font-size: 20px;
                     font-weight: 700;
                     line-height: 1.4;
@@ -186,8 +186,7 @@
                           padding: 15px 12px;
                           background-color: #eee9dd;
                           color: #3d4836;
-                          font-family:
-                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-family: Arial, Helvetica, sans-serif;
                           font-size: 11px;
                           font-weight: 700;
                           line-height: 1.5;
@@ -209,8 +208,7 @@
                           padding: 15px 6px;
                           background-color: #eee9dd;
                           color: #3d4836;
-                          font-family:
-                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-family: Arial, Helvetica, sans-serif;
                           font-size: 11px;
                           font-weight: 700;
                           line-height: 1.5;
@@ -232,8 +230,7 @@
                           padding: 15px 10px;
                           background-color: #eee9dd;
                           color: #3d4836;
-                          font-family:
-                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-family: Arial, Helvetica, sans-serif;
                           font-size: 11px;
                           font-weight: 700;
                           line-height: 1.5;
@@ -259,8 +256,7 @@
                           padding: 20px 12px;
                           background-color: #fffaf1;
                           color: #3d4836;
-                          font-family:
-                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-family: Arial, Helvetica, sans-serif;
                           font-size: 14px;
                           font-weight: 400;
                           line-height: 1.7;
@@ -282,8 +278,7 @@
                           padding: 20px 6px;
                           background-color: #fffaf1;
                           color: #3d4836;
-                          font-family:
-                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-family: Arial, Helvetica, sans-serif;
                           font-size: 14px;
                           font-weight: 400;
                           line-height: 1.7;
@@ -303,15 +298,14 @@
                           padding: 20px 10px;
                           background-color: #fffaf1;
                           color: #3d4836;
-                          font-family:
-                            Georgia, &quot;Times New Roman&quot;, serif;
+                          font-family: Arial, Helvetica, sans-serif;
                           font-size: 14px;
                           font-weight: 400;
                           line-height: 1.7;
                           text-align: right;
                           vertical-align: middle;
                           border-bottom: 1px solid #a7b19a;
-                          white-space: nowrap;
+                          white-space: normal;
                         "
                       >
                         {{money .UnitPrice}}
@@ -321,6 +315,7 @@
                   </tbody>
                 </table>
 
+<table role="presentation" width="100%" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;margin-top:22px;border-collapse:collapse"><tr><td>Subtotal dos produtos</td><td align="right">{{if .Order.ProductsSubtotal}}{{money .Order.ProductsSubtotal}}{{else}}Não registrado{{end}}</td></tr><tr><td>Descontos</td><td align="right">{{if .Order.Discount}}{{money .Order.Discount}}{{else}}Não registrados{{end}}</td></tr><tr><td>Frete</td><td align="right">{{if .Order.Shipping}}{{money .Order.Shipping}}{{else}}Não registrado{{end}}</td></tr></table>
                 <!-- Total do pedido -->
                 <table
                   role="presentation"
@@ -343,8 +338,7 @@
                         padding: 24px 20px;
                         background-color: #3f4e3c;
                         color: #ffffff;
-                        font-family:
-                          Georgia, &quot;Times New Roman&quot;, serif;
+                        font-family: Arial, Helvetica, sans-serif;
                         font-size: 16px;
                         font-weight: 700;
                         line-height: 1.5;
@@ -364,21 +358,21 @@
                         padding: 24px 20px;
                         background-color: #3f4e3c;
                         color: #ffffff;
-                        font-family:
-                          Georgia, &quot;Times New Roman&quot;, serif;
+                        font-family: Arial, Helvetica, sans-serif;
                         font-size: 22px;
                         font-weight: 700;
                         line-height: 1.4;
                         text-align: right;
                         vertical-align: middle;
-                        white-space: nowrap;
+                        white-space: normal;
                       "
                     >
                       {{money .Order.Total}}
- {{if .Order.Installments}}<p>Pagamento em {{.Order.Installments}} parcela(s), sem juros.</p><p>{{range .Order.InstallmentAmounts}}{{money .}} · {{end}}</p>{{end}}
                     </td>
                   </tr>
                 </table>
+                <p style="font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:400;line-height:1.6;color:#485143">{{plan .Order}}</p>
+                <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#5e6658">Ambiente acadêmico — pagamento simulado. Nenhuma cobrança real.</p>
               </td>
             </tr>
 
@@ -392,7 +386,7 @@
                   background-color: #3f4e3c;
                   border-radius: 0 0 14px 14px;
                   color: #ffffff;
-                  font-family: Georgia, &quot;Times New Roman&quot;, serif;
+                  font-family: Arial, Helvetica, sans-serif;
                   font-size: 12px;
                   font-weight: 400;
                   line-height: 1.7;

@@ -1,5 +1,9 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
+import { PurchaseReviewComponent } from '../../purchase-review/purchase-review.component';
+import { PurchaseReviewService } from '../../../core/services/purchase-review.service';
+import { ExperienceReview } from '../../../shared/types/experience-review.types';
 import { DatePipe } from '@angular/common';
 import { forkJoin, Subscription } from 'rxjs';
 import { AdminStateComponent } from '../../../shared/components/admin-state/admin-state.component';
@@ -15,6 +19,8 @@ import {
   selector: 'app-my-reviews',
   standalone: true,
   imports: [
+    RouterLink,
+    PurchaseReviewComponent,
     DatePipe,
     AdminStateComponent,
     InlineNoticeComponent,
@@ -26,6 +32,9 @@ import {
 })
 export class MyReviewsComponent {
   readonly service = inject(ProductReviewService);
+  private readonly purchaseApi = inject(PurchaseReviewService);
+  readonly experiences = signal<ExperienceReview[]>([]);
+  readonly selectedOrder = signal(0);
   private readonly destroyRef = inject(DestroyRef);
   private request?: Subscription;
   readonly reviews = signal<ProductReview[]>([]);
@@ -44,12 +53,14 @@ export class MyReviewsComponent {
     this.loading.set(true);
     this.error.set(false);
     this.request = forkJoin({
+      experiences: this.purchaseApi.mine(),
       reviews: this.service.mine(),
       products: this.service.reviewable(),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (value) => {
+          this.experiences.set(value.experiences);
           this.reviews.set(value.reviews);
           this.products.set(value.products);
           this.page.set(1);

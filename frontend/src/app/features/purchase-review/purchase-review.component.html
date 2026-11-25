@@ -1,12 +1,19 @@
 <section
   class="review"
+  [class.compact]="compact"
   [attr.aria-labelledby]="'experience-heading-' + orderId"
   [attr.aria-busy]="loading() || sending()"
 >
   <h2 [id]="'experience-heading-' + orderId">Conte como foi sua experiência</h2>
-  <p>Sua opinião nos ajuda a melhorar a Box Enxovais.</p>
+  <p>
+    Leva menos de 1 minuto. Sua opinião nos ajuda a melhorar a Box Enxovais.
+  </p>
   @if (loading()) {
-    <app-admin-state kind="loading" title="Consultando avaliação…" />
+    <app-admin-state
+      kind="loading"
+      layout="compact"
+      title="Consultando avaliação…"
+    />
   } @else if (readError()) {
     <app-admin-state
       kind="error"
@@ -16,86 +23,145 @@
     />
   } @else if (unavailable()) {
     <app-admin-state title="Este pedido não está disponível para avaliação." />
-  } @else if (saved()) {
-    <app-admin-state kind="success" [title]="saved()" />
-  } @else {
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <fieldset [disabled]="sending()">
-        <legend>Experiência de compra no site</legend>
-        <div
-          class="stars"
-          (mouseleave)="hoveredRating.set(0)"
-          (focusin)="hoveredRating.set(0)"
-        >
-          @for (n of ratings; track n) {
-            <label
-              [class.selected]="
-                (hoveredRating() || form.controls.overall.value) >= n
-              "
-              (mouseenter)="hoveredRating.set(n)"
-            >
-              <input
-                type="radio"
-                name="overall"
-                formControlName="overall"
-                [value]="n"
-                [attr.aria-label]="
-                  n + ' de 5 estrelas para a experiência de compra'
-                "
-                [attr.aria-invalid]="
-                  form.controls.overall.touched && form.controls.overall.invalid
-                "
-                [attr.aria-describedby]="
-                  form.controls.overall.touched && form.controls.overall.invalid
-                    ? 'rating-error-' + orderId
-                    : null
-                "
-              />
-              <mat-icon aria-hidden="true">star</mat-icon>
-            </label>
-          }
-        </div>
-        @if (form.controls.overall.touched && form.controls.overall.invalid) {
-          <small [id]="'rating-error-' + orderId"
-            >Selecione uma nota de 1 a 5.</small
-          >
+  } @else if (review() && !editing()) {
+    <div class="persisted-review">
+      <strong>Sua experiência: {{ review()!.overall }} de 5 estrelas</strong>
+      @if (review()!.experience) {
+        <p>Facilidade para finalizar: {{ review()!.experience }}/5</p>
+      }
+      <div class="topics">
+        @for (topic of review()!.topics; track topic) {
+          <span>{{ topicLabel(topic) }}</span>
         }
-      </fieldset>
-      <label [for]="'review-comment-' + orderId">Comentário (opcional)</label>
-      <textarea
-        [id]="'review-comment-' + orderId"
-        formControlName="comment"
-        rows="3"
-        maxlength="1000"
-        [readOnly]="sending()"
-        [attr.aria-invalid]="
-          form.controls.comment.touched && form.controls.comment.invalid
-        "
-        [attr.aria-describedby]="
-          form.controls.comment.touched && form.controls.comment.invalid
-            ? 'comment-error-' + orderId
-            : null
-        "
-      ></textarea>
-      @if (form.controls.comment.touched && form.controls.comment.invalid) {
-        <small [id]="'comment-error-' + orderId"
-          >Use até 1000 caracteres.</small
+      </div>
+      <p>{{ review()!.comment || "Sem comentário." }}</p>
+      <p>
+        {{
+          review()!.publicationConsent
+            ? "Publicação anônima autorizada"
+            : "Avaliação privada"
+        }}
+        ·
+        {{
+          review()!.status === "approved"
+            ? "Aprovada"
+            : review()!.status === "rejected"
+              ? "Não publicada"
+              : "Aguardando moderação"
+        }}
+      </p>
+      @if (review()!.canEdit !== false) {
+        <button type="button" (click)="startEdit()">Editar avaliação</button>
+      }
+    </div>
+  } @else if (!dismissed()) {
+    <form [formGroup]="form" (ngSubmit)="submit()" class="experience-grid">
+      <div>
+        <fieldset [disabled]="sending()">
+          <legend>Como foi sua experiência de compra no site?</legend>
+          <div class="stars" (mouseleave)="hoveredRating.set(0)">
+            @for (n of ratings; track n) {
+              <label
+                [class.selected]="
+                  (hoveredRating() || form.controls.overall.value) >= n
+                "
+                (mouseenter)="hoveredRating.set(n)"
+                ><input
+                  type="radio"
+                  name="overall"
+                  formControlName="overall"
+                  [value]="n"
+                  [attr.aria-label]="
+                    n + ' de 5 estrelas para a experiência de compra'
+                  "
+                /><mat-icon aria-hidden="true">{{
+                  (hoveredRating() || form.controls.overall.value) >= n
+                    ? "star"
+                    : "star_border"
+                }}</mat-icon></label
+              >
+            }
+          </div>
+          @if (form.controls.overall.touched && form.controls.overall.invalid) {
+            <small>Selecione uma nota de 1 a 5.</small>
+          }
+        </fieldset>
+        <fieldset [disabled]="sending()">
+          <legend>Foi fácil finalizar a compra?</legend>
+          <div class="ease-options">
+            @for (n of ratings; track n) {
+              <label [class.selected]="form.controls.experience.value === n"
+                ><input
+                  type="radio"
+                  name="experience"
+                  formControlName="experience"
+                  [value]="n"
+                  [attr.aria-label]="n + ' de 5 para facilidade de finalizar'"
+                />{{ n }}</label
+              >
+            }
+          </div>
+          <div class="scale">
+            <span>Muito difícil</span><span>Muito fácil</span>
+          </div>
+        </fieldset>
+        <fieldset [disabled]="sending()">
+          <legend>O que mais pesou na sua avaliação?</legend>
+          <div class="topics">
+            @for (topic of topics; track topic.id) {
+              <button
+                type="button"
+                [attr.aria-pressed]="
+                  form.controls.topics.value.includes(topic.id)
+                "
+                (click)="toggleTopic(topic.id)"
+              >
+                {{ topic.label }}
+              </button>
+            }
+          </div>
+        </fieldset>
+      </div>
+      <div>
+        <label [for]="'review-comment-' + orderId">Comentário (opcional)</label
+        ><textarea
+          [id]="'review-comment-' + orderId"
+          formControlName="comment"
+          rows="6"
+          maxlength="1000"
+          [readOnly]="sending()"
+          placeholder="Algo foi difícil ou confuso? O que podemos melhorar?"
+        ></textarea
+        ><span class="counter"
+          >{{ form.controls.comment.value.length }} / 1000</span
         >
-      }
-      <label class="consent"
-        ><input
-          type="checkbox"
-          formControlName="publicationConsent"
-          [attr.disabled]="sending() ? '' : null"
-        />Autorizo a publicação desta avaliação, sem meu nome ou dados
-        pessoais.</label
-      >
-      @if (submitError()) {
-        <app-inline-notice>{{ submitError() }}</app-inline-notice>
-      }
-      <button type="submit" [disabled]="sending()">
-        {{ sending() ? "Enviando…" : "Enviar avaliação" }}
-      </button>
+        <label class="consent"
+          ><input
+            type="checkbox"
+            formControlName="publicationConsent"
+            [attr.disabled]="sending() ? '' : null"
+          />Autorizo a publicação desta avaliação, sem meu nome ou dados
+          pessoais.</label
+        >
+        @if (submitError()) {
+          <app-inline-notice>{{ submitError() }}</app-inline-notice>
+        }
+        <div class="review-actions">
+          <button type="submit" [disabled]="sending()">
+            {{
+              sending()
+                ? "Enviando…"
+                : review()
+                  ? "Salvar avaliação"
+                  : "Enviar avaliação"
+            }}</button
+          ><button class="skip" type="button" (click)="dismissed.set(true)">
+            Agora não
+          </button>
+        </div>
+      </div>
     </form>
+  } @else {
+    <p>Você pode avaliar depois, em Meus pedidos.</p>
   }
 </section>

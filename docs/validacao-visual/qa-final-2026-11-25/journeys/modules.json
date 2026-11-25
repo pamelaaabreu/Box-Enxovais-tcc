@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Cadastro, duplicidade e recuperacao OTP sem SMTP real",
+    "status": "failed",
+    "error": "Expected values to be strictly equal:\n\n400 !== 201\n"
+  },
+  {
+    "name": "Enderecos, padrao, propriedade e CEP",
+    "status": "passed"
+  },
+  {
+    "name": "Faixas CEP: sobreposicao rejeitada e CRUD isolado",
+    "status": "passed"
+  },
+  {
+    "name": "Campanha: criacao, edicao sem timestamps e desconto publico",
+    "status": "passed"
+  },
+  {
+    "name": "Avaliacao de produto: propriedade, edicao e agregados moderados",
+    "status": "passed"
+  },
+  {
+    "name": "Relatorio sales e filtros/exportacao",
+    "status": "passed"
+  },
+  {
+    "name": "Relatorio products e filtros/exportacao",
+    "status": "passed"
+  },
+  {
+    "name": "Relatorio customers e filtros/exportacao",
+    "status": "passed"
+  },
+  {
+    "name": "Relatorio stock e filtros/exportacao",
+    "status": "passed"
+  }
+]

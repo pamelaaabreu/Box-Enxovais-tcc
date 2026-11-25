@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Login administrativo real e rota portuguesa",
+    "status": "passed"
+  },
+  {
+    "name": "Cadastro simples pela interface e SKU automatico",
+    "status": "passed",
+    "note": "Resposta 201 e SKU recuperados; aba Imagens muda sem alterar URL no cadastro."
+  },
+  {
+    "name": "Upload real duas fotos, capa, reordenacao e remocao",
+    "status": "passed"
+  },
+  {
+    "name": "Edicao sem trocar SKU e conflito de concorrencia",
+    "status": "failed",
+    "error": "locator.click: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Cancelar', exact: true })\u001b[22m\n"
+  },
+  {
+    "name": "Variantes e estoque agregado no backend real",
+    "status": "passed"
+  },
+  {
+    "name": "CRUD categories",
+    "status": "failed",
+    "error": "Expected values to be strictly equal:\n\n204 !== 200\n"
+  },
+  {
+    "name": "CRUD brands",
+    "status": "failed",
+    "error": "Expected values to be strictly equal:\n\n204 !== 200\n"
+  },
+  {
+    "name": "Newsletter idempotente, privacidade e MIME local",
+    "status": "passed"
+  },
+  {
+    "name": "Login cliente e bloqueio administrativo real",
+    "status": "passed"
+  },
+  {
+    "name": "Favoritos, carrinho e limites no ambiente isolado",
+    "status": "failed",
+    "error": "The expression evaluated to a falsy value:\n\n  assert((await client.locator('body').innerText()).includes('Essência Floral'))\n"
+  },
+  {
+    "name": "CEP, frete, checkout backend, idempotencia e cancelamento",
+    "status": "failed",
+    "error": "{\"success\":false,\"message\":\"O carrinho ou os preços mudaram. Confira o carrinho e revise a compra novamente.\"}\n\n\n409 !== 201\n"
+  },
+  {
+    "name": "Exclusao produto sem vinculos e autorizacao",
+    "status": "passed"
+  }
+]

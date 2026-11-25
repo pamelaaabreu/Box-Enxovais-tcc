@@ -52,3 +52,18 @@ export function installmentSummary(
       .join(' + ') + (count > 1 ? ' sem juros' : '')
   );
 }
+
+export function installmentOption(totalCents: number, count: number): string {
+  const values = splitInstallments(totalCents, count);
+  const money = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+  const low = Math.min(...values),
+    high = Math.max(...values);
+  return count === 1
+    ? 'À vista no cartão — ' + money.format(low / 100)
+    : low === high
+      ? `${count}x de ${money.format(low / 100)} sem juros`
+      : `${count} parcelas sem juros — de ${money.format(low / 100)} a ${money.format(high / 100)}`;
+}

@@ -416,10 +416,8 @@ describe('Promotion campaign workspace', () => {
     page.view = 'list';
     page.campaigns = [];
     fixture.detectChanges();
-    expect(host.querySelector('.campaign-table table')).toBeNull();
-    expect(
-      host.querySelector('.campaign-table app-admin-state'),
-    ).not.toBeNull();
+    expect(host.querySelector('.campaigns table')).toBeNull();
+    expect(host.querySelector('.campaigns app-admin-state')).not.toBeNull();
     expect(host.textContent).toContain('Nenhuma campanha cadastrada.');
   });
   it('renders the list with real counts and periods and a read-only campaign view', () => {
@@ -453,15 +451,13 @@ describe('Promotion campaign workspace', () => {
     page.chooseTab(1);
     page.openPicker();
     fixture.detectChanges();
-    expect(
-      host.querySelector('.product-picker')?.getAttribute('aria-modal'),
-    ).toBe('true');
-    expect(host.querySelector('.picker-product img')?.getAttribute('src')).toBe(
+    expect(host.querySelector('.picker')?.getAttribute('aria-modal')).toBe(
+      'true',
+    );
+    expect(host.querySelector('.choice img')?.getAttribute('src')).toBe(
       'http://localhost:8080/uploads/toalha.webp',
     );
-    expect(host.querySelector('.picker-product')?.textContent).toContain(
-      'BX-TOA-001',
-    );
+    expect(host.querySelector('.choice')?.textContent).toContain('BX-TOA-001');
   });
   it('keeps selections across search, categories and picker pagination', () => {
     const { page } = setup();
@@ -496,9 +492,9 @@ describe('Promotion campaign workspace', () => {
     page.uploadFile(new File(['image'], 'imagem.webp', { type: 'image/webp' }));
     fixture.detectChanges();
     expect(upload).toHaveBeenCalledTimes(1);
-    expect(host.querySelector('.campaign-preview')?.getAttribute('src')).toBe(
-      'http://localhost:8080/uploads/nova.webp',
-    );
+    expect(
+      host.querySelector('app-campaign-banner img')?.getAttribute('src'),
+    ).toBe('http://localhost:8080/uploads/nova.webp');
     page.uploadFile(new File(['x'], 'arquivo.txt', { type: 'text/plain' }));
     expect(upload).toHaveBeenCalledTimes(1);
     expect(page.promotionData.image_path).toBe('uploads/nova.webp');
@@ -589,10 +585,9 @@ describe('Promotion campaign workspace', () => {
   it('keeps the action bar in document flow and keeps its established static positioning', () => {
     const { host } = setup();
     expect(
-      getComputedStyle(host.querySelector('.promotion-form-container')!)
-        .overflowX,
+      getComputedStyle(host.querySelector('.promotion-content')!).overflowX,
     ).toBe('clip');
-    expect(getComputedStyle(host.querySelector('.action-bar')!).position).toBe(
+    expect(getComputedStyle(host.querySelector('.actions')!).position).toBe(
       'static',
     );
   });
@@ -679,9 +674,7 @@ describe('Promotion campaign workspace', () => {
   });
   it('returns to the campaign list through the breadcrumb and previews through the existing Images tab', () => {
     const { fixture, page, host } = setup();
-    const preview = host.querySelector<HTMLButtonElement>(
-      '.home-preview-action',
-    )!;
+    const preview = host.querySelector<HTMLButtonElement>('.preview-action')!;
     expect(preview.disabled).toBeTrue();
     page.edit(4);
     fixture.detectChanges();
@@ -704,8 +697,7 @@ describe('Promotion campaign workspace', () => {
     fixture.detectChanges();
     expect(page.campaignMeta).toContain('Atualizado em 12/11');
     expect(
-      host.querySelector('.campaign-heading-actions .campaign-status')
-        ?.textContent,
+      host.querySelector('.heading-actions .status')?.textContent,
     ).toContain('Ativa');
     expect(host.querySelector('.section-heading')?.textContent).not.toContain(
       '0 produtos vinculados',

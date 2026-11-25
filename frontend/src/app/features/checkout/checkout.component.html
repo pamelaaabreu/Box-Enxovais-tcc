@@ -64,6 +64,13 @@
         <div class="panel stage-card">
           @if (step() === 1) {
             <h2>Informações de entrega</h2>
+            <button
+              type="button"
+              class="text-button"
+              (click)="manageAddresses()"
+            >
+              Gerenciar endereços
+            </button>
             <form id="delivery-form" [formGroup]="address" (ngSubmit)="next()">
               @if (addressesLoading()) {
                 <p class="muted" role="status">Carregando seus endereços…</p>
@@ -378,25 +385,21 @@
                   @if (method === "card" && payment.value === "card") {
                     <div class="card-demo">
                       <div class="card-demo-content">
-                        <p>
-                          Pagamento demonstrativo. Nenhum dado de cartão é
-                          solicitado.
-                        </p>
                         <div class="field">
                           <label for="checkout-installments"
                             >Parcelamento sem juros</label
                           >
-                          <select
+                          <mat-select
+                            panelClass="box-form-options"
                             id="checkout-installments"
                             [formControl]="installments"
                           >
                             @for (n of installmentOptions; track n) {
-                              <option [ngValue]="n">
-                                {{ n }} parcela{{ n === 1 ? "" : "s" }} —
-                                {{ planLabel(n) }}
-                              </option>
+                              <mat-option [value]="n">{{
+                                optionLabel(n)
+                              }}</mat-option>
                             }
-                          </select>
+                          </mat-select>
                           @if (installments.touched && installments.invalid) {
                             <small class="error box-field-error"
                               >Selecione de 1 a 6 parcelas.</small
@@ -422,6 +425,10 @@
           }
           @if (step() === 3) {
             <h2 class="review-title">Confira seu pedido</h2>
+            <p class="academic-payment-note">
+              Ambiente acadêmico — pagamento simulado. Nenhuma cobrança real
+              será realizada.
+            </p>
             @let delivery = selectedAddress() ?? address.getRawValue();
             <section class="review-section">
               <div class="review-heading">
@@ -439,6 +446,13 @@
                   Editar
                 </button>
               </div>
+              <button
+                type="button"
+                class="text-button"
+                (click)="manageAddresses()"
+              >
+                Gerenciar endereços na minha conta
+              </button>
               <div class="review-details">
                 <strong>{{ delivery.recipient }}</strong>
                 <p>
@@ -508,7 +522,7 @@
                   <span class="muted">
                     {{
                       payment.value === "card"
-                        ? "Cartão demonstrativo, sem cobrança real"
+                        ? "Cartão de crédito"
                         : payment.value === "pix"
                           ? "Pagamento à vista"
                           : "Pagamento em parcela única"
@@ -517,10 +531,6 @@
                 </span>
               </p>
             </section>
-            <p class="simulation-note review-demo">
-              <strong>Compra demonstrativa</strong>
-              Nenhuma cobrança será realizada.
-            </p>
             <footer class="stage-footer">
               <button
                 class="text-button"

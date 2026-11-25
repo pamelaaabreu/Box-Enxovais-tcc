@@ -153,7 +153,7 @@ describe('ReportComponent', () => {
     request().flush(summary({ total: 3 }));
     expect(f.componentInstance.data()?.total).toBe(3);
   });
-  it('does not export customer personal information', () => {
+  it('exports customers only through the existing authenticated admin service', () => {
     query.next(convertToParamMap({ type: 'customers' }));
     const f = TestBed.createComponent(ReportComponent);
     request('customers').flush(summary({ rows: [row], total: 1 }));
@@ -161,11 +161,13 @@ describe('ReportComponent', () => {
     expect(
       f.nativeElement.querySelector('a[href="/admin/clientes/7"]'),
     ).not.toBeNull();
-    expect(f.nativeElement.textContent).not.toContain('Exportar CSV');
+    expect(f.nativeElement.textContent).toContain('Exportar CSV');
     f.componentInstance.export();
-    TestBed.inject(HttpTestingController).expectNone((r) =>
-      r.url.includes('/export'),
+    const exportRequest = TestBed.inject(HttpTestingController).expectOne((r) =>
+      r.url.endsWith('/customers/export'),
     );
+    expect(exportRequest.request.method).toBe('GET');
+    exportRequest.flush(new Blob(['Cliente;E-mail']));
   });
   it('stock ignores dates and preserves variant rows', () => {
     query.next(convertToParamMap({ type: 'stock', period: 'invalid' }));

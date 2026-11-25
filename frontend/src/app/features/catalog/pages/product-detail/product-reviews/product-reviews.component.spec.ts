@@ -42,7 +42,7 @@ describe('ProductReviewsComponent', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).not.toContain('Ótimo');
     expect(
-      fixture.nativeElement.querySelector('app-admin-state'),
+      fixture.nativeElement.querySelector('.empty-average'),
     ).not.toBeNull();
   });
 });

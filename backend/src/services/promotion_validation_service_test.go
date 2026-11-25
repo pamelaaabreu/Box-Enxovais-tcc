@@ -41,7 +41,7 @@ func TestPromotionValidateCampaignImage(t *testing.T) {
 		wantError bool
 	}{
 		{name: "Imagem válida", imagePath: "uploads/banner.png"},
-		{name: "Imagem obrigatória", imagePath: "", wantError: true},
+		{name: "Imagem ausente permite fallback validado na transação", imagePath: "", wantError: false},
 		{name: "Arquivo não encontrado", imagePath: "uploads/inexistente.png", wantError: true},
 		{name: "Falso PNG", imagePath: "uploads/falso.png", wantError: true},
 		{name: "Caminho externo", imagePath: "https://example.com/banner.png", wantError: true},

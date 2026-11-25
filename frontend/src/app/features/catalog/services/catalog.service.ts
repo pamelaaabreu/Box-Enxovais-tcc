@@ -88,6 +88,7 @@ export class CatalogService {
 
     return {
       ...product,
+      measurements: product.measurements ?? {},
 
       name: product.name.replace(/\s+—\s+/g, ' '),
 

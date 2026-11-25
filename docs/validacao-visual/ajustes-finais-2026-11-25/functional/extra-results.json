@@ -1,0 +1,26 @@
+{
+  "results": [
+    {
+      "name": "F08 - CPF válido, inválido, revertido, persistência e API",
+      "status": "failed",
+      "error": "The expression evaluated to a falsy value:\n\n  assert(await save.isEnabled())\n"
+    },
+    {
+      "name": "F09 - Pesquisa concorrente, SKU, teclado, vazio e escape",
+      "status": "passed"
+    },
+    {
+      "name": "F10 - Rodapé institucional, termos e formulário preservado",
+      "status": "passed"
+    },
+    {
+      "name": "F11 - CEP inválido e sem cobertura bloqueados também no backend",
+      "status": "passed"
+    },
+    {
+      "name": "F12 - CSV/XLSX dos quatro relatórios, sem persistir dados exportados",
+      "status": "passed"
+    }
+  ],
+  "errors": []
+}

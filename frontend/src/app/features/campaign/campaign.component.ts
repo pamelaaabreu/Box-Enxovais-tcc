@@ -1,3 +1,5 @@
+import { CampaignBannerComponent } from '../../shared/components/campaign-banner/campaign-banner.component';
+import { AssetUrlService } from '../../shared/services/asset-url.service';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -24,6 +26,7 @@ import type { HomeCampaign } from '../../shared/types/promotions/promotion';
   selector: 'app-campaign',
   standalone: true,
   imports: [
+    CampaignBannerComponent,
     NgTemplateOutlet,
     RouterLink,
     FormsModule,
@@ -37,6 +40,7 @@ import type { HomeCampaign } from '../../shared/types/promotions/promotion';
   styleUrl: './campaign.component.scss',
 })
 export class CampaignComponent {
+  readonly assets = inject(AssetUrlService);
   readonly campaigns = inject(CampaignService);
   readonly catalog = inject(CatalogService);
   private readonly route = inject(ActivatedRoute);

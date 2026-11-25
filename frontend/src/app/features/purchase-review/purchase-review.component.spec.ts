@@ -50,22 +50,28 @@ describe('PurchaseReviewComponent', () => {
         const req = http.expectOne((r) => r.method === 'POST');
         expect(req.request.body).toEqual({
           overall: rating,
+          experience: null,
+          topics: [],
           comment: '',
           publicationConsent: false,
         });
         req.flush({});
+        http.expectOne('http://localhost:8080/orders/1/review').flush({
+          overall: rating,
+          comment: '',
+          status: 'pending',
+          publicationConsent: false,
+        });
         f.detectChanges();
         expect(f.nativeElement.querySelector('form')).toBeNull();
-        expect(f.nativeElement.querySelectorAll('[role=status]').length).toBe(
-          1,
-        );
-        expect(f.nativeElement.textContent).toContain('Obrigado por avaliar');
+        expect(f.componentInstance.review()?.overall).toBe(rating);
+        expect(f.nativeElement.textContent).toContain('Sua experiência');
       },
     );
   it('preserves all entered values on HTTP failure and permits a single retry', () => {
     const f = setup();
     const c = f.componentInstance;
-    c.form.setValue({
+    c.form.patchValue({
       overall: 5,
       comment: 'Boa compra',
       publicationConsent: true,
@@ -80,6 +86,8 @@ describe('PurchaseReviewComponent', () => {
     f.detectChanges();
     expect(c.form.getRawValue()).toEqual({
       overall: 5,
+      experience: null,
+      topics: [],
       comment: 'Boa compra',
       publicationConsent: true,
     });
@@ -87,13 +95,19 @@ describe('PurchaseReviewComponent', () => {
     expect(f.nativeElement.querySelector('[role=alert]')).not.toBeNull();
     c.submit();
     http.expectOne((r) => r.method === 'POST').flush({});
+    http.expectOne('http://localhost:8080/orders/1/review').flush({
+      overall: 5,
+      comment: 'Boa compra',
+      publicationConsent: true,
+      status: 'pending',
+    });
     f.detectChanges();
     expect(f.nativeElement.querySelector('[role=alert]')).toBeNull();
   });
   it('consults the real state on reload and hides the form for an existing review', () => {
     const f = setup({ status: 'pending' });
     expect(f.nativeElement.querySelector('form')).toBeNull();
-    expect(f.nativeElement.textContent).toContain('Você já avaliou');
+    expect(f.nativeElement.textContent).toContain('Sua experiência');
     f.destroy();
     const again = setup({ status: 'approved' });
     expect(again.nativeElement.querySelector('form')).toBeNull();
@@ -113,7 +127,7 @@ describe('PurchaseReviewComponent', () => {
   });
   it('rejects an oversized comment without posting', () => {
     const f = setup();
-    f.componentInstance.form.setValue({
+    f.componentInstance.form.patchValue({
       overall: 4,
       comment: 'a'.repeat(1001),
       publicationConsent: false,

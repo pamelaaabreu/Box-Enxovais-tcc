@@ -1,4 +1,5 @@
 import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
+import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { NewsletterComponent } from '../newsletter/newsletter.component';
@@ -42,6 +43,7 @@ describe('Home composition', () => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
+        provideRouter([]),
         { provide: CampaignService, useValue: { active: signal(null) } },
       ],
     });

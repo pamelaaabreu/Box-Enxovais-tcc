@@ -1,0 +1,7 @@
+[
+  {
+    "name": "Edicao sem trocar SKU e conflito de concorrencia",
+    "status": "passed",
+    "scope": "UI save, GET persistence, stale API timestamp 409, isolated cleanup"
+  }
+]

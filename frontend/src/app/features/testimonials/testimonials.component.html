@@ -7,23 +7,16 @@
           <p
             class="rating"
             role="img"
-            [attr.aria-label]="review.rating + ' de 5 estrelas'"
+            [attr.aria-label]="review.overall + ' de 5 estrelas'"
           >
             @for (n of [1, 2, 3, 4, 5]; track n) {
               <mat-icon aria-hidden="true">{{
-                n <= review.rating ? "star" : "star_border"
+                n <= review.overall ? "star" : "star_border"
               }}</mat-icon>
             }
           </p>
           <blockquote>{{ review.comment }}</blockquote>
-          <strong>{{ review.customerName }}</strong
-          ><a
-            [routerLink]="[
-              '/produto',
-              productSlug(review.productName, review.productId),
-            ]"
-            >{{ review.productName }}</a
-          >
+          <strong>Cliente verificado · experiência de compra</strong>
           <p>Compra verificada</p>
         </article>
       }

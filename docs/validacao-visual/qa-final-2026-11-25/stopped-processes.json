@@ -1,0 +1,57 @@
+[
+  {
+    "ProcessId": 33308,
+    "ParentProcessId": 27524,
+    "Name": "node.exe"
+  },
+  {
+    "ProcessId": 5552,
+    "ParentProcessId": 27524,
+    "Name": "node.exe"
+  },
+  {
+    "ProcessId": 27492,
+    "ParentProcessId": 33308,
+    "Name": "conhost.exe"
+  },
+  {
+    "ProcessId": 13764,
+    "ParentProcessId": 5552,
+    "Name": "conhost.exe"
+  },
+  {
+    "ProcessId": 3480,
+    "ParentProcessId": 27524,
+    "Name": "pwsh.exe"
+  },
+  {
+    "ProcessId": 27232,
+    "ParentProcessId": 3480,
+    "Name": "conhost.exe"
+  },
+  {
+    "ProcessId": 39916,
+    "ParentProcessId": 3480,
+    "Name": "go.exe"
+  },
+  {
+    "ProcessId": 36844,
+    "ParentProcessId": 39916,
+    "Name": "go.exe"
+  },
+  {
+    "ProcessId": 24348,
+    "ParentProcessId": 36844,
+    "Name": "main.exe"
+  },
+  {
+    "ProcessId": 35808,
+    "ParentProcessId": 24348,
+    "Name": "go.exe"
+  },
+  {
+    "ProcessId": 40180,
+    "ParentProcessId": 35808,
+    "Name": "main.exe"
+  }
+]

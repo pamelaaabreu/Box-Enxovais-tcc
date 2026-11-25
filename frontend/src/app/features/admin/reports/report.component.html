@@ -85,7 +85,7 @@
                 ? 'warning'
                 : s.key === 'revenueCents'
                   ? 'featured'
-                  : s.key === 'approvedOrders'
+                  : s.key === 'approvedOrders' || s.key === 'averageTicketCents'
                     ? 'success'
                     : 'default'
             "
@@ -99,14 +99,20 @@
             report.total === 1 ? "registro encontrado" : "registros encontrados"
           }}
         </p>
-        @if (kind() !== "customers") {
+        @if (true) {
           <button
             type="button"
             (click)="export()"
             [disabled]="exporting() || !report.total"
           >
             <mat-icon aria-hidden="true">download</mat-icon
-            >{{ exporting() ? "Exportando…" : "Exportar CSV" }}
+            >{{ exporting() ? "Exportando…" : "Exportar CSV" }}</button
+          ><button
+            type="button"
+            (click)="export('xlsx')"
+            [disabled]="exporting() || !report.total"
+          >
+            Exportar Excel
           </button>
         }
       </div>
@@ -157,7 +163,15 @@
                   <th>Marca</th>
                   <th>Unidades</th>
                   <th>Faturamento</th>
-                  <th>Participação</th>
+                  <th>
+                    <button
+                      type="button"
+                      class="heading-hint"
+                      appHint="Faturamento do produto dividido pelo faturamento total dos produtos no conjunto filtrado e período, vezes 100. Exclui pedidos cancelados e frete."
+                    >
+                      Participação ⓘ
+                    </button>
+                  </th>
                 }
                 @if (kind() === "customers") {
                   <th>Cliente</th>
@@ -181,7 +195,9 @@
                   @if (kind() === "sales") {
                     <td data-label="Pedido">
                       <span class="cell-value"
-                        ><a [routerLink]="['/admin/pedidos', row.id]"
+                        ><a
+                          [routerLink]="['/admin/pedidos', row.id]"
+                          appHint="Ir para pedido"
                           >#{{ row.id }}</a
                         ></span
                       >
@@ -237,7 +253,10 @@
                   @if (kind() === "products") {
                     <td data-label="Produto / SKU">
                       <span class="cell-value"
-                        ><strong>{{ row.name }}</strong
+                        ><a
+                          [routerLink]="['/admin/produtos', row.id, 'editar']"
+                          appHint="Ir para produto"
+                          ><strong>{{ row.name }}</strong></a
                         ><small
                           >{{ row.sku || "SKU indisponível" }}
                           @if (row.archived) {
@@ -298,7 +317,10 @@
                   @if (kind() === "stock") {
                     <td data-label="Produto / SKU">
                       <span class="cell-value"
-                        ><strong>{{ row.name }}</strong
+                        ><a
+                          [routerLink]="['/admin/produtos', row.id, 'editar']"
+                          appHint="Ir para produto"
+                          ><strong>{{ row.name }}</strong></a
                         ><small>{{ row.sku }}</small></span
                       >
                     </td>

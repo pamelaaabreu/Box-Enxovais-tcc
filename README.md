@@ -251,4 +251,4 @@ Newsletter preserva idempotência e resposta neutra; falha SMTP após persistên
 
 Para encerrar aplicação local, use Ctrl+C nos terminais que você abriu. Automações devem guardar PID, encerrar apenas seus processos e limpar artefatos após consolidar evidências. Testes de escrita nunca apontam ao bd_box. Para race use CGO e compilador C compatível apenas no ambiente do processo; para integrações use CART_TEST_DATABASE_URL e REVIEW_TEST_DATABASE_URL de banco descartável.
 
-Resultados atuais: 433 Angular; Go normal/race com PostgreSQL isolado, vet e build aprovados. Build Angular aprovado com aviso CSS de Promoções (15,81 kB, limite de erro 16 kB). E2E, acessibilidade verificada e inspeção visual têm evidências/limites separados no AUDITORIA_FINAL.md.
+Resultados atuais: 433 Angular; Go normal/race com PostgreSQL isolado, vet e build aprovados. Build Angular aprovado; CSS de Promoções reduzido para13,81kB, abaixo do aviso14kB, sem ampliar budgets. E2E, acessibilidade verificada e inspeção visual têm evidências/limites separados no AUDITORIA_FINAL.md.

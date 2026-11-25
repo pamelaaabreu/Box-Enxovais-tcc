@@ -62,7 +62,24 @@ func buildOrderEmail(email, name string, order models.CheckoutOrder, cancelled b
 		filename, verb = "order_cancelled.html", "cancelado"
 	}
 	money := func(cents models.Money) string { return fmt.Sprintf("R$ %d,%02d", cents/100, cents%100) }
-	tmpl, err := template.New(filename).Funcs(template.FuncMap{"money": money}).
+	tmpl, err := template.New(filename).Funcs(template.FuncMap{"money": money, "plan": func(order models.CheckoutOrder) string {
+		if order.Installments == nil {
+			return "Parcelamento não registrado"
+		}
+		if *order.Installments == 1 {
+			return "Pagamento à vista"
+		}
+		groups := []string{}
+		for i := 0; i < len(order.InstallmentAmounts); {
+			j := i + 1
+			for j < len(order.InstallmentAmounts) && order.InstallmentAmounts[j] == order.InstallmentAmounts[i] {
+				j++
+			}
+			groups = append(groups, fmt.Sprintf("%dx de %s", j-i, money(order.InstallmentAmounts[i])))
+			i = j
+		}
+		return fmt.Sprintf("%d parcelas sem juros — %s", *order.Installments, strings.Join(groups, " + "))
+	}}).
 		ParseFiles(filepath.Join(templateDir, filename))
 	if err != nil {
 		return nil, fmt.Errorf("template")
@@ -82,7 +99,11 @@ func buildOrderEmail(email, name string, order models.CheckoutOrder, cancelled b
 	}
 	fmt.Fprintf(&plain, "Total: %s\nPagamento simulado. Nenhuma cobrança foi realizada.", money(order.Total))
 	if order.Installments != nil {
-		fmt.Fprintf(&plain, "\nParcelamento: %d parcela(s), sem juros.\n", *order.Installments)
+		label := "parcela"
+		if *order.Installments > 1 {
+			label = "parcelas"
+		}
+		fmt.Fprintf(&plain, "\nParcelamento: %d %s, sem juros.\n", *order.Installments, label)
 		for _, amount := range order.InstallmentAmounts {
 			fmt.Fprintf(&plain, "%s ", money(amount))
 		}

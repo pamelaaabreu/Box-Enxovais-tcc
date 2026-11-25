@@ -1,0 +1,157 @@
+[
+  {
+    "name": "Login administrativo real e rota portuguesa",
+    "status": "passed",
+    "evidence": "journeys/recheck-results.json"
+  },
+  {
+    "name": "Cadastro simples pela interface e SKU automatico",
+    "status": "passed",
+    "note": "Resposta 201 e SKU recuperados; aba Imagens muda sem alterar URL no cadastro.",
+    "evidence": "journeys/results.json"
+  },
+  {
+    "name": "Upload real duas fotos, capa, reordenacao e remocao",
+    "status": "passed",
+    "evidence": "journeys/results.json"
+  },
+  {
+    "name": "Edicao sem trocar SKU e conflito de concorrencia",
+    "status": "passed",
+    "scope": "UI save, GET persistence, stale API timestamp 409, isolated cleanup",
+    "evidence": "journeys/edit-final.json"
+  },
+  {
+    "name": "Variantes e estoque agregado no backend real",
+    "status": "passed",
+    "evidence": "journeys/recheck-results.json"
+  },
+  {
+    "name": "CRUD categories",
+    "status": "passed",
+    "evidence": "journeys/recheck-results.json"
+  },
+  {
+    "name": "CRUD brands",
+    "status": "passed",
+    "evidence": "journeys/recheck-results.json"
+  },
+  {
+    "name": "Newsletter idempotente, privacidade e MIME local",
+    "status": "passed",
+    "evidence": "journeys/recheck-results.json"
+  },
+  {
+    "name": "Login cliente e bloqueio administrativo real",
+    "status": "passed",
+    "evidence": "journeys/recheck-results.json"
+  },
+  {
+    "name": "Favoritos, carrinho e limites no ambiente isolado",
+    "status": "superseded",
+    "error": "The expression evaluated to a falsy value:\n\n  assert((await client.locator('body').innerText()).includes('Essência Floral'))\n",
+    "evidence": "journeys/recheck-results.json",
+    "note": "Replaced by focused passed scenarios in targeted-results, cancellation-results and final-critical."
+  },
+  {
+    "name": "CEP, frete, checkout backend, idempotencia e cancelamento",
+    "status": "superseded",
+    "error": "Cannot read properties of undefined (reading 'length')",
+    "evidence": "journeys/recheck-results.json",
+    "note": "Replaced by focused passed scenarios in targeted-results, cancellation-results and final-critical."
+  },
+  {
+    "name": "Exclusao produto sem vinculos e autorizacao",
+    "status": "passed",
+    "evidence": "journeys/results.json + journeys/edit-final.json",
+    "note": "Original pass and final isolated delete confirmed; intermediate rerun lacked its fixture ID."
+  },
+  {
+    "name": "Cadastro, duplicidade e recuperacao OTP sem SMTP real",
+    "status": "passed",
+    "evidence": "journeys/recovery.json"
+  },
+  {
+    "name": "Enderecos, padrao, propriedade e CEP",
+    "status": "passed",
+    "evidence": "journeys/modules.json"
+  },
+  {
+    "name": "Faixas CEP: sobreposicao rejeitada e CRUD isolado",
+    "status": "passed",
+    "evidence": "journeys/modules.json"
+  },
+  {
+    "name": "Campanha: criacao, edicao sem timestamps e desconto publico",
+    "status": "passed",
+    "evidence": "journeys/modules.json"
+  },
+  {
+    "name": "Avaliacao de produto: propriedade, edicao e agregados moderados",
+    "status": "passed",
+    "evidence": "journeys/modules.json"
+  },
+  {
+    "name": "Relatorio sales e filtros/exportacao",
+    "status": "passed",
+    "evidence": "journeys/modules.json"
+  },
+  {
+    "name": "Relatorio products e filtros/exportacao",
+    "status": "passed",
+    "evidence": "journeys/modules.json"
+  },
+  {
+    "name": "Relatorio customers e filtros/exportacao",
+    "status": "passed",
+    "evidence": "journeys/modules.json"
+  },
+  {
+    "name": "Relatorio stock e filtros/exportacao",
+    "status": "passed",
+    "evidence": "journeys/modules.json"
+  },
+  {
+    "name": "Favorito persistido e carrinho real com variante",
+    "status": "passed",
+    "evidence": "journeys/targeted-results.json"
+  },
+  {
+    "name": "Checkout completo pela interface com frete e Pix",
+    "status": "passed",
+    "evidence": "journeys/targeted-results.json"
+  },
+  {
+    "name": "Idempotencia backend e cancelamento sem reposicao dupla",
+    "status": "passed",
+    "evidence": "journeys/cancellation-results.json"
+  },
+  {
+    "name": "Descarte com ambas acoes e sem persistir alteracoes",
+    "status": "passed",
+    "evidence": "journeys/targeted-results.json"
+  },
+  {
+    "name": "Checkout UI card e persistencia do pagamento/frete",
+    "status": "passed",
+    "note": "UI checkout confirmed; persisted order 45 rechecked against actual shipping contract (BRL).",
+    "evidence": "journeys/final-critical.json"
+  },
+  {
+    "name": "Checkout UI boleto e persistencia do pagamento/frete",
+    "status": "passed",
+    "note": "UI checkout confirmed; persisted order 46 rechecked against actual shipping contract (BRL).",
+    "evidence": "journeys/final-critical.json"
+  },
+  {
+    "name": "Avaliacao de experiencia pela interface",
+    "status": "passed",
+    "evidence": "journeys/final-critical.json"
+  },
+  {
+    "name": "Arquivamento seguro de produto com historico comercial",
+    "status": "passed",
+    "note": "Archived, excluded from public listing, SKU/history retained; direct detail remains readable by existing design.",
+    "evidence": "journeys/final-critical.json"
+  }
+]

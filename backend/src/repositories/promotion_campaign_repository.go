@@ -163,6 +163,15 @@ $3)
 			}
 		}
 	}
+	if request.HomeFeatured && request.ImagePath == "" {
+		var imageExists bool
+		if err = tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM promotion_products pp JOIN products p ON p.id=pp.product_id JOIN product_images i ON i.product_id=p.id WHERE pp.promotion_id=$1 AND p.status='active')`, id).Scan(&imageExists); err != nil {
+			return 0, err
+		}
+		if !imageExists {
+			return 0, ErrCampaignInvalid
+		}
+	}
 	if err = tx.Commit(); err != nil {
 		return 0, err
 	}
